@@ -4,6 +4,8 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
 
+    resourcePrefix 'cmmsdk_'
+
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
@@ -23,6 +25,8 @@ android {
 
 ext {
     awsVersion                      =   '2.4.5'
+    facebookVersion                 =   '[4,5)'
+    noSqlVersion                    =   '1.0.0'
 
     awsDependencies = [
             core                    :       "com.amazonaws:aws-android-sdk-core:${awsVersion}",
@@ -32,6 +36,14 @@ ext {
             s3                      :       "com.amazonaws:aws-android-sdk-s3:${awsVersion}",
             iot                     :       "com.amazonaws:aws-android-sdk-iot:${awsVersion}",
     ]
+
+    facebookDependencies = [
+            facebook                :       "com.facebook.android:facebook-android-sdk:${facebookVersion}",
+    ]
+
+    otherDependencies = [
+            noSql                   :       "com.github.florent37:android-nosql:${noSqlVersion}",
+    ]
 }
 
 dependencies {
@@ -39,8 +51,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.+'
     testCompile 'junit:junit:4.12'
 
-
+    compile awsDependencies.values()
+    compile facebookDependencies.values()
+    compile otherDependencies.values()
 }

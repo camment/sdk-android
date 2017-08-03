@@ -1,0 +1,6 @@
+<resources>
+    <string name="cmmsdk_app_name">CammentSDK</string>
+
+    <string name="cmmsdk_facebook_app_id">272405646569362</string>
+    <string name="cmmsdk_fb_login_protocol_scheme">fb272405646569362</string>
+</resources>

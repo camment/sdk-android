@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    awsVersion                      =   '2.4.5'
+
+    awsDependencies = [
+            core                    :       "com.amazonaws:aws-android-sdk-core:${awsVersion}",
+            cognitoSync             :       "com.amazonaws:aws-android-sdk-cognito:${awsVersion}",
+            cognitoIdentityProvider :       "com.amazonaws:aws-android-sdk-cognitoidentityprovider:${awsVersion}",
+            apiGatewayCore          :       "com.amazonaws:aws-android-sdk-apigateway-core:${awsVersion}",
+            s3                      :       "com.amazonaws:aws-android-sdk-s3:${awsVersion}",
+            iot                     :       "com.amazonaws:aws-android-sdk-iot:${awsVersion}",
+    ]
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.+'
+    testCompile 'junit:junit:4.12'
+
+
+}

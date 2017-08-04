@@ -30,6 +30,7 @@ ext {
     constraintLayoutVersion         =   '1.0.2'
     supportLibVersion               =   '25.4.0'
     exoPlayerVersion                =   'r2.4.4'
+    glideVersion                    =   '4.0.0'
 
     awsDependencies = [
             core                    :       "com.amazonaws:aws-android-sdk-core:${awsVersion}",
@@ -50,6 +51,11 @@ ext {
             constraintLayout        :       "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
             exoPlayer               :       "com.google.android.exoplayer:exoplayer:${exoPlayerVersion}",
     ]
+
+    glideDependencies = [
+            glide                   :       "com.github.bumptech.glide:glide:${glideVersion}",
+            glideCompiler           :       "com.github.bumptech.glide:compiler:${glideVersion}",
+    ]
 }
 
 dependencies {
@@ -62,4 +68,7 @@ dependencies {
     compile awsDependencies.values()
     compile facebookDependencies.values()
     compile otherDependencies.values()
+
+    compile glideDependencies.glide
+    annotationProcessor glideDependencies.glideCompiler
 }

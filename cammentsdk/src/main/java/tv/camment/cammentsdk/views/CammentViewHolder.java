@@ -1,9 +1,11 @@
 package tv.camment.cammentsdk.views;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.camment.clientsdk.model.Camment;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
@@ -16,7 +18,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
     private Camment camment;
 
     private ImageView ivThumbnail;
-    private SimpleExoPlayerView exoPlayerView;
+    private TextureView textureView;
 
     public CammentViewHolder(View itemView, final CammentsAdapter.ActionListener actionListener) {
         super(itemView);
@@ -24,13 +26,13 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
         this.actionListener = actionListener;
 
         ivThumbnail = itemView.findViewById(R.id.iv_thumbnail);
-        exoPlayerView = itemView.findViewById(R.id.exo_player_view);
+        textureView = itemView.findViewById(R.id.texture_view);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (camment != null && actionListener != null) {
-                    actionListener.onCammentClick(camment);
+                    actionListener.onCammentClick(camment, textureView);
                 }
             }
         });
@@ -41,6 +43,8 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
             return;
 
         this.camment = camment;
+
+        Glide.with(itemView.getContext()).load(camment.getThumbnail()).into(ivThumbnail);
     }
 
 }

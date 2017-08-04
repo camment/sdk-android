@@ -2,6 +2,7 @@ package tv.camment.cammentsdk.views;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +26,11 @@ public class CammentsAdapter extends RecyclerView.Adapter {
     public CammentsAdapter(ActionListener actionListener) {
         this.actionListener = actionListener;
         setHasStableIds(true);
+    }
+
+    public void setData(CammentList cammentList) {
+        this.cammentList = cammentList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -69,7 +75,7 @@ public class CammentsAdapter extends RecyclerView.Adapter {
 
     interface ActionListener {
 
-        void onCammentClick(Camment camment);
+        void onCammentClick(Camment camment, TextureView textureView);
 
     }
 

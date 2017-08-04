@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.views.gl_encoder;
+package tv.camment.cammentsdk.camera.gl_encoder;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.

@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.views.gl_utils;
+package tv.camment.cammentsdk.camera.gl_utils;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
@@ -11,8 +11,8 @@ import java.lang.ref.WeakReference;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
 import tv.camment.cammentsdk.views.CameraGLView;
-import tv.camment.cammentsdk.views.gl_encoder.MediaVideoEncoder;
 
 
 public class CameraSurfaceRenderer implements

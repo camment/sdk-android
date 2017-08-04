@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context="tv.camment.cammentdemo.MainActivity">
 
-    <tv.camment.cammentsdk.views.CameraGLView
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+    <tv.camment.cammentsdk.views.CammentOverlay
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

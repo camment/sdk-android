@@ -11,9 +11,9 @@ import android.view.SurfaceHolder;
 import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.camera.CameraHandler;
 import tv.camment.cammentsdk.camera.CameraThread;
-import tv.camment.cammentsdk.views.gl_encoder.MediaEncoder;
-import tv.camment.cammentsdk.views.gl_encoder.MediaVideoEncoder;
-import tv.camment.cammentsdk.views.gl_utils.CameraSurfaceRenderer;
+import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
+import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
+import tv.camment.cammentsdk.camera.gl_utils.CameraSurfaceRenderer;
 
 
 public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEncoderListener {
@@ -124,6 +124,13 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         if (encoder instanceof MediaVideoEncoder) {
             setVideoEncoder(null);
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int size = MeasureSpec.getSize(widthMeasureSpec);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public void setVideoSize(int width, int height) {

@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.views.gl_encoder;
+package tv.camment.cammentsdk.camera.gl_encoder;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -32,7 +32,7 @@ import android.view.Surface;
 
 import java.io.IOException;
 
-import tv.camment.cammentsdk.views.gl_utils.RenderHandler;
+import tv.camment.cammentsdk.camera.gl_utils.RenderHandler;
 
 public class MediaVideoEncoder extends MediaEncoder {
 	private static final boolean DEBUG = false;	// TODO set false on release

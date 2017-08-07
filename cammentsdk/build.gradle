@@ -31,6 +31,7 @@ ext {
     supportLibVersion               =   '25.4.0'
     exoPlayerVersion                =   'r2.4.4'
     glideVersion                    =   '4.0.0'
+    easyPermissionsVersion          =   '0.4.2'
 
     awsDependencies = [
             core                    :       "com.amazonaws:aws-android-sdk-core:${awsVersion}",
@@ -50,6 +51,7 @@ ext {
             recyclerView            :       "com.android.support:recyclerview-v7:${supportLibVersion}",
             constraintLayout        :       "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
             exoPlayer               :       "com.google.android.exoplayer:exoplayer:${exoPlayerVersion}",
+            easyPermissions         :       "pub.devrel:easypermissions:${easyPermissionsVersion}",
     ]
 
     glideDependencies = [

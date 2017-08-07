@@ -1,6 +1,8 @@
 package tv.camment.cammentsdk.views;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
@@ -35,9 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.PermissionHelper;
 
 
-public class CammentOverlay extends RelativeLayout implements CammentsAdapter.ActionListener {
+public class CammentOverlay extends RelativeLayout implements CammentsAdapter.ActionListener, RecordingButton.ActionsListener, PermissionHelper.PermissionsListener {
 
     private static final int THRESHOLD = 100;
 
@@ -50,7 +54,7 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
 
     private CameraGLView cameraGLView;
     private RecyclerView rvCamments;
-    private ImageButton ibRecord;
+    private RecordingButton ibRecord;
 
     private CammentsAdapter adapter;
 
@@ -58,6 +62,7 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
     private ExtractorMediaSource videoSource;
     private DefaultDataSourceFactory dataSourceFactory;
     private DefaultExtractorsFactory extractorsFactory;
+    private boolean recordingEnabled;
 
     private enum Mode {
         GOING_BACK,
@@ -103,6 +108,11 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
         extractorsFactory = new DefaultExtractorsFactory();
 
         player.setPlayWhenReady(true);
+
+        if (getContext() instanceof Activity) {
+            PermissionHelper.getInstance().initPermissionHelper((Activity) getContext());
+        }
+        PermissionHelper.getInstance().setListener(this);
     }
 
     @Override
@@ -116,17 +126,7 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
         rvCamments.setLayoutManager(layoutManager);
         rvCamments.setAdapter(adapter);
 
-        //TODO remove
-        CammentList cammentList = new CammentList();
-        List<Camment> camments = new ArrayList<>();
-        Camment camment = new Camment();
-        for (int i = 0; i < 5; i++) {
-            camment.setThumbnail("https://images-production.global.ssl.fastly.net/uploads/posts/image/66942/corduroy-the-worlds-oldest-living-cat-square.jpg");
-            camment.setUrl("http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_1mb.mp4");
-            camments.add(camment);
-        }
-        cammentList.setItems(camments);
-        adapter.setData(cammentList);
+        ibRecord.setListener(this);
 
         super.onFinishInflate();
     }
@@ -204,10 +204,14 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
                         Log.d("TOUCH", "GO BACK!");
                         break;
                     case SHOW:
-                        Log.d("TOUCH", "SHOW!");
+                        if (ibRecord != null) {
+                            ibRecord.show();
+                        }
                         break;
                     case HIDE:
-                        Log.d("TOUCH", "HIDE!");
+                        if (ibRecord != null) {
+                            ibRecord.hide();
+                        }
                         break;
                 }
                 mode = Mode.NONE;
@@ -215,5 +219,36 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
         }
     }
 
+    @Override
+    public void onPulledDown() {
+        if (FacebookHelper.getInstance().isLoggedIn()) {
+            //TODO show friends
+        } else {
+            //TODO check with fragment
+            if (getContext() instanceof Activity) {
+                FacebookHelper.getInstance().logIn((Activity) getContext());
+            }
+        }
+    }
+
+    @Override
+    public void onRecordingStart() {
+        PermissionHelper.getInstance().cameraAndMicTask();
+    }
+
+    @Override
+    public void onRecordingStop() {
+
+    }
+
+    @Override
+    public void enableRecording() {
+        //TODO do real recording here
+    }
+
+    @Override
+    public void disableRecording() {
+
+    }
 
 }

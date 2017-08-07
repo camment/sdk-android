@@ -31,4 +31,20 @@ public class ApiManager {
         return new ShowApi(executorService, devcammentClient);
     }
 
+    public UserApi getUserApi() {
+        return new UserApi(executorService, devcammentClient);
+    }
+
+    public GroupApi getGroupApi() {
+        return new GroupApi(executorService, devcammentClient);
+    }
+
+    public InvitationApi getInvitationApi() {
+        return new InvitationApi(executorService, devcammentClient);
+    }
+
+    public CammentApi getCammentApi() {
+        return new CammentApi(executorService, devcammentClient);
+    }
+
 }

@@ -14,6 +14,7 @@ import com.facebook.AccessToken;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
 
@@ -67,6 +68,10 @@ public final class AWSManager {
 
     public TransferUtility getTransferUtility() {
         return new TransferUtility(getAmazonS3(), CammentSDK.getInstance().getApplicationContext());
+    }
+
+    public KeystoreHelper getKeystoreHelper() {
+        return new KeystoreHelper(Executors.newSingleThreadExecutor());
     }
 
 }

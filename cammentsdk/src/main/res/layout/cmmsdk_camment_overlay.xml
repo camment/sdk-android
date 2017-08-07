@@ -36,7 +36,7 @@
         app:layout_constraintRight_toLeftOf="@+id/g_camment_list"
         app:layout_constraintTop_toBottomOf="@+id/camera_view" />
 
-    <ImageButton
+    <tv.camment.cammentsdk.views.RecordingButton
         android:id="@+id/ib_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

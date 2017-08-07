@@ -74,4 +74,8 @@ public final class AWSManager {
         return new KeystoreHelper(Executors.newSingleThreadExecutor());
     }
 
+    public S3UploadHelper getS3UploadHelper() {
+        return new S3UploadHelper(Executors.newSingleThreadExecutor(), getTransferUtility());
+    }
+
 }

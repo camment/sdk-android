@@ -5,11 +5,16 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.amazonaws.auth.AWS4Signer;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.Request;
 import com.camment.clientsdk.model.Camment;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.aws.AWSManager;
 
 
 public class CammentViewHolder extends RecyclerView.ViewHolder {

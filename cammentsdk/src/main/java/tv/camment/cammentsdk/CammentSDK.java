@@ -2,12 +2,14 @@ package tv.camment.cammentsdk;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.github.florent37.androidnosql.AndroidNoSql;
 
 import java.lang.ref.WeakReference;
 
 import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.utils.NoSqlHelper;
 
 public final class CammentSDK {
 
@@ -39,6 +41,14 @@ public final class CammentSDK {
 
     public Context getApplicationContext() {
         return applicationContext.get();
+    }
+
+    public synchronized void setShowUuid(String showUuid) {
+        if (TextUtils.isEmpty(showUuid)) {
+            throw new IllegalArgumentException("Show uuid can't be null!");
+        }
+
+        NoSqlHelper.setCurrentShow(showUuid);
     }
 
 }

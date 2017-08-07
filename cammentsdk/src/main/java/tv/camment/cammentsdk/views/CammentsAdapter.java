@@ -9,27 +9,31 @@ import android.view.ViewGroup;
 import com.camment.clientsdk.model.Camment;
 import com.camment.clientsdk.model.CammentList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.api.CammentApi;
 
 /**
  * Created by petrushka on 04/08/2017.
  */
 
-public class CammentsAdapter extends RecyclerView.Adapter {
+public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.CammentListListener {
 
     private static final int CAMMENT = 0;
 
     private final ActionListener actionListener;
 
-    private CammentList cammentList;
+    private List<Camment> camments;
 
     public CammentsAdapter(ActionListener actionListener) {
         this.actionListener = actionListener;
         setHasStableIds(true);
     }
 
-    public void setData(CammentList cammentList) {
-        this.cammentList = cammentList;
+    public void setData(List<Camment> camments) {
+        this.camments = camments;
         notifyDataSetChanged();
     }
 
@@ -59,7 +63,7 @@ public class CammentsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case CAMMENT:
-                ((CammentViewHolder) holder).bindData(cammentList.getItems().get(position));
+                ((CammentViewHolder) holder).bindData(camments.get(position));
                 break;
         }
     }
@@ -70,7 +74,27 @@ public class CammentsAdapter extends RecyclerView.Adapter {
     }
 
     private int getCammentListSize() {
-        return cammentList != null && cammentList.getItems() != null ? cammentList.getItems().size() : 0;
+        return camments != null ? camments.size() : 0;
+    }
+
+    public void addCamment(Camment camment) {
+        if (camments == null) {
+            camments = new ArrayList<>();
+        }
+        camments.add(camment);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCammentListRetrieved(CammentList cammentList) {
+        if (cammentList != null) {
+            if (camments == null) {
+                camments = new ArrayList<>();
+            }
+
+            camments.addAll(cammentList.getItems());
+            notifyDataSetChanged();
+        }
     }
 
     interface ActionListener {

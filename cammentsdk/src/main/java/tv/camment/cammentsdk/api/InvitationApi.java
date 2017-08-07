@@ -34,7 +34,7 @@ public class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final String showUuid = NoSqlHelper.getCurrentShowUuid();
+                final String showUuid = NoSqlHelper.getCurrentShow().getUuid();
                 final String userGroupUuid = NoSqlHelper.getActiveGroup().getUuid();
 
                 UserInAddToGroupRequest userInAddToGroupRequest = new UserInAddToGroupRequest();

@@ -1,6 +1,33 @@
 <resources>
-    <string name="cmmsdk_app_name">CammentSDK</string>
+    <string name="cmmsdk_app_name" translatable="false">CammentSDK</string>
 
-    <string name="cmmsdk_facebook_app_id">272405646569362</string>
-    <string name="cmmsdk_fb_login_protocol_scheme">fb272405646569362</string>
+    <string name="cmmsdk_facebook_app_id" translatable="false">272405646569362</string>
+    <string name="cmmsdk_fb_login_protocol_scheme" translatable="false">fb272405646569362</string>
+
+    <string name="cmmsdk_user_invited_to_chat">%s invited you to a private chat</string>
+    <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
+
+    <string name="cmmsdk_join">Join</string>
+    <string name="cmmsdk_no">No</string>
+    <string name="cmmsdk_ok">OK</string>
+    <string name="cmmsdk_cancel">Cancel</string>
+    <string name="cmmsdk_invite">Done</string>
+
+    <string name="cmmsdk_user_entered_chat_title">%s entered your camment chat!</string>
+    <string name="cmmsdk_user_entered_chat_desc">Maybe it would be polite to say hi with a camment?</string>
+
+    <string name="cmmsdk_help_tap_and_hold_to_record">Tap &amp; hold to record a mini video (camment)</string>
+    <string name="cmmsdk_help_swipe_left_to_hide_camments">Swipe ← left anywhere to hide camments</string>
+    <string name="cmmsdk_help_swipe_right_to_show_camments">Swipe → right to show camments</string>
+    <string name="cmmsdk_help_tap_to_play">Great success! Now tap the camment to play it</string>
+    <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↓ down to invite friends to this chat</string>
+    <string name="cmmsdk_help_tap_and_hold_to_delete">ap &amp; hold your camment to delete it</string>
+
+    <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>
+    <string name="cmmsdk_setup_what_is_camment">It\'s like SMS group messaging but with mini videos (camments) on top of the show you are now watching</string>
+    <string name="cmmsdk_setup_sounds_fun">Sounds fun</string>
+    <string name="cmmsdk_setup_maybe_later">Maybe later</string>
+
+    <string name="cmmsdk_camment_actions_delete_camment">Delete camment</string>
+
 </resources>

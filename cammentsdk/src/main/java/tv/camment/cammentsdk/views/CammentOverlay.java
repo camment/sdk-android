@@ -2,24 +2,27 @@ package tv.camment.cammentsdk.views;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.camment.clientsdk.model.Camment;
-import com.camment.clientsdk.model.CammentList;
+import com.camment.clientsdk.model.Usergroup;
+import com.github.florent37.androidnosql.Listener;
+import com.github.florent37.androidnosql.NoSql;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -33,15 +36,27 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.camera.RecordingHandler;
+import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
+import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.utils.NoSqlHelper;
 
 
-public class CammentOverlay extends RelativeLayout implements CammentsAdapter.ActionListener, RecordingButton.ActionsListener, PermissionHelper.PermissionsListener {
+public class CammentOverlay extends RelativeLayout
+        implements
+        CammentsAdapter.ActionListener,
+        RecordingButton.ActionsListener,
+        PermissionHelper.PermissionsListener {
+
+    private static final String ARG_SUPER_STATE = "arg_super_state";
+    private static final String ARG_ACTIVE_GROUP_UUID = "arg_active_group";
 
     private static final int THRESHOLD = 100;
 
@@ -62,7 +77,10 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
     private ExtractorMediaSource videoSource;
     private DefaultDataSourceFactory dataSourceFactory;
     private DefaultExtractorsFactory extractorsFactory;
-    private boolean recordingEnabled;
+
+    private RecordingHandler recordingHandler;
+
+    private String activeGroupUuid;
 
     private enum Mode {
         GOING_BACK,
@@ -96,6 +114,7 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
     }
 
     public void init(Context context) {
+        Log.d("OVERLAY", "init");
         View.inflate(context, R.layout.cmmsdk_camment_overlay, this);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -113,6 +132,49 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
             PermissionHelper.getInstance().initPermissionHelper((Activity) getContext());
         }
         PermissionHelper.getInstance().setListener(this);
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Log.d("OVERLAY", "onSaveInstanceState");
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARG_SUPER_STATE, super.onSaveInstanceState());
+        final Usergroup usergroup = NoSqlHelper.getActiveGroup();
+        bundle.putString(ARG_ACTIVE_GROUP_UUID, usergroup.getUuid());
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        Log.d("OVERLAY", "onRestoreInstanceState");
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            activeGroupUuid = bundle.getString(ARG_ACTIVE_GROUP_UUID);
+            state = bundle.getParcelable(ARG_SUPER_STATE);
+        }
+        super.onRestoreInstanceState(state);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        Log.d("OVERLAY", "onAttachedToWindow");
+
+        if (TextUtils.isEmpty(activeGroupUuid)) {
+            final Usergroup usergroup = NoSqlHelper.getActiveGroup();
+            if (TextUtils.isEmpty(usergroup.getUuid())) {
+                ApiManager.getInstance().getGroupApi().createEmptyUsergroup();
+            } else {
+                ApiManager.getInstance().getCammentApi().getUserGroupCamments(adapter);
+            }
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.d("OVERLAY", "onDetachedFromWindow");
     }
 
     @Override
@@ -238,17 +300,23 @@ public class CammentOverlay extends RelativeLayout implements CammentsAdapter.Ac
 
     @Override
     public void onRecordingStop() {
-
+        if (recordingHandler != null) {
+            recordingHandler.stopRecording();
+        }
     }
 
     @Override
     public void enableRecording() {
         //TODO do real recording here
+        if (recordingHandler == null) {
+            recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
+        }
+        recordingHandler.startRecording();
     }
 
     @Override
     public void disableRecording() {
-
+        //TODO this may not be needed
     }
 
 }

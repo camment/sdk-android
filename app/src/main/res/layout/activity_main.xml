@@ -6,6 +6,7 @@
     tools:context="tv.camment.cammentdemo.MainActivity">
 
     <tv.camment.cammentsdk.views.CammentOverlay
+        android:id="@+id/cammentOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -26,7 +26,7 @@ public class GroupApi extends CammentAsyncClient {
     }
 
     public void createEmptyUsergroup() {
-        submitTask(new Callable<Usergroup>() {
+        submitBgTask(new Callable<Usergroup>() {
             @Override
             public Usergroup call() throws Exception {
                 return devcammentClient.usergroupsPost();

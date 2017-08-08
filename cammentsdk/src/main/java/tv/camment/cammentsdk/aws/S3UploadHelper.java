@@ -3,6 +3,7 @@ package tv.camment.cammentsdk.aws;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
@@ -89,12 +90,6 @@ public class S3UploadHelper extends CammentAsyncClient {
                     if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
                         ApiManager.getInstance().getCammentApi().createUserGroupCamment(camment);
                     }
-                } else if (state == TransferState.FAILED) {
-                    //retry once
-                    //TODO check if sufficient on retry
-                    Log.d("onStateChanged", "retry");
-                    final Camment camment = NoSqlHelper.getCammentTransfer(id);
-                    uploadCammentFile(camment);
                 }
             }
 
@@ -106,6 +101,12 @@ public class S3UploadHelper extends CammentAsyncClient {
             @Override
             public void onError(int id, Exception ex) {
                 Log.e("onError", "transfer", ex);
+                if (ex instanceof AmazonClientException) {
+                    //TODO check also ex.getMessage() More data read (4793) than expected (3225)?
+                    Log.d("onError", "retry");
+                    final Camment camment = NoSqlHelper.getCammentTransfer(id);
+                    uploadCammentFile(camment);
+                }
             }
         };
     }

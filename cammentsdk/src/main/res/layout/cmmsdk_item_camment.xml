@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tv.camment.cammentsdk.views.RoundedFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<tv.camment.cammentsdk.views.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/iv_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+    android:layout_height="wrap_content">
 
     <tv.camment.cammentsdk.views.SquareTextureView
         android:id="@+id/texture_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp" />
 
-</tv.camment.cammentsdk.views.RoundedFrameLayout>
+    <tv.camment.cammentsdk.views.SquareImageView
+        android:id="@+id/iv_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/cmmsdk_rounded_inside_corners" />
+
+</tv.camment.cammentsdk.views.SquareFrameLayout>

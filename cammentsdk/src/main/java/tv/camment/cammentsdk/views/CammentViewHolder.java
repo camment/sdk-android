@@ -1,6 +1,8 @@
 package tv.camment.cammentsdk.views;
 
+import android.graphics.SurfaceTexture;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,10 +39,15 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 if (camment != null && actionListener != null) {
+                    changeThumbnailVisibility();
                     actionListener.onCammentClick(camment, textureView);
                 }
             }
         });
+    }
+
+    private void changeThumbnailVisibility() {
+        ivThumbnail.setVisibility(ivThumbnail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
     public void bindData(Camment camment) {

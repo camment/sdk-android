@@ -16,6 +16,7 @@ public class CameraHandler extends Handler {
     }
 
     public void startPreview(final int width, final int height) {
+        Log.d("CAMERA", "start preview");
         sendMessage(obtainMessage(MSG_PREVIEW_START, width, height));
     }
 
@@ -24,6 +25,7 @@ public class CameraHandler extends Handler {
      * @param needWait need to wait for stopping camera preview
      */
     public void stopPreview(final boolean needWait) {
+        Log.d("CAMERA", "stop preview");
         synchronized (this) {
             sendEmptyMessage(MSG_PREVIEW_STOP);
             if (needWait && mThread.isRunning()) {

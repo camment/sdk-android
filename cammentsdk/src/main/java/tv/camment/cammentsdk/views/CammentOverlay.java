@@ -1,8 +1,12 @@
 package tv.camment.cammentsdk.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,35 +21,38 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.camment.clientsdk.model.Camment;
 import com.camment.clientsdk.model.Usergroup;
-import com.github.florent37.androidnosql.Listener;
-import com.github.florent37.androidnosql.NoSql;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.List;
 import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.camera.RecordingHandler;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.NoSqlHelper;
 
 
@@ -67,6 +74,7 @@ public class CammentOverlay extends RelativeLayout
 
     private ViewGroup parentViewGroup;
 
+    private FrameLayout flCamera;
     private CameraGLView cameraGLView;
     private RecyclerView rvCamments;
     private RecordingButton ibRecord;
@@ -179,7 +187,9 @@ public class CammentOverlay extends RelativeLayout
 
     @Override
     protected void onFinishInflate() {
-        cameraGLView = findViewById(R.id.camera_view);
+        flCamera = findViewById(R.id.fl_camera);
+
+        //cameraGLView = findViewById(R.id.camera_view);
         rvCamments = findViewById(R.id.rv_camments);
         ibRecord = findViewById(R.id.ib_record);
 
@@ -195,9 +205,72 @@ public class CammentOverlay extends RelativeLayout
 
     @Override
     public void onCammentClick(Camment camment, TextureView textureView) {
-        player.setVideoTextureView(textureView);
+        player.addListener(new ExoPlayer.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+                Log.d("onLoadingChanged", "isLoading: " + isLoading);
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                Log.d("onPlayerStateChanged", "playWhenReady: " + playWhenReady);
+                Log.d("onPlayerStateChanged", "playbackState: " + playbackState);
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                Log.e("onPlayerError", "error", error);
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
+
+            }
+
+            @Override
+            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+            }
+        });
+
+        //applyMatrix(textureView, 320, 320, 0);
         videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
         player.prepare(videoSource);
+
+        player.setVideoTextureView(textureView);
+    }
+
+    public static void applyMatrix(TextureView textureView, int videoWidth, int videoHeight,
+                                   int requiredRotation) {
+        int pivotPoint = textureView.getWidth() / 2;
+        float ratio = (float) videoWidth / videoHeight;
+        float scaleX;
+        float scaleY;
+
+        if (requiredRotation > -1) {
+            scaleX = ratio > 1 ? ratio : 1;
+            scaleY = ratio > 1 ? 1 : 1f / ratio;
+        } else {
+            scaleX = ratio > 1 ? 1 : 1f / ratio;
+            scaleY = ratio > 1 ? ratio : 1;
+        }
+
+        Matrix matrix = new Matrix();
+        matrix.setScale(scaleX, scaleY, pivotPoint, pivotPoint);
+        if (requiredRotation > -1) {
+            matrix.postRotate(requiredRotation, pivotPoint, pivotPoint);
+        }
+        textureView.setTransform(matrix);
     }
 
     public void setParentViewGroup(ViewGroup parentViewGroup) {
@@ -303,15 +376,62 @@ public class CammentOverlay extends RelativeLayout
         if (recordingHandler != null) {
             recordingHandler.stopRecording();
         }
+
+        cameraGLView.onPause();
+        flCamera.setVisibility(GONE);
     }
 
     @Override
     public void enableRecording() {
         //TODO do real recording here
-        if (recordingHandler == null) {
-            recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
+
+
+        if (cameraGLView == null) {
+            cameraGLView = new CameraGLView(getContext());
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            int dp2 = CommonUtils.dpToPx(getContext(), 2);
+            params.setMargins(dp2, dp2, dp2, dp2);
+            flCamera.addView(cameraGLView, 0, params);
+        } else {
+            cameraGLView.onResume();
         }
-        recordingHandler.startRecording();
+
+        flCamera.setVisibility(VISIBLE);
+        flCamera.setPivotX(0);
+        flCamera.setPivotY(0);
+        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(flCamera, "scaleX", 0.0f, 1.0f);
+        ObjectAnimator yAnimator = ObjectAnimator.ofFloat(flCamera, "scaleY", 0.0f, 1.0f);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(xAnimator, yAnimator);
+        set.setDuration(500);
+        set.start();
+
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (recordingHandler == null) {
+                    recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
+                }
+                recordingHandler.startRecording();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
     }
 
     @Override

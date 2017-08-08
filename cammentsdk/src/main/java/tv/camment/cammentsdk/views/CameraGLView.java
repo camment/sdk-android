@@ -40,6 +40,7 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
     }
 
     private void init() {
+        setZOrderMediaOverlay(true);
         setEGLContextClientVersion(2); //GLES 2.0
         setRenderer(surfaceRenderer);
     }
@@ -61,6 +62,7 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
     }
 
     public synchronized void startPreview(int width, int height) {
+        Log.d("CAMERA", "startPreview");
         if (cameraHandler == null) {
             final CameraThread cameraThread = new CameraThread(this);
             cameraThread.start();

@@ -7,12 +7,13 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.StorageClass;
 import com.camment.clientsdk.model.Camment;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -27,6 +28,8 @@ import tv.camment.cammentsdk.utils.NoSqlHelper;
  */
 
 public class S3UploadHelper extends CammentAsyncClient {
+
+    private final String KEY_FORMAT = "uploads/%s.mp4";
 
     private final TransferUtility transferUtility;
 
@@ -43,7 +46,15 @@ public class S3UploadHelper extends CammentAsyncClient {
             public Object call() throws Exception {
                 Log.d("Camment to upload", camment.getUuid() + " - " + camment.getUrl());
 
-                transferObserver = transferUtility.upload(SDKConfig.BUCKET_ID, camment.getUuid(), new File(camment.getUrl()));
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentType("video/mp4");
+                metadata.setHeader(Headers.STORAGE_CLASS, StorageClass.StandardInfrequentAccess);
+
+                transferObserver = transferUtility.upload(SDKConfig.BUCKET_ID,
+                        String.format(KEY_FORMAT, camment.getUuid()),
+                        new File(camment.getUrl()),
+                        metadata,
+                        CannedAccessControlList.PublicRead);
 
                 NoSqlHelper.setCammentTransfer(transferObserver.getId(), camment);
 

@@ -1,8 +1,6 @@
 package tv.camment.cammentsdk.views;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +20,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.camment.clientsdk.model.Camment;
@@ -52,6 +51,7 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.NoSqlHelper;
 
@@ -76,7 +76,7 @@ public class CammentOverlay extends RelativeLayout
 
     private FrameLayout flCamera;
     private CameraGLView cameraGLView;
-    private RecyclerView rvCamments;
+    private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
 
     private CammentsAdapter adapter;
@@ -89,6 +89,7 @@ public class CammentOverlay extends RelativeLayout
     private RecordingHandler recordingHandler;
 
     private String activeGroupUuid;
+    private ExoPlayer.EventListener exoEventListener;
 
     private enum Mode {
         GOING_BACK,
@@ -123,6 +124,7 @@ public class CammentOverlay extends RelativeLayout
 
     public void init(Context context) {
         Log.d("OVERLAY", "init");
+        //TODO check xml for landscape layout
         View.inflate(context, R.layout.cmmsdk_camment_overlay, this);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -189,7 +191,6 @@ public class CammentOverlay extends RelativeLayout
     protected void onFinishInflate() {
         flCamera = findViewById(R.id.fl_camera);
 
-        //cameraGLView = findViewById(R.id.camera_view);
         rvCamments = findViewById(R.id.rv_camments);
         ibRecord = findViewById(R.id.ib_record);
 
@@ -204,8 +205,21 @@ public class CammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onCammentClick(Camment camment, TextureView textureView) {
-        player.addListener(new ExoPlayer.EventListener() {
+    public void onCammentClick(Camment camment, TextureView textureView, ImageView ivThumbnail) {
+        player.setVideoTextureView(textureView);
+
+        if (exoEventListener != null) {
+            player.removeListener(exoEventListener);
+        }
+        exoEventListener = getEventListener(ivThumbnail);
+        player.addListener(exoEventListener);
+
+        videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
+        player.prepare(videoSource);
+    }
+
+    private SimpleExoPlayer.EventListener getEventListener(final ImageView ivThumbnail) {
+        return new ExoPlayer.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest) {
 
@@ -218,13 +232,16 @@ public class CammentOverlay extends RelativeLayout
 
             @Override
             public void onLoadingChanged(boolean isLoading) {
-                Log.d("onLoadingChanged", "isLoading: " + isLoading);
+                ivThumbnail.setVisibility(isLoading ? VISIBLE : GONE);
             }
 
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                Log.d("onPlayerStateChanged", "playWhenReady: " + playWhenReady);
-                Log.d("onPlayerStateChanged", "playbackState: " + playbackState);
+                switch (playbackState) {
+                    case ExoPlayer.STATE_ENDED:
+                        ivThumbnail.setVisibility(VISIBLE);
+                        break;
+                }
             }
 
             @Override
@@ -241,13 +258,7 @@ public class CammentOverlay extends RelativeLayout
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
 
             }
-        });
-
-        //applyMatrix(textureView, 320, 320, 0);
-        videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
-        player.prepare(videoSource);
-
-        player.setVideoTextureView(textureView);
+        };
     }
 
     public static void applyMatrix(TextureView textureView, int videoWidth, int videoHeight,
@@ -342,10 +353,16 @@ public class CammentOverlay extends RelativeLayout
                         if (ibRecord != null) {
                             ibRecord.show();
                         }
+                        if (rvCamments != null) {
+                            rvCamments.show();
+                        }
                         break;
                     case HIDE:
                         if (ibRecord != null) {
                             ibRecord.hide();
+                        }
+                        if (rvCamments != null) {
+                            rvCamments.hide();
                         }
                         break;
                 }
@@ -383,56 +400,43 @@ public class CammentOverlay extends RelativeLayout
 
     @Override
     public void enableRecording() {
-        //TODO do real recording here
-
-
         if (cameraGLView == null) {
             cameraGLView = new CameraGLView(getContext());
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            int dp2 = CommonUtils.dpToPx(getContext(), 2);
+            final int dp2 = CommonUtils.dpToPx(getContext(), 2);
             params.setMargins(dp2, dp2, dp2, dp2);
             flCamera.addView(cameraGLView, 0, params);
         } else {
             cameraGLView.onResume();
         }
 
-        flCamera.setVisibility(VISIBLE);
-        flCamera.setPivotX(0);
-        flCamera.setPivotY(0);
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(flCamera, "scaleX", 0.0f, 1.0f);
-        ObjectAnimator yAnimator = ObjectAnimator.ofFloat(flCamera, "scaleY", 0.0f, 1.0f);
-
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(xAnimator, yAnimator);
-        set.setDuration(500);
-        set.start();
-
-        set.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                if (recordingHandler == null) {
-                    recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
-                }
-                recordingHandler.startRecording();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-
+        AnimationUtils.animateCameraView(flCamera, cameraViewAnimatorListener);
     }
+
+    private Animator.AnimatorListener cameraViewAnimatorListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animator) {
+            if (recordingHandler == null) {
+                recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
+            }
+            recordingHandler.startRecording();
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
+        }
+    };
 
     @Override
     public void disableRecording() {

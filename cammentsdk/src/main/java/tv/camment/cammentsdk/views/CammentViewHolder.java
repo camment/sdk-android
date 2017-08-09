@@ -1,22 +1,16 @@
 package tv.camment.cammentsdk.views;
 
-import android.graphics.SurfaceTexture;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.amazonaws.auth.AWS4Signer;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
-import com.bumptech.glide.request.Request;
 import com.camment.clientsdk.model.Camment;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import tv.camment.cammentsdk.R;
-import tv.camment.cammentsdk.aws.AWSManager;
 
 
 public class CammentViewHolder extends RecyclerView.ViewHolder {
@@ -27,10 +21,13 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivThumbnail;
     private TextureView textureView;
 
-    public CammentViewHolder(View itemView, final CammentsAdapter.ActionListener actionListener) {
+    public CammentViewHolder(final View itemView, final CammentsAdapter.ActionListener actionListener) {
         super(itemView);
 
         this.actionListener = actionListener;
+
+        itemView.setPivotX(0);
+        itemView.setPivotY(0);
 
         ivThumbnail = itemView.findViewById(R.id.iv_thumbnail);
         textureView = itemView.findViewById(R.id.texture_view);
@@ -39,15 +36,27 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 if (camment != null && actionListener != null) {
-                    changeThumbnailVisibility();
-                    actionListener.onCammentClick(camment, textureView);
+                    setItemViewScale(getItemViewScale() == 0.5f ? 1.0f : 0.5f);
+
+                    actionListener.onCammentClick(camment, textureView, ivThumbnail);
                 }
             }
         });
+
+        setItemViewScale(0.5f);
     }
 
-    private void changeThumbnailVisibility() {
-        ivThumbnail.setVisibility(ivThumbnail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    private void setItemViewScale(float scale) {
+        if (itemView instanceof SquareFrameLayout) {
+            ((SquareFrameLayout) itemView).setScale(scale);
+        }
+    }
+
+    private float getItemViewScale() {
+        if (itemView instanceof SquareFrameLayout) {
+            return ((SquareFrameLayout) itemView).getScale();
+        }
+        return 1.0f;
     }
 
     public void bindData(Camment camment) {

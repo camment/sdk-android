@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.camment.clientsdk.model.Camment;
 import com.camment.clientsdk.model.CammentList;
@@ -99,7 +100,8 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
 
     interface ActionListener {
 
-        void onCammentClick(Camment camment, TextureView textureView);
+        void onCammentClick(Camment camment, TextureView textureView, ImageView ivThumbnail);
+
 
     }
 

@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tv.camment.cammentsdk.views.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="2dp">
 
     <tv.camment.cammentsdk.views.SquareTextureView
         android:id="@+id/texture_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="2dp" />
 
     <tv.camment.cammentsdk.views.SquareImageView
         android:id="@+id/iv_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="2dp"
         android:scaleType="centerCrop" />
 
     <View
+        android:id="@+id/v_border"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/cmmsdk_rounded_inside_corners" />

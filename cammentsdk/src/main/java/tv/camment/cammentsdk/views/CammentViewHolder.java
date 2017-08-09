@@ -1,5 +1,8 @@
 package tv.camment.cammentsdk.views;
 
+import android.content.DialogInterface;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.TextureView;
@@ -40,6 +43,16 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
 
                     actionListener.onCammentClick(camment, textureView, ivThumbnail);
                 }
+            }
+        });
+
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                CammentBottomSheetDialog dialog = new CammentBottomSheetDialog(itemView.getContext());
+                dialog.setCamment(camment);
+                dialog.show();
+                return true;
             }
         });
 

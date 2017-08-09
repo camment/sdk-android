@@ -28,6 +28,7 @@
     <string name="cmmsdk_setup_sounds_fun">Sounds fun</string>
     <string name="cmmsdk_setup_maybe_later">Maybe later</string>
 
+    <string name="cmmsdk_camment_actions_title">Choose action</string>
     <string name="cmmsdk_camment_actions_delete_camment">Delete camment</string>
 
 </resources>

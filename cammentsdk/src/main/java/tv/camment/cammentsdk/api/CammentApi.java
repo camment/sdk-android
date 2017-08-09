@@ -31,7 +31,7 @@ public class CammentApi extends CammentAsyncClient {
     }
 
     public void createUserGroupCamment(final Camment camment) {
-        submitTask(new Callable<Camment>() {
+        submitBgTask(new Callable<Camment>() {
             @Override
             public Camment call() throws Exception {
                 CammentInRequest cammentInRequest = new CammentInRequest();
@@ -94,4 +94,27 @@ public class CammentApi extends CammentAsyncClient {
 
     }
 
+    public void deleteUserGroupCamment(final Camment camment) {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                devcammentClient.usergroupsGroupUuidCammentsCammentUuidDelete(camment.getUuid(), camment.getUserGroupUuid());
+                return new Object();
+            }
+        }, deleteUserGroupCammentCallback());
+    }
+
+    private CammentCallback<Object> deleteUserGroupCammentCallback() {
+        return new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("onSuccess", "deleteUserGroupCamment");
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "deleteUserGroupCamment", exception);
+            }
+        };
+    }
 }

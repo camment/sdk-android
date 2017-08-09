@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
@@ -68,7 +69,7 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
             cameraThread.start();
             cameraHandler = cameraThread.getHandler();
         }
-        cameraHandler.startPreview(SDKConfig.CAMMENT_SIZE, SDKConfig.CAMMENT_SIZE);
+        cameraHandler.startPreview(width, height);
     }
 
     @Override
@@ -131,8 +132,15 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int size = MeasureSpec.getSize(widthMeasureSpec);
+        Log.d("onMeasure", "cameraGlView " + size);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        Log.d("onDraw", "cameraGlView " + canvas.getWidth());
+        super.onDraw(canvas);
     }
 
     public void setVideoSize(int width, int height) {
@@ -162,4 +170,5 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
     public void setCameraRotation(int cameraRotation) {
         this.cameraRotation = cameraRotation;
     }
+
 }

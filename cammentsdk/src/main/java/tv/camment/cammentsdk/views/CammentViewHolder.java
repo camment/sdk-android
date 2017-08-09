@@ -1,13 +1,8 @@
 package tv.camment.cammentsdk.views;
 
-import android.content.DialogInterface;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -61,13 +56,13 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
 
     private void setItemViewScale(float scale) {
         if (itemView instanceof SquareFrameLayout) {
-            ((SquareFrameLayout) itemView).setScale(scale);
+            ((SquareFrameLayout) itemView).setCustomScale(scale);
         }
     }
 
     private float getItemViewScale() {
         if (itemView instanceof SquareFrameLayout) {
-            return ((SquareFrameLayout) itemView).getScale();
+            return ((SquareFrameLayout) itemView).getCustomScale();
         }
         return 1.0f;
     }

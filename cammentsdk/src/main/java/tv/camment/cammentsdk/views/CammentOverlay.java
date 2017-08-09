@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -74,7 +73,7 @@ public class CammentOverlay extends RelativeLayout
 
     private ViewGroup parentViewGroup;
 
-    private FrameLayout flCamera;
+    private SquareFrameLayout flCamera;
     private CameraGLView cameraGLView;
     private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
@@ -394,29 +393,52 @@ public class CammentOverlay extends RelativeLayout
             recordingHandler.stopRecording();
         }
 
-        cameraGLView.onPause();
-        flCamera.setVisibility(GONE);
+        AnimationUtils.animateDisappearCameraView(flCamera, cameraGLView, cameraViewDisappearAnimatorListener);
     }
+
+    private Animator.AnimatorListener cameraViewDisappearAnimatorListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animator) {
+            cameraGLView.onPause();
+            flCamera.setVisibility(GONE);
+            flCamera.removeView(cameraGLView);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animator) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+
+        }
+    };
 
     @Override
     public void enableRecording() {
-        if (cameraGLView == null) {
-            cameraGLView = new CameraGLView(getContext());
+        if (flCamera.getChildCount() < 2) {
+            if (cameraGLView == null) {
+                cameraGLView = new CameraGLView(getContext());
+            }
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             final int dp2 = CommonUtils.dpToPx(getContext(), 2);
             params.setMargins(dp2, dp2, dp2, dp2);
             flCamera.addView(cameraGLView, 0, params);
-        } else {
-            cameraGLView.onResume();
         }
 
-        AnimationUtils.animateCameraView(flCamera, cameraViewAnimatorListener);
+        AnimationUtils.animateAppearCameraView(flCamera, cameraGLView, cameraViewAppearAnimatorListener);
     }
 
-    private Animator.AnimatorListener cameraViewAnimatorListener = new Animator.AnimatorListener() {
+    private Animator.AnimatorListener cameraViewAppearAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animator) {
-
+            flCamera.setVisibility(VISIBLE);
         }
 
         @Override

@@ -56,8 +56,7 @@ public class CameraSurfaceRenderer implements
         surfaceTexture = new SurfaceTexture(hTex);
         surfaceTexture.setOnFrameAvailableListener(this);
 
-        //clear screen with yellow color so that you can see rendering rectangle
-        GLES20.glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         final CameraGLView cameraGLView = cameraGLViewWeakRef.get();
         if (cameraGLView != null) {

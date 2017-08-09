@@ -3,7 +3,13 @@ package tv.camment.cammentsdk.utils;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
+
+import tv.camment.cammentsdk.views.CameraGLView;
+import tv.camment.cammentsdk.views.SquareFrameLayout;
 
 import static android.view.View.VISIBLE;
 
@@ -13,17 +19,39 @@ import static android.view.View.VISIBLE;
 
 public class AnimationUtils {
 
-    public static void animateCameraView(FrameLayout flCamera, Animator.AnimatorListener animatorListener) {
-        flCamera.setVisibility(VISIBLE);
+    public static void animateAppearCameraView(final SquareFrameLayout flCamera,
+                                               final CameraGLView cameraGLView,
+                                               Animator.AnimatorListener animatorListener) {
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
-        ObjectAnimator xAnimator = ObjectAnimator.ofFloat(flCamera, "scaleX", 0.0f, 1.0f);
-        ObjectAnimator yAnimator = ObjectAnimator.ofFloat(flCamera, "scaleY", 0.0f, 1.0f);
 
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(xAnimator, yAnimator);
-        set.setDuration(500);
-        set.addListener(animatorListener);
-        set.start();
+        ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        animator.setDuration(500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                flCamera.setCustomScale((Float) valueAnimator.getAnimatedValue());
+            }
+        });
+        animator.addListener(animatorListener);
+        animator.start();
+    }
+
+    public static void animateDisappearCameraView(final SquareFrameLayout flCamera,
+                                                  final CameraGLView cameraGLView,
+                                                  Animator.AnimatorListener animatorListener) {
+        flCamera.setPivotX(0);
+        flCamera.setPivotY(0);
+
+        ValueAnimator animator = ValueAnimator.ofFloat(1.0f, 0.0f);
+        animator.setDuration(500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                flCamera.setCustomScale((Float) valueAnimator.getAnimatedValue());
+            }
+        });
+        animator.addListener(animatorListener);
+        animator.start();
     }
 }

@@ -95,7 +95,8 @@ public class RecordingHandler extends CammentAsyncClient {
                 if (!TextUtils.isEmpty(cammentUuid)) {
                     final Camment camment = NoSqlHelper.getCammentUpload(cammentUuid);
                     if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
-                        AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                        //TODO uncomment
+                        //AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
                     }
                 }
             }

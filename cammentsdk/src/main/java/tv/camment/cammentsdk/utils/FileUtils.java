@@ -9,9 +9,8 @@ import tv.camment.cammentsdk.CammentSDK;
 
 public class FileUtils {
 
-    private static final String ROOT_DIR = CammentSDK.getInstance().getApplicationContext().getExternalFilesDir(null)
-            + File.separator;
-    private static final String UPLOADS_DIR = ROOT_DIR + "uploads" + File.separator;
+    private static final String ROOT_DIR = CammentSDK.getInstance().getApplicationContext().getFilesDir().getPath();
+    private static final String UPLOADS_DIR = ROOT_DIR + File.separator + "uploads" + File.separator;
 
 
     private static FileUtils instance = new FileUtils();
@@ -33,6 +32,10 @@ public class FileUtils {
             return new File(dir, cammentUuid + ".mp4");
         }
         return null;
+    }
+
+    public String getRootDirectory() {
+        return ROOT_DIR;
     }
 
 }

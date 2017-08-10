@@ -373,12 +373,13 @@ public class CammentOverlay extends RelativeLayout
     @Override
     public void onPulledDown() {
         if (FacebookHelper.getInstance().isLoggedIn()) {
-            //TODO show friends
+            new FbFriendsBottomSheetDialog(getContext()).show();
         } else {
             //TODO check with fragment
             if (getContext() instanceof Activity) {
                 FacebookHelper.getInstance().logIn((Activity) getContext());
             }
+            //TODO show friends after successful login
         }
     }
 

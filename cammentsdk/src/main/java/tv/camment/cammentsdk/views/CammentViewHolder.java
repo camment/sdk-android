@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.camment.clientsdk.model.Camment;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 
 
@@ -73,7 +74,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
 
         this.camment = camment;
 
-        Glide.with(itemView.getContext()).load(camment.getThumbnail()).into(ivThumbnail);
+        Glide.with(CammentSDK.getInstance().getApplicationContext()).load(camment.getThumbnail()).into(ivThumbnail);
     }
 
 }

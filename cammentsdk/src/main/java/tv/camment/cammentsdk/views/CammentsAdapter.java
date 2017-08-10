@@ -102,7 +102,6 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
 
         void onCammentClick(Camment camment, TextureView textureView, ImageView ivThumbnail);
 
-
     }
 
 }

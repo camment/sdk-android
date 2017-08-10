@@ -5,18 +5,25 @@ import android.text.TextUtils;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.iot.AWSIotClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.camment.clientsdk.DevcammentClient;
 import com.facebook.AccessToken;
 
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.SDKConfig;
+import tv.camment.cammentsdk.utils.FileUtils;
 
 public final class AWSManager {
 
@@ -51,6 +58,10 @@ public final class AWSManager {
         return credentialsProvider;
     }
 
+    public String getUserIdentityId() {
+        return getCognitoCachingCredentialsProvider().getIdentityId();
+    }
+
     public ApiClientFactory getApiClientFactory() {
         ApiClientFactory apiClientFactory = new ApiClientFactory();
         apiClientFactory.credentialsProvider(getCognitoCachingCredentialsProvider());
@@ -76,6 +87,26 @@ public final class AWSManager {
 
     public S3UploadHelper getS3UploadHelper() {
         return new S3UploadHelper(Executors.newSingleThreadExecutor(), getTransferUtility());
+    }
+
+    public AWSIotMqttManager getAWSIotMqttManager() {
+        return new AWSIotMqttManager(getUserIdentityId(), SDKConfig.IOT_ENDPOINT);
+    }
+
+    public AWSIotClient getAWSIotClient() {
+        AWSIotClient awsIotClient = new AWSIotClient(getCognitoCachingCredentialsProvider());
+        awsIotClient.setRegion(Region.getRegion(Regions.EU_CENTRAL_1));
+        return awsIotClient;
+    }
+
+    public KeyStore getClientKeyStore() {
+        return AWSIotKeystoreHelper.getIotKeystore(SDKConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
+                SDKConfig.CERT_KEYSTORE_NAME, SDKConfig.CERT_KEYSTORE_PWD);
+    }
+
+    public IoTHelper getIoTHelper(IoTHelper.IoTMessageArrivedListener ioTMessageArrivedListener) {
+        return new IoTHelper(Executors.newSingleThreadExecutor(), getAWSIotMqttManager(),
+                getClientKeyStore(), ioTMessageArrivedListener);
     }
 
 }

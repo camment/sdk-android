@@ -68,27 +68,13 @@ public class UserApi extends CammentAsyncClient {
         };
     }
 
-    public void getFacebookFriends() {
+    public void getFacebookFriends(CammentCallback<FacebookFriendList> getFacebookFriendsCallback) {
         submitTask(new Callable<FacebookFriendList>() {
             @Override
             public FacebookFriendList call() throws Exception {
                 return devcammentClient.meFbFriendsGet(AccessToken.getCurrentAccessToken().getToken());
             }
-        }, getFacebookFriendsCallback());
-    }
-
-    private CammentCallback<FacebookFriendList> getFacebookFriendsCallback() {
-        return new CammentCallback<FacebookFriendList>() {
-            @Override
-            public void onSuccess(FacebookFriendList result) {
-                Log.d("onSuccess", "getFacebookFriends");
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("onException", "getFacebookFriends", exception);
-            }
-        };
+        }, getFacebookFriendsCallback);
     }
 
     private class FbUserInfo {

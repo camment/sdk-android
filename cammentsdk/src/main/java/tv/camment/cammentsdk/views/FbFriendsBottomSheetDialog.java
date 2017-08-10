@@ -1,65 +1,75 @@
 package tv.camment.cammentsdk.views;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.camment.clientsdk.model.FacebookFriendList;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
 
 public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
 
-    private TextView tvCancel;
-    private TextView tvDone;
+    private Button btnCancel;
+    private Button btnDone;
     private RecyclerView rvFriends;
     private FbFriendsAdapter adapter;
 
     public FbFriendsBottomSheetDialog(@NonNull Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public FbFriendsBottomSheetDialog(@NonNull Context context, @StyleRes int theme) {
         super(context, theme);
-        init();
+        init(context);
     }
 
     protected FbFriendsBottomSheetDialog(@NonNull Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
-        init();
+        init(context);
     }
 
-    private void init() {
+
+    private void init(Context context) {
+        if (context instanceof Activity) {
+            setOwnerActivity((Activity) context);
+        }
         setContentView(R.layout.cmmsdk_fb_friends_bottom_sheet);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
         setOnShowListener(this);
 
-        tvCancel = (TextView) findViewById(R.id.tv_cancel);
-        tvCancel.setOnClickListener(new View.OnClickListener() {
+        btnCancel = (Button) findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cancel();
             }
         });
 
-        tvDone = (TextView) findViewById(R.id.tv_done);
-        tvDone.setOnClickListener(new View.OnClickListener() {
+        btnDone = (Button) findViewById(R.id.btn_done);
+        btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ApiManager.getInstance().getInvitationApi().sendInvitation(adapter.getSelectedFacebookFriends(), sendInvitationCallback());
+                dismiss();
             }
         });
 
@@ -99,4 +109,29 @@ public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements Dia
             }
         }
     }
+
+    private CammentCallback<Object> sendInvitationCallback() {
+        return new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("onSuccess", "sendInvitation");
+                if (getOwnerActivity() instanceof AppCompatActivity) {
+                    BaseMessage baseMessage = new BaseMessage();
+                    baseMessage.type = MessageType.INVITATION_SENT;
+
+                    Fragment fragment = getOwnerActivity().getFragmentManager().findFragmentByTag(baseMessage.toString());
+                    if (fragment == null || !fragment.isAdded()) {
+                        CammentDialog cammentDialog = CammentDialog.createInstance(baseMessage);
+                        cammentDialog.show(((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager(), baseMessage.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "sendInvitation", exception);
+            }
+        };
+    }
+
 }

@@ -8,9 +8,7 @@ import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.iot.AWSIotClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.camment.clientsdk.DevcammentClient;
@@ -93,20 +91,14 @@ public final class AWSManager {
         return new AWSIotMqttManager(getUserIdentityId(), SDKConfig.IOT_ENDPOINT);
     }
 
-    public AWSIotClient getAWSIotClient() {
-        AWSIotClient awsIotClient = new AWSIotClient(getCognitoCachingCredentialsProvider());
-        awsIotClient.setRegion(Region.getRegion(Regions.EU_CENTRAL_1));
-        return awsIotClient;
-    }
-
     public KeyStore getClientKeyStore() {
         return AWSIotKeystoreHelper.getIotKeystore(SDKConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
                 SDKConfig.CERT_KEYSTORE_NAME, SDKConfig.CERT_KEYSTORE_PWD);
     }
 
     public IoTHelper getIoTHelper(IoTHelper.IoTMessageArrivedListener ioTMessageArrivedListener) {
-        return new IoTHelper(Executors.newSingleThreadExecutor(), getAWSIotMqttManager(),
-                getClientKeyStore(), ioTMessageArrivedListener);
+        return new IoTHelper(Executors.newSingleThreadExecutor(), getClientKeyStore(),
+                ioTMessageArrivedListener);
     }
 
 }

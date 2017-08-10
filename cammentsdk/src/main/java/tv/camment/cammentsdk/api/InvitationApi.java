@@ -4,9 +4,9 @@ import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
+import com.camment.clientsdk.model.FacebookFriend;
 import com.camment.clientsdk.model.UserInAddToGroupRequest;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -30,7 +30,7 @@ public class InvitationApi extends CammentAsyncClient {
         this.devcammentClient = devcammentClient;
     }
 
-    public void sendInvitation(final List<BigDecimal> fbUserIds) {
+    public void sendInvitation(final List<FacebookFriend> fbFriends, final CammentCallback<Object> sendInvitationCallback) {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -41,8 +41,8 @@ public class InvitationApi extends CammentAsyncClient {
                 userInAddToGroupRequest.setShowUuid(showUuid);
 
                 List<String> fbUserIdsStrings = new ArrayList<>();
-                for (BigDecimal bd : fbUserIds) {
-                    fbUserIdsStrings.add(String.valueOf(bd.longValue()));
+                for (FacebookFriend fbFriend : fbFriends) {
+                    fbUserIdsStrings.add(String.valueOf(fbFriend.getId().longValue()));
                 }
                 userInAddToGroupRequest.setUserFacebookIdList(fbUserIdsStrings);
 
@@ -50,23 +50,8 @@ public class InvitationApi extends CammentAsyncClient {
 
                 return new Object();
             }
-        }, sendInvitationCallback());
+        }, sendInvitationCallback);
     }
-
-    private CammentCallback<Object> sendInvitationCallback() {
-        return new CammentCallback<Object>() {
-            @Override
-            public void onSuccess(Object result) {
-                Log.d("onSuccess", "sendInvitation");
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("onException", "sendInvitation", exception);
-            }
-        };
-    }
-
 
     public void acceptInvitation(final InvitationMessage invitationMessage) {
         submitTask(new Callable<Object>() {

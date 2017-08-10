@@ -3,6 +3,7 @@ package tv.camment.cammentsdk.views;
 import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -47,6 +49,12 @@ import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.aws.IoTHelper;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
+import tv.camment.cammentsdk.aws.messages.CammentMessage;
+import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -59,7 +67,7 @@ public class CammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        PermissionHelper.PermissionsListener {
+        PermissionHelper.PermissionsListener, IoTHelper.IoTMessageArrivedListener, CammentDialog.ActionListener {
 
     private static final String ARG_SUPER_STATE = "arg_super_state";
     private static final String ARG_ACTIVE_GROUP_UUID = "arg_active_group";
@@ -89,6 +97,7 @@ public class CammentOverlay extends RelativeLayout
 
     private String activeGroupUuid;
     private ExoPlayer.EventListener exoEventListener;
+    private IoTHelper iotHelper;
 
     private enum Mode {
         GOING_BACK,
@@ -177,6 +186,12 @@ public class CammentOverlay extends RelativeLayout
             } else {
                 ApiManager.getInstance().getCammentApi().getUserGroupCamments(adapter);
             }
+        }
+
+        //TODO handle also elsewhere
+        if (FacebookHelper.getInstance().isLoggedIn()) {
+            iotHelper = AWSManager.getInstance().getIoTHelper(this);
+            iotHelper.connect();
         }
     }
 
@@ -464,6 +479,52 @@ public class CammentOverlay extends RelativeLayout
     @Override
     public void disableRecording() {
         //TODO this may not be needed
+    }
+
+    @Override
+    public void invitationMessageReceived(InvitationMessage message) {
+        //TODO check with fragment
+        if (getContext() instanceof AppCompatActivity) {
+            Fragment fragment = ((AppCompatActivity) getContext()).getFragmentManager().findFragmentByTag(message.toString());
+            if (fragment == null || !fragment.isAdded()) {
+                CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                cammentDialog.setInvitationListener(this);
+                cammentDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), message.toString());
+            }
+        }
+    }
+
+    @Override
+    public void newUserInGroupMessageReceived(NewUserInGroupMessage message) {
+        //TODO check with fragment
+        //TODO sometimes body is not filled only groupUuid is sent (issue or ok? check ios code)
+
+        if (getContext() instanceof AppCompatActivity) {
+            Fragment fragment = ((AppCompatActivity) getContext()).getFragmentManager().findFragmentByTag(message.toString());
+            if (fragment == null || !fragment.isAdded()) {
+                CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                cammentDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), message.toString());
+            }
+        }
+    }
+
+    @Override
+    public void newCammentMessage(CammentMessage message) {
+
+    }
+
+    @Override
+    public void cammentDeletedMessage(CammentMessage message) {
+
+    }
+
+    @Override
+    public void onPositiveButtonClick(BaseMessage baseMessage) {
+        switch (baseMessage.type) {
+            case INVITATION:
+
+                break;
+        }
     }
 
 }

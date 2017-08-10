@@ -54,7 +54,7 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
         View itemView;
         switch (viewType) {
             case CAMMENT:
-                itemView = inflater.inflate(R.layout.cmmsdk_item_camment, parent, false);
+                itemView = inflater.inflate(R.layout.cmmsdk_camment_item, parent, false);
                 return new CammentViewHolder(itemView, actionListener);
         }
         throw new IllegalArgumentException("unsupported viewholder type");

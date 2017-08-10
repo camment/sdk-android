@@ -20,6 +20,7 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
+import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 /**
  * Created by petrushka on 10/08/2017.
@@ -27,16 +28,14 @@ import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 
 public class IoTHelper extends CammentAsyncClient {
 
-    private final AWSIotMqttManager mqttManager;
+    private AWSIotMqttManager mqttManager;
     private final KeyStore clientKeyStore;
     private final IoTMessageArrivedListener ioTMessageArrivedListener;
 
     public IoTHelper(ExecutorService executorService,
-                     AWSIotMqttManager mqttManager,
                      KeyStore clientKeyStore,
                      IoTMessageArrivedListener ioTMessageArrivedListener) {
         super(executorService);
-        this.mqttManager = mqttManager;
         this.clientKeyStore = clientKeyStore;
         this.ioTMessageArrivedListener = ioTMessageArrivedListener;
     }
@@ -45,11 +44,17 @@ public class IoTHelper extends CammentAsyncClient {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                if (mqttManager == null) {
+                    mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
+                }
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override
                     public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
                         //TODO this should be ok just handled here
                         Log.d("iot connect", status.name());
+                        if (status == AWSIotMqttClientStatus.Connected) {
+                            subscribe();
+                        }
                     }
                 });
                 return new Object();
@@ -71,10 +76,13 @@ public class IoTHelper extends CammentAsyncClient {
         };
     }
 
-    public void subscribe() {
+    private void subscribe() {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                if (mqttManager == null) {
+                    mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
+                }
                 mqttManager.subscribeToTopic(SDKConfig.IOT_TOPIC, AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
                 return new Object();
             }
@@ -115,19 +123,19 @@ public class IoTHelper extends CammentAsyncClient {
                         switch (baseMessage.type) {
                             case INVITATION:
                                 baseMessage = new Gson().fromJson(message, InvitationMessage.class);
-                                sendMessage(baseMessage);
+                                handleMessage(baseMessage);
                                 break;
                             case NEW_USER_IN_GROUP:
                                 baseMessage = new Gson().fromJson(message, NewUserInGroupMessage.class);
-                                sendMessage(baseMessage);
+                                handleMessage(baseMessage);
                                 break;
                             case CAMMENT:
                                 baseMessage = new Gson().fromJson(message, CammentMessage.class);
-                                sendMessage(baseMessage);
+                                handleMessage(baseMessage);
                                 break;
                             case CAMMENT_DELETED:
                                 baseMessage = new Gson().fromJson(message, CammentMessage.class);
-                                sendMessage(baseMessage);
+                                handleMessage(baseMessage);
                                 break;
                         }
                     }
@@ -140,6 +148,9 @@ public class IoTHelper extends CammentAsyncClient {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                if (mqttManager == null) {
+                    mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
+                }
                 mqttManager.disconnect();
                 return new Object();
             }
@@ -160,16 +171,19 @@ public class IoTHelper extends CammentAsyncClient {
         };
     }
 
-    private void sendMessage(final BaseMessage message) {
+    private void handleMessage(final BaseMessage message) {
         if (ioTMessageArrivedListener == null)
             return;
 
+        //TODO check if for me also others - groupId?
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 switch (message.type) {
                     case INVITATION:
-                        ioTMessageArrivedListener.invitationMessageReceived((InvitationMessage) message);
+                        if (FacebookHelper.getInstance().isMessageForMe(((InvitationMessage) message).body.userFacebookId)) {
+                            ioTMessageArrivedListener.invitationMessageReceived((InvitationMessage) message);
+                        }
                         break;
                     case NEW_USER_IN_GROUP:
                         ioTMessageArrivedListener.newUserInGroupMessageReceived((NewUserInGroupMessage) message);

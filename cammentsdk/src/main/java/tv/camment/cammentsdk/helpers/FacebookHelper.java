@@ -13,7 +13,6 @@ import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 
 /**
@@ -65,6 +64,14 @@ public class FacebookHelper {
 
     public boolean isLoggedIn() {
         return AccessToken.getCurrentAccessToken() != null && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken());
+    }
+
+    public boolean isMessageForMe(String userId) {
+        if (isLoggedIn()
+                && !TextUtils.isEmpty(userId)) {
+            return userId.equals(AccessToken.getCurrentAccessToken().getUserId());
+        }
+        return false;
     }
 
     public CallbackManager getCallbackManager() {

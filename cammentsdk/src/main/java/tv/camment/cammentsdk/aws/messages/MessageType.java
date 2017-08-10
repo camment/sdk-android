@@ -8,6 +8,8 @@ public enum MessageType {
     @SerializedName("invitation")
     INVITATION,
 
+    INVITATION_SENT,
+
     @SerializedName("new-user-in-group")
     NEW_USER_IN_GROUP,
 

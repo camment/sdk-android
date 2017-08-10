@@ -16,6 +16,9 @@
     <string name="cmmsdk_user_entered_chat_title">%s entered your camment chat!</string>
     <string name="cmmsdk_user_entered_chat_desc">Maybe it would be polite to say hi with a camment?</string>
 
+    <string name="cmmsdk_user_invitation_sent_title">Done! We’ll let you know when your friend(s) arrive.</string>
+    <string name="cmmsdk_user_invitation_sent_desc">In the meanwhile, lay back and enjoy the show - or maybe you could make a welcome camment to your friend(s)</string>
+
     <string name="cmmsdk_help_tap_and_hold_to_record">Tap &amp; hold to record a mini video (camment)</string>
     <string name="cmmsdk_help_swipe_left_to_hide_camments">Swipe ← left anywhere to hide camments</string>
     <string name="cmmsdk_help_swipe_right_to_show_camments">Swipe → right to show camments</string>

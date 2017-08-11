@@ -38,4 +38,15 @@ public class FileUtils {
         return ROOT_DIR;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void deleteCammentFile(String uuid) {
+        String filePath = UPLOADS_DIR + uuid + ".mp4";
+
+        File file = new File(filePath);
+        if (file.isFile()) {
+            Log.d("File deleted", filePath);
+            file.delete();
+        }
+    }
+
 }

@@ -6,6 +6,9 @@ import android.database.Cursor;
 
 import com.camment.clientsdk.model.Camment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tv.camment.cammentsdk.CammentSDK;
 
 /**
@@ -35,7 +38,32 @@ public class CammentProvider {
         cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
         cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
 
-        CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.Camment.CONTENT_URI, cv);
+        CammentSDK.getInstance().getApplicationContext().getContentResolver()
+                .insert(DataContract.Camment.CONTENT_URI, cv);
+    }
+
+    public static void insertCamments(List<Camment> camments) {
+        if (camments == null || camments.size() == 0)
+            return;
+
+        List<ContentValues> values = new ArrayList<>();
+        ContentValues cv;
+
+        for (Camment camment : camments) {
+            cv = new ContentValues();
+
+            cv.put(DataContract.Camment.uuid, camment.getUuid());
+            cv.put(DataContract.Camment.url, camment.getUrl());
+            cv.put(DataContract.Camment.showUuid, camment.getShowUuid());
+            cv.put(DataContract.Camment.thumbnail, camment.getThumbnail());
+            cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
+            cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
+
+            values.add(cv);
+        }
+
+        CammentSDK.getInstance().getApplicationContext().getContentResolver()
+                .bulkInsert(DataContract.Camment.CONTENT_URI, values.toArray(new ContentValues[values.size()]));
     }
 
     public static void deleteCamments() {

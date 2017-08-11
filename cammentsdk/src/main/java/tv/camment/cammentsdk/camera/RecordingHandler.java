@@ -73,32 +73,43 @@ public class RecordingHandler extends CammentAsyncClient {
         };
     }
 
-    public void stopRecording() {
-        Log.d("RECORDING", "stopRecording");
+    public void stopRecording(boolean cancelled) {
+        Log.d("RECORDING", "stopRecording - check muxer ");
 
-        submitBgTask(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                String cammentUuid = null;
-                if (mediaMuxer != null) {
-                    mediaMuxer.stopRecording();
-                    cammentUuid = mediaMuxer.getCammentUuid();
-                    mediaMuxer = null;
+        if (mediaMuxer != null && mediaMuxer.isStarted()) {
+            Log.d("RECORDING", "stopRecording - cancelled " + cancelled);
+
+            submitBgTask(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    String cammentUuid = null;
+                    if (mediaMuxer != null && mediaMuxer.isStarted()) {
+                        mediaMuxer.stopRecording();
+                        cammentUuid = mediaMuxer.getCammentUuid();
+                        mediaMuxer = null;
+                    }
+                    return cammentUuid;
                 }
-                return cammentUuid;
-            }
-        }, stopRecordingCallback());
+            }, stopRecordingCallback(cancelled));
+        }
     }
 
-    private CammentCallback<String> stopRecordingCallback() {
+    private CammentCallback<String> stopRecordingCallback(final boolean cancelled) {
         return new CammentCallback<String>() {
             @Override
             public void onSuccess(String cammentUuid) {
                 Log.d("onSuccess", "stopRecording");
                 if (!TextUtils.isEmpty(cammentUuid)) {
                     final CammentUpload camment = CammentUploadProvider.getCammentUploadByUuid(cammentUuid);
-                    if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
-                        AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                    if (!cancelled) {
+                        if (camment != null
+                                && !TextUtils.isEmpty(camment.getUuid())) {
+                            //TODO uncomment
+                            //AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                        }
+                    } else {
+                        CammentUploadProvider.deleteCammentUploadByUuid(cammentUuid);
+                        FileUtils.getInstance().deleteCammentFile(cammentUuid);
                     }
                 }
             }

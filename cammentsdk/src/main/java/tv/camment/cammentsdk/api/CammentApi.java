@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 
 /**
@@ -73,8 +74,13 @@ public class CammentApi extends CammentAsyncClient {
             @Override
             public void onSuccess(CammentList cammentList) {
                 Log.d("onSuccess", "getUserGroupCamments");
-                if (cammentListListener != null) {
-                    cammentListListener.onCammentListRetrieved(cammentList);
+
+                if (cammentList != null) {
+                    CammentProvider.insertCamments(cammentList.getItems());
+
+                    if (cammentListListener != null) {
+                        cammentListListener.onCammentListRetrieved(cammentList);
+                    }
                 }
             }
 

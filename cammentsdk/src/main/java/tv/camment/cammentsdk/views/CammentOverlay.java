@@ -56,6 +56,7 @@ import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.camera.RecordingHandler;
+import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -404,9 +405,9 @@ public class CammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onRecordingStop() {
+    public void onRecordingStop(boolean cancelled) {
         if (recordingHandler != null) {
-            recordingHandler.stopRecording();
+            recordingHandler.stopRecording(cancelled);
         }
 
         AnimationUtils.animateDisappearCameraView(flCamera, cameraGLView, cameraViewDisappearAnimatorListener);
@@ -514,19 +515,26 @@ public class CammentOverlay extends RelativeLayout
 
     @Override
     public void newCammentMessage(CammentMessage message) {
+        Camment camment = new Camment();
+        camment.setUuid(message.body.uuid);
+        camment.setUserGroupUuid(message.body.userGroupUuid);
+        camment.setThumbnail(message.body.thumbnail);
+        camment.setUrl(message.body.url);
+        camment.setUserGroupUuid(message.body.userCognitoIdentityId);
 
+        CammentProvider.insertCamment(camment);
     }
 
     @Override
     public void cammentDeletedMessage(CammentMessage message) {
-
+        CammentProvider.deleteCammentByUuid(message.body.uuid);
     }
 
     @Override
     public void onPositiveButtonClick(BaseMessage baseMessage) {
         switch (baseMessage.type) {
             case INVITATION:
-
+                ApiManager.getInstance().getInvitationApi().acceptInvitation((InvitationMessage) baseMessage);
                 break;
         }
     }

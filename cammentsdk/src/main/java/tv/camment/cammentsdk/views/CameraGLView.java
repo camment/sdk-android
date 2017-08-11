@@ -129,20 +129,6 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int size = MeasureSpec.getSize(widthMeasureSpec);
-        Log.d("onMeasure", "cameraGlView " + size);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        Log.d("onDraw", "cameraGlView " + canvas.getWidth());
-        super.onDraw(canvas);
-    }
-
     public void setVideoSize(int width, int height) {
         if ((cameraRotation % 180) == 0) {
             videoWidth = width;

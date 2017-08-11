@@ -18,8 +18,11 @@ import tv.camment.cammentsdk.camera.gl_encoder.MediaAudioEncoder;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaMuxerWrapper;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
+import tv.camment.cammentsdk.data.CammentUploadProvider;
+import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.model.CammentUpload;
 import tv.camment.cammentsdk.utils.FileUtils;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
 
 /**
  * Created by petrushka on 07/08/2017.
@@ -93,10 +96,9 @@ public class RecordingHandler extends CammentAsyncClient {
             public void onSuccess(String cammentUuid) {
                 Log.d("onSuccess", "stopRecording");
                 if (!TextUtils.isEmpty(cammentUuid)) {
-                    final Camment camment = NoSqlHelper.getCammentUpload(cammentUuid);
+                    final CammentUpload camment = CammentUploadProvider.getCammentUploadByUuid(cammentUuid);
                     if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
-                        //TODO uncomment
-                        //AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                        AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
                     }
                 }
             }
@@ -109,18 +111,16 @@ public class RecordingHandler extends CammentAsyncClient {
     }
 
     private Camment getNewUploadCamment() {
-        final Usergroup usergroup = NoSqlHelper.getActiveGroup();
-        final String showUuid = NoSqlHelper.getCurrentShow().getUuid();
+        final Usergroup usergroup = UserGroupProvider.getUserGroup();
+        final String showUuid = ShowProvider.getShow().getUuid();
 
-        Camment camment = new Camment();
+        CammentUpload camment = new CammentUpload();
         camment.setUuid(UUID.randomUUID().toString());
         camment.setShowUuid(showUuid);
         camment.setUrl(FileUtils.getInstance().getUploadCammentFile(camment.getUuid()).toString());
-        camment.setThumbnail("");
-        camment.setUserCognitoIdentityId("");
         camment.setUserGroupUuid(usergroup.getUuid());
 
-        NoSqlHelper.setCammentUpload(camment);
+        CammentUploadProvider.insertCammentUpload(camment);
 
         return camment;
     }

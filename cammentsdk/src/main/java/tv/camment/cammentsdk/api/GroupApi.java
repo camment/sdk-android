@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
+import tv.camment.cammentsdk.data.UserGroupProvider;
 
 /**
  * Created by petrushka on 03/08/2017.
@@ -39,7 +39,7 @@ public class GroupApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Usergroup usergroup) {
                 Log.d("onSuccess", "createEmptyUsergroup " + usergroup.getUuid());
-                NoSqlHelper.setActiveGroup(usergroup);
+                UserGroupProvider.insertUserGroup(usergroup);
             }
 
             @Override

@@ -4,12 +4,12 @@ package tv.camment.cammentsdk;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.github.florent37.androidnosql.AndroidNoSql;
+import com.camment.clientsdk.model.Show;
 
 import java.lang.ref.WeakReference;
 
 import tv.camment.cammentsdk.aws.AWSManager;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
+import tv.camment.cammentsdk.data.ShowProvider;
 
 public final class CammentSDK {
 
@@ -34,7 +34,6 @@ public final class CammentSDK {
             }
             applicationContext = new WeakReference<>(context);
             getInstance();
-            AndroidNoSql.initWithDefault(applicationContext.get());
             AWSManager.getInstance().getKeystoreHelper().checkKeyStore();
         }
     }
@@ -48,7 +47,10 @@ public final class CammentSDK {
             throw new IllegalArgumentException("Show uuid can't be null!");
         }
 
-        NoSqlHelper.setCurrentShow(showUuid);
+        Show show = new Show();
+        show.setUuid(showUuid);
+
+        ShowProvider.insertShow(show);
     }
 
 }

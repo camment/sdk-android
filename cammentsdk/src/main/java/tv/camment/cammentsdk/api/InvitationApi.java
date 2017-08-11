@@ -15,7 +15,8 @@ import java.util.concurrent.ExecutorService;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
+import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.data.UserGroupProvider;
 
 /**
  * Created by petrushka on 03/08/2017.
@@ -34,8 +35,8 @@ public class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final String showUuid = NoSqlHelper.getCurrentShow().getUuid();
-                final String userGroupUuid = NoSqlHelper.getActiveGroup().getUuid();
+                final String showUuid = ShowProvider.getShow().getUuid();
+                final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
 
                 UserInAddToGroupRequest userInAddToGroupRequest = new UserInAddToGroupRequest();
                 userInAddToGroupRequest.setShowUuid(showUuid);

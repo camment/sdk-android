@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
+import tv.camment.cammentsdk.data.UserGroupProvider;
 
 /**
  * Created by petrushka on 03/08/2017.
@@ -61,7 +61,7 @@ public class CammentApi extends CammentAsyncClient {
         submitTask(new Callable<CammentList>() {
             @Override
             public CammentList call() throws Exception {
-                final Usergroup usergroup = NoSqlHelper.getActiveGroup();
+                final Usergroup usergroup = UserGroupProvider.getUserGroup();
 
                 return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid());
             }
@@ -73,9 +73,6 @@ public class CammentApi extends CammentAsyncClient {
             @Override
             public void onSuccess(CammentList cammentList) {
                 Log.d("onSuccess", "getUserGroupCamments");
-//                if (cammentList != null && cammentList.getItems() != null) {
-//                    NoSqlHelper.setCammentList(cammentList);
-//                }
                 if (cammentListListener != null) {
                     cammentListListener.onCammentListRetrieved(cammentList);
                 }

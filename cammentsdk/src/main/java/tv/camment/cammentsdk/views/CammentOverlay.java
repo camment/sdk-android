@@ -56,11 +56,11 @@ import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.camera.RecordingHandler;
+import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
 
 
 public class CammentOverlay extends RelativeLayout
@@ -157,7 +157,7 @@ public class CammentOverlay extends RelativeLayout
         Log.d("OVERLAY", "onSaveInstanceState");
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_SUPER_STATE, super.onSaveInstanceState());
-        final Usergroup usergroup = NoSqlHelper.getActiveGroup();
+        final Usergroup usergroup = UserGroupProvider.getUserGroup();
         bundle.putString(ARG_ACTIVE_GROUP_UUID, usergroup.getUuid());
         return bundle;
     }
@@ -180,8 +180,8 @@ public class CammentOverlay extends RelativeLayout
         Log.d("OVERLAY", "onAttachedToWindow");
 
         if (TextUtils.isEmpty(activeGroupUuid)) {
-            final Usergroup usergroup = NoSqlHelper.getActiveGroup();
-            if (TextUtils.isEmpty(usergroup.getUuid())) {
+            final Usergroup usergroup = UserGroupProvider.getUserGroup();
+            if (usergroup == null || TextUtils.isEmpty(usergroup.getUuid())) {
                 ApiManager.getInstance().getGroupApi().createEmptyUsergroup();
             } else {
                 ApiManager.getInstance().getCammentApi().getUserGroupCamments(adapter);
@@ -420,9 +420,13 @@ public class CammentOverlay extends RelativeLayout
 
         @Override
         public void onAnimationEnd(Animator animator) {
-            cameraGLView.onPause();
-            flCamera.setVisibility(GONE);
-            flCamera.removeView(cameraGLView);
+            if (cameraGLView != null) {
+                cameraGLView.onPause();
+            }
+            if (flCamera != null) {
+                flCamera.setVisibility(GONE);
+                flCamera.removeView(cameraGLView);
+            }
         }
 
         @Override

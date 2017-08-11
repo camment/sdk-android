@@ -12,7 +12,6 @@ import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.StorageClass;
-import com.camment.clientsdk.model.Camment;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -22,7 +21,8 @@ import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.utils.NoSqlHelper;
+import tv.camment.cammentsdk.data.CammentUploadProvider;
+import tv.camment.cammentsdk.data.model.CammentUpload;
 
 /**
  * Created by petrushka on 07/08/2017.
@@ -41,7 +41,7 @@ public class S3UploadHelper extends CammentAsyncClient {
         this.transferUtility = transferUtility;
     }
 
-    public void uploadCammentFile(final Camment camment) {
+    public void uploadCammentFile(final CammentUpload camment) {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -57,7 +57,7 @@ public class S3UploadHelper extends CammentAsyncClient {
                         metadata,
                         CannedAccessControlList.PublicRead);
 
-                NoSqlHelper.setCammentTransfer(transferObserver.getId(), camment);
+                CammentUploadProvider.setCammentUploadTransferId(camment, transferObserver.getId());
 
                 transferObserver.setTransferListener(getTransferListener());
 
@@ -86,7 +86,7 @@ public class S3UploadHelper extends CammentAsyncClient {
             public void onStateChanged(int id, TransferState state) {
                 Log.d("onStateChanged", state.name() + " id: " + id);
                 if (state == TransferState.COMPLETED) {
-                    final Camment camment = NoSqlHelper.getCammentTransfer(id);
+                    final CammentUpload camment = CammentUploadProvider.getCammentUploadByTransferId(id);
                     if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
                         ApiManager.getInstance().getCammentApi().createUserGroupCamment(camment);
                     }
@@ -104,7 +104,7 @@ public class S3UploadHelper extends CammentAsyncClient {
                 if (ex instanceof AmazonClientException) {
                     //TODO check also ex.getMessage() More data read (4793) than expected (3225)?
                     Log.d("onError", "retry");
-                    final Camment camment = NoSqlHelper.getCammentTransfer(id);
+                    final CammentUpload camment = CammentUploadProvider.getCammentUploadByTransferId(id);
                     uploadCammentFile(camment);
                 }
             }

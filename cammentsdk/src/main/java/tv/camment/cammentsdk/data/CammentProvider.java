@@ -79,10 +79,13 @@ public class CammentProvider {
                 .delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
     }
 
-    public static Camment getCamment() {
+    public static Camment getCammentByUuid(String uuid) {
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
 
-        Cursor cursor = cr.query(DataContract.Camment.CONTENT_URI, CAMMENT_PROJECTION, null, null, null);
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {uuid};
+
+        Cursor cursor = cr.query(DataContract.Camment.CONTENT_URI, CAMMENT_PROJECTION, where, selectionArgs, null);
 
         Camment camment = null;
         if (cursor != null) {

@@ -40,7 +40,7 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return camments.get(position).getUuid().hashCode();
     }
 
     @Override
@@ -82,8 +82,20 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
         if (camments == null) {
             camments = new ArrayList<>();
         }
-        camments.add(camment);
-        notifyDataSetChanged();
+        camments.add(0, camment);
+        notifyItemInserted(0);
+    }
+
+    public void removeCamment(String uuid) {
+        if (camments != null) {
+            for (int i = 0; i < camments.size(); i++) {
+                if (uuid.equals(camments.get(i).getUuid())) {
+                    camments.remove(i);
+                    notifyItemRemoved(i);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -98,7 +110,7 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
 
     interface ActionListener {
 
-        void onCammentClick(Camment camment, TextureView textureView, ImageView ivThumbnail);
+        void onCammentClick(SquareFrameLayout itemView, Camment camment, TextureView textureView, ImageView ivThumbnail);
 
     }
 

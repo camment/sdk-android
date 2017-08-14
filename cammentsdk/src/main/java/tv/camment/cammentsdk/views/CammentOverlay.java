@@ -213,6 +213,7 @@ public class CammentOverlay extends RelativeLayout
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvCamments.setLayoutManager(layoutManager);
         rvCamments.setAdapter(adapter);
+        rvCamments.setItemAnimator(null);
 
         ibRecord.setListener(this);
 
@@ -220,20 +221,21 @@ public class CammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onCammentClick(Camment camment, TextureView textureView, ImageView ivThumbnail) {
+    public void onCammentClick(SquareFrameLayout itemView, Camment camment, TextureView textureView, ImageView ivThumbnail) {
+        exoEventListener = getEventListener(itemView, ivThumbnail);
+        player.addListener(exoEventListener);
+        
         player.setVideoTextureView(textureView);
 
         if (exoEventListener != null) {
             player.removeListener(exoEventListener);
         }
-        exoEventListener = getEventListener(ivThumbnail);
-        player.addListener(exoEventListener);
 
         videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
         player.prepare(videoSource);
     }
 
-    private SimpleExoPlayer.EventListener getEventListener(final ImageView ivThumbnail) {
+    private ExoPlayer.EventListener getEventListener(final SquareFrameLayout itemView, final ImageView ivThumbnail) {
         return new ExoPlayer.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest) {
@@ -254,6 +256,7 @@ public class CammentOverlay extends RelativeLayout
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
                     case ExoPlayer.STATE_ENDED:
+                        itemView.setCustomScale(0.5f);
                         ivThumbnail.setVisibility(VISIBLE);
                         break;
                 }
@@ -467,7 +470,13 @@ public class CammentOverlay extends RelativeLayout
             if (recordingHandler == null) {
                 recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
             }
-            recordingHandler.startRecording();
+
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recordingHandler.startRecording();
+                }
+            }, 250);
         }
 
         @Override
@@ -523,10 +532,14 @@ public class CammentOverlay extends RelativeLayout
         camment.setUserGroupUuid(message.body.userCognitoIdentityId);
 
         CammentProvider.insertCamment(camment);
+
+        adapter.addCamment(camment);
     }
 
     @Override
     public void cammentDeletedMessage(CammentMessage message) {
+        adapter.removeCamment(message.body.uuid);
+
         CammentProvider.deleteCammentByUuid(message.body.uuid);
     }
 

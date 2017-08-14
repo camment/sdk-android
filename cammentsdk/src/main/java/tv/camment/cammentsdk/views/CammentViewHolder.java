@@ -37,7 +37,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
                 if (camment != null && actionListener != null) {
                     setItemViewScale(getItemViewScale() == 0.5f ? 1.0f : 0.5f);
 
-                    actionListener.onCammentClick(camment, textureView, ivThumbnail);
+                    actionListener.onCammentClick((SquareFrameLayout) itemView, camment, textureView, ivThumbnail);
                 }
             }
         });

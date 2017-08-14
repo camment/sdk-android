@@ -76,18 +76,18 @@ public class RecordingHandler extends CammentAsyncClient {
     public void stopRecording(boolean cancelled) {
         Log.d("RECORDING", "stopRecording - check muxer ");
 
-        if (mediaMuxer != null && mediaMuxer.isStarted()) {
+        if (mediaMuxer != null) {
             Log.d("RECORDING", "stopRecording - cancelled " + cancelled);
 
             submitBgTask(new Callable<String>() {
                 @Override
                 public String call() throws Exception {
                     String cammentUuid = null;
-                    if (mediaMuxer != null && mediaMuxer.isStarted()) {
+                    if (mediaMuxer != null) {
                         mediaMuxer.stopRecording();
                         cammentUuid = mediaMuxer.getCammentUuid();
-                        mediaMuxer = null;
                     }
+                    mediaMuxer = null;
                     return cammentUuid;
                 }
             }, stopRecordingCallback(cancelled));
@@ -105,7 +105,7 @@ public class RecordingHandler extends CammentAsyncClient {
                         if (camment != null
                                 && !TextUtils.isEmpty(camment.getUuid())) {
                             //TODO uncomment
-                            //AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                            AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
                         }
                     } else {
                         CammentUploadProvider.deleteCammentUploadByUuid(cammentUuid);

@@ -3,9 +3,12 @@ package tv.camment.cammentsdk.utils;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 
 import tv.camment.cammentsdk.views.CameraGLView;
@@ -19,8 +22,9 @@ import static android.view.View.VISIBLE;
 
 public class AnimationUtils {
 
+    private static ObjectAnimator recordAnimator;
+
     public static void animateAppearCameraView(final SquareFrameLayout flCamera,
-                                               final CameraGLView cameraGLView,
                                                Animator.AnimatorListener animatorListener) {
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
@@ -38,7 +42,6 @@ public class AnimationUtils {
     }
 
     public static void animateDisappearCameraView(final SquareFrameLayout flCamera,
-                                                  final CameraGLView cameraGLView,
                                                   Animator.AnimatorListener animatorListener) {
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
@@ -54,4 +57,21 @@ public class AnimationUtils {
         animator.addListener(animatorListener);
         animator.start();
     }
+
+    public static void startRecordAnimation(final View vRecordIndicator) {
+        recordAnimator = ObjectAnimator.ofFloat(vRecordIndicator, "alpha", 0.0f, 1.0f);
+        recordAnimator.setTarget(vRecordIndicator);
+        recordAnimator.setDuration(500);
+        recordAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        recordAnimator.setRepeatCount(Animation.INFINITE);
+        recordAnimator.start();
+    }
+
+    public static void stopRecordAnimation(final View vRecordIndicator) {
+        if (recordAnimator != null) {
+            recordAnimator.cancel();
+        }
+        vRecordIndicator.setAlpha(0.0f);
+    }
+
 }

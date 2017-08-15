@@ -34,11 +34,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (camment != null && actionListener != null) {
-                    setItemViewScale(getItemViewScale() == 0.5f ? 1.0f : 0.5f);
-
-                    actionListener.onCammentClick((SquareFrameLayout) itemView, camment, textureView, ivThumbnail);
-                }
+                handleOnItemClick();
             }
         });
 
@@ -55,13 +51,26 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
         setItemViewScale(0.5f);
     }
 
-    private void setItemViewScale(float scale) {
-        if (itemView instanceof SquareFrameLayout) {
-            ((SquareFrameLayout) itemView).setCustomScale(scale);
+    private void handleOnItemClick() {
+        if (camment != null && actionListener != null) {
+            actionListener.onCammentClick(this, camment, textureView);
         }
     }
 
-    private float getItemViewScale() {
+    public void setItemViewScale(float scale) {
+        if (itemView instanceof SquareFrameLayout) {
+            ((SquareFrameLayout) itemView).setCustomScale(scale);
+            if (scale == 0.5f) {
+                setThumbnailVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public void setThumbnailVisibility(int visibility) {
+        ivThumbnail.setVisibility(visibility);
+    }
+
+    public float getItemViewScale() {
         if (itemView instanceof SquareFrameLayout) {
             return ((SquareFrameLayout) itemView).getCustomScale();
         }

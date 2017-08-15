@@ -118,7 +118,7 @@ public class CammentDialog extends DialogFragment {
         this.actionListener = actionListener;
     }
 
-    interface ActionListener {
+    public interface ActionListener {
 
         void onPositiveButtonClick(BaseMessage baseMessage);
 

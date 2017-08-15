@@ -23,24 +23,18 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.camment.clientsdk.model.Camment;
 import com.camment.clientsdk.model.Usergroup;
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -53,8 +47,6 @@ import java.util.concurrent.Executors;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.aws.messages.BaseMessage;
-import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataContract;
@@ -69,8 +61,6 @@ public class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        PermissionHelper.PermissionsListener,
-        CammentDialog.ActionListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_SUPER_STATE = "arg_super_state";
@@ -86,6 +76,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
     private SquareFrameLayout flCamera;
     private CameraGLView cameraGLView;
+    private View vRecordIndicator;
     private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
 
@@ -166,10 +157,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
         player.setPlayWhenReady(true);
 
-        if (getContext() instanceof Activity) {
-            PermissionHelper.getInstance().initPermissionHelper((Activity) getContext());
-        }
-        PermissionHelper.getInstance().setListener(this);
+        PermissionHelper.getInstance().initPermissionHelper(CammentSDK.getInstance().getCurrentActivity());
     }
 
     @Override
@@ -208,20 +196,15 @@ public class BaseCammentOverlay extends RelativeLayout
             if (usergroup == null || TextUtils.isEmpty(usergroup.getUuid())) {
                 ApiManager.getInstance().getGroupApi().createEmptyUsergroup();
             } else {
-                ApiManager.getInstance().getCammentApi().getUserGroupCamments(adapter);
+                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
             }
         }
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        Log.d("OVERLAY", "onDetachedFromWindow");
-    }
-
-    @Override
     protected void onFinishInflate() {
         flCamera = findViewById(R.id.fl_camera);
+        vRecordIndicator = findViewById(R.id.v_record_indicator);
 
         rvCamments = findViewById(R.id.rv_camments);
         ibRecord = findViewById(R.id.ib_record);
@@ -238,62 +221,28 @@ public class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onCammentClick(SquareFrameLayout itemView, Camment camment, TextureView textureView, ImageView ivThumbnail) {
-        exoEventListener = getEventListener(itemView, ivThumbnail);
-        player.addListener(exoEventListener);
-
-        player.setVideoTextureView(textureView);
+    public void onCammentClick(CammentViewHolder cammentViewHolder, Camment camment, TextureView textureView) {
+        rvCamments.showSmallThumbnailsForAllChildren();
 
         if (exoEventListener != null) {
             player.removeListener(exoEventListener);
         }
 
-        videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
-        player.prepare(videoSource);
-    }
+        if (player.getPlaybackState() == ExoPlayer.STATE_IDLE
+                || player.getPlaybackState() == ExoPlayer.STATE_ENDED) {
 
-    private ExoPlayer.EventListener getEventListener(final SquareFrameLayout itemView, final ImageView ivThumbnail) {
-        return new ExoPlayer.EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
+            cammentViewHolder.setItemViewScale(cammentViewHolder.getItemViewScale() == 0.5f ? 1.0f : 0.5f);
 
-            }
+            exoEventListener = new CammentPlayerEventListener(cammentViewHolder);
+            player.addListener(exoEventListener);
 
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+            player.setVideoTextureView(textureView);
 
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-                ivThumbnail.setVisibility(isLoading ? VISIBLE : GONE);
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                switch (playbackState) {
-                    case ExoPlayer.STATE_ENDED:
-                        itemView.setCustomScale(0.5f);
-                        ivThumbnail.setVisibility(VISIBLE);
-                        break;
-                }
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-                Log.e("onPlayerError", "error", error);
-            }
-
-            @Override
-            public void onPositionDiscontinuity() {
-
-            }
-
-            @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-            }
-        };
+            videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
+            player.prepare(videoSource);
+        } else {
+            player.stop();
+        }
     }
 
     @Override
@@ -391,16 +340,35 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStart() {
-        PermissionHelper.getInstance().cameraAndMicTask();
+        if (PermissionHelper.getInstance().hasPermissions()) {
+            if (flCamera.getChildCount() < 2) {
+                if (cameraGLView == null) {
+                    cameraGLView = new CameraGLView(getContext());
+                }
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                final int dp2 = CommonUtils.dpToPx(getContext(), 2);
+                params.setMargins(dp2, dp2, dp2, dp2);
+                flCamera.addView(cameraGLView, 0, params);
+            }
+
+            AnimationUtils.animateAppearCameraView(flCamera, cameraViewAppearAnimatorListener);
+
+        } else {
+            PermissionHelper.getInstance().cameraAndMicTask();
+        }
     }
 
     @Override
     public void onRecordingStop(boolean cancelled) {
+        getHandler().removeCallbacks(recordRunnable);
+
         if (recordingHandler != null) {
             recordingHandler.stopRecording(cancelled);
         }
 
-        AnimationUtils.animateDisappearCameraView(flCamera, cameraGLView, cameraViewDisappearAnimatorListener);
+        AnimationUtils.stopRecordAnimation(vRecordIndicator);
+
+        AnimationUtils.animateDisappearCameraView(flCamera, cameraViewDisappearAnimatorListener);
     }
 
     private Animator.AnimatorListener cameraViewDisappearAnimatorListener = new Animator.AnimatorListener() {
@@ -431,20 +399,7 @@ public class BaseCammentOverlay extends RelativeLayout
         }
     };
 
-    @Override
-    public void enableRecording() {
-        if (flCamera.getChildCount() < 2) {
-            if (cameraGLView == null) {
-                cameraGLView = new CameraGLView(getContext());
-            }
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            final int dp2 = CommonUtils.dpToPx(getContext(), 2);
-            params.setMargins(dp2, dp2, dp2, dp2);
-            flCamera.addView(cameraGLView, 0, params);
-        }
-
-        AnimationUtils.animateAppearCameraView(flCamera, cameraGLView, cameraViewAppearAnimatorListener);
-    }
+    private Runnable recordRunnable;
 
     private Animator.AnimatorListener cameraViewAppearAnimatorListener = new Animator.AnimatorListener() {
         @Override
@@ -458,12 +413,14 @@ public class BaseCammentOverlay extends RelativeLayout
                 recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
             }
 
-            postDelayed(new Runnable() {
+            recordRunnable = new Runnable() {
                 @Override
                 public void run() {
+                    AnimationUtils.startRecordAnimation(vRecordIndicator);
                     recordingHandler.startRecording();
                 }
-            }, 250);
+            };
+            postDelayed(recordRunnable, 250);
         }
 
         @Override
@@ -477,18 +434,14 @@ public class BaseCammentOverlay extends RelativeLayout
         }
     };
 
-    @Override
-    public void disableRecording() {
-        //TODO this may not be needed
-    }
-
-    @Override
-    public void onPositiveButtonClick(BaseMessage baseMessage) {
-        switch (baseMessage.type) {
-            case INVITATION:
-                ApiManager.getInstance().getInvitationApi().acceptInvitation((InvitationMessage) baseMessage);
-                break;
-        }
+    private Runnable getRecordRunnable() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                AnimationUtils.startRecordAnimation(vRecordIndicator);
+                recordingHandler.startRecording();
+            }
+        };
     }
 
 }

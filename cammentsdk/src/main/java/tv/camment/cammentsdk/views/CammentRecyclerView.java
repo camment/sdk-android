@@ -31,4 +31,13 @@ public class CammentRecyclerView extends RecyclerView {
         animate().translationX(-getWidth() * 2).alpha(0.0f).start();
     }
 
+    public void showSmallThumbnailsForAllChildren() {
+        for (int i = 0, count = getChildCount(); i < count; i++) {
+            RecyclerView.ViewHolder holder = getChildViewHolder(getChildAt(i));
+            if (holder != null && holder instanceof CammentViewHolder) {
+                ((CammentViewHolder) holder).setItemViewScale(0.5f);
+            }
+        }
+    }
+
 }

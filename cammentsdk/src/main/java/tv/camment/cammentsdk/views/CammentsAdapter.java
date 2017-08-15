@@ -8,19 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.camment.clientsdk.model.Camment;
-import com.camment.clientsdk.model.CammentList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.CammentApi;
 
-/**
- * Created by petrushka on 04/08/2017.
- */
 
-public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.CammentListListener {
+public class CammentsAdapter extends RecyclerView.Adapter {
 
     private static final int CAMMENT = 0;
 
@@ -78,39 +73,9 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
         return camments != null ? camments.size() : 0;
     }
 
-    public void addCamment(Camment camment) {
-        if (camments == null) {
-            camments = new ArrayList<>();
-        }
-        camments.add(0, camment);
-        notifyItemInserted(0);
-    }
-
-    public void removeCamment(String uuid) {
-        if (camments != null) {
-            for (int i = 0; i < camments.size(); i++) {
-                if (uuid.equals(camments.get(i).getUuid())) {
-                    camments.remove(i);
-                    notifyItemRemoved(i);
-                    break;
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onCammentListRetrieved(CammentList cammentList) {
-//        if (camments == null) {
-//            camments = new ArrayList<>();
-//        }
-//
-//        camments.addAll(cammentList.getItems());
-//        notifyDataSetChanged();
-    }
-
     interface ActionListener {
 
-        void onCammentClick(SquareFrameLayout itemView, Camment camment, TextureView textureView, ImageView ivThumbnail);
+        void onCammentClick(CammentViewHolder cammentViewHolder, Camment camment, TextureView textureView);
 
     }
 

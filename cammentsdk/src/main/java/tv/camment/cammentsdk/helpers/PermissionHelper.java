@@ -13,9 +13,6 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-/**
- * Created by petrushka on 04/08/2017.
- */
 
 public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
 
@@ -26,8 +23,6 @@ public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
     private static PermissionHelper INSTANCE;
 
     private static final String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
-
-    private PermissionsListener listener;
 
     private WeakReference<Activity> activityWeakRef;
 
@@ -47,9 +42,6 @@ public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
         activityWeakRef = new WeakReference<>(activity);
     }
 
-    public void setListener(PermissionsListener listener) {
-        this.listener = listener;
-    }
 
     @AfterPermissionGranted(RC_CAMERA_MIC_PERM)
     public void cameraAndMicTask() {
@@ -57,20 +49,15 @@ public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
             throw new IllegalArgumentException("PermissionHelper was not initialized");
         }
 
-        if (EasyPermissions.hasPermissions(activityWeakRef.get(), permissions)) {
-            Log.d(TAG, "enableRecording");
-            if (listener != null) {
-                listener.enableRecording();
-            }
-        } else {
-            Log.d(TAG, "disableRecording");
-            if (listener != null) {
-                listener.disableRecording();
-            }
-            // Ask for both permissions
-            EasyPermissions.requestPermissions(activityWeakRef.get(), "TODO string",
-                    RC_CAMERA_MIC_PERM, permissions);
-        }
+        Log.d(TAG, "ask for permission");
+        // Ask for both permissions
+        //TODO suply string
+        EasyPermissions.requestPermissions(activityWeakRef.get(), "TODO string",
+                RC_CAMERA_MIC_PERM, permissions);
+    }
+
+    public boolean hasPermissions() {
+        return EasyPermissions.hasPermissions(activityWeakRef.get(), permissions);
     }
 
     @Override
@@ -100,14 +87,6 @@ public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             Log.d("onActivityResult", "resultCode: " + resultCode);
         }
-    }
-
-    public interface PermissionsListener {
-
-        void enableRecording();
-
-        void disableRecording();
-
     }
 
 }

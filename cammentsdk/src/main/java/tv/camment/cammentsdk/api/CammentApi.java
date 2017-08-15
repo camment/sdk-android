@@ -24,8 +24,6 @@ public class CammentApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 
-    private CammentListListener cammentListListener;
-
     public CammentApi(ExecutorService executorService, DevcammentClient devcammentClient) {
         super(executorService);
         this.devcammentClient = devcammentClient;
@@ -56,9 +54,7 @@ public class CammentApi extends CammentAsyncClient {
         };
     }
 
-    public void getUserGroupCamments(CammentListListener cammentListListener) {
-        this.cammentListListener = cammentListListener;
-
+    public void getUserGroupCamments() {
         submitTask(new Callable<CammentList>() {
             @Override
             public CammentList call() throws Exception {
@@ -77,10 +73,6 @@ public class CammentApi extends CammentAsyncClient {
 
                 if (cammentList != null) {
                     CammentProvider.insertCamments(cammentList.getItems());
-
-                    if (cammentListListener != null) {
-                        cammentListListener.onCammentListRetrieved(cammentList);
-                    }
                 }
             }
 
@@ -89,12 +81,6 @@ public class CammentApi extends CammentAsyncClient {
                 Log.e("onException", "getUserGroupCamments", exception);
             }
         };
-    }
-
-    public interface CammentListListener {
-
-        void onCammentListRetrieved(CammentList cammentList);
-
     }
 
     public void deleteUserGroupCamment(final Camment camment) {

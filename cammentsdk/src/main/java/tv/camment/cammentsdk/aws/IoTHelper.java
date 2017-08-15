@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.SDKConfig;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
@@ -31,7 +32,8 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.views.CammentDialog;
 
-public class IoTHelper extends CammentAsyncClient {
+public class IoTHelper extends CammentAsyncClient
+        implements CammentDialog.ActionListener {
 
     private AWSIotMqttManager mqttManager;
     private final KeyStore clientKeyStore;
@@ -240,6 +242,9 @@ public class IoTHelper extends CammentAsyncClient {
             Fragment fragment = activity.getFragmentManager().findFragmentByTag(message.toString());
             if (fragment == null || !fragment.isAdded()) {
                 CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                if (message instanceof InvitationMessage) {
+                    cammentDialog.setInvitationListener(this);
+                }
                 cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
             }
         }
@@ -259,6 +264,15 @@ public class IoTHelper extends CammentAsyncClient {
 
     private void handleCammentDeletedMessage(CammentMessage message) {
         CammentProvider.deleteCammentByUuid(message.body.uuid);
+    }
+
+    @Override
+    public void onPositiveButtonClick(BaseMessage baseMessage) {
+        switch (baseMessage.type) {
+            case INVITATION:
+                ApiManager.getInstance().getInvitationApi().acceptInvitation((InvitationMessage) baseMessage);
+                break;
+        }
     }
 
 }

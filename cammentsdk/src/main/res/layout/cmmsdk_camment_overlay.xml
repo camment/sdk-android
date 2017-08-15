@@ -24,9 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/g_camment_list"
+        app:layout_constraintRight_toLeftOf="@+id/v_record_indicator"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
@@ -34,6 +35,16 @@
             android:layout_height="match_parent"
             android:background="@drawable/cmmsdk_rounded_inside_corners" />
     </tv.camment.cammentsdk.views.SquareFrameLayout>
+
+    <View
+        android:id="@+id/v_record_indicator"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0"
+        app:layout_constraintRight_toLeftOf="@+id/g_camment_list"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/cmmsdk_red_circle"/>
 
     <tv.camment.cammentsdk.views.CammentRecyclerView
         android:id="@+id/rv_camments"

@@ -360,7 +360,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStop(boolean cancelled) {
-        getHandler().removeCallbacks(recordRunnable);
+        getHandler().removeCallbacksAndMessages(null);
 
         if (recordingHandler != null) {
             recordingHandler.stopRecording(cancelled);
@@ -399,8 +399,6 @@ public class BaseCammentOverlay extends RelativeLayout
         }
     };
 
-    private Runnable recordRunnable;
-
     private Animator.AnimatorListener cameraViewAppearAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animator) {
@@ -413,14 +411,13 @@ public class BaseCammentOverlay extends RelativeLayout
                 recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
             }
 
-            recordRunnable = new Runnable() {
+            postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     AnimationUtils.startRecordAnimation(vRecordIndicator);
                     recordingHandler.startRecording();
                 }
-            };
-            postDelayed(recordRunnable, 250);
+            }, 250);
         }
 
         @Override

@@ -1,7 +1,10 @@
 package tv.camment.cammentsdk.utils;
 
 
+import android.net.Uri;
 import android.util.Log;
+
+import com.camment.clientsdk.model.Camment;
 
 import java.io.File;
 
@@ -21,6 +24,17 @@ public class FileUtils {
 
     public String getUploadCammentPath(String cammentUuid) {
         return UPLOADS_DIR + cammentUuid + ".mp4";
+    }
+
+    private boolean isLocalVideoAvailable(String cammentUuid) {
+        final File file = new File(getUploadCammentPath(cammentUuid));
+        return file.exists();
+    }
+
+    public Uri getVideoUri(Camment camment) {
+        return isLocalVideoAvailable(camment.getUuid())
+                ? Uri.parse(getUploadCammentPath(camment.getUuid()))
+                : Uri.parse(camment.getUrl());
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

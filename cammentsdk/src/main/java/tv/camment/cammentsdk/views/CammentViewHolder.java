@@ -83,7 +83,9 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
 
         this.camment = camment;
 
-        Glide.with(CammentSDK.getInstance().getApplicationContext()).load(camment.getThumbnail()).into(ivThumbnail);
+        Glide.with(CammentSDK.getInstance().getApplicationContext())
+                .load(camment.getThumbnail())
+                .into(ivThumbnail);
     }
 
 }

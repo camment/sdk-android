@@ -55,6 +55,7 @@ import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
+import tv.camment.cammentsdk.utils.FileUtils;
 
 
 public class BaseCammentOverlay extends RelativeLayout
@@ -237,8 +238,7 @@ public class BaseCammentOverlay extends RelativeLayout
             player.addListener(exoEventListener);
 
             player.setVideoTextureView(textureView);
-
-            videoSource = new ExtractorMediaSource(Uri.parse(camment.getUrl()), dataSourceFactory, extractorsFactory, null, null);
+            videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), dataSourceFactory, extractorsFactory, null, null);
             player.prepare(videoSource);
         } else {
             player.stop();

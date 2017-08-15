@@ -9,11 +9,11 @@ import android.provider.BaseColumns;
 
 public class DataContract {
 
-    public static final String AUTHORITY = "tv.camment.cammentsdk";
+    static final String AUTHORITY = "tv.camment.cammentsdk";
     /**
      * The content:// style URL for the top-level authority
      */
-    public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     private DataContract() {
     }
@@ -26,7 +26,7 @@ public class DataContract {
         return "vnd.android.cursor.item/" + AUTHORITY + "." + name;
     }
 
-    public interface Tables {
+    interface Tables {
         String USER_GROUP = "user_group";
         String USER_GROUP_ID = "user_group/*";
         String SHOW = "show";
@@ -37,7 +37,7 @@ public class DataContract {
         String CAMMENT_ID = "camment/*";
     }
 
-    public interface Codes {
+    interface Codes {
         int USER_GROUP = 100;
         int USER_GROUP_ID = 101;
         int SHOW = 200;
@@ -78,6 +78,7 @@ public class DataContract {
         String userGroupUuid = "userGroupUuid";
         String userCognitoIdentityId = "userCognitoIdentityId";
         String showUuid = "showUuid";
+        String timestamp = "timestamp";
     }
 
     private interface UploadColumns {

@@ -14,7 +14,7 @@ public class CammentDemoApp extends Application {
         super.onCreate();
         sInstance = this;
 
-        CammentSDK.init(this);
+        CammentSDK.getInstance().init(this);
     }
 
 }

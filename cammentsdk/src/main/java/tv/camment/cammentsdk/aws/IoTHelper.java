@@ -1,5 +1,8 @@
 package tv.camment.cammentsdk.aws;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -7,12 +10,14 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
+import com.camment.clientsdk.model.Usergroup;
 import com.google.gson.Gson;
 
 import java.security.KeyStore;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -20,24 +25,21 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
+import tv.camment.cammentsdk.data.CammentProvider;
+import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
-
-/**
- * Created by petrushka on 10/08/2017.
- */
+import tv.camment.cammentsdk.views.CammentDialog;
 
 public class IoTHelper extends CammentAsyncClient {
 
     private AWSIotMqttManager mqttManager;
     private final KeyStore clientKeyStore;
-    private final IoTMessageArrivedListener ioTMessageArrivedListener;
 
     public IoTHelper(ExecutorService executorService,
-                     KeyStore clientKeyStore,
-                     IoTMessageArrivedListener ioTMessageArrivedListener) {
+                     KeyStore clientKeyStore) {
         super(executorService);
         this.clientKeyStore = clientKeyStore;
-        this.ioTMessageArrivedListener = ioTMessageArrivedListener;
     }
 
     public void connect() {
@@ -117,7 +119,7 @@ public class IoTHelper extends CammentAsyncClient {
                         Log.e("IoTHelper", "invalid message format", e);
                     }
 
-                    //TODO check if it's not from me
+                    //TODO check if it's not from me and format is valid
                     if (!TextUtils.isEmpty(message)) {
                         BaseMessage baseMessage = new Gson().fromJson(message, BaseMessage.class);
                         switch (baseMessage.type) {
@@ -172,43 +174,91 @@ public class IoTHelper extends CammentAsyncClient {
     }
 
     private void handleMessage(final BaseMessage message) {
-        if (ioTMessageArrivedListener == null)
-            return;
-
-        //TODO check if for me also others - groupId?
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (message == null || message.type == null)
+                    return;
+
                 switch (message.type) {
                     case INVITATION:
-                        if (FacebookHelper.getInstance().isMessageForMe(((InvitationMessage) message).body.userFacebookId)) {
-                            ioTMessageArrivedListener.invitationMessageReceived((InvitationMessage) message);
+                        if (isInvitationValid((InvitationMessage) message)) {
+                            handleInvitationMessage(message);
                         }
                         break;
                     case NEW_USER_IN_GROUP:
-                        ioTMessageArrivedListener.newUserInGroupMessageReceived((NewUserInGroupMessage) message);
+                        if (isNewUserInGroupValid((NewUserInGroupMessage) message)) {
+                            handleInvitationMessage(message);
+                        }
                         break;
                     case CAMMENT:
-                        ioTMessageArrivedListener.newCammentMessage((CammentMessage) message);
+                        if (isCammentValid((CammentMessage) message)) {
+                            handleNewCammentMessage((CammentMessage) message);
+                        }
                         break;
                     case CAMMENT_DELETED:
-                        ioTMessageArrivedListener.cammentDeletedMessage((CammentMessage) message);
+                        if (isCammentValid((CammentMessage) message)) {
+                            handleCammentDeletedMessage((CammentMessage) message);
+                        }
                         break;
                 }
             }
         });
     }
 
-    public interface IoTMessageArrivedListener {
+    private boolean isInvitationValid(InvitationMessage m) {
+        //TODO check also group?
+        return m.body != null
+                && FacebookHelper.getInstance().isMessageForMe(m.body.userFacebookId);
+    }
 
-        void invitationMessageReceived(InvitationMessage message);
+    private boolean isNewUserInGroupValid(NewUserInGroupMessage m) {
+        Usergroup usergroup = UserGroupProvider.getUserGroup();
 
-        void newUserInGroupMessageReceived(NewUserInGroupMessage message);
+        return usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && m.body != null
+                && m.body.user != null
+                && !TextUtils.isEmpty(m.body.user.facebookId)
+                && usergroup.getUuid().equals(m.body.groupUuid);
+    }
 
-        void newCammentMessage(CammentMessage message);
+    private boolean isCammentValid(CammentMessage m) {
+        Usergroup usergroup = UserGroupProvider.getUserGroup();
 
-        void cammentDeletedMessage(CammentMessage message);
+        return usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && m.body != null
+                && !TextUtils.isEmpty(m.body.url)
+                && !TextUtils.isEmpty(m.body.thumbnail)
+                && usergroup.getUuid().equals(m.body.userGroupUuid);
+    }
 
+    private void handleInvitationMessage(BaseMessage message) {
+        Activity activity = CammentSDK.getInstance().getCurrentActivity();
+        if (activity instanceof AppCompatActivity) {
+            Fragment fragment = activity.getFragmentManager().findFragmentByTag(message.toString());
+            if (fragment == null || !fragment.isAdded()) {
+                CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+            }
+        }
+    }
+
+    private void handleNewCammentMessage(CammentMessage message) {
+        CCamment camment = new CCamment();
+        camment.setUuid(message.body.uuid);
+        camment.setUserGroupUuid(message.body.userGroupUuid);
+        camment.setThumbnail(message.body.thumbnail);
+        camment.setUrl(message.body.url);
+        camment.setUserGroupUuid(message.body.userCognitoIdentityId);
+        camment.setTimestamp(System.currentTimeMillis());
+
+        CammentProvider.insertCamment(camment);
+    }
+
+    private void handleCammentDeletedMessage(CammentMessage message) {
+        CammentProvider.deleteCammentByUuid(message.body.uuid);
     }
 
 }

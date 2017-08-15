@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.data.model.CCamment;
 
 /**
  * Created by petrushka on 11/08/2017.
@@ -24,9 +25,10 @@ public class CammentProvider {
             DataContract.Camment.showUuid,
             DataContract.Camment.thumbnail,
             DataContract.Camment.userCognitoIdentityId,
-            DataContract.Camment.userGroupUuid};
+            DataContract.Camment.userGroupUuid,
+            DataContract.Camment.timestamp};
 
-    public static void insertCamment(Camment camment) {
+    public static void insertCamment(CCamment camment) {
         if (camment == null)
             return;
 
@@ -37,6 +39,7 @@ public class CammentProvider {
         cv.put(DataContract.Camment.thumbnail, camment.getThumbnail());
         cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
         cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
+        cv.put(DataContract.Camment.timestamp, camment.getTimestamp());
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
@@ -58,6 +61,7 @@ public class CammentProvider {
             cv.put(DataContract.Camment.thumbnail, camment.getThumbnail());
             cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
             cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
+            cv.put(DataContract.Camment.timestamp, System.currentTimeMillis());
 
             values.add(cv);
         }
@@ -99,14 +103,15 @@ public class CammentProvider {
         return camment;
     }
 
-    private static Camment fromCursor(Cursor cursor) {
-        Camment camment = new Camment();
+    private static CCamment fromCursor(Cursor cursor) {
+        CCamment camment = new CCamment();
         camment.setUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.uuid)));
         camment.setUrl(cursor.getString(cursor.getColumnIndex(DataContract.Camment.url)));
         camment.setThumbnail(cursor.getString(cursor.getColumnIndex(DataContract.Camment.thumbnail)));
         camment.setUserCognitoIdentityId(cursor.getString(cursor.getColumnIndex(DataContract.Camment.userCognitoIdentityId)));
         camment.setUserGroupUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.userGroupUuid)));
         camment.setShowUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.showUuid)));
+        camment.setTimestamp(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.timestamp)));
 
         return camment;
     }

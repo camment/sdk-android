@@ -62,6 +62,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 .columnText(DataContract.CammentUpload.userGroupUuid)
                 .columnText(DataContract.CammentUpload.userCognitoIdentityId)
                 .columnInt(DataContract.CammentUpload.transferId)
+                .columnInt(DataContract.CammentUpload.timestamp)
                 .build();
     }
 
@@ -74,6 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 .columnText(DataContract.Camment.thumbnail)
                 .columnText(DataContract.Camment.userGroupUuid)
                 .columnText(DataContract.Camment.userCognitoIdentityId)
+                .columnInt(DataContract.Camment.timestamp)
                 .build();
     }
 

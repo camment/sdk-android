@@ -1,12 +1,10 @@
 package tv.camment.cammentsdk.data.model;
 
-import com.camment.clientsdk.model.Camment;
-
 /**
  * Created by petrushka on 11/08/2017.
  */
 
-public class CammentUpload extends Camment {
+public class CammentUpload extends CCamment {
 
     private int transferId = -1;
 

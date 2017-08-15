@@ -21,7 +21,8 @@ public class CammentUploadProvider {
             DataContract.CammentUpload.thumbnail,
             DataContract.CammentUpload.userCognitoIdentityId,
             DataContract.CammentUpload.userGroupUuid,
-            DataContract.CammentUpload.transferId};
+            DataContract.CammentUpload.transferId,
+            DataContract.Camment.timestamp};
 
     public static void insertCammentUpload(CammentUpload camment) {
         if (camment == null)
@@ -34,6 +35,7 @@ public class CammentUploadProvider {
         cv.put(DataContract.CammentUpload.thumbnail, camment.getThumbnail());
         cv.put(DataContract.CammentUpload.userCognitoIdentityId, camment.getUserCognitoIdentityId());
         cv.put(DataContract.CammentUpload.userGroupUuid, camment.getUserGroupUuid());
+        cv.put(DataContract.CammentUpload.timestamp, camment.getTimestamp());
         cv.put(DataContract.CammentUpload.transferId, camment.getTransferId());
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.CammentUpload.CONTENT_URI, cv);
@@ -111,6 +113,7 @@ public class CammentUploadProvider {
         camment.setUserCognitoIdentityId(cursor.getString(cursor.getColumnIndex(DataContract.CammentUpload.userCognitoIdentityId)));
         camment.setUserGroupUuid(cursor.getString(cursor.getColumnIndex(DataContract.CammentUpload.userGroupUuid)));
         camment.setShowUuid(cursor.getString(cursor.getColumnIndex(DataContract.CammentUpload.showUuid)));
+        camment.setTimestamp(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.timestamp)));
         camment.setTransferId(cursor.getInt(cursor.getColumnIndex(DataContract.CammentUpload.transferId)));
 
         return camment;

@@ -96,9 +96,8 @@ public final class AWSManager {
                 SDKConfig.CERT_KEYSTORE_NAME, SDKConfig.CERT_KEYSTORE_PWD);
     }
 
-    public IoTHelper getIoTHelper(IoTHelper.IoTMessageArrivedListener ioTMessageArrivedListener) {
-        return new IoTHelper(Executors.newSingleThreadExecutor(), getClientKeyStore(),
-                ioTMessageArrivedListener);
+    public IoTHelper getIoTHelper() {
+        return new IoTHelper(Executors.newSingleThreadExecutor(), getClientKeyStore());
     }
 
 }

@@ -100,7 +100,7 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        long id = 0;
+        long id = -1;
         switch (uriMatcher.match(uri)) {
             case Codes.USER_GROUP:
                 id = db.insertWithOnConflict(Tables.USER_GROUP, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
@@ -116,9 +116,10 @@ public class DataProvider extends ContentProvider {
                 break;
         }
 
-        Uri newUri = ContentUris.withAppendedId(uri, id);
-        getContext().getContentResolver().notifyChange(newUri, null);
-        return newUri;
+        if (id > -1) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return uri;
     }
 
     @Override

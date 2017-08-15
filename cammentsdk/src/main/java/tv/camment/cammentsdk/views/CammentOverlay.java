@@ -5,11 +5,15 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,8 +49,10 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
@@ -57,6 +63,7 @@ import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
+import tv.camment.cammentsdk.data.DataContract;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -68,17 +75,19 @@ public class CammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        PermissionHelper.PermissionsListener, IoTHelper.IoTMessageArrivedListener, CammentDialog.ActionListener {
+        PermissionHelper.PermissionsListener,
+        IoTHelper.IoTMessageArrivedListener,
+        CammentDialog.ActionListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ARG_SUPER_STATE = "arg_super_state";
     private static final String ARG_ACTIVE_GROUP_UUID = "arg_active_group";
 
-    private static final int THRESHOLD = 100;
+    private static final int THRESHOLD_X = 100;
+    private static final int THRESHOLD_Y = 150;
 
     private float startX;
-    private float stopX;
     private float startY;
-    private float stopY;
 
     private ViewGroup parentViewGroup;
 
@@ -99,6 +108,24 @@ public class CammentOverlay extends RelativeLayout
     private String activeGroupUuid;
     private ExoPlayer.EventListener exoEventListener;
     private IoTHelper iotHelper;
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
+                null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d("Loader", "onLoadFinished");
+        List<Camment> camments = CammentProvider.listFromCursor(data);
+        adapter.setData(camments);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 
     private enum Mode {
         GOING_BACK,
@@ -180,6 +207,10 @@ public class CammentOverlay extends RelativeLayout
 
         Log.d("OVERLAY", "onAttachedToWindow");
 
+        if (getContext() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
+        }
+
         if (TextUtils.isEmpty(activeGroupUuid)) {
             final Usergroup usergroup = UserGroupProvider.getUserGroup();
             if (usergroup == null || TextUtils.isEmpty(usergroup.getUuid())) {
@@ -224,7 +255,7 @@ public class CammentOverlay extends RelativeLayout
     public void onCammentClick(SquareFrameLayout itemView, Camment camment, TextureView textureView, ImageView ivThumbnail) {
         exoEventListener = getEventListener(itemView, ivThumbnail);
         player.addListener(exoEventListener);
-        
+
         player.setVideoTextureView(textureView);
 
         if (exoEventListener != null) {
@@ -279,29 +310,6 @@ public class CammentOverlay extends RelativeLayout
         };
     }
 
-    public static void applyMatrix(TextureView textureView, int videoWidth, int videoHeight,
-                                   int requiredRotation) {
-        int pivotPoint = textureView.getWidth() / 2;
-        float ratio = (float) videoWidth / videoHeight;
-        float scaleX;
-        float scaleY;
-
-        if (requiredRotation > -1) {
-            scaleX = ratio > 1 ? ratio : 1;
-            scaleY = ratio > 1 ? 1 : 1f / ratio;
-        } else {
-            scaleX = ratio > 1 ? 1 : 1f / ratio;
-            scaleY = ratio > 1 ? ratio : 1;
-        }
-
-        Matrix matrix = new Matrix();
-        matrix.setScale(scaleX, scaleY, pivotPoint, pivotPoint);
-        if (requiredRotation > -1) {
-            matrix.postRotate(requiredRotation, pivotPoint, pivotPoint);
-        }
-        textureView.setTransform(matrix);
-    }
-
     public void setParentViewGroup(ViewGroup parentViewGroup) {
         this.parentViewGroup = parentViewGroup;
     }
@@ -338,11 +346,11 @@ public class CammentOverlay extends RelativeLayout
                     break;
                 }
 
-                stopX = event.getX();
-                stopY = event.getY();
+                float stopX = event.getX();
+                float stopY = event.getY();
 
-                if (Math.abs(startX - stopX) > THRESHOLD) {
-                    if (Math.abs(startY - stopY) < THRESHOLD) {
+                if (Math.abs(startX - stopX) > THRESHOLD_X) {
+                    if (Math.abs(startY - stopY) < THRESHOLD_Y) {
                         if (startX < stopX) {
                             if (event.getPointerCount() == 1) {
                                 mode = Mode.HIDE;
@@ -533,12 +541,12 @@ public class CammentOverlay extends RelativeLayout
 
         CammentProvider.insertCamment(camment);
 
-        adapter.addCamment(camment);
+        //adapter.addCamment(camment);
     }
 
     @Override
     public void cammentDeletedMessage(CammentMessage message) {
-        adapter.removeCamment(message.body.uuid);
+        //adapter.removeCamment(message.body.uuid);
 
         CammentProvider.deleteCammentByUuid(message.body.uuid);
     }

@@ -100,12 +100,12 @@ public class CammentsAdapter extends RecyclerView.Adapter implements CammentApi.
 
     @Override
     public void onCammentListRetrieved(CammentList cammentList) {
-        if (camments == null) {
-            camments = new ArrayList<>();
-        }
-
-        camments.addAll(cammentList.getItems());
-        notifyDataSetChanged();
+//        if (camments == null) {
+//            camments = new ArrayList<>();
+//        }
+//
+//        camments.addAll(cammentList.getItems());
+//        notifyDataSetChanged();
     }
 
     interface ActionListener {

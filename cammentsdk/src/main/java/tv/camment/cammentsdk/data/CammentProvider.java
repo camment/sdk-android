@@ -111,4 +111,17 @@ public class CammentProvider {
         return camment;
     }
 
+    public static List<Camment> listFromCursor(Cursor cursor) {
+        List<Camment> camments = new ArrayList<>();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                Camment camment;
+                do {
+                    camment = fromCursor(cursor);
+                    camments.add(camment);
+                } while (cursor.moveToNext());
+            }
+        }
+        return camments;
+    }
 }

@@ -45,6 +45,7 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataContract;
+import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.utils.AnimationUtils;
@@ -88,14 +89,17 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection = DataContract.Camment.recorded + "=?";
+        String[] selectionArgs = {"1"};
+
         return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
-                null, null, null, DataContract.Camment.timestamp + " DESC");
+                null, selection, selectionArgs, DataContract.Camment.timestamp + " DESC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d("Loader", "onLoadFinished");
-        List<Camment> camments = CammentProvider.listFromCursor(data);
+        List<CCamment> camments = CammentProvider.listFromCursor(data);
         adapter.setData(camments);
     }
 
@@ -323,11 +327,9 @@ public class BaseCammentOverlay extends RelativeLayout
         if (FacebookHelper.getInstance().isLoggedIn()) {
             new FbFriendsBottomSheetDialog(getContext()).show();
         } else {
-            //TODO check with fragment
             if (getContext() instanceof Activity) {
                 FacebookHelper.getInstance().logIn((Activity) getContext());
             }
-            //TODO show friends after successful login
         }
     }
 

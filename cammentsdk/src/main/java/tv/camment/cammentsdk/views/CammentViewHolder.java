@@ -1,6 +1,14 @@
 package tv.camment.cammentsdk.views;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +18,7 @@ import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.utils.FileUtils;
 
 
 public class CammentViewHolder extends RecyclerView.ViewHolder {
@@ -83,9 +92,17 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
 
         this.camment = camment;
 
-        Glide.with(CammentSDK.getInstance().getApplicationContext())
-                .load(camment.getThumbnail())
-                .into(ivThumbnail);
+        if (TextUtils.isEmpty(camment.getThumbnail())) {
+            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(FileUtils.getInstance().getUploadCammentPath(camment.getUuid()),
+                    MediaStore.Video.Thumbnails.MINI_KIND);
+            if (bitmap != null) {
+                ivThumbnail.setImageBitmap(bitmap);
+            }
+        } else {
+            Glide.with(CammentSDK.getInstance().getApplicationContext())
+                    .load(camment.getThumbnail())
+                    .into(ivThumbnail);
+        }
     }
 
 }

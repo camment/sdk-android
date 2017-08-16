@@ -46,6 +46,7 @@ public class CammentApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Camment camment) {
                 Log.d("onSuccess", "createUserGroupCamment");
+                CammentProvider.insertCamment(new CCamment(camment));
             }
 
             @Override

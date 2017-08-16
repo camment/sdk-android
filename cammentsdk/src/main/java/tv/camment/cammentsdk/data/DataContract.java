@@ -31,8 +31,6 @@ public class DataContract {
         String USER_GROUP_ID = "user_group/*";
         String SHOW = "show";
         String SHOW_ID = "show/*";
-        String CAMMENT_UPLOAD = "camment_upload";
-        String CAMMENT_UPLOAD_ID = "camment_upload/*";
         String CAMMENT = "camment";
         String CAMMENT_ID = "camment/*";
     }
@@ -42,8 +40,6 @@ public class DataContract {
         int USER_GROUP_ID = 101;
         int SHOW = 200;
         int SHOW_ID = 201;
-        int CAMMENT_UPLOAD = 300;
-        int CAMMENT_UPLOAD_ID = 301;
         int CAMMENT = 400;
         int CAMMENT_ID = 401;
     }
@@ -79,16 +75,8 @@ public class DataContract {
         String userCognitoIdentityId = "userCognitoIdentityId";
         String showUuid = "showUuid";
         String timestamp = "timestamp";
-    }
-
-    private interface UploadColumns {
         String transferId = "transferId";
-    }
-
-    public static final class CammentUpload implements BaseColumns, CammentColumns, UploadColumns {
-        public static final String CONTENT_TYPE = buildContentTypeDir(Tables.CAMMENT_UPLOAD);
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.CAMMENT_UPLOAD);
-        public static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.CAMMENT_UPLOAD_ID);
+        String recorded = "recorded";
     }
 
     public static final class Camment implements BaseColumns, CammentColumns {

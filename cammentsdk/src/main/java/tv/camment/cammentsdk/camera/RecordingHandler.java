@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.camment.clientsdk.model.Camment;
-import com.camment.clientsdk.model.Usergroup;
 
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -14,15 +13,13 @@ import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaAudioEncoder;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaMuxerWrapper;
 import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
-import tv.camment.cammentsdk.data.CammentUploadProvider;
+import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.ShowProvider;
-import tv.camment.cammentsdk.data.UserGroupProvider;
-import tv.camment.cammentsdk.data.model.CammentUpload;
+import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 /**
@@ -101,7 +98,7 @@ public class RecordingHandler extends CammentAsyncClient {
             public void onSuccess(String cammentUuid) {
                 Log.d("onSuccess", "stopRecording");
                 if (!TextUtils.isEmpty(cammentUuid)) {
-                    final CammentUpload camment = CammentUploadProvider.getCammentUploadByUuid(cammentUuid);
+                    final CCamment camment = CammentProvider.getCammentByUuid(cammentUuid);
                     if (!cancelled) {
                         if (camment != null
                                 && !TextUtils.isEmpty(camment.getUuid())) {
@@ -109,7 +106,7 @@ public class RecordingHandler extends CammentAsyncClient {
                                     .createEmptyUsergroupIfNeededAndUploadCamment(camment);
                         }
                     } else {
-                        CammentUploadProvider.deleteCammentUploadByUuid(cammentUuid);
+                        CammentProvider.deleteCammentByUuid(cammentUuid);
                         FileUtils.getInstance().deleteCammentFile(cammentUuid);
                     }
                 }
@@ -125,12 +122,13 @@ public class RecordingHandler extends CammentAsyncClient {
     private Camment getNewUploadCamment() {
         final String showUuid = ShowProvider.getShow().getUuid();
 
-        CammentUpload camment = new CammentUpload();
+        CCamment camment = new CCamment();
         camment.setUuid(UUID.randomUUID().toString());
         camment.setShowUuid(showUuid);
         camment.setUrl(FileUtils.getInstance().getUploadCammentFile(camment.getUuid()).toString());
+        camment.setRecorded(false);
 
-        CammentUploadProvider.insertCammentUpload(camment);
+        CammentProvider.insertCamment(camment);
 
         return camment;
     }

@@ -1,17 +1,9 @@
 package tv.camment.cammentsdk.data;
 
-import com.camment.clientsdk.DevcammentClient;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import tv.camment.cammentsdk.api.CammentApi;
-import tv.camment.cammentsdk.api.GroupApi;
-import tv.camment.cammentsdk.api.InvitationApi;
-import tv.camment.cammentsdk.api.ShowApi;
-import tv.camment.cammentsdk.api.UserApi;
-import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.views.FbFriendsBottomSheetDialog;
 
 
 public class DataManager {
@@ -32,10 +24,15 @@ public class DataManager {
     public void clearDataForUserGroupChange() {
         UserGroupProvider.deleteUserGroups();
         CammentProvider.deleteCamments();
-        CammentUploadProvider.deleteCammentUploads();
         ShowProvider.deleteShows();
 
         FileUtils.getInstance().deleteAllFiles();
+    }
+
+    public void handleFbPermissionsResult() {
+        if (FacebookHelper.getInstance().isLoggedIn()) {
+            new FbFriendsBottomSheetDialog(CammentSDK.getInstance().getCurrentActivity()).show();
+        }
     }
 
 }

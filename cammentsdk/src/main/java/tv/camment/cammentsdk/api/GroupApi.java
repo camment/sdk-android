@@ -14,9 +14,9 @@ import java.util.concurrent.ExecutorService;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
-import tv.camment.cammentsdk.data.CammentUploadProvider;
+import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
-import tv.camment.cammentsdk.data.model.CammentUpload;
+import tv.camment.cammentsdk.data.model.CCamment;
 
 /**
  * Created by petrushka on 03/08/2017.
@@ -47,12 +47,13 @@ public class GroupApi extends CammentAsyncClient {
         }
     }
 
-    public void createEmptyUsergroupIfNeededAndUploadCamment(final CammentUpload camment) {
+    public void createEmptyUsergroupIfNeededAndUploadCamment(final CCamment camment) {
         Usergroup usergroup = UserGroupProvider.getUserGroup();
 
         if (usergroup != null && !TextUtils.isEmpty(usergroup.getUuid())) {
             camment.setUserGroupUuid(usergroup.getUuid());
-            CammentUploadProvider.insertCammentUpload(camment);
+
+            CammentProvider.updateCammentGroupId(camment, usergroup.getUuid());
 
             AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
         } else {
@@ -82,7 +83,7 @@ public class GroupApi extends CammentAsyncClient {
         };
     }
 
-    private CammentCallback<Usergroup> createEmptyUsergroupUploadCallback(final CammentUpload camment) {
+    private CammentCallback<Usergroup> createEmptyUsergroupUploadCallback(final CCamment camment) {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
@@ -91,7 +92,7 @@ public class GroupApi extends CammentAsyncClient {
 
                 camment.setUserGroupUuid(usergroup.getUuid());
 
-                CammentUploadProvider.insertCammentUpload(camment);
+                CammentProvider.updateCammentGroupId(camment, usergroup.getUuid());
 
                 AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
             }

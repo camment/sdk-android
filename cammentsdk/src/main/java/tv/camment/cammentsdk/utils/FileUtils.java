@@ -26,7 +26,7 @@ public class FileUtils {
         return UPLOADS_DIR + cammentUuid + ".mp4";
     }
 
-    private boolean isLocalVideoAvailable(String cammentUuid) {
+    public boolean isLocalVideoAvailable(String cammentUuid) {
         final File file = new File(getUploadCammentPath(cammentUuid));
         return file.exists();
     }

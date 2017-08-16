@@ -1,9 +1,10 @@
 package tv.camment.cammentsdk;
 
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Show;
@@ -15,14 +16,14 @@ import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.views.CammentOverlay;
 
 public final class CammentSDK extends CammentLifecycle {
 
     private static CammentSDK INSTANCE;
 
     private volatile WeakReference<Context> applicationContext;
-
-    private WeakReference<Activity> currentActivity;
 
     private IoTHelper ioTHelper;
 
@@ -74,6 +75,17 @@ public final class CammentSDK extends CammentLifecycle {
                 && FacebookHelper.getInstance().isLoggedIn()) {
             ioTHelper.connect();
         }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        DataManager.getInstance().handleFbPermissionsResult();
+
+        PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        PermissionHelper.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

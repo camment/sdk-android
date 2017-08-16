@@ -6,6 +6,24 @@ import com.camment.clientsdk.model.Camment;
 public class CCamment extends Camment {
 
     private long timestamp;
+    private int transferId = -1;
+    private boolean recorded;
+
+    public CCamment() {
+
+    }
+
+    public CCamment(Camment camment) {
+        setUuid(camment.getUuid());
+        setUserGroupUuid(camment.getUserGroupUuid());
+        setUserCognitoIdentityId(camment.getUserCognitoIdentityId());
+        setThumbnail(camment.getThumbnail());
+        setShowUuid(camment.getShowUuid());
+        setUrl(camment.getUrl());
+        setTimestamp(System.currentTimeMillis());
+        setTransferId(-1);
+        setRecorded(true);
+    }
 
     @Override
     public int hashCode() {
@@ -31,6 +49,22 @@ public class CCamment extends Camment {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public int getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
+    }
+
+    public boolean isRecorded() {
+        return recorded;
+    }
+
+    public void setRecorded(boolean recorded) {
+        this.recorded = recorded;
     }
 
 }

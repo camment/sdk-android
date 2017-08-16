@@ -25,7 +25,6 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d("database", "onCreate");
         db.execSQL(createUserGroupTable());
         db.execSQL(createShowTable());
-        db.execSQL(createCammentUploadTable());
         db.execSQL(createCammentTable());
     }
 
@@ -52,20 +51,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 .build();
     }
 
-    private String createCammentUploadTable() {
-        return DbUtils.TableBuilder.table(DataContract.Tables.CAMMENT_UPLOAD)
-                .primaryKey(DataContract.CammentUpload._ID)
-                .columnTextUnique(DataContract.CammentUpload.uuid)
-                .columnText(DataContract.CammentUpload.url)
-                .columnText(DataContract.CammentUpload.showUuid)
-                .columnText(DataContract.CammentUpload.thumbnail)
-                .columnText(DataContract.CammentUpload.userGroupUuid)
-                .columnText(DataContract.CammentUpload.userCognitoIdentityId)
-                .columnInt(DataContract.CammentUpload.transferId)
-                .columnInt(DataContract.CammentUpload.timestamp)
-                .build();
-    }
-
     private String createCammentTable() {
         return DbUtils.TableBuilder.table(DataContract.Tables.CAMMENT)
                 .primaryKey(DataContract.Camment._ID)
@@ -76,6 +61,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 .columnText(DataContract.Camment.userGroupUuid)
                 .columnText(DataContract.Camment.userCognitoIdentityId)
                 .columnInt(DataContract.Camment.timestamp)
+                .columnInt(DataContract.Camment.transferId)
+                .columnInt(DataContract.Camment.recorded)
                 .build();
     }
 

@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.facebook.CallbackManager;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -26,16 +24,10 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.UUID;
-
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
-import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
 public class MainActivity extends AppCompatActivity {
-
-    private CallbackManager callbackManager;
 
     private SimpleExoPlayer player;
     private SimpleExoPlayerView showPlayerView;
@@ -72,19 +64,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("MainActivity", "onActivityResult");
-        if (callbackManager == null) {
-            callbackManager = FacebookHelper.getInstance().getCallbackManager();
-        }
-        callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
+        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        PermissionHelper.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        CammentSDK.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 }

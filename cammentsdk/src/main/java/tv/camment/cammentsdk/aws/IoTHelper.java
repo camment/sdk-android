@@ -258,6 +258,8 @@ public class IoTHelper extends CammentAsyncClient
         camment.setUrl(message.body.url);
         camment.setUserGroupUuid(message.body.userCognitoIdentityId);
         camment.setTimestamp(System.currentTimeMillis());
+        camment.setRecorded(true);
+        camment.setTransferId(-1);
 
         CammentProvider.insertCamment(camment);
     }

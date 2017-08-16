@@ -16,6 +16,7 @@ import java.util.Set;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.CammentApi;
+import tv.camment.cammentsdk.data.model.CCamment;
 
 
 public class CammentsAdapter extends RecyclerView.Adapter {
@@ -24,18 +25,19 @@ public class CammentsAdapter extends RecyclerView.Adapter {
 
     private final ActionListener actionListener;
 
-    private List<Camment> camments;
+    private List<CCamment> camments;
 
     public CammentsAdapter(ActionListener actionListener) {
         this.actionListener = actionListener;
         setHasStableIds(true);
     }
 
-    public void setData(List<Camment> camments) {
-        Set<Camment> cammentSet = new HashSet<>();
+    public void setData(List<CCamment> camments) {
+        Set<CCamment> cammentSet = new HashSet<>();
         cammentSet.addAll(camments);
 
         this.camments = new ArrayList<>();
+
         this.camments.addAll(cammentSet);
 
         notifyDataSetChanged();

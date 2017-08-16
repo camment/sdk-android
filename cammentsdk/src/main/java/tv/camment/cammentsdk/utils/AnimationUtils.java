@@ -23,13 +23,14 @@ import static android.view.View.VISIBLE;
 public class AnimationUtils {
 
     private static ObjectAnimator recordAnimator;
+    private static ValueAnimator animator;
 
     public static void animateAppearCameraView(final SquareFrameLayout flCamera,
                                                Animator.AnimatorListener animatorListener) {
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
 
-        ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        animator = ValueAnimator.ofFloat(0.0f, 1.0f);
         animator.setDuration(500);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -41,8 +42,16 @@ public class AnimationUtils {
         animator.start();
     }
 
+    public static void cancelAppearAnimation() {
+        if (animator != null) {
+            animator.cancel();
+        }
+    }
+
     public static void animateDisappearCameraView(final SquareFrameLayout flCamera,
                                                   Animator.AnimatorListener animatorListener) {
+        cancelAppearAnimation();
+
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
 

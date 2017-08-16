@@ -4,7 +4,6 @@ package tv.camment.cammentsdk;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Show;
@@ -13,6 +12,7 @@ import java.lang.ref.WeakReference;
 
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
+import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 
@@ -46,6 +46,8 @@ public final class CammentSDK extends CammentLifecycle {
             AWSManager.getInstance().getKeystoreHelper().checkKeyStore();
 
             ((Application) context).registerActivityLifecycleCallbacks(this);
+
+            DataManager.getInstance().clearDataForUserGroupChange();
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
             connectToIoT();

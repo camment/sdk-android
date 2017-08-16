@@ -90,7 +90,6 @@ public class BaseCammentOverlay extends RelativeLayout
 
     private RecordingHandler recordingHandler;
 
-    private String activeGroupUuid;
     private ExoPlayer.EventListener exoEventListener;
 
     @Override
@@ -161,26 +160,26 @@ public class BaseCammentOverlay extends RelativeLayout
         PermissionHelper.getInstance().initPermissionHelper(CammentSDK.getInstance().getCurrentActivity());
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        Log.d("OVERLAY", "onSaveInstanceState");
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ARG_SUPER_STATE, super.onSaveInstanceState());
-        final Usergroup usergroup = UserGroupProvider.getUserGroup();
-        bundle.putString(ARG_ACTIVE_GROUP_UUID, usergroup.getUuid());
-        return bundle;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        Log.d("OVERLAY", "onRestoreInstanceState");
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            activeGroupUuid = bundle.getString(ARG_ACTIVE_GROUP_UUID);
-            state = bundle.getParcelable(ARG_SUPER_STATE);
-        }
-        super.onRestoreInstanceState(state);
-    }
+//    @Override
+//    protected Parcelable onSaveInstanceState() {
+//        Log.d("OVERLAY", "onSaveInstanceState");
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(ARG_SUPER_STATE, super.onSaveInstanceState());
+//        final Usergroup usergroup = UserGroupProvider.getUserGroup();
+//        bundle.putString(ARG_ACTIVE_GROUP_UUID, activeGroupUuid);
+//        return bundle;
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Parcelable state) {
+//        Log.d("OVERLAY", "onRestoreInstanceState");
+//        if (state instanceof Bundle) {
+//            Bundle bundle = (Bundle) state;
+//            activeGroupUuid = bundle.getString(ARG_ACTIVE_GROUP_UUID);
+//            state = bundle.getParcelable(ARG_SUPER_STATE);
+//        }
+//        super.onRestoreInstanceState(state);
+//    }
 
     @Override
     protected void onAttachedToWindow() {
@@ -192,14 +191,14 @@ public class BaseCammentOverlay extends RelativeLayout
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
         }
 
-        if (TextUtils.isEmpty(activeGroupUuid)) {
-            final Usergroup usergroup = UserGroupProvider.getUserGroup();
-            if (usergroup == null || TextUtils.isEmpty(usergroup.getUuid())) {
-                ApiManager.getInstance().getGroupApi().createEmptyUsergroup();
-            } else {
-                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-            }
-        }
+//        if (TextUtils.isEmpty(activeGroupUuid)) {
+//            final Usergroup usergroup = UserGroupProvider.getUserGroup();
+//            if (usergroup == null || TextUtils.isEmpty(usergroup.getUuid())) {
+//                ApiManager.getInstance().getGroupApi().createEmptyUsergroup();
+//            } else {
+//                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+//            }
+//        }
     }
 
     @Override
@@ -430,15 +429,5 @@ public class BaseCammentOverlay extends RelativeLayout
 
         }
     };
-
-    private Runnable getRecordRunnable() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                AnimationUtils.startRecordAnimation(vRecordIndicator);
-                recordingHandler.startRecording();
-            }
-        };
-    }
 
 }

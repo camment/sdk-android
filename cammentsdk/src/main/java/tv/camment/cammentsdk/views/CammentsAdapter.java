@@ -9,7 +9,10 @@ import android.widget.ImageView;
 
 import com.camment.clientsdk.model.Camment;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.CammentApi;
@@ -29,7 +32,12 @@ public class CammentsAdapter extends RecyclerView.Adapter {
     }
 
     public void setData(List<Camment> camments) {
-        this.camments = camments;
+        Set<Camment> cammentSet = new HashSet<>();
+        cammentSet.addAll(camments);
+
+        this.camments = new ArrayList<>();
+        this.camments.addAll(cammentSet);
+
         notifyDataSetChanged();
     }
 

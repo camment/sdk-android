@@ -6,6 +6,7 @@ import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
 import com.camment.clientsdk.model.FacebookFriend;
 import com.camment.clientsdk.model.UserInAddToGroupRequest;
+import com.camment.clientsdk.model.Usergroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 
@@ -55,7 +57,7 @@ public class InvitationApi extends CammentAsyncClient {
     }
 
     public void acceptInvitation(final InvitationMessage invitationMessage) {
-        submitTask(new Callable<Object>() {
+        submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 AcceptInvitationRequest acceptInvitationRequest = new AcceptInvitationRequest();
@@ -64,14 +66,22 @@ public class InvitationApi extends CammentAsyncClient {
 
                 return new Object();
             }
-        }, acceptInvitationCallback());
+        }, acceptInvitationCallback(invitationMessage));
     }
 
-    private CammentCallback<Object> acceptInvitationCallback() {
+    private CammentCallback<Object> acceptInvitationCallback(final InvitationMessage invitationMessage) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
                 Log.d("onSuccess", "acceptInvitation");
+                DataManager.getInstance().clearDataForUserGroupChange();
+
+                Usergroup usergroup = new Usergroup();
+                usergroup.setUuid(invitationMessage.body.groupUuid);
+
+                UserGroupProvider.insertUserGroup(usergroup);
+
+                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
             }
 
             @Override

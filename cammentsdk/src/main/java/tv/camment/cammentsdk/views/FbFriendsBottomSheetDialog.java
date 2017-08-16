@@ -68,7 +68,9 @@ public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements Dia
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiManager.getInstance().getInvitationApi().sendInvitation(adapter.getSelectedFacebookFriends(), sendInvitationCallback());
+                ApiManager.getInstance().getGroupApi()
+                        .createEmptyUsergroupIfNeededAndSendInvitation(adapter.getSelectedFacebookFriends(),
+                                sendInvitationCallback());
                 dismiss();
             }
         });

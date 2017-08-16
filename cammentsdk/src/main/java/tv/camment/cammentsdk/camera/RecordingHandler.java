@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.SDKConfig;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
@@ -104,7 +105,8 @@ public class RecordingHandler extends CammentAsyncClient {
                     if (!cancelled) {
                         if (camment != null
                                 && !TextUtils.isEmpty(camment.getUuid())) {
-                            AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                            ApiManager.getInstance().getGroupApi()
+                                    .createEmptyUsergroupIfNeededAndUploadCamment(camment);
                         }
                     } else {
                         CammentUploadProvider.deleteCammentUploadByUuid(cammentUuid);
@@ -121,14 +123,12 @@ public class RecordingHandler extends CammentAsyncClient {
     }
 
     private Camment getNewUploadCamment() {
-        final Usergroup usergroup = UserGroupProvider.getUserGroup();
         final String showUuid = ShowProvider.getShow().getUuid();
 
         CammentUpload camment = new CammentUpload();
         camment.setUuid(UUID.randomUUID().toString());
         camment.setShowUuid(showUuid);
         camment.setUrl(FileUtils.getInstance().getUploadCammentFile(camment.getUuid()).toString());
-        camment.setUserGroupUuid(usergroup.getUuid());
 
         CammentUploadProvider.insertCammentUpload(camment);
 

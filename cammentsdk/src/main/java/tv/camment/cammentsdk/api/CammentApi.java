@@ -15,6 +15,7 @@ import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.model.CCamment;
 
 /**
  * Created by petrushka on 03/08/2017.

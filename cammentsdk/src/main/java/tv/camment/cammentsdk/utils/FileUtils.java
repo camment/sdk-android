@@ -63,4 +63,17 @@ public class FileUtils {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void deleteAllFiles() {
+        File dir = new File(UPLOADS_DIR);
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                if (file.isFile()) {
+                    file.delete();
+                }
+            }
+        }
+    }
+
+
 }

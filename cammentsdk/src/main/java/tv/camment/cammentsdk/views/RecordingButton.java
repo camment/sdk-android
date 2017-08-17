@@ -2,12 +2,15 @@ package tv.camment.cammentsdk.views;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
 
@@ -74,6 +77,8 @@ public class RecordingButton extends AppCompatImageButton {
                             .onRecordingStop(MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_CANCEL);
                 }
 
+                AnimationUtils.animateDeactivateRecordingButton(this);
+
                 par.topMargin = initMargin;
 
                 setLayoutParams(par);
@@ -83,6 +88,8 @@ public class RecordingButton extends AppCompatImageButton {
                 if (actionsListener != null) {
                     actionsListener.onRecordingStart();
                 }
+
+                AnimationUtils.animateActivateRecordingButton(this);
 
                 screenHeight = CommonUtils.getScreenHeight(getContext());
 

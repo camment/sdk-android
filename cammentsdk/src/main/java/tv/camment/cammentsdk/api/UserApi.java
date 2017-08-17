@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.aws.AWSManager;
 
 /**
  * Created by petrushka on 03/08/2017.
@@ -83,6 +84,15 @@ public class UserApi extends CammentAsyncClient {
         private String name;
         private String picture;
 
+    }
+
+    public void getMyUserCognitoId(CammentCallback<String> getMyUserCognitoIdCallback) {
+        submitTask(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return AWSManager.getInstance().getCognitoCachingCredentialsProvider().getIdentityId();
+            }
+        }, getMyUserCognitoIdCallback);
     }
 
 }

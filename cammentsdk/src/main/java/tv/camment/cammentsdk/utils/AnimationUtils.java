@@ -3,18 +3,13 @@ package tv.camment.cammentsdk.utils;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
-import tv.camment.cammentsdk.views.CameraGLView;
 import tv.camment.cammentsdk.views.SquareFrameLayout;
-
-import static android.view.View.VISIBLE;
 
 /**
  * Created by petrushka on 09/08/2017.
@@ -38,6 +33,7 @@ public class AnimationUtils {
                 flCamera.setCustomScale((Float) valueAnimator.getAnimatedValue());
             }
         });
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addListener(animatorListener);
         animator.start();
     }
@@ -64,6 +60,7 @@ public class AnimationUtils {
             }
         });
         animator.addListener(animatorListener);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
     }
 
@@ -81,6 +78,30 @@ public class AnimationUtils {
             recordAnimator.cancel();
         }
         vRecordIndicator.setAlpha(0.0f);
+    }
+
+    public static void animateActivateRecordingButton(final ImageButton ibRecord) {
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 0.8f, 1.5f);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 0.8f, 1.5f);
+        ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(ibRecord, "alpha", 0.5f, 0.9f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animatorX, animatorY, animatorAlpha);
+        animatorSet.setDuration(100);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.start();
+    }
+
+    public static void animateDeactivateRecordingButton(final ImageButton ibRecord) {
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 1.5f, 0.8f);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 1.5f, 0.8f);
+        ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(ibRecord, "alpha", 0.9f, 0.5f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animatorX, animatorY, animatorAlpha);
+        animatorSet.setDuration(100);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.start();
     }
 
 }

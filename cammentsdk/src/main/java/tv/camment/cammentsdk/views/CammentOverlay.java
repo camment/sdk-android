@@ -31,4 +31,8 @@ public class CammentOverlay extends BaseCammentOverlay {
         this.parentViewGroup = parentViewGroup;
     }
 
+    public void setCammentAudioListener(CammentAudioListener cammentAudioListener) {
+        this.cammentAudioListener = cammentAudioListener;
+    }
+
 }

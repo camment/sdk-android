@@ -25,13 +25,15 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CammentAudioListener {
 
     private SimpleExoPlayer player;
     private SimpleExoPlayerView showPlayerView;
     private CammentOverlay cammentOverlay;
+    private float previousVolume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         cammentOverlay = (CammentOverlay) findViewById(R.id.cammentOverlay);
 
         cammentOverlay.setParentViewGroup(showPlayerView);
+        cammentOverlay.setCammentAudioListener(this);
     }
 
     @Override
@@ -73,6 +76,32 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         CammentSDK.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onCammentPlaybackStarted() {
+        Log.d("main", "onCammentPlaybackStarted");
+        previousVolume = player.getVolume();
+        player.setVolume(previousVolume / 2);
+    }
+
+    @Override
+    public void onCammentPlaybackEnded() {
+        Log.d("main", "onCammentPlaybackEnded");
+        player.setVolume(previousVolume);
+    }
+
+    @Override
+    public void onCammentRecordingStarted() {
+        Log.d("main", "onCammentRecordingStarted " + player.getVolume());
+        previousVolume = player.getVolume();
+        player.setVolume(0.0f);
+    }
+
+    @Override
+    public void onCammentRecordingEnded() {
+        Log.d("main", "onCammentRecordingEnded " + previousVolume);
+        player.setVolume(previousVolume);
     }
 
 }

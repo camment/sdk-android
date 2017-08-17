@@ -21,6 +21,7 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.views.CammentAudioListener;
 
 /**
  * Created by petrushka on 07/08/2017.
@@ -71,7 +72,7 @@ public class RecordingHandler extends CammentAsyncClient {
         };
     }
 
-    public void stopRecording(boolean cancelled) {
+    public void stopRecording(boolean cancelled, CammentAudioListener cammentAudioListener) {
         Log.d("RECORDING", "stopRecording - check muxer ");
 
         if (mediaMuxer != null) {
@@ -88,18 +89,22 @@ public class RecordingHandler extends CammentAsyncClient {
                     mediaMuxer = null;
                     return cammentUuid;
                 }
-            }, stopRecordingCallback(cancelled));
+            }, stopRecordingCallback(cancelled, cammentAudioListener));
         }
     }
 
-    private CammentCallback<String> stopRecordingCallback(final boolean cancelled) {
+    private CammentCallback<String> stopRecordingCallback(final boolean cancelled,
+                                                          final CammentAudioListener cammentAudioListener) {
         return new CammentCallback<String>() {
             @Override
             public void onSuccess(String cammentUuid) {
-                Log.d("onSuccess", "stopRecording");
                 if (!TextUtils.isEmpty(cammentUuid)) {
                     final CCamment camment = CammentProvider.getCammentByUuid(cammentUuid);
                     if (!cancelled) {
+                        if (cammentAudioListener != null) {
+                            cammentAudioListener.onCammentRecordingEnded();
+                        }
+
                         if (camment != null
                                 && !TextUtils.isEmpty(camment.getUuid())) {
                             ApiManager.getInstance().getGroupApi()

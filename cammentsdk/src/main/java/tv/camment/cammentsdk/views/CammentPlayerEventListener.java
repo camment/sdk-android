@@ -18,9 +18,12 @@ import static android.view.View.VISIBLE;
 
 class CammentPlayerEventListener implements ExoPlayer.EventListener {
 
+    private final CammentAudioListener cammentAudioListener;
     private final CammentViewHolder cammentViewHolder;
 
-    CammentPlayerEventListener(CammentViewHolder cammentViewHolder) {
+    CammentPlayerEventListener(CammentAudioListener cammentAudioListener,
+                               CammentViewHolder cammentViewHolder) {
+        this.cammentAudioListener = cammentAudioListener;
         this.cammentViewHolder = cammentViewHolder;
     }
 
@@ -42,7 +45,15 @@ class CammentPlayerEventListener implements ExoPlayer.EventListener {
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         switch (playbackState) {
+            case ExoPlayer.STATE_READY:
+                if (cammentAudioListener != null) {
+                    cammentAudioListener.onCammentPlaybackStarted();
+                }
+                break;
             case ExoPlayer.STATE_ENDED:
+                if (cammentAudioListener != null) {
+                    cammentAudioListener.onCammentPlaybackEnded();
+                }
                 cammentViewHolder.setItemViewScale(0.5f);
                 break;
         }

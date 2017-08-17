@@ -69,6 +69,7 @@ public class BaseCammentOverlay extends RelativeLayout
     private float startY;
 
     protected ViewGroup parentViewGroup;
+    protected CammentAudioListener cammentAudioListener;
 
     private SquareFrameLayout flCamera;
     private CameraGLView cameraGLView;
@@ -231,13 +232,16 @@ public class BaseCammentOverlay extends RelativeLayout
 
             cammentViewHolder.setItemViewScale(cammentViewHolder.getItemViewScale() == 0.5f ? 1.0f : 0.5f);
 
-            exoEventListener = new CammentPlayerEventListener(cammentViewHolder);
+            exoEventListener = new CammentPlayerEventListener(cammentAudioListener, cammentViewHolder);
             player.addListener(exoEventListener);
 
             player.setVideoTextureView(textureView);
             videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), dataSourceFactory, extractorsFactory, null, null);
             player.prepare(videoSource);
         } else {
+            if (cammentAudioListener != null) {
+                cammentAudioListener.onCammentPlaybackEnded();
+            }
             player.stop();
         }
     }
@@ -364,7 +368,7 @@ public class BaseCammentOverlay extends RelativeLayout
         AnimationUtils.cancelAppearAnimation();
 
         if (recordingHandler != null) {
-            recordingHandler.stopRecording(cancelled);
+            recordingHandler.stopRecording(cancelled, cammentAudioListener);
         }
 
         AnimationUtils.stopRecordAnimation(vRecordIndicator);
@@ -418,6 +422,9 @@ public class BaseCammentOverlay extends RelativeLayout
                 @Override
                 public void run() {
                     Log.d("delayed", "running");
+                    if (cammentAudioListener != null) {
+                        cammentAudioListener.onCammentRecordingStarted();
+                    }
                     AnimationUtils.startRecordAnimation(vRecordIndicator);
                     recordingHandler.startRecording();
                 }

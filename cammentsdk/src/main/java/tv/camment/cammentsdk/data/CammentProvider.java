@@ -176,7 +176,7 @@ public class CammentProvider {
         camment.setUserCognitoIdentityId(cursor.getString(cursor.getColumnIndex(DataContract.Camment.userCognitoIdentityId)));
         camment.setUserGroupUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.userGroupUuid)));
         camment.setShowUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.showUuid)));
-        camment.setTimestamp(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.timestamp)));
+        camment.setTimestamp(cursor.getLong(cursor.getColumnIndex(DataContract.Camment.timestamp)));
         camment.setTransferId(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.transferId)));
         camment.setRecorded(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.recorded)) == 1);
 

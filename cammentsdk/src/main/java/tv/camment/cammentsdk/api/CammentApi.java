@@ -92,14 +92,15 @@ public class CammentApi extends CammentAsyncClient {
                 devcammentClient.usergroupsGroupUuidCammentsCammentUuidDelete(camment.getUuid(), camment.getUserGroupUuid());
                 return new Object();
             }
-        }, deleteUserGroupCammentCallback());
+        }, deleteUserGroupCammentCallback(camment));
     }
 
-    private CammentCallback<Object> deleteUserGroupCammentCallback() {
+    private CammentCallback<Object> deleteUserGroupCammentCallback(final Camment camment) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
                 Log.d("onSuccess", "deleteUserGroupCamment");
+                CammentProvider.deleteCammentByUuid(camment.getUuid());
             }
 
             @Override

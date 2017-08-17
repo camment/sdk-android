@@ -7,6 +7,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.TextureView;
@@ -14,6 +15,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
@@ -117,6 +122,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
             }
         } else {
             Glide.with(CammentSDK.getInstance().getApplicationContext())
+                    .asBitmap()
                     .load(camment.getThumbnail())
                     .into(ivThumbnail);
         }

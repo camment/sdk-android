@@ -127,6 +127,7 @@ public class RecordingHandler extends CammentAsyncClient {
         camment.setShowUuid(showUuid);
         camment.setUrl(FileUtils.getInstance().getUploadCammentFile(camment.getUuid()).toString());
         camment.setRecorded(false);
+        camment.setTimestamp(System.currentTimeMillis());
 
         CammentProvider.insertCamment(camment);
 

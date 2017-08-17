@@ -222,6 +222,7 @@ public class IoTHelper extends CammentAsyncClient
                 && m.body != null
                 && m.body.user != null
                 && !TextUtils.isEmpty(m.body.user.facebookId)
+                && !FacebookHelper.getInstance().isMessageForMe(m.body.user.facebookId)
                 && usergroup.getUuid().equals(m.body.groupUuid);
     }
 

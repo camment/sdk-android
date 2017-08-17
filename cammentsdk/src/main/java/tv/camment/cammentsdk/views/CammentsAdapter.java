@@ -5,18 +5,18 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.camment.clientsdk.model.Camment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import tv.camment.cammentsdk.R;
-import tv.camment.cammentsdk.api.CammentApi;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.data.model.CCammentComparator;
 
 
 public class CammentsAdapter extends RecyclerView.Adapter {
@@ -39,6 +39,7 @@ public class CammentsAdapter extends RecyclerView.Adapter {
         this.camments = new ArrayList<>();
 
         this.camments.addAll(cammentSet);
+        Collections.sort(this.camments, new CCammentComparator());
 
         notifyDataSetChanged();
     }

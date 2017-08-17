@@ -335,6 +335,9 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStart() {
+        Log.d("delayed", "removing");
+        getHandler().removeCallbacksAndMessages(null);
+
         if (PermissionHelper.getInstance().hasPermissions()) {
             if (flCamera.getChildCount() < 2) {
                 if (cameraGLView == null) {
@@ -355,7 +358,10 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStop(boolean cancelled) {
+        Log.d("delayed", "removing");
         getHandler().removeCallbacksAndMessages(null);
+
+        AnimationUtils.cancelAppearAnimation();
 
         if (recordingHandler != null) {
             recordingHandler.stopRecording(cancelled);
@@ -402,13 +408,16 @@ public class BaseCammentOverlay extends RelativeLayout
 
         @Override
         public void onAnimationEnd(Animator animator) {
+            Log.d("recording", "onAnimationEnd");
             if (recordingHandler == null) {
                 recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
             }
 
+            Log.d("delayed", "adding");
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("delayed", "running");
                     AnimationUtils.startRecordAnimation(vRecordIndicator);
                     recordingHandler.startRecording();
                 }
@@ -417,7 +426,8 @@ public class BaseCammentOverlay extends RelativeLayout
 
         @Override
         public void onAnimationCancel(Animator animator) {
-
+            Log.d("delayed", "cancel");
+            getHandler().removeCallbacksAndMessages(null);
         }
 
         @Override

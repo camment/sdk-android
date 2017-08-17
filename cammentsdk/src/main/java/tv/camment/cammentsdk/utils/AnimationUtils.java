@@ -26,6 +26,7 @@ public class AnimationUtils {
         flCamera.setPivotY(0);
 
         animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+
         animator.setDuration(500);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -34,12 +35,14 @@ public class AnimationUtils {
             }
         });
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
         animator.addListener(animatorListener);
         animator.start();
     }
 
     public static void cancelAppearAnimation() {
         if (animator != null) {
+            animator.removeAllListeners();
             animator.cancel();
         }
     }

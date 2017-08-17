@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 public class CammentOverlay extends BaseCammentOverlay {
 
-
     public CammentOverlay(Context context) {
         super(context);
     }

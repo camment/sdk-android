@@ -1,15 +1,14 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
@@ -25,6 +24,7 @@ public class RecordingButton extends AppCompatImageButton {
     private boolean handledPullDown;
 
     private ActionsListener actionsListener;
+    private long lastClick;
 
     public RecordingButton(Context context) {
         super(context);
@@ -45,6 +45,8 @@ public class RecordingButton extends AppCompatImageButton {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         final ConstraintLayout.LayoutParams par = (ConstraintLayout.LayoutParams) getLayoutParams();
+
+        Log.d("delayed", "event " + MotionEventCompat.getActionMasked(event));
 
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_MOVE:
@@ -85,19 +87,24 @@ public class RecordingButton extends AppCompatImageButton {
                 return true;
             case MotionEvent.ACTION_DOWN:
                 handledPullDown = false;
-                if (actionsListener != null) {
-                    actionsListener.onRecordingStart();
+
+                if (Math.abs(SystemClock.uptimeMillis() - lastClick) >= 1000) {
+                    lastClick = SystemClock.uptimeMillis();
+
+                    if (actionsListener != null) {
+                        actionsListener.onRecordingStart();
+                    }
+
+                    AnimationUtils.animateActivateRecordingButton(this);
+
+                    screenHeight = CommonUtils.getScreenHeight(getContext());
+
+                    prevY = (int) event.getRawY();
+                    initMargin = par.topMargin;
+                    par.bottomMargin = -2 * getHeight();
+
+                    setLayoutParams(par);
                 }
-
-                AnimationUtils.animateActivateRecordingButton(this);
-
-                screenHeight = CommonUtils.getScreenHeight(getContext());
-
-                prevY = (int) event.getRawY();
-                initMargin = par.topMargin;
-                par.bottomMargin = -2 * getHeight();
-
-                setLayoutParams(par);
                 return true;
         }
         return false;

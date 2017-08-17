@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
@@ -114,13 +115,20 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
 
         this.camment = camment;
 
-        if (TextUtils.isEmpty(camment.getThumbnail())) {
-            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(FileUtils.getInstance().getUploadCammentPath(camment.getUuid()),
-                    MediaStore.Video.Thumbnails.MINI_KIND);
+        if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
+            Log.d("thumb", "showing local");
+            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(FileUtils.getInstance()
+                            .getUploadCammentPath(camment.getUuid()), MediaStore.Video.Thumbnails.MINI_KIND);
             if (bitmap != null) {
                 ivThumbnail.setImageBitmap(bitmap);
+
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                ivThumbnail.setColorFilter(filter);
             }
         } else {
+            Log.d("thumb", "trying to load");
             Glide.with(CammentSDK.getInstance().getApplicationContext())
                     .asBitmap()
                     .load(camment.getThumbnail())

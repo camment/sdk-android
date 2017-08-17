@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tv.camment.cammentdemo">
 
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
     <application
         android:name=".CammentDemoApp"
         android:allowBackup="true"

@@ -27,14 +27,13 @@ public class AnimationUtils {
 
         animator = ValueAnimator.ofFloat(0.0f, 1.0f);
 
-        animator.setDuration(500);
+        animator.setDuration(250);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 flCamera.setCustomScale((Float) valueAnimator.getAnimatedValue());
             }
         });
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
         animator.addListener(animatorListener);
         animator.start();
@@ -55,7 +54,7 @@ public class AnimationUtils {
         flCamera.setPivotY(0);
 
         ValueAnimator animator = ValueAnimator.ofFloat(1.0f, 0.0f);
-        animator.setDuration(500);
+        animator.setDuration(250);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -63,7 +62,6 @@ public class AnimationUtils {
             }
         });
         animator.addListener(animatorListener);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.start();
     }
 

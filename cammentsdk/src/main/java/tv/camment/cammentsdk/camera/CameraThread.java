@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.views.CameraGLView;
 
 @SuppressWarnings("deprecation")
@@ -93,12 +94,12 @@ public class CameraThread extends Thread {
 
                 // request closest supported preview size
                 final Camera.Size closestSize = getClosestSupportedSize(
-                        params.getSupportedPreviewSizes(), width, height);
+                        params.getSupportedPreviewSizes(), SDKConfig.CAMMENT_SIZE, SDKConfig.CAMMENT_SIZE);
                 params.setPreviewSize(closestSize.width, closestSize.height);
 
                 // request closest picture size for an aspect ratio issue on Nexus7
                 final Camera.Size pictureSize = getClosestSupportedSize(
-                        params.getSupportedPictureSizes(), width, height);
+                        params.getSupportedPictureSizes(), SDKConfig.CAMMENT_SIZE, SDKConfig.CAMMENT_SIZE);
                 params.setPictureSize(pictureSize.width, pictureSize.height);
 
                 // rotate camera preview according to the device orientation

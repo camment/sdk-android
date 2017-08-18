@@ -41,7 +41,12 @@ public class CammentProvider {
         cv.put(DataContract.Camment.thumbnail, camment.getThumbnail());
         cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
         cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
-        cv.put(DataContract.Camment.timestamp, camment.getTimestamp());
+
+        long timestamp = camment.getTimestamp() == 0
+                ? System.currentTimeMillis()
+                : camment.getTimestamp();
+        cv.put(DataContract.Camment.timestamp, timestamp);
+
         cv.put(DataContract.Camment.transferId, camment.getTransferId());
         cv.put(DataContract.Camment.recorded, camment.isRecorded() ? 1 : 0);
 

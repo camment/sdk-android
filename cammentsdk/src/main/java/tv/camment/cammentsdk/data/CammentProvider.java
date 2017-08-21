@@ -34,6 +34,8 @@ public class CammentProvider {
         if (camment == null)
             return;
 
+        final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
+
         ContentValues cv = new ContentValues();
         cv.put(DataContract.Camment.uuid, camment.getUuid());
         cv.put(DataContract.Camment.url, camment.getUrl());
@@ -44,7 +46,7 @@ public class CammentProvider {
 
         long timestamp = camment.getTimestamp() == 0
                 ? System.currentTimeMillis()
-                : camment.getTimestamp();
+                : cammentByUuid == null ? camment.getTimestamp() : cammentByUuid.getTimestamp();
         cv.put(DataContract.Camment.timestamp, timestamp);
 
         cv.put(DataContract.Camment.transferId, camment.getTransferId());

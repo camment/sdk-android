@@ -4,6 +4,9 @@
     <string name="cmmsdk_facebook_app_id" translatable="false">272405646569362</string>
     <string name="cmmsdk_fb_login_protocol_scheme" translatable="false">fb272405646569362</string>
 
+    <string name="cmmsdk_permission">In order to use Camment feature you need to grant the access
+        to video and audio recording</string>
+
     <string name="cmmsdk_user_invited_to_chat">%s invited you to a private chat</string>
     <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
 

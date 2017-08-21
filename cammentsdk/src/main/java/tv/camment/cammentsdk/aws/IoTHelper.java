@@ -258,6 +258,7 @@ public class IoTHelper extends CammentAsyncClient
         camment.setThumbnail(message.body.thumbnail);
         camment.setUrl(message.body.url);
         camment.setUserCognitoIdentityId(message.body.userCognitoIdentityId);
+        //TODO check camment message timestamp
         camment.setTimestamp(System.currentTimeMillis());
         camment.setRecorded(true);
         camment.setTransferId(-1);

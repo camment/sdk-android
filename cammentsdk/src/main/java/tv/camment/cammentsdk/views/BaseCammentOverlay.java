@@ -141,8 +141,6 @@ public class BaseCammentOverlay extends RelativeLayout
     }
 
     private void init(Context context) {
-        Log.d("OVERLAY", "init");
-        //TODO check xml for landscape layout
         View.inflate(context, R.layout.cmmsdk_camment_overlay, this);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();

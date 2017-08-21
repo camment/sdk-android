@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
@@ -19,6 +20,7 @@ public class RecordingButton extends AppCompatImageButton {
     private static final int MOVE_THRESHOLD = 10;
 
     private int initMargin;
+    private int prevX;
     private int prevY;
     private int screenHeight;
     private boolean handledPullDown;
@@ -50,8 +52,18 @@ public class RecordingButton extends AppCompatImageButton {
 
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_MOVE:
+                if (!PermissionHelper.getInstance().hasPermissions()) {
+                    par.leftMargin += (int) event.getRawX() - prevX;
+                    prevX = (int) event.getRawX();
+                    setLayoutParams(par);
+                    return true;
+                }
+
                 if (Math.abs(prevY - event.getRawY()) > MOVE_THRESHOLD) {
-                    Log.d("MOVE", "move threshold reached");
+                    setAlpha(0.5f);
+                    setScaleX(0.8f);
+                    setScaleY(0.8f);
+
                     if (actionsListener != null) {
                         actionsListener.onRecordingStop(true);
                     }
@@ -100,6 +112,7 @@ public class RecordingButton extends AppCompatImageButton {
                     screenHeight = CommonUtils.getScreenHeight(getContext());
 
                     prevY = (int) event.getRawY();
+                    prevX = (int) event.getRawX();
                     initMargin = par.topMargin;
                     par.bottomMargin = -2 * getHeight();
 

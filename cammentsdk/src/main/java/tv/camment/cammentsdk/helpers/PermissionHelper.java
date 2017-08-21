@@ -12,6 +12,7 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import tv.camment.cammentsdk.R;
 
 
 public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
@@ -48,11 +49,9 @@ public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
         if (activityWeakRef == null || activityWeakRef.get() == null) {
             throw new IllegalArgumentException("PermissionHelper was not initialized");
         }
-
-        Log.d(TAG, "ask for permission");
         // Ask for both permissions
-        //TODO suply string
-        EasyPermissions.requestPermissions(activityWeakRef.get(), "TODO string",
+        EasyPermissions.requestPermissions(activityWeakRef.get(),
+                activityWeakRef.get().getString(R.string.cmmsdk_permission),
                 RC_CAMERA_MIC_PERM, permissions);
     }
 

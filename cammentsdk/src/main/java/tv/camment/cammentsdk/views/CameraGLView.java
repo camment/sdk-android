@@ -3,6 +3,7 @@ package tv.camment.cammentsdk.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
@@ -17,10 +18,11 @@ import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
 import tv.camment.cammentsdk.camera.gl_utils.CameraSurfaceRenderer;
 
 
-public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEncoderListener {
+public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEncoderListener, Camera.PreviewCallback {
 
     private final CameraSurfaceRenderer surfaceRenderer;
     private CameraHandler cameraHandler = null;
+    private OnPreviewStartedListener previewStartedListener;
 
     private boolean hasSurface;
 
@@ -50,7 +52,7 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
     public void onResume() {
         super.onResume();
         if (hasSurface && cameraHandler == null) {
-            startPreview(getWidth(), getHeight());
+            startPreview();
         }
     }
 
@@ -62,14 +64,14 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         super.onPause();
     }
 
-    public synchronized void startPreview(int width, int height) {
+    public synchronized void startPreview() {
         Log.d("CAMERA", "startPreview");
         if (cameraHandler == null) {
             final CameraThread cameraThread = new CameraThread(this);
             cameraThread.start();
             cameraHandler = cameraThread.getHandler();
         }
-        cameraHandler.startPreview(width, height);
+        cameraHandler.startPreview(this);
     }
 
     @Override
@@ -155,6 +157,28 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
 
     public void setCameraRotation(int cameraRotation) {
         this.cameraRotation = cameraRotation;
+    }
+
+    public void setPreviewStartedListener(OnPreviewStartedListener previewStartedListener) {
+        this.previewStartedListener = previewStartedListener;
+    }
+
+    public void clearPreviewStartedListener() {
+        previewStartedListener = null;
+    }
+
+    interface OnPreviewStartedListener {
+        void onPreviewStarted();
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] bytes, Camera camera) {
+        if (getParent() instanceof SquareFrameLayout) {
+            if (((SquareFrameLayout) getParent()).getCustomScale() == 1.0f
+                    && previewStartedListener != null) {
+                previewStartedListener.onPreviewStarted();
+            }
+        }
     }
 
 }

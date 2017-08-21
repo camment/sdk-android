@@ -26,7 +26,6 @@ public class CameraThread extends Thread {
     private CameraHandler cameraHandler;
     private volatile boolean isRunning = false;
     private Camera camera;
-    private boolean isFrontFace;
 
     private int cameraId;
 
@@ -68,11 +67,8 @@ public class CameraThread extends Thread {
 
     /**
      * start camera preview
-     *
-     * @param width
-     * @param height
      */
-    final void startPreview(final int width, final int height) {
+    final void startPreview(Camera.PreviewCallback previewCallback) {
         final CameraGLView cameraGLView = cameraGlViewWeakRef.get();
         if (cameraGLView != null && camera == null) {
             // This is a sample project so just use 0 as camera ID.
@@ -105,6 +101,7 @@ public class CameraThread extends Thread {
                 // rotate camera preview according to the device orientation
                 setRotation(params);
                 camera.setParameters(params);
+                camera.setPreviewCallback(previewCallback);
                 // get the actual preview size
                 final Camera.Size previewSize = camera.getParameters().getPreviewSize();
                 // adjust view size with keeping the aspect ration of camera preview.
@@ -232,7 +229,7 @@ public class CameraThread extends Thread {
         final Camera.CameraInfo info =
                 new android.hardware.Camera.CameraInfo();
         android.hardware.Camera.getCameraInfo(cameraId, info);
-        isFrontFace = (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT);
+        boolean isFrontFace = (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT);
         if (isFrontFace) {    // front camera
             degrees = (info.orientation + degrees) % 360;
             degrees = (360 - degrees) % 360;  // reverse

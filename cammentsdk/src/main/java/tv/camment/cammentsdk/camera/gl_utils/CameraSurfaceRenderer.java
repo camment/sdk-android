@@ -76,7 +76,7 @@ public class CameraSurfaceRenderer implements
         updateViewport();
         final CameraGLView cameraGLView = cameraGLViewWeakRef.get();
         if (cameraGLView != null) {
-            cameraGLView.startPreview(width, height);
+            cameraGLView.startPreview();
         }
     }
 

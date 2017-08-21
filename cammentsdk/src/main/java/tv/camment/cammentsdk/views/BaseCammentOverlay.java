@@ -57,7 +57,7 @@ public class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, CameraGLView.OnPreviewStartedListener {
 
     private static final String ARG_SUPER_STATE = "arg_super_state";
     private static final String ARG_ACTIVE_GROUP_UUID = "arg_active_group";
@@ -339,14 +339,12 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStart() {
-        Log.d("delayed", "removing");
-        getHandler().removeCallbacksAndMessages(null);
-
         if (PermissionHelper.getInstance().hasPermissions()) {
             if (flCamera.getChildCount() < 2) {
                 if (cameraGLView == null) {
                     cameraGLView = new CameraGLView(getContext());
                 }
+                cameraGLView.setPreviewStartedListener(this);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 final int dp2 = CommonUtils.dpToPx(getContext(), 2);
                 params.setMargins(dp2, dp2, dp2, dp2);
@@ -362,9 +360,6 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStop(boolean cancelled) {
-        Log.d("delayed", "removing");
-        getHandler().removeCallbacksAndMessages(null);
-
         AnimationUtils.cancelAppearAnimation();
 
         if (recordingHandler != null) {
@@ -413,22 +408,6 @@ public class BaseCammentOverlay extends RelativeLayout
         @Override
         public void onAnimationEnd(Animator animator) {
             Log.d("recording", "onAnimationEnd");
-            if (recordingHandler == null) {
-                recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
-            }
-
-            Log.d("delayed", "adding");
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("delayed", "running");
-                    if (cammentAudioListener != null) {
-                        cammentAudioListener.onCammentRecordingStarted();
-                    }
-                    AnimationUtils.startRecordAnimation(vRecordIndicator);
-                    recordingHandler.startRecording();
-                }
-            }, 250);
         }
 
         @Override
@@ -442,5 +421,26 @@ public class BaseCammentOverlay extends RelativeLayout
 
         }
     };
+
+    @Override
+    public void onPreviewStarted() {
+        cameraGLView.clearPreviewStartedListener();
+
+        if (recordingHandler == null) {
+            recordingHandler = new RecordingHandler(Executors.newSingleThreadExecutor(), cameraGLView);
+        }
+
+        if (cammentAudioListener != null) {
+            cammentAudioListener.onCammentRecordingStarted();
+        }
+
+        post(new Runnable() {
+            @Override
+            public void run() {
+                AnimationUtils.startRecordAnimation(vRecordIndicator);
+            }
+        });
+        recordingHandler.startRecording();
+    }
 
 }

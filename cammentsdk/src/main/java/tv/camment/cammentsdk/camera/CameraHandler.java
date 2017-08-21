@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.camera;
 
+import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -15,9 +16,9 @@ public class CameraHandler extends Handler {
         mThread = thread;
     }
 
-    public void startPreview(final int width, final int height) {
+    public void startPreview(Camera.PreviewCallback previewCallback) {
         Log.d("CAMERA", "start preview");
-        sendMessage(obtainMessage(MSG_PREVIEW_START, width, height));
+        sendMessage(obtainMessage(MSG_PREVIEW_START, previewCallback));
     }
 
     /**
@@ -45,7 +46,7 @@ public class CameraHandler extends Handler {
     public void handleMessage(final Message msg) {
         switch (msg.what) {
             case MSG_PREVIEW_START:
-                mThread.startPreview(msg.arg1, msg.arg2);
+                mThread.startPreview((Camera.PreviewCallback) msg.obj);
                 break;
             case MSG_PREVIEW_STOP:
                 mThread.stopPreview();

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 
 /**
@@ -116,6 +117,10 @@ public class CammentDialog extends DialogFragment {
 
     public void setInvitationListener(ActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    public MessageType getMessageType() {
+        return message.type;
     }
 
     public interface ActionListener {

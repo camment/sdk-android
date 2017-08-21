@@ -1,7 +1,7 @@
 package tv.camment.cammentsdk.aws;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +14,7 @@ import com.camment.clientsdk.model.Usergroup;
 import com.google.gson.Gson;
 
 import java.security.KeyStore;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -25,6 +26,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -240,13 +242,26 @@ public class IoTHelper extends CammentAsyncClient
     private void handleInvitationMessage(BaseMessage message) {
         Activity activity = CammentSDK.getInstance().getCurrentActivity();
         if (activity instanceof AppCompatActivity) {
-            Fragment fragment = activity.getFragmentManager().findFragmentByTag(message.toString());
+            dismissInvitationSentIfNeeded(((AppCompatActivity) activity).getSupportFragmentManager().getFragments());
+
+            Fragment fragment = ((AppCompatActivity) activity).getSupportFragmentManager().findFragmentByTag(message.toString());
             if (fragment == null || !fragment.isAdded()) {
                 CammentDialog cammentDialog = CammentDialog.createInstance(message);
                 if (message instanceof InvitationMessage) {
                     cammentDialog.setInvitationListener(this);
                 }
                 cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+            }
+        }
+    }
+
+    private void dismissInvitationSentIfNeeded(List<Fragment> fragments) {
+        if (fragments != null) {
+            for (Fragment f : fragments) {
+                if (f instanceof CammentDialog
+                        && ((CammentDialog) f).getMessageType() == MessageType.INVITATION_SENT) {
+                    ((CammentDialog) f).dismiss();
+                }
             }
         }
     }

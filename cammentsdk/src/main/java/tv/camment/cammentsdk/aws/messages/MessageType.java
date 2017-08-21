@@ -10,6 +10,8 @@ public enum MessageType {
 
     INVITATION_SENT,
 
+    ONBOARDING,
+
     @SerializedName("new-user-in-group")
     NEW_USER_IN_GROUP,
 

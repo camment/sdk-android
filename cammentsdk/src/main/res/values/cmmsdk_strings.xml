@@ -26,7 +26,7 @@
     <string name="cmmsdk_help_swipe_left_to_hide_camments">Swipe ← left anywhere to hide camments</string>
     <string name="cmmsdk_help_swipe_right_to_show_camments">Swipe → right to show camments</string>
     <string name="cmmsdk_help_tap_to_play">Great success! Now tap the camment to play it</string>
-    <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↓ down to invite friends to this chat</string>
+    <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↓ down\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
 
     <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>

@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.widget.ImageButton;
 
 import tv.camment.cammentsdk.views.SquareFrameLayout;
+import tv.camment.cammentsdk.views.TooltipView;
 
 /**
  * Created by petrushka on 09/08/2017.
@@ -103,6 +104,14 @@ public class AnimationUtils {
         animatorSet.setDuration(100);
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.start();
+    }
+
+    public static void animateTooltip(final TooltipView tooltipView) {
+        ObjectAnimator objectAnimator =
+                ObjectAnimator.ofFloat(tooltipView, "translationY", 0, 0, -30, 0, -15, 0, 0);
+
+        objectAnimator.setDuration(1250);
+        objectAnimator.start();
     }
 
 }

@@ -248,7 +248,7 @@ public class IoTHelper extends CammentAsyncClient
             if (fragment == null || !fragment.isAdded()) {
                 CammentDialog cammentDialog = CammentDialog.createInstance(message);
                 if (message instanceof InvitationMessage) {
-                    cammentDialog.setInvitationListener(this);
+                    cammentDialog.setActionListener(this);
                 }
                 cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
             }

@@ -48,6 +48,7 @@ import tv.camment.cammentsdk.data.DataContract;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
@@ -76,6 +77,7 @@ public class BaseCammentOverlay extends RelativeLayout
     private View vRecordIndicator;
     private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
+    private OnboardingOverlay onboardingOverlay;
 
     private CammentsAdapter adapter;
 
@@ -214,6 +216,8 @@ public class BaseCammentOverlay extends RelativeLayout
 
         ibRecord.setListener(this);
 
+        onboardingOverlay = findViewById(R.id.onboarding_overlay);
+
         super.onFinishInflate();
     }
 
@@ -297,7 +301,10 @@ public class BaseCammentOverlay extends RelativeLayout
             case MotionEvent.ACTION_CANCEL:
                 switch (mode) {
                     case GOING_BACK:
-                        Log.d("TOUCH", "GO BACK!");
+                        Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
+                        if (currentActivity != null) {
+                            currentActivity.finish();
+                        }
                         break;
                     case SHOW:
                         if (ibRecord != null) {
@@ -322,6 +329,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
         return true;
     }
+
 
 
     @Override
@@ -439,6 +447,11 @@ public class BaseCammentOverlay extends RelativeLayout
             }
         });
         recordingHandler.startRecording();
+    }
+
+    @Override
+    public void onOnboardingStart() {
+        onboardingOverlay.displayTooltip(Step.RECORD, ibRecord);
     }
 
 }

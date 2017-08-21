@@ -84,6 +84,9 @@ public class CammentDialog extends DialogFragment {
             case NEW_USER_IN_GROUP:
                 tvTitle.setText(String.format(getString(R.string.cmmsdk_user_entered_chat_title), ((NewUserInGroupMessage) message).body.user.name));
                 break;
+            case ONBOARDING:
+                tvTitle.setText(R.string.cmmsdk_setup_use_camment_chat);
+                break;
         }
     }
 
@@ -97,6 +100,9 @@ public class CammentDialog extends DialogFragment {
                 break;
             case NEW_USER_IN_GROUP:
                 tvMessage.setText(R.string.cmmsdk_user_entered_chat_desc);
+                break;
+            case ONBOARDING:
+                tvMessage.setText(R.string.cmmsdk_setup_what_is_camment);
                 break;
         }
     }
@@ -112,10 +118,14 @@ public class CammentDialog extends DialogFragment {
                 btnPositive.setText(R.string.cmmsdk_ok);
                 btnNegative.setVisibility(View.GONE);
                 break;
+            case ONBOARDING:
+                btnPositive.setText(R.string.cmmsdk_setup_sounds_fun);
+                btnNegative.setText(R.string.cmmsdk_setup_maybe_later);
+                break;
         }
     }
 
-    public void setInvitationListener(ActionListener actionListener) {
+    public void setActionListener(ActionListener actionListener) {
         this.actionListener = actionListener;
     }
 

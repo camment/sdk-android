@@ -42,6 +42,7 @@ import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataContract;
@@ -59,10 +60,7 @@ public class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        LoaderManager.LoaderCallbacks<Cursor>, CameraGLView.OnPreviewStartedListener {
-
-    private static final String ARG_SUPER_STATE = "arg_super_state";
-    private static final String ARG_ACTIVE_GROUP_UUID = "arg_active_group";
+        LoaderManager.LoaderCallbacks<Cursor>, OnPreviewStartedListener {
 
     private static final int THRESHOLD_X = 100;
     private static final int THRESHOLD_Y = 150;
@@ -131,24 +129,24 @@ public class BaseCammentOverlay extends RelativeLayout
 
     private Mode mode = Mode.NONE;
 
-    public BaseCammentOverlay(Context context) {
+    BaseCammentOverlay(Context context) {
         super(context);
         init(context);
     }
 
-    public BaseCammentOverlay(Context context, AttributeSet attrs) {
+    BaseCammentOverlay(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public BaseCammentOverlay(Context context, AttributeSet attrs, int defStyleAttr) {
+    BaseCammentOverlay(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("unused")
-    public BaseCammentOverlay(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    BaseCammentOverlay(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }

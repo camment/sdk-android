@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_utils;
+package tv.camment.cammentsdk.camera;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
@@ -11,15 +11,11 @@ import java.lang.ref.WeakReference;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
-import tv.camment.cammentsdk.views.CameraGLView;
-
-
-public class CameraSurfaceRenderer implements
+class CameraSurfaceRenderer implements
         GLSurfaceView.Renderer,
         SurfaceTexture.OnFrameAvailableListener {
 
-    private final WeakReference<CameraGLView> cameraGLViewWeakRef;
+    private final WeakReference<BaseCameraGLView> cameraGLViewWeakRef;
     private SurfaceTexture surfaceTexture;
 
     private MediaVideoEncoder videoEncoder;
@@ -34,7 +30,7 @@ public class CameraSurfaceRenderer implements
     private volatile boolean requestUpdateTex = false;
     private boolean flip = true;
 
-    public CameraSurfaceRenderer(final CameraGLView cameraGLView) {
+    CameraSurfaceRenderer(final BaseCameraGLView cameraGLView) {
         cameraGLViewWeakRef = new WeakReference<>(cameraGLView);
         Matrix.setIdentityM(mvpMatrix, 0);
     }
@@ -58,7 +54,7 @@ public class CameraSurfaceRenderer implements
 
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        final CameraGLView cameraGLView = cameraGLViewWeakRef.get();
+        final BaseCameraGLView cameraGLView = cameraGLViewWeakRef.get();
         if (cameraGLView != null) {
             cameraGLView.setHasSurface(true);
         }
@@ -74,7 +70,7 @@ public class CameraSurfaceRenderer implements
         if (width == 0 || height == 0)
             return;
         updateViewport();
-        final CameraGLView cameraGLView = cameraGLViewWeakRef.get();
+        final BaseCameraGLView cameraGLView = cameraGLViewWeakRef.get();
         if (cameraGLView != null) {
             cameraGLView.startPreview();
         }
@@ -116,7 +112,7 @@ public class CameraSurfaceRenderer implements
     /**
      * when GLSurface context will be destroyed soon
      */
-    public void onSurfaceDestroyed() {
+    void onSurfaceDestroyed() {
         Log.d("CAMERArender", "onSurfaceDestroyed");
         if (drawer2D != null) {
             drawer2D = null;
@@ -128,8 +124,8 @@ public class CameraSurfaceRenderer implements
         }
     }
 
-    public void updateViewport() {
-        final CameraGLView cameraGLView = cameraGLViewWeakRef.get();
+    void updateViewport() {
+        final BaseCameraGLView cameraGLView = cameraGLViewWeakRef.get();
         if (cameraGLView != null) {
             final int viewWidth = cameraGLView.getWidth();
             final int viewHeight = cameraGLView.getHeight();
@@ -186,15 +182,15 @@ public class CameraSurfaceRenderer implements
         }
     }
 
-    public int getHTex() {
+    int getHTex() {
         return hTex;
     }
 
-    public void setVideoEncoder(MediaVideoEncoder videoEncoder) {
+    void setVideoEncoder(MediaVideoEncoder videoEncoder) {
         this.videoEncoder = videoEncoder;
     }
 
-    public SurfaceTexture getSurfaceTexture() {
+    SurfaceTexture getSurfaceTexture() {
         return surfaceTexture;
     }
 

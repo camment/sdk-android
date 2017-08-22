@@ -16,25 +16,24 @@ import java.util.Comparator;
 import java.util.List;
 
 import tv.camment.cammentsdk.SDKConfig;
-import tv.camment.cammentsdk.views.CameraGLView;
 
 @SuppressWarnings("deprecation")
-public class CameraThread extends Thread {
+class CameraThread extends Thread {
 
     private final Object readyFence = new Object();
-    private final WeakReference<CameraGLView> cameraGlViewWeakRef;
+    private final WeakReference<BaseCameraGLView> cameraGlViewWeakRef;
     private CameraHandler cameraHandler;
     private volatile boolean isRunning = false;
     private Camera camera;
 
     private int cameraId;
 
-    public CameraThread(final CameraGLView cameraGLView) {
+    CameraThread(final BaseCameraGLView cameraGLView) {
         super("Camera thread");
         cameraGlViewWeakRef = new WeakReference<>(cameraGLView);
     }
 
-    public CameraHandler getHandler() {
+    CameraHandler getHandler() {
         synchronized (readyFence) {
             try {
                 readyFence.wait();
@@ -69,7 +68,7 @@ public class CameraThread extends Thread {
      * start camera preview
      */
     final void startPreview(Camera.PreviewCallback previewCallback) {
-        final CameraGLView cameraGLView = cameraGlViewWeakRef.get();
+        final BaseCameraGLView cameraGLView = cameraGlViewWeakRef.get();
         if (cameraGLView != null && camera == null) {
             // This is a sample project so just use 0 as camera ID.
             // it is better to selecting camera is available
@@ -193,7 +192,7 @@ public class CameraThread extends Thread {
             camera.release();
             camera = null;
         }
-        final CameraGLView cameraGLView = cameraGlViewWeakRef.get();
+        final BaseCameraGLView cameraGLView = cameraGlViewWeakRef.get();
         if (cameraGLView != null) {
             cameraGLView.clearCameraHandler();
         }
@@ -203,7 +202,7 @@ public class CameraThread extends Thread {
      * rotate preview screen according to the device orientation
      */
     private void setRotation(final Camera.Parameters params) {
-        final CameraGLView cameraGLView = cameraGlViewWeakRef.get();
+        final BaseCameraGLView cameraGLView = cameraGlViewWeakRef.get();
         if (cameraGLView == null)
             return;
 
@@ -241,7 +240,7 @@ public class CameraThread extends Thread {
         cameraGLView.setCameraRotation(degrees);
     }
 
-    public boolean isRunning() {
+    boolean isRunning() {
         return isRunning;
     }
 }

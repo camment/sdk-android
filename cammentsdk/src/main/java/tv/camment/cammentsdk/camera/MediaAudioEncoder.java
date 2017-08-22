@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_encoder;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -34,19 +34,19 @@ import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class MediaAudioEncoder extends MediaEncoder {
+class MediaAudioEncoder extends MediaEncoder {
     private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "MediaAudioEncoder";
 
     private static final String MIME_TYPE = "audio/mp4a-latm";
     private static final int SAMPLE_RATE = 44100;    // 44.1[KHz] is only setting guaranteed to be available on all devices.
     private static final int BIT_RATE = 64000;
-    public static final int SAMPLES_PER_FRAME = 1024;    // AAC, bytes/frame/channel
-    public static final int FRAMES_PER_BUFFER = 25;    // AAC, frame/buffer/sec
+    private static final int SAMPLES_PER_FRAME = 1024;    // AAC, bytes/frame/channel
+    private static final int FRAMES_PER_BUFFER = 25;    // AAC, frame/buffer/sec
 
     private AudioThread mAudioThread = null;
 
-    public MediaAudioEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener) {
+    MediaAudioEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener) {
         super(muxer, listener);
     }
 
@@ -55,7 +55,7 @@ public class MediaAudioEncoder extends MediaEncoder {
         if (DEBUG) Log.v(TAG, "prepare:");
         mTrackIndex = -1;
         mMuxerStarted = mIsEOS = false;
-        // prepare MediaCodec for AAC encoding of audio data from inernal mic.
+        // prepare MediaCodec for AAC encoding of audio data from internal mic.
         final MediaCodecInfo audioCodecInfo = selectAudioCodec(MIME_TYPE);
         if (audioCodecInfo == null) {
             Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE);
@@ -68,8 +68,7 @@ public class MediaAudioEncoder extends MediaEncoder {
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);
         audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-//		audioFormat.setLong(MediaFormat.KEY_MAX_INPUT_SIZE, inputFile.length());
-//      audioFormat.setLong(MediaFormat.KEY_DURATION, (long)durationInMs );
+
         if (DEBUG) Log.i(TAG, "format: " + audioFormat);
         mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
         mMediaCodec.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);

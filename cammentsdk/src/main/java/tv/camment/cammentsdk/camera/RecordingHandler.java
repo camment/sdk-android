@@ -13,16 +13,11 @@ import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaAudioEncoder;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaMuxerWrapper;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
-
 
 public class RecordingHandler extends CammentAsyncClient {
 
@@ -39,8 +34,6 @@ public class RecordingHandler extends CammentAsyncClient {
             @Override
             public Object call() throws Exception {
                 final Camment camment = getNewUploadCamment();
-
-                Log.d("RECORDING", "startRecording " + camment.getUrl());
 
                 mediaMuxer = new MediaMuxerWrapper(camment.getUuid());
 
@@ -70,11 +63,7 @@ public class RecordingHandler extends CammentAsyncClient {
     }
 
     public void stopRecording(boolean cancelled, CammentAudioListener cammentAudioListener) {
-        Log.d("RECORDING", "stopRecording - check muxer ");
-
         if (mediaMuxer != null) {
-            Log.d("RECORDING", "stopRecording - cancelled " + cancelled);
-
             submitBgTask(new Callable<String>() {
                 @Override
                 public String call() throws Exception {

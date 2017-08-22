@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_encoder;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -34,7 +34,7 @@ import java.util.Locale;
 
 import tv.camment.cammentsdk.utils.FileUtils;
 
-public class MediaMuxerWrapper {
+class MediaMuxerWrapper {
     private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "MediaMuxerWrapper";
 
@@ -53,7 +53,7 @@ public class MediaMuxerWrapper {
      *
      * @throws IOException
      */
-    public MediaMuxerWrapper(String cammentUuid) throws IOException {
+    MediaMuxerWrapper(String cammentUuid) throws IOException {
         try {
             mCammentUuid = cammentUuid;
             mOutputPath = FileUtils.getInstance().getUploadCammentPath(cammentUuid);
@@ -65,29 +65,29 @@ public class MediaMuxerWrapper {
         mIsStarted = false;
     }
 
-    public String getOutputPath() {
+    String getOutputPath() {
         return mOutputPath;
     }
 
-    public String getCammentUuid() {
+    String getCammentUuid() {
         return mCammentUuid;
     }
 
-    public void prepare() throws IOException {
+    void prepare() throws IOException {
         if (mVideoEncoder != null)
             mVideoEncoder.prepare();
         if (mAudioEncoder != null)
             mAudioEncoder.prepare();
     }
 
-    public void startRecording() {
+    void startRecording() {
         if (mVideoEncoder != null)
             mVideoEncoder.startRecording();
         if (mAudioEncoder != null)
             mAudioEncoder.startRecording();
     }
 
-    public void stopRecording() {
+    void stopRecording() {
         if (mVideoEncoder != null)
             mVideoEncoder.stopRecording();
         mVideoEncoder = null;
@@ -96,7 +96,7 @@ public class MediaMuxerWrapper {
         mAudioEncoder = null;
     }
 
-    public synchronized boolean isStarted() {
+    synchronized boolean isStarted() {
         return mIsStarted;
     }
 
@@ -108,7 +108,7 @@ public class MediaMuxerWrapper {
      *
      * @param encoder instance of MediaVideoEncoder or MediaAudioEncoder
      */
-    /*package*/ void addEncoder(final MediaEncoder encoder) {
+     void addEncoder(final MediaEncoder encoder) {
         if (encoder instanceof MediaVideoEncoder) {
             if (mVideoEncoder != null)
                 throw new IllegalArgumentException("Video encoder already added.");
@@ -127,7 +127,6 @@ public class MediaMuxerWrapper {
      *
      * @return true when muxer is ready to write
      */
-	/*package*/
     synchronized boolean start() {
         if (DEBUG) Log.v(TAG, "start:");
         mStatredCount++;
@@ -143,7 +142,6 @@ public class MediaMuxerWrapper {
     /**
      * request stop recording from encoder when encoder received EOS
      */
-	/*package*/
     synchronized void stop() {
         if (DEBUG) Log.v(TAG, "stop:mStatredCount=" + mStatredCount);
         mStatredCount--;
@@ -161,7 +159,6 @@ public class MediaMuxerWrapper {
      * @param format
      * @return minus value indicate error
      */
-	/*package*/
     synchronized int addTrack(final MediaFormat format) {
         if (mIsStarted)
             throw new IllegalStateException("muxer already started");
@@ -178,7 +175,6 @@ public class MediaMuxerWrapper {
      * @param byteBuf
      * @param bufferInfo
      */
-	/*package*/
     synchronized void writeSampleData(final int trackIndex, final ByteBuffer byteBuf, final MediaCodec.BufferInfo bufferInfo) {
         if (mStatredCount > 0)
             mMediaMuxer.writeSampleData(trackIndex, byteBuf, bufferInfo);

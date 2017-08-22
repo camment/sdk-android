@@ -19,7 +19,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -40,7 +39,7 @@ public class IoTHelper extends CammentAsyncClient
     private AWSIotMqttManager mqttManager;
     private final KeyStore clientKeyStore;
 
-    public IoTHelper(ExecutorService executorService,
+    IoTHelper(ExecutorService executorService,
                      KeyStore clientKeyStore) {
         super(executorService);
         this.clientKeyStore = clientKeyStore;
@@ -56,8 +55,6 @@ public class IoTHelper extends CammentAsyncClient
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override
                     public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
-                        //TODO this should be ok just handled here
-                        Log.d("iot connect", status.name());
                         if (status == AWSIotMqttClientStatus.Connected) {
                             subscribe();
                         }
@@ -89,7 +86,7 @@ public class IoTHelper extends CammentAsyncClient
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                 }
-                mqttManager.subscribeToTopic(SDKConfig.IOT_TOPIC, AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
+                mqttManager.subscribeToTopic(AWSConfig.IOT_TOPIC, AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
                 return new Object();
             }
         }, subscribeCallback());
@@ -113,7 +110,7 @@ public class IoTHelper extends CammentAsyncClient
         return new AWSIotMqttNewMessageCallback() {
             @Override
             public void onMessageArrived(String topic, byte[] data) {
-                if (SDKConfig.IOT_TOPIC.equals(topic)) {
+                if (AWSConfig.IOT_TOPIC.equals(topic)) {
                     String message = null;
 
                     try {

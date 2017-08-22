@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_utils;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -34,7 +34,7 @@ import android.view.SurfaceHolder;
 /**
  * Helper class to draw texture to whole view on private thread
  */
-public final class RenderHandler implements Runnable {
+final class RenderHandler implements Runnable {
     private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "RenderHandler";
 
@@ -49,7 +49,7 @@ public final class RenderHandler implements Runnable {
     private boolean mRequestRelease;
     private int mRequestDraw;
 
-    public static RenderHandler createHandler(final String name) {
+    static RenderHandler createHandler(final String name) {
         if (DEBUG) Log.v(TAG, "createHandler:");
         final RenderHandler handler = new RenderHandler();
         synchronized (handler.mSync) {
@@ -63,7 +63,7 @@ public final class RenderHandler implements Runnable {
         return handler;
     }
 
-    public final void setEglContext(final EGLContext shared_context, final int tex_id, final Object surface, final boolean isRecordable) {
+    final void setEglContext(final EGLContext shared_context, final int tex_id, final Object surface, final boolean isRecordable) {
         if (DEBUG) Log.i(TAG, "setEglContext:");
         if (!(surface instanceof Surface) && !(surface instanceof SurfaceTexture) && !(surface instanceof SurfaceHolder))
             throw new RuntimeException("unsupported window type:" + surface);
@@ -85,27 +85,15 @@ public final class RenderHandler implements Runnable {
         }
     }
 
-    public final void draw() {
-        draw(mTexId, mMatrix, null);
-    }
-
-    public final void draw(final int tex_id) {
-        draw(tex_id, mMatrix, null);
-    }
-
-    public final void draw(final float[] tex_matrix) {
+    final void draw(final float[] tex_matrix) {
         draw(mTexId, tex_matrix, null);
     }
 
-    public final void draw(final float[] tex_matrix, final float[] mvp_matrix) {
+    final void draw(final float[] tex_matrix, final float[] mvp_matrix) {
         draw(mTexId, tex_matrix, mvp_matrix);
     }
 
-    public final void draw(final int tex_id, final float[] tex_matrix) {
-        draw(tex_id, tex_matrix, null);
-    }
-
-    public final void draw(final int tex_id, final float[] tex_matrix, final float[] mvp_matrix) {
+    final void draw(final int tex_id, final float[] tex_matrix, final float[] mvp_matrix) {
         synchronized (mSync) {
             if (mRequestRelease) return;
             mTexId = tex_id;
@@ -121,20 +109,10 @@ public final class RenderHandler implements Runnable {
             }
             mRequestDraw++;
             mSync.notifyAll();
-/*			try {
-                mSync.wait();
-			} catch (final InterruptedException e) {
-			} */
         }
     }
 
-    public boolean isValid() {
-        synchronized (mSync) {
-            return !(mSurface instanceof Surface) || ((Surface) mSurface).isValid();
-        }
-    }
-
-    public final void release() {
+    final void release() {
         if (DEBUG) Log.i(TAG, "release:");
         synchronized (mSync) {
             if (mRequestRelease) return;

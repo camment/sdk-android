@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_utils;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -33,7 +33,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class EGLBase {
+class EGLBase {
     private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "EGLBase";
 
@@ -44,7 +44,7 @@ public class EGLBase {
     private EGLDisplay mEglDisplay = EGL14.EGL_NO_DISPLAY;
     private EGLContext mDefaultContext = EGL14.EGL_NO_CONTEXT;
 
-    public static class EglSurface {
+    static class EglSurface {
         private final EGLBase mEgl;
         private EGLSurface mEglSurface = EGL14.EGL_NO_SURFACE;
         private final int mWidth, mHeight;
@@ -71,11 +71,11 @@ public class EGLBase {
             mHeight = height;
         }
 
-        public void makeCurrent() {
+        void makeCurrent() {
             mEgl.makeCurrent(mEglSurface);
         }
 
-        public void swap() {
+        void swap() {
             mEgl.swap(mEglSurface);
         }
 
@@ -99,12 +99,12 @@ public class EGLBase {
         }
     }
 
-    public EGLBase(final EGLContext shared_context, final boolean with_depth_buffer, final boolean isRecordable) {
+    EGLBase(final EGLContext shared_context, final boolean with_depth_buffer, final boolean isRecordable) {
         if (DEBUG) Log.v(TAG, "EGLBase:");
         init(shared_context, with_depth_buffer, isRecordable);
     }
 
-    public void release() {
+    void release() {
         if (DEBUG) Log.v(TAG, "release:");
         if (mEglDisplay != EGL14.EGL_NO_DISPLAY) {
             destroyContext();
@@ -115,25 +115,25 @@ public class EGLBase {
         mEglContext = EGL14.EGL_NO_CONTEXT;
     }
 
-    public EglSurface createFromSurface(final Object surface) {
+    EglSurface createFromSurface(final Object surface) {
         if (DEBUG) Log.v(TAG, "createFromSurface:");
         final EglSurface eglSurface = new EglSurface(this, surface);
         eglSurface.makeCurrent();
         return eglSurface;
     }
 
-    public EglSurface createOffscreen(final int width, final int height) {
+    EglSurface createOffscreen(final int width, final int height) {
         if (DEBUG) Log.v(TAG, "createOffscreen:");
         final EglSurface eglSurface = new EglSurface(this, width, height);
         eglSurface.makeCurrent();
         return eglSurface;
     }
 
-    public EGLContext getContext() {
+    EGLContext getContext() {
         return mEglContext;
     }
 
-    public int querySurface(final EGLSurface eglSurface, final int what) {
+    int querySurface(final EGLSurface eglSurface, final int what) {
         final int[] value = new int[1];
         EGL14.eglQuerySurface(mEglDisplay, eglSurface, what, value, 0);
         return value[0];
@@ -178,7 +178,6 @@ public class EGLBase {
      * @return
      */
     private boolean makeCurrent(final EGLSurface surface) {
-//		if (DEBUG) Log.v(TAG, "makeCurrent:");
         if (mEglDisplay == null) {
             if (DEBUG) Log.d(TAG, "makeCurrent:eglDisplay not initialized");
         }
@@ -189,7 +188,7 @@ public class EGLBase {
             }
             return false;
         }
-        // attach EGL renderring context to specific EGL window surface
+        // attach EGL rendering context to specific EGL window surface
         if (!EGL14.eglMakeCurrent(mEglDisplay, surface, surface, mEglContext)) {
             Log.w(TAG, "eglMakeCurrent:" + EGL14.eglGetError());
             return false;
@@ -331,4 +330,5 @@ public class EGLBase {
         }
         return configs[0];
     }
+
 }

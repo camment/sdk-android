@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import java.lang.ref.WeakReference;
 
-public class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
+class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
     private WeakReference<Activity> currentActivity;
 

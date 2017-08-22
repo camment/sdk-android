@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_encoder;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -38,7 +38,7 @@ public abstract class MediaEncoder implements Runnable {
 	protected static final int MSG_FRAME_AVAILABLE = 1;
 	protected static final int MSG_STOP_RECORDING = 9;
 
-	public interface MediaEncoderListener {
+	interface MediaEncoderListener {
 		void onPrepared(MediaEncoder encoder);
 		void onStopped(MediaEncoder encoder);
 	}
@@ -253,7 +253,7 @@ public abstract class MediaEncoder implements Runnable {
      * @param length　length of byte array, zero means EOS.
      * @param presentationTimeUs
      */
-    protected void encode(final ByteBuffer buffer, final int length, final long presentationTimeUs) {
+	void encode(final ByteBuffer buffer, final int length, final long presentationTimeUs) {
     	if (!mIsCapturing) return;
         final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
         while (mIsCapturing) {
@@ -288,7 +288,7 @@ public abstract class MediaEncoder implements Runnable {
     /**
      * drain encoded data and write them to muxer
      */
-    protected void drain() {
+    private void drain() {
     	if (mMediaCodec == null) return;
         ByteBuffer[] encoderOutputBuffers = mMediaCodec.getOutputBuffers();
         int encoderStatus, count = 0;
@@ -385,7 +385,7 @@ LOOP:	while (mIsCapturing) {
 	 * get next encoding presentationTimeUs
 	 * @return
 	 */
-    protected long getPTSUs() {
+	long getPTSUs() {
 		long result = System.nanoTime() / 1000L;
 		// presentationTimeUs should be monotonic
 		// otherwise muxer fail to write

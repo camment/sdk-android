@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 public final class AWSManager {
@@ -50,7 +49,7 @@ public final class AWSManager {
     public CognitoCachingCredentialsProvider getCognitoCachingCredentialsProvider() {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 CammentSDK.getInstance().getApplicationContext(),
-                "eu-central-1:a5d9d157-be3b-4a86-9bc9-ebd1890bcd62",
+                AWSConfig.IDENTITY_POOL,
                 Regions.EU_CENTRAL_1);
         credentialsProvider.setLogins(getAwsLoginsMap());
         return credentialsProvider;
@@ -88,12 +87,12 @@ public final class AWSManager {
     }
 
     public AWSIotMqttManager getAWSIotMqttManager() {
-        return new AWSIotMqttManager(getUserIdentityId(), SDKConfig.IOT_ENDPOINT);
+        return new AWSIotMqttManager(getUserIdentityId(), AWSConfig.IOT_ENDPOINT);
     }
 
     private KeyStore getClientKeyStore() {
-        return AWSIotKeystoreHelper.getIotKeystore(SDKConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
-                SDKConfig.CERT_KEYSTORE_NAME, SDKConfig.CERT_KEYSTORE_PWD);
+        return AWSIotKeystoreHelper.getIotKeystore(AWSConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
+                AWSConfig.CERT_KEYSTORE_NAME, AWSConfig.CERT_KEYSTORE_PWD);
     }
 
     public IoTHelper getIoTHelper() {

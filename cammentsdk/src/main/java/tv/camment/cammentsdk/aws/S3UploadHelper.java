@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -48,7 +47,7 @@ public class S3UploadHelper extends CammentAsyncClient {
                 metadata.setContentType("video/mp4");
                 metadata.setHeader(Headers.STORAGE_CLASS, StorageClass.StandardInfrequentAccess);
 
-                transferObserver = transferUtility.upload(SDKConfig.BUCKET_ID,
+                transferObserver = transferUtility.upload(AWSConfig.BUCKET_ID,
                         String.format(KEY_FORMAT, camment.getUuid()),
                         new File(camment.getUrl()),
                         metadata,

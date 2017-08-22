@@ -6,18 +6,17 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-public class CameraHandler extends Handler {
+class CameraHandler extends Handler {
 
     private static final int MSG_PREVIEW_START = 1;
     private static final int MSG_PREVIEW_STOP = 2;
     private CameraThread mThread;
 
-    public CameraHandler(final CameraThread thread) {
+    CameraHandler(final CameraThread thread) {
         mThread = thread;
     }
 
-    public void startPreview(Camera.PreviewCallback previewCallback) {
-        Log.d("CAMERA", "start preview");
+    void startPreview(Camera.PreviewCallback previewCallback) {
         sendMessage(obtainMessage(MSG_PREVIEW_START, previewCallback));
     }
 
@@ -25,7 +24,7 @@ public class CameraHandler extends Handler {
      * request to stop camera preview
      * @param needWait need to wait for stopping camera preview
      */
-    public void stopPreview(final boolean needWait) {
+    void stopPreview(final boolean needWait) {
         Log.d("CAMERA", "stop preview");
         synchronized (this) {
             sendEmptyMessage(MSG_PREVIEW_STOP);

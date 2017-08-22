@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.views;
+package tv.camment.cammentsdk.camera;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -10,14 +10,13 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import tv.camment.cammentsdk.SDKConfig;
-import tv.camment.cammentsdk.camera.CameraHandler;
-import tv.camment.cammentsdk.camera.CameraThread;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaEncoder;
-import tv.camment.cammentsdk.camera.gl_encoder.MediaVideoEncoder;
-import tv.camment.cammentsdk.camera.gl_utils.CameraSurfaceRenderer;
+import tv.camment.cammentsdk.views.OnPreviewStartedListener;
+import tv.camment.cammentsdk.views.SquareFrameLayout;
 
-
-public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEncoderListener, Camera.PreviewCallback {
+@SuppressWarnings("deprecation")
+class BaseCameraGLView extends GLSurfaceView
+        implements MediaEncoder.MediaEncoderListener,
+        Camera.PreviewCallback {
 
     private final CameraSurfaceRenderer surfaceRenderer;
     private CameraHandler cameraHandler = null;
@@ -29,19 +28,19 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
     private int videoHeight = SDKConfig.CAMMENT_SIZE;
     private int cameraRotation;
 
-    public CameraGLView(Context context) {
+    BaseCameraGLView(Context context) {
         super(context);
         surfaceRenderer = new CameraSurfaceRenderer(this);
         init();
     }
 
-    public CameraGLView(Context context, AttributeSet attrs) {
+    BaseCameraGLView(Context context, AttributeSet attrs) {
         super(context, attrs);
         surfaceRenderer = new CameraSurfaceRenderer(this);
         init();
     }
 
-    private void init() {
+    void init() {
         setZOrderMediaOverlay(true);
         setEGLContextClientVersion(2); //GLES 2.0
         setRenderer(surfaceRenderer);
@@ -63,7 +62,7 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         super.onPause();
     }
 
-    public synchronized void startPreview() {
+    synchronized void startPreview() {
         Log.d("CAMERA", "startPreview");
         if (cameraHandler == null) {
             final CameraThread cameraThread = new CameraThread(this);
@@ -90,15 +89,15 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         super.surfaceDestroyed(holder);
     }
 
-    public double getVideoWidth() {
+    double getVideoWidth() {
         return videoWidth;
     }
 
-    public double getVideoHeight() {
+    double getVideoHeight() {
         return videoHeight;
     }
 
-    public void setHasSurface(boolean hasSurface) {
+    void setHasSurface(boolean hasSurface) {
         this.hasSurface = hasSurface;
     }
 
@@ -130,7 +129,7 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         }
     }
 
-    public void setVideoSize(int width, int height) {
+    void setVideoSize(int width, int height) {
         if ((cameraRotation % 180) == 0) {
             videoWidth = width;
             videoHeight = height;
@@ -146,15 +145,15 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
         });
     }
 
-    public SurfaceTexture getSurfaceTexture() {
+    SurfaceTexture getSurfaceTexture() {
         return surfaceRenderer != null ? surfaceRenderer.getSurfaceTexture() : null;
     }
 
-    public void clearCameraHandler() {
+    void clearCameraHandler() {
         cameraHandler = null;
     }
 
-    public void setCameraRotation(int cameraRotation) {
+    void setCameraRotation(int cameraRotation) {
         this.cameraRotation = cameraRotation;
     }
 
@@ -164,10 +163,6 @@ public class CameraGLView extends GLSurfaceView implements MediaEncoder.MediaEnc
 
     public void clearPreviewStartedListener() {
         previewStartedListener = null;
-    }
-
-    interface OnPreviewStartedListener {
-        void onPreviewStarted();
     }
 
     @Override

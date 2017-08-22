@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_utils;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -34,7 +34,7 @@ import java.nio.FloatBuffer;
 /**
  * Helper class to draw to whole view using specific texture and texture matrix
  */
-public class GLDrawer2D {
+class GLDrawer2D {
     private static final boolean DEBUG = false; // TODO set false on release
     private static final String TAG = "GLDrawer2D";
 
@@ -77,7 +77,7 @@ public class GLDrawer2D {
      * Constructor
      * this should be called in GL context
      */
-    public GLDrawer2D() {
+    GLDrawer2D() {
         pVertex = ByteBuffer.allocateDirect(VERTEX_SZ * FLOAT_SZ)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         pVertex.put(VERTICES);
@@ -106,7 +106,7 @@ public class GLDrawer2D {
     /**
      * terminating, this should be called in GL context
      */
-    public void release() {
+    void release() {
         if (hProgram >= 0) {
             GLES20.glDeleteProgram(hProgram);
         }
@@ -119,7 +119,7 @@ public class GLDrawer2D {
      * @param tex_id     texture ID
      * @param tex_matrix texture matrix、if this is null, the last one use(we don't check size of this array and needs at least 16 of float)
      */
-    public void draw(final int tex_id, final float[] tex_matrix) {
+    void draw(final int tex_id, final float[] tex_matrix) {
         GLES20.glUseProgram(hProgram);
         if (tex_matrix != null)
             GLES20.glUniformMatrix4fv(muTexMatrixLoc, 1, false, tex_matrix, 0);
@@ -137,7 +137,7 @@ public class GLDrawer2D {
      * @param matrix
      * @param offset
      */
-    public void setMatrix(final float[] matrix, final int offset) {
+    void setMatrix(final float[] matrix, final int offset) {
         if ((matrix != null) && (matrix.length >= offset + 16)) {
             System.arraycopy(matrix, offset, mMvpMatrix, 0, 16);
         } else {
@@ -150,7 +150,7 @@ public class GLDrawer2D {
      *
      * @return texture ID
      */
-    public static int initTex() {
+    static int initTex() {
         if (DEBUG) Log.v(TAG, "initTex:");
         final int[] tex = new int[1];
         GLES20.glGenTextures(1, tex, 0);
@@ -169,7 +169,7 @@ public class GLDrawer2D {
     /**
      * delete specific texture
      */
-    public static void deleteTex(final int hTex) {
+    static void deleteTex(final int hTex) {
         if (DEBUG) Log.v(TAG, "deleteTex:");
         final int[] tex = new int[]{hTex};
         GLES20.glDeleteTextures(1, tex, 0);
@@ -183,7 +183,7 @@ public class GLDrawer2D {
      * @param fss source of fragment shader
      * @return
      */
-    public static int loadShader(final String vss, final String fss) {
+    static int loadShader(final String vss, final String fss) {
         if (DEBUG) Log.v(TAG, "loadShader:");
         int vs = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
         GLES20.glShaderSource(vs, vss);

@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.camera.gl_encoder;
+package tv.camment.cammentsdk.camera;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -32,9 +32,7 @@ import android.view.Surface;
 
 import java.io.IOException;
 
-import tv.camment.cammentsdk.camera.gl_utils.RenderHandler;
-
-public class MediaVideoEncoder extends MediaEncoder {
+class MediaVideoEncoder extends MediaEncoder {
 	private static final boolean DEBUG = false;	// TODO set false on release
 	private static final String TAG = "MediaVideoEncoder";
 
@@ -49,7 +47,7 @@ public class MediaVideoEncoder extends MediaEncoder {
     private RenderHandler mRenderHandler;
     private Surface mSurface;
 
-	public MediaVideoEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, final int width, final int height) {
+	MediaVideoEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener, final int width, final int height) {
 		super(muxer, listener);
 		if (DEBUG) Log.i(TAG, "MediaVideoEncoder: ");
 		mWidth = width;
@@ -57,14 +55,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 		mRenderHandler = RenderHandler.createHandler(TAG);
 	}
 
-	public boolean frameAvailableSoon(final float[] tex_matrix) {
-		boolean result;
-		if (result = super.frameAvailableSoon())
-			mRenderHandler.draw(tex_matrix);
-		return result;
-	}
-
-	public boolean frameAvailableSoon(final float[] tex_matrix, final float[] mvp_matrix) {
+	boolean frameAvailableSoon(final float[] tex_matrix, final float[] mvp_matrix) {
 		boolean result;
 		if (result = super.frameAvailableSoon())
 			mRenderHandler.draw(tex_matrix, mvp_matrix);
@@ -115,7 +106,7 @@ public class MediaVideoEncoder extends MediaEncoder {
         }
 	}
 
-	public void setEglContext(final EGLContext shared_context, final int tex_id) {
+	void setEglContext(final EGLContext shared_context, final int tex_id) {
 		mRenderHandler.setEglContext(shared_context, tex_id, mSurface, true);
 	}
 
@@ -144,7 +135,7 @@ public class MediaVideoEncoder extends MediaEncoder {
      * @param mimeType
      * @return null if no codec matched
      */
-    protected static MediaCodecInfo selectVideoCodec(final String mimeType) {
+    private static MediaCodecInfo selectVideoCodec(final String mimeType) {
     	if (DEBUG) Log.v(TAG, "selectVideoCodec:");
 
     	// get the list of available codecs
@@ -174,7 +165,7 @@ public class MediaVideoEncoder extends MediaEncoder {
      * select color format available on specific codec and we can use.
      * @return 0 if no colorFormat is matched
      */
-    protected static int selectColorFormat(final MediaCodecInfo codecInfo, final String mimeType) {
+    private static int selectColorFormat(final MediaCodecInfo codecInfo, final String mimeType) {
 		if (DEBUG) Log.i(TAG, "selectColorFormat: ");
     	int result = 0;
     	final MediaCodecInfo.CodecCapabilities caps;
@@ -201,12 +192,9 @@ public class MediaVideoEncoder extends MediaEncoder {
 	/**
 	 * color formats that we can use in this class
 	 */
-    protected static int[] recognizedFormats;
+    private static int[] recognizedFormats;
 	static {
 		recognizedFormats = new int[] {
-//        	MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar,
-//        	MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar,
-//        	MediaCodecInfo.CodecCapabilities.COLOR_QCOM_FormatYUV420SemiPlanar,
         	MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface,
 		};
 	}

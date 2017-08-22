@@ -175,6 +175,19 @@ public class CammentProvider {
         cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
     }
 
+    public static int getCammentsSize() {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+        Cursor cursor = cr.query(DataContract.Camment.CONTENT_URI, CAMMENT_PROJECTION, null, null, null);
+
+        int count = 0;
+        if (cursor != null) {
+            count = cursor.getCount();
+            cursor.close();
+        }
+
+        return count;
+    }
+
     private static CCamment fromCursor(Cursor cursor) {
         CCamment camment = new CCamment();
         camment.setUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.uuid)));

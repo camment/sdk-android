@@ -63,6 +63,10 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
                     ApiManager.getInstance().getUserApi().getMyUserCognitoId(new CammentCallback<String>() {
                         @Override
                         public void onSuccess(String cognitoId) {
+                            if (actionListener != null) {
+                                actionListener.onCammentBottomSheetDisplayed();
+                            }
+
                             if (camment.getUserCognitoIdentityId().equals(cognitoId)) {
                                 CammentBottomSheetDialog dialog = new CammentBottomSheetDialog(itemView.getContext());
                                 dialog.setCamment(camment);

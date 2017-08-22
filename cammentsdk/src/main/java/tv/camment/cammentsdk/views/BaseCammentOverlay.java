@@ -47,6 +47,7 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataContract;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.AnimationUtils;
@@ -104,6 +105,17 @@ public class BaseCammentOverlay extends RelativeLayout
         Log.d("Loader", "onLoadFinished");
         List<CCamment> camments = CammentProvider.listFromCursor(data);
         adapter.setData(camments);
+
+        if (camments != null) {
+            if (camments.size() == 1
+                    && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.PLAY)) {
+                onboardingOverlay.displayTooltip(Step.PLAY);
+            } else if (camments.size() > 0
+                    && OnboardingPreferences.getInstance().isOnboardingStepLastRemaining(Step.DELETE)
+                    && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.DELETE)) {
+                onboardingOverlay.displayTooltip(Step.DELETE);
+            }
+        }
     }
 
     @Override
@@ -217,6 +229,7 @@ public class BaseCammentOverlay extends RelativeLayout
         ibRecord.setListener(this);
 
         onboardingOverlay = findViewById(R.id.onboarding_overlay);
+        onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
 
         super.onFinishInflate();
     }
@@ -240,12 +253,19 @@ public class BaseCammentOverlay extends RelativeLayout
             player.setVideoTextureView(textureView);
             videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), dataSourceFactory, extractorsFactory, null, null);
             player.prepare(videoSource);
+
+            onboardingOverlay.hideTooltipIfNeeded(Step.PLAY);
         } else {
             if (cammentAudioListener != null) {
                 cammentAudioListener.onCammentPlaybackEnded();
             }
             player.stop();
         }
+    }
+
+    @Override
+    public void onCammentBottomSheetDisplayed() {
+        onboardingOverlay.hideTooltipIfNeeded(Step.DELETE);
     }
 
     @Override
@@ -281,13 +301,13 @@ public class BaseCammentOverlay extends RelativeLayout
                     if (Math.abs(startY - stopY) < THRESHOLD_Y) {
                         if (startX < stopX) {
                             if (event.getPointerCount() == 1) {
-                                mode = Mode.HIDE;
+                                mode = Mode.SHOW;
                             } else if (event.getPointerCount() == 2) {
                                 mode = Mode.GOING_BACK;
                             }
                         } else {
                             if (event.getPointerCount() == 1) {
-                                mode = Mode.SHOW;
+                                mode = Mode.HIDE;
                             } else if (event.getPointerCount() == 2) {
                                 mode = Mode.NONE;
                             }
@@ -307,6 +327,8 @@ public class BaseCammentOverlay extends RelativeLayout
                         }
                         break;
                     case SHOW:
+                        onboardingOverlay.hideTooltipIfNeeded(Step.SHOW);
+
                         if (ibRecord != null) {
                             ibRecord.show();
                         }
@@ -315,6 +337,8 @@ public class BaseCammentOverlay extends RelativeLayout
                         }
                         break;
                     case HIDE:
+                        onboardingOverlay.hideTooltipIfNeeded(Step.HIDE);
+
                         if (ibRecord != null) {
                             ibRecord.hide();
                         }
@@ -331,9 +355,10 @@ public class BaseCammentOverlay extends RelativeLayout
     }
 
 
-
     @Override
     public void onPulledDown() {
+        onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
+
         if (FacebookHelper.getInstance().isLoggedIn()) {
             new FbFriendsBottomSheetDialog(getContext()).show();
         } else {
@@ -346,6 +371,8 @@ public class BaseCammentOverlay extends RelativeLayout
     @Override
     public void onRecordingStart() {
         if (PermissionHelper.getInstance().hasPermissions()) {
+            onboardingOverlay.hideTooltipIfNeeded(Step.RECORD);
+
             if (flCamera.getChildCount() < 2) {
                 if (cameraGLView == null) {
                     cameraGLView = new CameraGLView(getContext());
@@ -358,7 +385,6 @@ public class BaseCammentOverlay extends RelativeLayout
             }
 
             AnimationUtils.animateAppearCameraView(flCamera, cameraViewAppearAnimatorListener);
-
         } else {
             PermissionHelper.getInstance().cameraAndMicTask();
         }
@@ -451,7 +477,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onOnboardingStart() {
-        onboardingOverlay.displayTooltip(Step.RECORD, ibRecord);
+        onboardingOverlay.displayTooltip(Step.RECORD);
     }
 
 }

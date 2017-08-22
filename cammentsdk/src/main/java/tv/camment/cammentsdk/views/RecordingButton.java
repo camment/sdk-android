@@ -16,6 +16,7 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
@@ -59,7 +60,7 @@ public class RecordingButton extends AppCompatImageButton implements CammentDial
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_MOVE:
                 if (!PermissionHelper.getInstance().hasPermissions()
-                        || !OnboardingPreferences.getInstance().isAtLeastOneStepFinished()) {
+                        || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
                     par.leftMargin += (int) event.getRawX() - prevX;
                     prevX = (int) event.getRawX();
                     setLayoutParams(par);
@@ -94,7 +95,7 @@ public class RecordingButton extends AppCompatImageButton implements CammentDial
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (!PermissionHelper.getInstance().hasPermissions()
-                        || !OnboardingPreferences.getInstance().isAtLeastOneStepFinished()) {
+                        || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
                     return true;
                 }
 
@@ -112,7 +113,8 @@ public class RecordingButton extends AppCompatImageButton implements CammentDial
             case MotionEvent.ACTION_DOWN:
                 handledPullDown = false;
 
-                if (!OnboardingPreferences.getInstance().isAtLeastOneStepFinished()) {
+                if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)
+                        && PermissionHelper.getInstance().hasPermissions()) {
                     BaseMessage message = new BaseMessage();
                     message.type = MessageType.ONBOARDING;
 
@@ -131,7 +133,9 @@ public class RecordingButton extends AppCompatImageButton implements CammentDial
                         actionsListener.onRecordingStart();
                     }
 
-                    AnimationUtils.animateActivateRecordingButton(this);
+                    if (PermissionHelper.getInstance().hasPermissions()) {
+                        AnimationUtils.animateActivateRecordingButton(this);
+                    }
 
                     screenHeight = CommonUtils.getScreenHeight(getContext());
 

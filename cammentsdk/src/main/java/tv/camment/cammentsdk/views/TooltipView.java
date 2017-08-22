@@ -59,10 +59,20 @@ public class TooltipView extends RelativeLayout {
         areas[3] = anchor.getBottom();
 
         RelativeLayout.LayoutParams params = (LayoutParams) getLayoutParams();
-        params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-        int marginTop = areas[1] + ((areas[3] - areas[1]) / 2) - CommonUtils.dpToPx(getContext(), 18);
-        int marginRight = CommonUtils.getScreenWidth(getContext()) - areas[0] + CommonUtils.dpToPx(getContext(), 4);
-        params.setMargins(0, marginTop, marginRight, 0);
+        if (orientation == Orientation.RIGHT) {
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+        } else {
+            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
+        }
+        int marginTop = CommonUtils.dpToPx(getContext(), 32);
+        int marginRight = 0;
+        int marginLeft = 0;
+        if (orientation == Orientation.RIGHT) {
+            marginRight = CommonUtils.getScreenWidth(getContext()) - areas[0] + CommonUtils.dpToPx(getContext(), 4);
+        } else {
+            marginLeft = anchor.getRight() + CommonUtils.dpToPx(getContext(), 4);
+        }
+        params.setMargins(marginLeft, marginTop, marginRight, 0);
 
         setLayoutParams(params);
 
@@ -110,6 +120,10 @@ public class TooltipView extends RelativeLayout {
 
     private void animateTooltip() {
         AnimationUtils.animateTooltip(this);
+    }
+
+    public Step getStep() {
+        return step;
     }
 
 }

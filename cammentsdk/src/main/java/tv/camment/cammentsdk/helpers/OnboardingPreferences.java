@@ -3,15 +3,10 @@ package tv.camment.cammentsdk.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by petrushka on 21/08/2017.
- */
 
 public class OnboardingPreferences extends BasePreferences {
 
     private static final String PREFS_NAME = "camment_onboarding_prefs";
-
-    private static final String PREFS_FINISHED = "onboarding_finished";
 
     private static final String PREFS_RECORD = "onboarding_record";
     private static final String PREFS_PLAY = "onboarding_play";
@@ -44,51 +39,47 @@ public class OnboardingPreferences extends BasePreferences {
         steps = new ArrayList<>();
 
         for (Step step : Step.values()) {
-            if (!getOnboardingStepFinished(step)) {
+            if (!wasOnboardingStepShown(step)) {
                 steps.add(step);
             }
         }
     }
 
-    public void putOnboardingFinished(boolean finished) {
-        putBoolean(PREFS_FINISHED, finished);
-    }
-
-    public boolean getOnboardingFinished() {
-        return getBoolean(PREFS_FINISHED, false);
-    }
-
-    public void putOnboardingStepFinished(Step step, boolean finished) {
+    public void putOnboardingStepDisplayed(Step step, boolean display) {
         switch (step) {
             case RECORD:
-                putBoolean(PREFS_RECORD, finished);
+                putBoolean(PREFS_RECORD, display);
                 break;
             case PLAY:
-                putBoolean(PREFS_PLAY, finished);
+                putBoolean(PREFS_PLAY, display);
                 break;
             case HIDE:
-                putBoolean(PREFS_HIDE, finished);
+                putBoolean(PREFS_HIDE, display);
                 break;
             case SHOW:
-                putBoolean(PREFS_SHOW, finished);
+                putBoolean(PREFS_SHOW, display);
                 break;
             case DELETE:
-                putBoolean(PREFS_DELETE, finished);
+                putBoolean(PREFS_DELETE, display);
                 break;
             case INVITE:
-                putBoolean(PREFS_INVITE, finished);
+                putBoolean(PREFS_INVITE, display);
                 break;
             default:
                 break;
         }
+
+        if (steps != null && display) {
+            steps.remove(step);
+        }
     }
 
-    public boolean isAtLeastOneStepFinished() {
+    public boolean wasAtLeastOneStepShown() {
         return steps != null
                 && steps.size() != Step.values().length;
     }
 
-    public boolean getOnboardingStepFinished(Step step) {
+    public boolean wasOnboardingStepShown(Step step) {
         switch (step) {
             case RECORD:
                 return getBoolean(PREFS_RECORD, false);
@@ -107,4 +98,11 @@ public class OnboardingPreferences extends BasePreferences {
         }
     }
 
+    public Step getNextOnboardingStep() {
+        return steps != null && steps.size() > 0 ? steps.get(0) : null;
+    }
+
+    public boolean isOnboardingStepLastRemaining(Step step) {
+        return steps != null && steps.size() == 1 && steps.get(0) == step;
+    }
 }

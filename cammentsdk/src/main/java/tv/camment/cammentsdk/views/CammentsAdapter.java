@@ -89,6 +89,8 @@ public class CammentsAdapter extends RecyclerView.Adapter {
 
         void onCammentClick(CammentViewHolder cammentViewHolder, Camment camment, TextureView textureView);
 
+        void onCammentBottomSheetDisplayed();
+
     }
 
 }

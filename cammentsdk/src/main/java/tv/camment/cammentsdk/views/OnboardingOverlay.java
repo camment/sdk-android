@@ -14,9 +14,6 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.Step;
 
-/**
- * Created by petrushka on 21/08/2017.
- */
 
 public class OnboardingOverlay extends RelativeLayout {
 

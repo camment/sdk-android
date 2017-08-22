@@ -12,8 +12,8 @@ public class ApiManager {
 
     private static ApiManager INSTANCE;
 
-    private DevcammentClient devcammentClient;
-    private ExecutorService executorService;
+    private final DevcammentClient devcammentClient;
+    private final ExecutorService executorService;
 
     public static ApiManager getInstance() {
         if (INSTANCE == null) {

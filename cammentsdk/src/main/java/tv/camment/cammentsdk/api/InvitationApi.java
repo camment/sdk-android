@@ -20,20 +20,17 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 
-/**
- * Created by petrushka on 03/08/2017.
- */
 
 public class InvitationApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 
-    public InvitationApi(ExecutorService executorService, DevcammentClient devcammentClient) {
+    InvitationApi(ExecutorService executorService, DevcammentClient devcammentClient) {
         super(executorService);
         this.devcammentClient = devcammentClient;
     }
 
-    public void sendInvitation(final List<FacebookFriend> fbFriends, final CammentCallback<Object> sendInvitationCallback) {
+    void sendInvitation(final List<FacebookFriend> fbFriends, final CammentCallback<Object> sendInvitationCallback) {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {

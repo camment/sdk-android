@@ -75,7 +75,7 @@
         android:alpha="0.5"
         android:layout_marginTop="16dp"
         android:background="@null"
-        android:src="@drawable/camment_white_60dp"
+        android:src="@drawable/cmmsdk_camment_white_60dp"
         app:layout_constraintLeft_toLeftOf="@+id/g_record_camment"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

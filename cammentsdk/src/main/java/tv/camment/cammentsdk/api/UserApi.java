@@ -18,15 +18,12 @@ import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 
-/**
- * Created by petrushka on 03/08/2017.
- */
 
 public class UserApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 
-    public UserApi(ExecutorService executorService, DevcammentClient devcammentClient) {
+    UserApi(ExecutorService executorService, DevcammentClient devcammentClient) {
         super(executorService);
         this.devcammentClient = devcammentClient;
     }

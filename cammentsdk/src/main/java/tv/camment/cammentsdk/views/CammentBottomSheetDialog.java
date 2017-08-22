@@ -8,27 +8,28 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 
-public class CammentBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
+class CammentBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
 
     private Camment camment;
 
-    public CammentBottomSheetDialog(@NonNull Context context) {
+    CammentBottomSheetDialog(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public CammentBottomSheetDialog(@NonNull Context context, @StyleRes int theme) {
+    CammentBottomSheetDialog(@NonNull Context context, @StyleRes int theme) {
         super(context, theme);
         init();
     }
 
-    protected CammentBottomSheetDialog(@NonNull Context context, boolean cancelable, OnCancelListener cancelListener) {
+    CammentBottomSheetDialog(@NonNull Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
         init();
     }
@@ -39,22 +40,30 @@ public class CammentBottomSheetDialog extends BottomSheetDialog implements Dialo
         setCanceledOnTouchOutside(true);
         setOnShowListener(this);
 
-        findViewById(R.id.tv_delete_camment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (camment != null) {
-                    ApiManager.getInstance().getCammentApi().deleteUserGroupCamment(camment);
-                }
-                dismiss();
-            }
-        });
+        TextView tvDeleteCamment = (TextView) findViewById(R.id.tv_delete_camment);
 
-        findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancel();
-            }
-        });
+        if (tvDeleteCamment != null) {
+            tvDeleteCamment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (camment != null) {
+                        ApiManager.getInstance().getCammentApi().deleteUserGroupCamment(camment);
+                    }
+                    dismiss();
+                }
+            });
+        }
+
+        TextView tvCancel = (TextView) findViewById(R.id.tv_cancel);
+
+        if (tvCancel != null) {
+            tvCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cancel();
+                }
+            });
+        }
     }
 
     public void setCamment(Camment camment) {

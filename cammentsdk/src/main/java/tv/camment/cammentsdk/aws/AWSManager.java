@@ -56,14 +56,14 @@ public final class AWSManager {
         return credentialsProvider;
     }
 
-    public String getUserIdentityId() {
+    private String getUserIdentityId() {
         return getCognitoCachingCredentialsProvider().getIdentityId();
     }
 
-    public ApiClientFactory getApiClientFactory() {
+    private ApiClientFactory getApiClientFactory() {
         ApiClientFactory apiClientFactory = new ApiClientFactory();
         apiClientFactory.credentialsProvider(getCognitoCachingCredentialsProvider());
-        apiClientFactory.apiKey("Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi"); //TODO extract to gradle
+        apiClientFactory.apiKey(CammentSDK.getInstance().getApiKey());
         return apiClientFactory;
     }
 
@@ -71,11 +71,11 @@ public final class AWSManager {
         return getApiClientFactory().build(DevcammentClient.class);
     }
 
-    public AmazonS3 getAmazonS3() {
+    private AmazonS3 getAmazonS3() {
         return new AmazonS3Client(getCognitoCachingCredentialsProvider());
     }
 
-    public TransferUtility getTransferUtility() {
+    private TransferUtility getTransferUtility() {
         return new TransferUtility(getAmazonS3(), CammentSDK.getInstance().getApplicationContext());
     }
 
@@ -91,7 +91,7 @@ public final class AWSManager {
         return new AWSIotMqttManager(getUserIdentityId(), SDKConfig.IOT_ENDPOINT);
     }
 
-    public KeyStore getClientKeyStore() {
+    private KeyStore getClientKeyStore() {
         return AWSIotKeystoreHelper.getIotKeystore(SDKConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
                 SDKConfig.CERT_KEYSTORE_NAME, SDKConfig.CERT_KEYSTORE_PWD);
     }

@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <Button
@@ -17,8 +16,7 @@
         android:padding="16dp"
         android:textAllCaps="false"
         android:textColor="@android:color/holo_blue_dark"
-        android:textSize="16dp"
-        app:textAllCaps="false" />
+        android:textSize="16dp" />
 
     <Button
         android:id="@+id/btn_done"
@@ -34,8 +32,7 @@
         android:textAllCaps="false"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="16dp"
-        android:textStyle="bold"
-        app:textAllCaps="false" />
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_friends"

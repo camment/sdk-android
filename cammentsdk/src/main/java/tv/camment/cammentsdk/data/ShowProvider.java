@@ -8,9 +8,6 @@ import com.camment.clientsdk.model.Show;
 
 import tv.camment.cammentsdk.CammentSDK;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
 public class ShowProvider {
 

@@ -76,7 +76,7 @@ public class TooltipView extends RelativeLayout {
 
         setLayoutParams(params);
 
-        tvTooltipText = findViewById(R.id.tv_tooltip_text);
+        tvTooltipText = (TextView) findViewById(R.id.tv_tooltip_text);
 
         showText();
 

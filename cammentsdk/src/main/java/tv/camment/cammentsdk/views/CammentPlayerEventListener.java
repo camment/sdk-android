@@ -12,9 +12,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-/**
- * Created by petrushka on 15/08/2017.
- */
 
 class CammentPlayerEventListener implements ExoPlayer.EventListener {
 

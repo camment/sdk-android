@@ -8,9 +8,6 @@ import com.camment.clientsdk.model.Usergroup;
 
 import tv.camment.cammentsdk.CammentSDK;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
 public class UserGroupProvider {
 

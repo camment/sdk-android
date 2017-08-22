@@ -8,17 +8,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
 public class DbUtils {
 
-    public static final String TAG = "DbUtils";
+    private static final String TAG = "DbUtils";
 
     DbUtils() { /* protected */ }
 
@@ -32,8 +30,8 @@ public class DbUtils {
         private static final int TYPE_TEXT = 2;
         private String mTable;
         private String mID;
-        private List<ColumnDef> mColumns = new ArrayList<ColumnDef>();
-        private List<String> mUnique = new ArrayList<String>();
+        private List<ColumnDef> mColumns = new ArrayList<>();
+        private List<String> mUnique = new ArrayList<>();
 
         public static TableBuilder table(String name) {
             TableBuilder helper = new TableBuilder();
@@ -137,9 +135,9 @@ public class DbUtils {
 
         private String mTable = null;
         private static final String TAG = DbUtils.TAG + "." + "SelectionBuilder";
-        private Map<String, String> mProjectionMap = new HashMap<String, String>();
+        private Map<String, String> mProjectionMap = new HashMap<>();
         private StringBuilder mSelection = new StringBuilder();
-        private ArrayList<String> mSelectionArgs = new ArrayList<String>();
+        private ArrayList<String> mSelectionArgs = new ArrayList<>();
 
         /**
          * Reset any internal state, allowing this builder to be recycled.
@@ -178,9 +176,7 @@ public class DbUtils {
 
             mSelection.append("(").append(selection).append(")");
             if (selectionArgs != null) {
-                for (String arg : selectionArgs) {
-                    mSelectionArgs.add(arg);
-                }
+                Collections.addAll(mSelectionArgs, selectionArgs);
             }
 
             return this;

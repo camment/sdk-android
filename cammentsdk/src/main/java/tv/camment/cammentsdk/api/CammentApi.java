@@ -17,15 +17,12 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 
-/**
- * Created by petrushka on 03/08/2017.
- */
 
 public class CammentApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 
-    public CammentApi(ExecutorService executorService, DevcammentClient devcammentClient) {
+    CammentApi(ExecutorService executorService, DevcammentClient devcammentClient) {
         super(executorService);
         this.devcammentClient = devcammentClient;
     }

@@ -16,9 +16,6 @@ import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 
-/**
- * Created by petrushka on 10/08/2017.
- */
 
 public class CammentDialog extends DialogFragment {
 
@@ -40,14 +37,19 @@ public class CammentDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        if (getDialog() != null) {
+            Window window = getDialog().getWindow();
+            if (window != null) {
+                window.requestFeature(Window.FEATURE_NO_TITLE);
+            }
+        }
 
         View view = inflater.inflate(R.layout.cmmsdk_title_message_dialog, container);
 
-        tvTitle = view.findViewById(R.id.tv_title);
-        tvMessage = view.findViewById(R.id.tv_message);
-        btnPositive = view.findViewById(R.id.btn_positive);
-        btnNegative = view.findViewById(R.id.btn_negative);
+        tvTitle = (TextView) view.findViewById(R.id.tv_title);
+        tvMessage = (TextView) view.findViewById(R.id.tv_message);
+        btnPositive = (Button) view.findViewById(R.id.btn_positive);
+        btnNegative = (Button) view.findViewById(R.id.btn_negative);
 
         btnPositive.setOnClickListener(new View.OnClickListener() {
             @Override

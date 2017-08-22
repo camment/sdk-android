@@ -18,14 +18,14 @@ public abstract class CammentAsyncClient {
     private static final Handler UI_HANDLER = new Handler(Looper.getMainLooper());
     private static final Thread UI_THREAD = Looper.getMainLooper().getThread();
 
-    protected ExecutorService executorService;
+    private final ExecutorService executorService;
 
     protected CammentAsyncClient(ExecutorService executorService) {
         this.executorService = executorService;
     }
 
     //deliver on UI thread
-    public <T> Future<T> submitTask(@NonNull final Callable<T> callable, @Nullable final CammentCallback<T> callback) {
+    protected <T> Future<T> submitTask(@NonNull final Callable<T> callable, @Nullable final CammentCallback<T> callback) {
         return executorService.submit(new Callable<T>() {
             @Override
             public T call() throws Exception {
@@ -43,7 +43,7 @@ public abstract class CammentAsyncClient {
     }
 
     //deliver on background thread
-    public <T> Future<T> submitBgTask(@NonNull final Callable<T> callable, @Nullable final CammentCallback<T> callback) {
+    protected <T> Future<T> submitBgTask(@NonNull final Callable<T> callable, @Nullable final CammentCallback<T> callback) {
         return executorService.submit(new Callable<T>() {
             @Override
             public T call() throws Exception {

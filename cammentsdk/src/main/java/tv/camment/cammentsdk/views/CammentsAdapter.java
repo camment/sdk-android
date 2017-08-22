@@ -1,7 +1,6 @@
 package tv.camment.cammentsdk.views;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -20,7 +19,7 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.CCammentComparator;
 
 
-public class CammentsAdapter extends RecyclerView.Adapter {
+class CammentsAdapter extends RecyclerView.Adapter {
 
     private static final int CAMMENT = 0;
 
@@ -28,7 +27,7 @@ public class CammentsAdapter extends RecyclerView.Adapter {
 
     private List<CCamment> camments;
 
-    public CammentsAdapter(ActionListener actionListener) {
+    CammentsAdapter(ActionListener actionListener) {
         this.actionListener = actionListener;
         setHasStableIds(true);
     }

@@ -1,7 +1,6 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.EGL14;

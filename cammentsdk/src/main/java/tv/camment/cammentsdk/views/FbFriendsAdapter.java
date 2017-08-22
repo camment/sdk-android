@@ -12,11 +12,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.R;
 
-/**
- * Created by petrushka on 10/08/2017.
- */
-
-public class FbFriendsAdapter extends RecyclerView.Adapter
+class FbFriendsAdapter extends RecyclerView.Adapter
         implements FbFriendViewHolder.ActionListener {
 
     private static final int FB_FRIEND = 0;
@@ -24,11 +20,11 @@ public class FbFriendsAdapter extends RecyclerView.Adapter
     private List<FacebookFriend> facebookFriends;
     private List<FacebookFriend> selectedFacebookFriends;
 
-    public FbFriendsAdapter() {
+    FbFriendsAdapter() {
         setHasStableIds(true);
     }
 
-    public void setFacebookFriends(List<FacebookFriend> facebookFriends) {
+    void setFacebookFriends(List<FacebookFriend> facebookFriends) {
         this.facebookFriends = facebookFriends;
         notifyDataSetChanged();
     }

@@ -39,8 +39,8 @@ public abstract class MediaEncoder implements Runnable {
 	protected static final int MSG_STOP_RECORDING = 9;
 
 	public interface MediaEncoderListener {
-		public void onPrepared(MediaEncoder encoder);
-		public void onStopped(MediaEncoder encoder);
+		void onPrepared(MediaEncoder encoder);
+		void onStopped(MediaEncoder encoder);
 	}
 
 	protected final Object mSync = new Object();
@@ -86,7 +86,7 @@ public abstract class MediaEncoder implements Runnable {
     public MediaEncoder(final MediaMuxerWrapper muxer, final MediaEncoderListener listener) {
     	if (listener == null) throw new NullPointerException("MediaEncoderListener is null");
     	if (muxer == null) throw new NullPointerException("MediaMuxerWrapper is null");
-		mWeakMuxer = new WeakReference<MediaMuxerWrapper>(muxer);
+		mWeakMuxer = new WeakReference<>(muxer);
 		muxer.addEncoder(this);
 		mListener = listener;
         synchronized (mSync) {

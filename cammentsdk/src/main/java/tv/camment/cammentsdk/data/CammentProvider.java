@@ -12,9 +12,6 @@ import java.util.List;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CCamment;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
 public class CammentProvider {
 

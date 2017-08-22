@@ -1,13 +1,10 @@
 package tv.camment.cammentsdk.views;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,21 +13,16 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 
-public class CammentViewHolder extends RecyclerView.ViewHolder {
+class CammentViewHolder extends RecyclerView.ViewHolder {
 
     private final CammentsAdapter.ActionListener actionListener;
     private Camment camment;
@@ -38,7 +30,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivThumbnail;
     private TextureView textureView;
 
-    public CammentViewHolder(final View itemView, final CammentsAdapter.ActionListener actionListener) {
+    CammentViewHolder(final View itemView, final CammentsAdapter.ActionListener actionListener) {
         super(itemView);
 
         this.actionListener = actionListener;
@@ -46,8 +38,8 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
         itemView.setPivotX(0);
         itemView.setPivotY(0);
 
-        ivThumbnail = itemView.findViewById(R.id.iv_thumbnail);
-        textureView = itemView.findViewById(R.id.texture_view);
+        ivThumbnail = (ImageView) itemView.findViewById(R.id.iv_thumbnail);
+        textureView = (TextureView) itemView.findViewById(R.id.texture_view);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +114,7 @@ public class CammentViewHolder extends RecyclerView.ViewHolder {
         if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
             Log.d("thumb", "showing local");
             Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(FileUtils.getInstance()
-                            .getUploadCammentPath(camment.getUuid()), MediaStore.Video.Thumbnails.MINI_KIND);
+                    .getUploadCammentPath(camment.getUuid()), MediaStore.Video.Thumbnails.MINI_KIND);
             if (bitmap != null) {
                 ivThumbnail.setImageBitmap(bitmap);
 

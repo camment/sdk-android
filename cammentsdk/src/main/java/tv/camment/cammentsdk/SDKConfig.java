@@ -16,4 +16,6 @@ public class SDKConfig {
 
     public static final String CERT_KEYSTORE_PWD = "8uT$BwY+x=DF,M";
 
+    public static final String API_KEY_DUMMY = "Your Camment API key";
+
 }

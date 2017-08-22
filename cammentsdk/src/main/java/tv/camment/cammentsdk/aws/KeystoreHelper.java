@@ -16,9 +16,6 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 
-/**
- * Created by petrushka on 07/08/2017.
- */
 
 public class KeystoreHelper extends CammentAsyncClient {
 

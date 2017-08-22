@@ -23,9 +23,6 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 
-/**
- * Created by petrushka on 07/08/2017.
- */
 
 public class RecordingHandler extends CammentAsyncClient {
 

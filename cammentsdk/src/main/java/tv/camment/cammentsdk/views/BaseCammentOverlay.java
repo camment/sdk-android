@@ -70,8 +70,8 @@ public class BaseCammentOverlay extends RelativeLayout
     private float startX;
     private float startY;
 
-    protected ViewGroup parentViewGroup;
-    protected CammentAudioListener cammentAudioListener;
+    ViewGroup parentViewGroup;
+    CammentAudioListener cammentAudioListener;
 
     private SquareFrameLayout flCamera;
     private CameraGLView cameraGLView;
@@ -83,7 +83,6 @@ public class BaseCammentOverlay extends RelativeLayout
     private CammentsAdapter adapter;
 
     private SimpleExoPlayer player;
-    private ExtractorMediaSource videoSource;
     private DefaultDataSourceFactory dataSourceFactory;
     private DefaultExtractorsFactory extractorsFactory;
 
@@ -214,11 +213,11 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     protected void onFinishInflate() {
-        flCamera = findViewById(R.id.fl_camera);
+        flCamera = (SquareFrameLayout) findViewById(R.id.fl_camera);
         vRecordIndicator = findViewById(R.id.v_record_indicator);
 
-        rvCamments = findViewById(R.id.rv_camments);
-        ibRecord = findViewById(R.id.ib_record);
+        rvCamments = (CammentRecyclerView) findViewById(R.id.rv_camments);
+        ibRecord = (RecordingButton) findViewById(R.id.ib_record);
 
         adapter = new CammentsAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -228,7 +227,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
         ibRecord.setListener(this);
 
-        onboardingOverlay = findViewById(R.id.onboarding_overlay);
+        onboardingOverlay = (OnboardingOverlay) findViewById(R.id.onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
 
         super.onFinishInflate();
@@ -251,7 +250,7 @@ public class BaseCammentOverlay extends RelativeLayout
             player.addListener(exoEventListener);
 
             player.setVideoTextureView(textureView);
-            videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), dataSourceFactory, extractorsFactory, null, null);
+            ExtractorMediaSource videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), dataSourceFactory, extractorsFactory, null, null);
             player.prepare(videoSource);
 
             onboardingOverlay.hideTooltipIfNeeded(Step.PLAY);
@@ -403,7 +402,7 @@ public class BaseCammentOverlay extends RelativeLayout
         AnimationUtils.animateDisappearCameraView(flCamera, cameraViewDisappearAnimatorListener);
     }
 
-    private Animator.AnimatorListener cameraViewDisappearAnimatorListener = new Animator.AnimatorListener() {
+    private final Animator.AnimatorListener cameraViewDisappearAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animator) {
 
@@ -431,7 +430,7 @@ public class BaseCammentOverlay extends RelativeLayout
         }
     };
 
-    private Animator.AnimatorListener cameraViewAppearAnimatorListener = new Animator.AnimatorListener() {
+    private final Animator.AnimatorListener cameraViewAppearAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animator) {
             flCamera.setVisibility(VISIBLE);

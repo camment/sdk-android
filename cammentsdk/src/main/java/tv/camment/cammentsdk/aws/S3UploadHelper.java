@@ -24,9 +24,6 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 
-/**
- * Created by petrushka on 07/08/2017.
- */
 
 public class S3UploadHelper extends CammentAsyncClient {
 

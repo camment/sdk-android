@@ -11,15 +11,12 @@ import java.util.concurrent.ExecutorService;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 
-/**
- * Created by petrushka on 03/08/2017.
- */
 
 public class ShowApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 
-    public ShowApi(ExecutorService executorService, DevcammentClient devcammentClient) {
+    ShowApi(ExecutorService executorService, DevcammentClient devcammentClient) {
         super(executorService);
         this.devcammentClient = devcammentClient;
     }

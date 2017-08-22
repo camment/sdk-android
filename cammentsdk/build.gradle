@@ -1,33 +1,29 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     resourcePrefix 'cmmsdk_'
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionName project.VERSION_NAME
+        versionCode Integer.parseInt(project.VERSION_CODE)
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
 ext {
+    supportLibVersion               =   rootProject.ext.supportLibVersion
     awsVersion                      =   '2.4.5'
     facebookVersion                 =   '[4,5)'
     constraintLayoutVersion         =   '1.0.2'
-    supportLibVersion               =   '25.4.0'
     exoPlayerVersion                =   'r2.4.4'
     glideVersion                    =   '4.0.0'
     easyPermissionsVersion          =   '0.4.2'
@@ -61,10 +57,6 @@ ext {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
 
     compile awsDependencies.values()
     compile facebookDependencies.values()
@@ -72,4 +64,7 @@ dependencies {
 
     compile glideDependencies.glide
     annotationProcessor glideDependencies.glideCompiler
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:1.7.1'
 }

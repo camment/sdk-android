@@ -3,9 +3,6 @@ package tv.camment.cammentsdk.utils;
 import android.content.Context;
 import android.util.TypedValue;
 
-/**
- * Created by petrushka on 04/08/2017.
- */
 
 public class CommonUtils {
 

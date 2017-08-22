@@ -3,9 +3,6 @@ package tv.camment.cammentsdk.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
 public class DataContract {
 

@@ -17,9 +17,6 @@ import static tv.camment.cammentsdk.data.DataContract.Show;
 import static tv.camment.cammentsdk.data.DataContract.Tables;
 import static tv.camment.cammentsdk.data.DataContract.UserGroup;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
 public class DataProvider extends ContentProvider {
 
@@ -35,11 +32,10 @@ public class DataProvider extends ContentProvider {
     }
 
     private SQLiteDatabase db;
-    private DbHelper dbHelper;
 
     @Override
     public boolean onCreate() {
-        dbHelper = new DbHelper(getContext());
+        DbHelper dbHelper = new DbHelper(getContext());
         db = dbHelper.getWritableDatabase();
         return (db != null);
     }

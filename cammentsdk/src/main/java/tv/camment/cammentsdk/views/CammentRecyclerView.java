@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-/**
- * Created by petrushka on 09/08/2017.
- */
 
 public class CammentRecyclerView extends RecyclerView {
 

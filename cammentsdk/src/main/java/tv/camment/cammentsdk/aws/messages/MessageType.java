@@ -19,6 +19,6 @@ public enum MessageType {
     CAMMENT,
 
     @SerializedName("camment-deleted")
-    CAMMENT_DELETED;
+    CAMMENT_DELETED
 
 }

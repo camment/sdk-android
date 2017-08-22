@@ -15,9 +15,6 @@ import java.util.Arrays;
 
 import tv.camment.cammentsdk.api.ApiManager;
 
-/**
- * Created by petrushka on 04/08/2017.
- */
 
 public class FacebookHelper {
 
@@ -28,8 +25,8 @@ public class FacebookHelper {
     private static final String[] permissions = new String[]{"public_profile", "email",
             "user_friends"};
 
-    private LoginManager loginManager;
-    private CallbackManager callbackManager;
+    private final LoginManager loginManager;
+    private final CallbackManager callbackManager;
 
     public static FacebookHelper getInstance() {
         if (INSTANCE == null) {
@@ -67,11 +64,7 @@ public class FacebookHelper {
     }
 
     public boolean isMessageForMe(String userId) {
-        if (isLoggedIn()
-                && !TextUtils.isEmpty(userId)) {
-            return userId.equals(AccessToken.getCurrentAccessToken().getUserId());
-        }
-        return false;
+        return isLoggedIn() && !TextUtils.isEmpty(userId) && userId.equals(AccessToken.getCurrentAccessToken().getUserId());
     }
 
     public CallbackManager getCallbackManager() {

@@ -144,7 +144,7 @@ public class MediaVideoEncoder extends MediaEncoder {
      * @param mimeType
      * @return null if no codec matched
      */
-    protected static final MediaCodecInfo selectVideoCodec(final String mimeType) {
+    protected static MediaCodecInfo selectVideoCodec(final String mimeType) {
     	if (DEBUG) Log.v(TAG, "selectVideoCodec:");
 
     	// get the list of available codecs
@@ -157,15 +157,15 @@ public class MediaVideoEncoder extends MediaEncoder {
             }
             // select first codec that match a specific MIME type and color format
             final String[] types = codecInfo.getSupportedTypes();
-            for (int j = 0; j < types.length; j++) {
-                if (types[j].equalsIgnoreCase(mimeType)) {
-                	if (DEBUG) Log.i(TAG, "codec:" + codecInfo.getName() + ",MIME=" + types[j]);
-            		final int format = selectColorFormat(codecInfo, mimeType);
-                	if (format > 0) {
-                		return codecInfo;
-                	}
-                }
-            }
+			for (String type : types) {
+				if (type.equalsIgnoreCase(mimeType)) {
+					if (DEBUG) Log.i(TAG, "codec:" + codecInfo.getName() + ",MIME=" + type);
+					final int format = selectColorFormat(codecInfo, mimeType);
+					if (format > 0) {
+						return codecInfo;
+					}
+				}
+			}
         }
         return null;
     }
@@ -174,7 +174,7 @@ public class MediaVideoEncoder extends MediaEncoder {
      * select color format available on specific codec and we can use.
      * @return 0 if no colorFormat is matched
      */
-    protected static final int selectColorFormat(final MediaCodecInfo codecInfo, final String mimeType) {
+    protected static int selectColorFormat(final MediaCodecInfo codecInfo, final String mimeType) {
 		if (DEBUG) Log.i(TAG, "selectColorFormat: ");
     	int result = 0;
     	final MediaCodecInfo.CodecCapabilities caps;
@@ -211,7 +211,7 @@ public class MediaVideoEncoder extends MediaEncoder {
 		};
 	}
 
-    private static final boolean isRecognizedViewoFormat(final int colorFormat) {
+    private static boolean isRecognizedViewoFormat(final int colorFormat) {
 		if (DEBUG) Log.i(TAG, "isRecognizedViewoFormat:colorFormat=" + colorFormat);
     	final int n = recognizedFormats != null ? recognizedFormats.length : 0;
     	for (int i = 0; i < n; i++) {

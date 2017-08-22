@@ -17,7 +17,6 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
-import tv.camment.cammentsdk.views.CammentOverlay;
 
 public final class CammentSDK extends CammentLifecycle {
 
@@ -26,6 +25,8 @@ public final class CammentSDK extends CammentLifecycle {
     private volatile WeakReference<Context> applicationContext;
 
     private IoTHelper ioTHelper;
+
+    private String apiKey;
 
     public static CammentSDK getInstance() {
         if (INSTANCE == null) {
@@ -37,12 +38,17 @@ public final class CammentSDK extends CammentLifecycle {
     private CammentSDK() {
     }
 
-    public synchronized void init(Context context) {
+    public synchronized void init(Context context, String apiKey) {
         if (applicationContext == null || applicationContext.get() == null) {
             if (context == null || !(context instanceof Application)) {
                 throw new IllegalArgumentException("Can't init CammentSDK with null application context");
             }
+            if (TextUtils.isEmpty(apiKey) || SDKConfig.API_KEY_DUMMY.equals(apiKey)) {
+                throw new IllegalArgumentException("Invalid CammentSDK API key");
+            }
             applicationContext = new WeakReference<>(context);
+
+            this.apiKey = apiKey;
 
             AWSManager.getInstance().getKeystoreHelper().checkKeyStore();
 
@@ -86,6 +92,10 @@ public final class CammentSDK extends CammentLifecycle {
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionHelper.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 
 }

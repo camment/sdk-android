@@ -7,16 +7,13 @@ import android.util.Log;
 
 import tv.camment.cammentsdk.utils.DbUtils;
 
-/**
- * Created by petrushka on 11/08/2017.
- */
 
-public class DbHelper extends SQLiteOpenHelper {
+class DbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "cammentsdk";
     private static final int DB_VERSION = 1;
 
-    public DbHelper(Context context) {
+    DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 

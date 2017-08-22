@@ -35,7 +35,7 @@ public class CameraSurfaceRenderer implements
     private boolean flip = true;
 
     public CameraSurfaceRenderer(final CameraGLView cameraGLView) {
-        cameraGLViewWeakRef = new WeakReference<CameraGLView>(cameraGLView);
+        cameraGLViewWeakRef = new WeakReference<>(cameraGLView);
         Matrix.setIdentityM(mvpMatrix, 0);
     }
 

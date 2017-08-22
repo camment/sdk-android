@@ -12,9 +12,6 @@ import android.widget.ImageButton;
 import tv.camment.cammentsdk.views.SquareFrameLayout;
 import tv.camment.cammentsdk.views.TooltipView;
 
-/**
- * Created by petrushka on 09/08/2017.
- */
 
 public class AnimationUtils {
 

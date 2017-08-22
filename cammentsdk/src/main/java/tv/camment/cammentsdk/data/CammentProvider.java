@@ -3,6 +3,8 @@ package tv.camment.cammentsdk.data;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 import com.camment.clientsdk.model.Camment;
 
@@ -212,6 +214,14 @@ public class CammentProvider {
             }
         }
         return camments;
+    }
+
+    public static Loader<Cursor> getCammentLoader() {
+        String selection = DataContract.Camment.recorded + "=?";
+        String[] selectionArgs = {"1"};
+
+        return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
+                null, selection, selectionArgs, DataContract.Camment.timestamp + " DESC");
     }
 
 }

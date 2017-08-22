@@ -86,3 +86,4 @@
 
 -dontshrink
 -dontoptimize
+-verbose

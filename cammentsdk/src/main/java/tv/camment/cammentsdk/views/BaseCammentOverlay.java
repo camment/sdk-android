@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -45,18 +44,15 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
-import tv.camment.cammentsdk.data.DataContract;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
-import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
 
-
-public class BaseCammentOverlay extends RelativeLayout
+class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
@@ -90,11 +86,7 @@ public class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String selection = DataContract.Camment.recorded + "=?";
-        String[] selectionArgs = {"1"};
-
-        return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
-                null, selection, selectionArgs, DataContract.Camment.timestamp + " DESC");
+        return CammentProvider.getCammentLoader();
     }
 
     @Override

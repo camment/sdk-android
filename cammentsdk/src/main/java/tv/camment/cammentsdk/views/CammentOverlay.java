@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 
-public class CammentOverlay extends BaseCammentOverlay {
+public final class CammentOverlay extends BaseCammentOverlay {
 
     public CammentOverlay(Context context) {
         super(context);

@@ -17,7 +17,6 @@ import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
-import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
 
@@ -152,7 +151,7 @@ public class RecordingButton extends AppCompatImageButton implements CammentDial
     }
 
     public void show() {
-        animate().translationX(0).alpha(1.0f).start();
+        animate().translationX(0).alpha(0.5f).start();
     }
 
     public void hide() {

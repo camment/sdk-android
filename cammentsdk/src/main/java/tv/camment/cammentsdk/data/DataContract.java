@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 
-public class DataContract {
+class DataContract {
 
     static final String AUTHORITY = "tv.camment.cammentsdk";
     /**
@@ -47,10 +47,10 @@ public class DataContract {
         String timestamp = "timestamp";
     }
 
-    public static final class UserGroup implements BaseColumns, UserGroupColumns {
-        public static final String CONTENT_TYPE = buildContentTypeDir(Tables.USER_GROUP);
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.USER_GROUP);
-        public static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.USER_GROUP_ID);
+    static final class UserGroup implements BaseColumns, UserGroupColumns {
+        static final String CONTENT_TYPE = buildContentTypeDir(Tables.USER_GROUP);
+        static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.USER_GROUP);
+        static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.USER_GROUP_ID);
     }
 
     private interface ShowColumns {
@@ -58,10 +58,10 @@ public class DataContract {
         String url = "url";
     }
 
-    public static final class Show implements BaseColumns, ShowColumns {
-        public static final String CONTENT_TYPE = buildContentTypeDir(Tables.SHOW);
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.SHOW);
-        public static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.SHOW_ID);
+    static final class Show implements BaseColumns, ShowColumns {
+        static final String CONTENT_TYPE = buildContentTypeDir(Tables.SHOW);
+        static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.SHOW);
+        static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.SHOW_ID);
     }
 
     private interface CammentColumns {
@@ -76,10 +76,10 @@ public class DataContract {
         String recorded = "recorded";
     }
 
-    public static final class Camment implements BaseColumns, CammentColumns {
-        public static final String CONTENT_TYPE = buildContentTypeDir(Tables.CAMMENT);
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.CAMMENT);
-        public static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.CAMMENT_ID);
+    static final class Camment implements BaseColumns, CammentColumns {
+        static final String CONTENT_TYPE = buildContentTypeDir(Tables.CAMMENT);
+        static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.CAMMENT);
+        static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.CAMMENT_ID);
     }
 
 }

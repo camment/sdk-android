@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.helpers.Step;
-import tv.camment.cammentsdk.utils.AnimationUtils;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
 

@@ -78,15 +78,19 @@ public final class AWSManager {
         return new TransferUtility(getAmazonS3(), CammentSDK.getInstance().getApplicationContext());
     }
 
-    public KeystoreHelper getKeystoreHelper() {
+    private KeystoreHelper getKeystoreHelper() {
         return new KeystoreHelper(Executors.newSingleThreadExecutor());
+    }
+
+    public void checkKeyStore() {
+        getKeystoreHelper().checkKeyStore();
     }
 
     public S3UploadHelper getS3UploadHelper() {
         return new S3UploadHelper(Executors.newSingleThreadExecutor(), getTransferUtility());
     }
 
-    public AWSIotMqttManager getAWSIotMqttManager() {
+    AWSIotMqttManager getAWSIotMqttManager() {
         return new AWSIotMqttManager(getUserIdentityId(), AWSConfig.IOT_ENDPOINT);
     }
 

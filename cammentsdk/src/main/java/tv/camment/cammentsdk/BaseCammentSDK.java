@@ -40,7 +40,7 @@ class BaseCammentSDK extends CammentLifecycle {
 
             this.apiKey = apiKey;
 
-            AWSManager.getInstance().getKeystoreHelper().checkKeyStore();
+            AWSManager.getInstance().checkKeyStore();
 
             ((Application) context).registerActivityLifecycleCallbacks(this);
 

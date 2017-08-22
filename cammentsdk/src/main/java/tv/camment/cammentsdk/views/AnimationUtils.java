@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.utils;
+package tv.camment.cammentsdk.views;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -12,13 +12,12 @@ import android.widget.ImageButton;
 import tv.camment.cammentsdk.views.SquareFrameLayout;
 import tv.camment.cammentsdk.views.TooltipView;
 
-
-public class AnimationUtils {
+class AnimationUtils {
 
     private static ObjectAnimator recordAnimator;
     private static ValueAnimator animator;
 
-    public static void animateAppearCameraView(final SquareFrameLayout flCamera,
+    static void animateAppearCameraView(final SquareFrameLayout flCamera,
                                                Animator.AnimatorListener animatorListener) {
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
@@ -37,14 +36,14 @@ public class AnimationUtils {
         animator.start();
     }
 
-    public static void cancelAppearAnimation() {
+    static void cancelAppearAnimation() {
         if (animator != null) {
             animator.removeAllListeners();
             animator.cancel();
         }
     }
 
-    public static void animateDisappearCameraView(final SquareFrameLayout flCamera,
+    static void animateDisappearCameraView(final SquareFrameLayout flCamera,
                                                   Animator.AnimatorListener animatorListener) {
         cancelAppearAnimation();
 
@@ -63,7 +62,7 @@ public class AnimationUtils {
         animator.start();
     }
 
-    public static void startRecordAnimation(final View vRecordIndicator) {
+    static void startRecordAnimation(final View vRecordIndicator) {
         recordAnimator = ObjectAnimator.ofFloat(vRecordIndicator, "alpha", 0.0f, 1.0f);
         recordAnimator.setTarget(vRecordIndicator);
         recordAnimator.setDuration(500);
@@ -72,14 +71,14 @@ public class AnimationUtils {
         recordAnimator.start();
     }
 
-    public static void stopRecordAnimation(final View vRecordIndicator) {
+    static void stopRecordAnimation(final View vRecordIndicator) {
         if (recordAnimator != null) {
             recordAnimator.cancel();
         }
         vRecordIndicator.setAlpha(0.0f);
     }
 
-    public static void animateActivateRecordingButton(final ImageButton ibRecord) {
+    static void animateActivateRecordingButton(final ImageButton ibRecord) {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 0.8f, 1.5f);
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 0.8f, 1.5f);
         ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(ibRecord, "alpha", 0.5f, 0.9f);
@@ -91,7 +90,7 @@ public class AnimationUtils {
         animatorSet.start();
     }
 
-    public static void animateDeactivateRecordingButton(final ImageButton ibRecord) {
+    static void animateDeactivateRecordingButton(final ImageButton ibRecord) {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 1.5f, 0.8f);
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 1.5f, 0.8f);
         ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(ibRecord, "alpha", 0.9f, 0.5f);
@@ -103,7 +102,7 @@ public class AnimationUtils {
         animatorSet.start();
     }
 
-    public static void animateTooltip(final TooltipView tooltipView) {
+    static void animateTooltip(final TooltipView tooltipView) {
         ObjectAnimator objectAnimator =
                 ObjectAnimator.ofFloat(tooltipView, "translationY", 0, 0, -30, 0, -15, 0, 0);
 

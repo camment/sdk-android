@@ -3,8 +3,6 @@ package tv.camment.cammentdemo;
 import android.app.Application;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.camera.CameraGLView;
-
 
 public class CammentDemoApp extends Application {
 

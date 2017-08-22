@@ -16,6 +16,20 @@ android {
         buildConfigField "String", "CAMMENT_API_KEY", (project.hasProperty('CAMMENT_API_KEY') ? "\"$CAMMENT_API_KEY\"" : "\"Your Camment API key\"")
     }
 
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -33,6 +47,5 @@ ext {
 
 dependencies {
     compile supportDependencies.values()
-
     compile project(path: ':cammentsdk')
 }

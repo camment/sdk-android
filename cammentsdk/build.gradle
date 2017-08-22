@@ -11,6 +11,16 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
+
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            useProguard true
+        }
     }
 
     compileOptions {

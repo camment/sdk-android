@@ -19,7 +19,7 @@
         android:paddingTop="16dp"
         android:text="@string/cmmsdk_camment_actions_title"
         android:textColor="@color/cmmsdk_camment_text_grey"
-        android:textSize="12dp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tv_delete_camment"
@@ -35,7 +35,7 @@
         android:paddingTop="16dp"
         android:text="@string/cmmsdk_camment_actions_delete_camment"
         android:textColor="@android:color/holo_blue_dark"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -52,7 +52,7 @@
         android:paddingTop="16dp"
         android:text="@string/cmmsdk_cancel"
         android:textColor="@android:color/holo_red_dark"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
 </LinearLayout>

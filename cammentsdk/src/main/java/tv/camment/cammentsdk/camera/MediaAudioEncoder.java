@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 class MediaAudioEncoder extends MediaEncoder {
-    private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "MediaAudioEncoder";
 
     private static final String MIME_TYPE = "audio/mp4a-latm";
@@ -52,7 +51,6 @@ class MediaAudioEncoder extends MediaEncoder {
 
     @Override
     protected void prepare() throws IOException {
-        if (DEBUG) Log.v(TAG, "prepare:");
         mTrackIndex = -1;
         mMuxerStarted = mIsEOS = false;
         // prepare MediaCodec for AAC encoding of audio data from internal mic.
@@ -61,7 +59,6 @@ class MediaAudioEncoder extends MediaEncoder {
             Log.e(TAG, "Unable to find an appropriate codec for " + MIME_TYPE);
             return;
         }
-        if (DEBUG) Log.i(TAG, "selected codec: " + audioCodecInfo.getName());
 
         final MediaFormat audioFormat = MediaFormat.createAudioFormat(MIME_TYPE, SAMPLE_RATE, 1);
         audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
@@ -69,11 +66,10 @@ class MediaAudioEncoder extends MediaEncoder {
         audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
 
-        if (DEBUG) Log.i(TAG, "format: " + audioFormat);
         mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
         mMediaCodec.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         mMediaCodec.start();
-        if (DEBUG) Log.i(TAG, "prepare finishing");
+
         if (mListener != null) {
             try {
                 mListener.onPrepared(this);
@@ -139,7 +135,6 @@ class MediaAudioEncoder extends MediaEncoder {
                 if (audioRecord != null) {
                     try {
                         if (mIsCapturing) {
-                            if (DEBUG) Log.v(TAG, "AudioThread:start audio recording");
                             final ByteBuffer buf = ByteBuffer.allocateDirect(SAMPLES_PER_FRAME);
                             int readBytes;
                             audioRecord.startRecording();
@@ -170,19 +165,13 @@ class MediaAudioEncoder extends MediaEncoder {
             } catch (final Exception e) {
                 Log.e(TAG, "AudioThread#run", e);
             }
-            if (DEBUG) Log.v(TAG, "AudioThread:finished");
         }
     }
 
     /**
      * select the first codec that match a specific MIME type
-     *
-     * @param mimeType
-     * @return
      */
     private static MediaCodecInfo selectAudioCodec(final String mimeType) {
-        if (DEBUG) Log.v(TAG, "selectAudioCodec:");
-
         MediaCodecInfo result = null;
         // get the list of available codecs
         final int numCodecs = MediaCodecList.getCodecCount();
@@ -194,7 +183,6 @@ class MediaAudioEncoder extends MediaEncoder {
             }
             final String[] types = codecInfo.getSupportedTypes();
             for (String type : types) {
-                if (DEBUG) Log.i(TAG, "supportedType:" + codecInfo.getName() + ",MIME=" + type);
                 if (type.equalsIgnoreCase(mimeType)) {
                     if (result == null) {
                         result = codecInfo;

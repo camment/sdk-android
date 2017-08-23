@@ -96,6 +96,7 @@ abstract class MediaEncoder implements Runnable {
             try {
                 mSync.wait();
             } catch (final InterruptedException e) {
+                Log.e(TAG, "wait", e);
             }
         }
     }
@@ -200,7 +201,7 @@ abstract class MediaEncoder implements Runnable {
     /**
      * Release all releated objects
      */
-    protected void release() {
+    void release() {
         try {
             mListener.onStopped(this);
         } catch (final Exception e) {
@@ -229,7 +230,7 @@ abstract class MediaEncoder implements Runnable {
         mBufferInfo = null;
     }
 
-    protected void signalEndOfInputStream() {
+    void signalEndOfInputStream() {
         // signalEndOfInputStream is only avairable for video encoding with surface
         // and equivalent sending a empty buffer with BUFFER_FLAG_END_OF_STREAM flag.
 //		mMediaCodec.signalEndOfInputStream();	// API >= 18 //TODO check
@@ -269,6 +270,7 @@ abstract class MediaEncoder implements Runnable {
                 // wait for MediaCodec encoder is ready to encode
                 // nothing to do here because MediaCodec#dequeueInputBuffer(TIMEOUT_USEC)
                 // will wait for maximum TIMEOUT_USEC(10msec) on each call
+                Log.d(TAG, "MediaCodec.INFO_TRY_AGAIN_LATER");
             }
         }
     }
@@ -323,6 +325,7 @@ abstract class MediaEncoder implements Runnable {
                 }
             } else if (encoderStatus < 0) {
                 // unexpected status
+                Log.d(TAG, "unexpected status");
             } else {
                 final ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
                 if (encodedData == null) {

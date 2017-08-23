@@ -30,7 +30,7 @@
         android:paddingStart="8dp"
         android:paddingTop="16dp"
         android:textColor="@color/cmmsdk_camment_text_grey"
-        android:textSize="16dp" />
+        android:textSize="14sp" />
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/cb_select"

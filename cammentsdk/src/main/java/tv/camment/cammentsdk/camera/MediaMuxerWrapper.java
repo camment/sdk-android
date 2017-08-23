@@ -35,11 +35,8 @@ import java.util.Locale;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 class MediaMuxerWrapper {
-    private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "MediaMuxerWrapper";
 
-    private static final String DIR_NAME = "Camment";
-    private static final SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
     private final String mCammentUuid;
 
     private String mOutputPath;
@@ -63,10 +60,6 @@ class MediaMuxerWrapper {
         mMediaMuxer = new MediaMuxer(mOutputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
         mEncoderCount = mStatredCount = 0;
         mIsStarted = false;
-    }
-
-    String getOutputPath() {
-        return mOutputPath;
     }
 
     String getCammentUuid() {
@@ -128,13 +121,11 @@ class MediaMuxerWrapper {
      * @return true when muxer is ready to write
      */
     synchronized boolean start() {
-        if (DEBUG) Log.v(TAG, "start:");
         mStatredCount++;
         if ((mEncoderCount > 0) && (mStatredCount == mEncoderCount)) {
             mMediaMuxer.start();
             mIsStarted = true;
             notifyAll();
-            if (DEBUG) Log.v(TAG, "MediaMuxer started:");
         }
         return mIsStarted;
     }
@@ -143,13 +134,11 @@ class MediaMuxerWrapper {
      * request stop recording from encoder when encoder received EOS
      */
     synchronized void stop() {
-        if (DEBUG) Log.v(TAG, "stop:mStatredCount=" + mStatredCount);
         mStatredCount--;
         if ((mEncoderCount > 0) && (mStatredCount <= 0)) {
             mMediaMuxer.stop();
             mMediaMuxer.release();
             mIsStarted = false;
-            if (DEBUG) Log.v(TAG, "MediaMuxer stopped:");
         }
     }
 
@@ -162,10 +151,7 @@ class MediaMuxerWrapper {
     synchronized int addTrack(final MediaFormat format) {
         if (mIsStarted)
             throw new IllegalStateException("muxer already started");
-        final int trackIx = mMediaMuxer.addTrack(format);
-        if (DEBUG)
-            Log.i(TAG, "addTrack:trackNum=" + mEncoderCount + ",trackIx=" + trackIx + ",format=" + format);
-        return trackIx;
+        return mMediaMuxer.addTrack(format);
     }
 
     /**

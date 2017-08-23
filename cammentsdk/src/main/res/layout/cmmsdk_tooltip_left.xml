@@ -14,7 +14,7 @@
         android:background="@drawable/cmmsdk_tooltip_bubble"
         android:padding="8dp"
         android:textColor="@android:color/white"
-        android:textSize="12dp" />
+        android:textSize="12sp" />
 
     <View
         android:layout_width="8dp"

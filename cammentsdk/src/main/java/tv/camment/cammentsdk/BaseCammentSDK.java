@@ -29,7 +29,7 @@ class BaseCammentSDK extends CammentLifecycle {
 
     String apiKey;
 
-    public synchronized void init(Context context, String apiKey) {
+    synchronized void init(Context context, String apiKey) {
         if (applicationContext == null || applicationContext.get() == null) {
             if (context == null || !(context instanceof Application)) {
                 throw new IllegalArgumentException("Can't init CammentSDK with null application context");
@@ -74,7 +74,7 @@ class BaseCammentSDK extends CammentLifecycle {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    void onActivityResult(int requestCode, int resultCode, Intent data) {
         boolean fbHandled = FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         Log.d("FACEBOOK", "handled? " + fbHandled);
@@ -86,7 +86,7 @@ class BaseCammentSDK extends CammentLifecycle {
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionHelper.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 

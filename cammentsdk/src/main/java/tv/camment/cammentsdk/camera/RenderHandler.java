@@ -35,7 +35,6 @@ import android.view.SurfaceHolder;
  * Helper class to draw texture to whole view on private thread
  */
 final class RenderHandler implements Runnable {
-    private static final boolean DEBUG = false;    // TODO set false on release
     private static final String TAG = "RenderHandler";
 
     private final Object mSync = new Object();
@@ -50,7 +49,6 @@ final class RenderHandler implements Runnable {
     private int mRequestDraw;
 
     static RenderHandler createHandler(final String name) {
-        if (DEBUG) Log.v(TAG, "createHandler:");
         final RenderHandler handler = new RenderHandler();
         synchronized (handler.mSync) {
             new Thread(handler, !TextUtils.isEmpty(name) ? name : TAG).start();
@@ -64,7 +62,6 @@ final class RenderHandler implements Runnable {
     }
 
     final void setEglContext(final EGLContext shared_context, final int tex_id, final Object surface, final boolean isRecordable) {
-        if (DEBUG) Log.i(TAG, "setEglContext:");
         if (!(surface instanceof Surface) && !(surface instanceof SurfaceTexture) && !(surface instanceof SurfaceHolder))
             throw new RuntimeException("unsupported window type:" + surface);
         synchronized (mSync) {
@@ -93,7 +90,7 @@ final class RenderHandler implements Runnable {
         draw(mTexId, tex_matrix, mvp_matrix);
     }
 
-    final void draw(final int tex_id, final float[] tex_matrix, final float[] mvp_matrix) {
+    private void draw(final int tex_id, final float[] tex_matrix, final float[] mvp_matrix) {
         synchronized (mSync) {
             if (mRequestRelease) return;
             mTexId = tex_id;
@@ -113,7 +110,6 @@ final class RenderHandler implements Runnable {
     }
 
     final void release() {
-        if (DEBUG) Log.i(TAG, "release:");
         synchronized (mSync) {
             if (mRequestRelease) return;
             mRequestRelease = true;
@@ -121,6 +117,7 @@ final class RenderHandler implements Runnable {
             try {
                 mSync.wait();
             } catch (final InterruptedException e) {
+                Log.e(TAG, "wait", e);
             }
         }
     }
@@ -133,7 +130,6 @@ final class RenderHandler implements Runnable {
 
     @Override
     public final void run() {
-        if (DEBUG) Log.i(TAG, "RenderHandler thread started:");
         synchronized (mSync) {
             mRequestSetEglContext = mRequestRelease = false;
             mRequestDraw = 0;
@@ -176,11 +172,9 @@ final class RenderHandler implements Runnable {
             internalRelease();
             mSync.notifyAll();
         }
-        if (DEBUG) Log.i(TAG, "RenderHandler thread finished:");
     }
 
     private void internalPrepare() {
-        if (DEBUG) Log.i(TAG, "internalPrepare:");
         internalRelease();
         mEgl = new EGLBase(mShard_context, false, mIsRecordable);
 
@@ -193,7 +187,6 @@ final class RenderHandler implements Runnable {
     }
 
     private void internalRelease() {
-        if (DEBUG) Log.i(TAG, "internalRelease:");
         if (mInputSurface != null) {
             mInputSurface.release();
             mInputSurface = null;

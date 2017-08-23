@@ -40,7 +40,7 @@ class BaseCameraGLView extends GLSurfaceView
         init();
     }
 
-    void init() {
+    private void init() {
         setZOrderMediaOverlay(true);
         setEGLContextClientVersion(2); //GLES 2.0
         setRenderer(surfaceRenderer);

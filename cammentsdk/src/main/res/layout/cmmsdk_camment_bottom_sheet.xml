@@ -9,6 +9,7 @@
         android:id="@+id/tv_choose_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:alpha="0.6"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="1"
@@ -17,13 +18,14 @@
         android:paddingStart="32dp"
         android:paddingTop="16dp"
         android:text="@string/cmmsdk_camment_actions_title"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/cmmsdk_camment_text_grey"
         android:textSize="12dp" />
 
     <TextView
         android:id="@+id/tv_delete_camment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/cmmsdk_button_ripple"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="1"
@@ -40,6 +42,7 @@
         android:id="@+id/tv_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/cmmsdk_button_ripple"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:maxLines="1"

@@ -98,7 +98,7 @@ class CameraThread extends Thread {
                 params.setPictureSize(pictureSize.width, pictureSize.height);
 
                 // rotate camera preview according to the device orientation
-                setRotation(params);
+                setRotation();
                 camera.setParameters(params);
                 camera.setPreviewCallback(previewCallback);
                 // get the actual preview size
@@ -201,7 +201,7 @@ class CameraThread extends Thread {
     /**
      * rotate preview screen according to the device orientation
      */
-    private void setRotation(final Camera.Parameters params) {
+    private void setRotation() {
         final BaseCameraGLView cameraGLView = cameraGlViewWeakRef.get();
         if (cameraGLView == null)
             return;

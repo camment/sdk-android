@@ -4,7 +4,7 @@
 
     <stroke
         android:width="2dp"
-        android:color="@color/cardview_dark_background" />
+        android:color="@color/cmmsdk_camment_grey" />
 
     <corners android:radius="4dp" />
 

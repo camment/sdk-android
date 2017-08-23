@@ -17,11 +17,14 @@ class CammentPlayerEventListener implements ExoPlayer.EventListener {
 
     private final CammentAudioListener cammentAudioListener;
     private final CammentViewHolder cammentViewHolder;
+    private final OnResetLastCammentPlayedListener onResetLastCammentPlayedListener;
 
     CammentPlayerEventListener(CammentAudioListener cammentAudioListener,
-                               CammentViewHolder cammentViewHolder) {
+                               CammentViewHolder cammentViewHolder,
+                               OnResetLastCammentPlayedListener onResetLastCammentPlayedListener) {
         this.cammentAudioListener = cammentAudioListener;
         this.cammentViewHolder = cammentViewHolder;
+        this.onResetLastCammentPlayedListener = onResetLastCammentPlayedListener;
     }
 
     @Override
@@ -52,6 +55,9 @@ class CammentPlayerEventListener implements ExoPlayer.EventListener {
                     cammentAudioListener.onCammentPlaybackEnded();
                 }
                 cammentViewHolder.setItemViewScale(0.5f);
+                if (onResetLastCammentPlayedListener != null) {
+                    onResetLastCammentPlayedListener.resetLastCammentPlayed();
+                }
                 break;
         }
     }
@@ -68,6 +74,12 @@ class CammentPlayerEventListener implements ExoPlayer.EventListener {
 
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    interface OnResetLastCammentPlayedListener {
+
+        void resetLastCammentPlayed();
 
     }
 

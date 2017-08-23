@@ -56,7 +56,7 @@ class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        LoaderManager.LoaderCallbacks<Cursor>, OnPreviewStartedListener {
+        LoaderManager.LoaderCallbacks<Cursor>, OnPreviewStartedListener, CammentPlayerEventListener.OnResetLastCammentPlayedListener {
 
     private static final int THRESHOLD_X = 100;
     private static final int THRESHOLD_Y = 150;
@@ -83,6 +83,7 @@ class BaseCammentOverlay extends RelativeLayout
     private RecordingHandler recordingHandler;
 
     private ExoPlayer.EventListener exoEventListener;
+    private String lastVideoCammentUuid;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -231,12 +232,11 @@ class BaseCammentOverlay extends RelativeLayout
             player.removeListener(exoEventListener);
         }
 
-        if (player.getPlaybackState() == ExoPlayer.STATE_IDLE
-                || player.getPlaybackState() == ExoPlayer.STATE_ENDED) {
-
+        if (!camment.getUuid().equals(lastVideoCammentUuid)) {
             cammentViewHolder.setItemViewScale(cammentViewHolder.getItemViewScale() == 0.5f ? 1.0f : 0.5f);
 
-            exoEventListener = new CammentPlayerEventListener(cammentAudioListener, cammentViewHolder);
+            exoEventListener = new CammentPlayerEventListener(cammentAudioListener,
+                    cammentViewHolder, this);
             player.addListener(exoEventListener);
 
             player.setVideoTextureView(textureView);
@@ -244,12 +244,20 @@ class BaseCammentOverlay extends RelativeLayout
             player.prepare(videoSource);
 
             onboardingOverlay.hideTooltipIfNeeded(Step.PLAY);
+
+            this.lastVideoCammentUuid = camment.getUuid();
         } else {
             if (cammentAudioListener != null) {
                 cammentAudioListener.onCammentPlaybackEnded();
             }
             player.stop();
+            this.lastVideoCammentUuid = null;
         }
+    }
+
+    @Override
+    public void resetLastCammentPlayed() {
+        this.lastVideoCammentUuid = null;
     }
 
     @Override

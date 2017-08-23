@@ -120,7 +120,6 @@ public class IoTHelper extends CammentAsyncClient
                         Log.e("IoTHelper", "invalid message format", e);
                     }
 
-                    //TODO check if it's not from me and format is valid
                     if (!TextUtils.isEmpty(message)) {
                         BaseMessage baseMessage = new Gson().fromJson(message, BaseMessage.class);
                         switch (baseMessage.type) {

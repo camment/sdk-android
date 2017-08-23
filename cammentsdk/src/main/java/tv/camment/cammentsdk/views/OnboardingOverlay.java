@@ -1,8 +1,10 @@
 package tv.camment.cammentsdk.views;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -10,12 +12,17 @@ import android.widget.RelativeLayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
+import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
 
 
-public class OnboardingOverlay extends RelativeLayout {
+public class OnboardingOverlay extends RelativeLayout
+        implements CammentDialog.ActionListener {
 
     private Map<Step, TooltipView> tooltipViewMap;
     private View recordingButton;
@@ -46,6 +53,17 @@ public class OnboardingOverlay extends RelativeLayout {
     private void init() {
         tooltipViewMap = new HashMap<>();
         OnboardingPreferences.getInstance().initSteps();
+
+        if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+            BaseMessage message = new BaseMessage();
+            message.type = MessageType.ONBOARDING;
+
+            Activity activity = CammentSDK.getInstance().getCurrentActivity();
+
+            CammentDialog cammentDialog = CammentDialog.createInstance(message);
+            cammentDialog.setActionListener(this);
+            cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+        }
     }
 
     public void setAnchorViews(View recordingButton, View recyclerView) {
@@ -56,6 +74,11 @@ public class OnboardingOverlay extends RelativeLayout {
     public void displayTooltip(Step step) {
         final TooltipView tooltipView = new TooltipView(getContext());
         addView(tooltipView);
+
+        if (step == Step.RECORD
+                && !PermissionHelper.getInstance().hasPermissions()) {
+            PermissionHelper.getInstance().cameraAndMicTask();
+        }
 
         TooltipView.Orientation orientation;
         switch (step) {
@@ -133,6 +156,13 @@ public class OnboardingOverlay extends RelativeLayout {
                     }
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onPositiveButtonClick(BaseMessage baseMessage) {
+        if (baseMessage.type == MessageType.ONBOARDING) {
+            displayTooltip(Step.RECORD);
         }
     }
 

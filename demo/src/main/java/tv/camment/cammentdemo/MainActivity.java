@@ -80,27 +80,23 @@ public class MainActivity extends AppCompatActivity implements CammentAudioListe
 
     @Override
     public void onCammentPlaybackStarted() {
-        Log.d("main", "onCammentPlaybackStarted");
         previousVolume = player.getVolume();
         player.setVolume(previousVolume / 2);
     }
 
     @Override
     public void onCammentPlaybackEnded() {
-        Log.d("main", "onCammentPlaybackEnded");
         player.setVolume(previousVolume);
     }
 
     @Override
     public void onCammentRecordingStarted() {
-        Log.d("main", "onCammentRecordingStarted " + player.getVolume());
         previousVolume = player.getVolume();
         player.setVolume(0.0f);
     }
 
     @Override
     public void onCammentRecordingEnded() {
-        Log.d("main", "onCammentRecordingEnded " + previousVolume);
         player.setVolume(previousVolume);
     }
 

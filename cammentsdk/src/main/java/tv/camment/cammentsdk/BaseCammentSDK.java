@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.camment.clientsdk.model.Show;
 
@@ -74,8 +75,13 @@ class BaseCammentSDK extends CammentLifecycle {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
-        DataManager.getInstance().handleFbPermissionsResult();
+        boolean fbHandled = FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
+
+        Log.d("FACEBOOK", "handled? " + fbHandled);
+
+        if (fbHandled) {
+            DataManager.getInstance().handleFbPermissionsResult();
+        }
 
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
     }

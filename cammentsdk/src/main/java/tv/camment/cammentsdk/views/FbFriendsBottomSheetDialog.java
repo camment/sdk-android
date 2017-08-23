@@ -24,7 +24,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 
-public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
+public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener, FbFriendsAdapter.ActionListener {
 
     private Button btnCancel;
     private Button btnDone;
@@ -75,12 +75,19 @@ public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements Dia
             }
         });
 
+        enableDoneButton(false);
+
         rvFriends = (RecyclerView) findViewById(R.id.rv_friends);
         rvFriends.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        adapter = new FbFriendsAdapter();
+        adapter = new FbFriendsAdapter(this);
         rvFriends.setAdapter(adapter);
 
         ApiManager.getInstance().getUserApi().getFacebookFriends(getFacebookFriendsCallback());
+    }
+
+    private void enableDoneButton(boolean enable) {
+        btnDone.setEnabled(enable);
+        btnDone.setAlpha(enable ? 1.0f : 0.6f);
     }
 
     private CammentCallback<FacebookFriendList> getFacebookFriendsCallback() {
@@ -134,6 +141,11 @@ public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements Dia
                 Log.e("onException", "sendInvitation", exception);
             }
         };
+    }
+
+    @Override
+    public void onFbFriendsSelectedChanged(boolean atLeastOneSelected) {
+        enableDoneButton(atLeastOneSelected);
     }
 
 }

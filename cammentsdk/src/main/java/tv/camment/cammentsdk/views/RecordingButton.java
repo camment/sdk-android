@@ -112,8 +112,7 @@ public class RecordingButton extends AppCompatImageButton implements CammentDial
             case MotionEvent.ACTION_DOWN:
                 handledPullDown = false;
 
-                if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)
-                        && PermissionHelper.getInstance().hasPermissions()) {
+                if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
                     BaseMessage message = new BaseMessage();
                     message.type = MessageType.ONBOARDING;
 

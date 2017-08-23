@@ -17,10 +17,13 @@ class FbFriendsAdapter extends RecyclerView.Adapter
 
     private static final int FB_FRIEND = 0;
 
+    private final ActionListener actionListener;
+
     private List<FacebookFriend> facebookFriends;
     private List<FacebookFriend> selectedFacebookFriends;
 
-    FbFriendsAdapter() {
+    FbFriendsAdapter(ActionListener actionListener) {
+        this.actionListener = actionListener;
         setHasStableIds(true);
     }
 
@@ -76,10 +79,20 @@ class FbFriendsAdapter extends RecyclerView.Adapter
         } else {
             selectedFacebookFriends.add(facebookFriend);
         }
+
+        if (actionListener != null) {
+            actionListener.onFbFriendsSelectedChanged(selectedFacebookFriends.size() > 0);
+        }
     }
 
-    public List<FacebookFriend> getSelectedFacebookFriends() {
+    List<FacebookFriend> getSelectedFacebookFriends() {
         return selectedFacebookFriends;
+    }
+
+    interface ActionListener {
+
+        void onFbFriendsSelectedChanged(boolean atLeastOneSelected);
+
     }
 
 }

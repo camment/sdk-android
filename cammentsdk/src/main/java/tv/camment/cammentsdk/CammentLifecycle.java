@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.facebook.FacebookActivity;
+
 import java.lang.ref.WeakReference;
 
 class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
@@ -13,6 +15,9 @@ class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
+        if (activity instanceof FacebookActivity)
+            return;
+
         currentActivity = new WeakReference<>(activity);
     }
 

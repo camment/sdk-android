@@ -21,6 +21,11 @@ android {
             minifyEnabled true
             useProguard true
         }
+
+        debug {
+            minifyEnabled false
+            useProguard false
+        }
     }
 
     compileOptions {

@@ -1,7 +1,7 @@
 package tv.camment.cammentsdk.aws.messages;
 
 
-public class CammentMessage extends BaseMessage {
+public final class CammentMessage extends BaseMessage {
 
     public Body body;
 

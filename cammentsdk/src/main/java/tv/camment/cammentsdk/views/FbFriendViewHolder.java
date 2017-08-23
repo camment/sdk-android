@@ -20,7 +20,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 
 
-class FbFriendViewHolder extends RecyclerView.ViewHolder {
+final class FbFriendViewHolder extends RecyclerView.ViewHolder {
 
     private final ActionListener actionListener;
     private FacebookFriend facebookFriend;

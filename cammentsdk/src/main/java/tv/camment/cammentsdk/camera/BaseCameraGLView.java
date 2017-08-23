@@ -14,7 +14,7 @@ import tv.camment.cammentsdk.views.OnPreviewStartedListener;
 import tv.camment.cammentsdk.views.SquareFrameLayout;
 
 @SuppressWarnings("deprecation")
-class BaseCameraGLView extends GLSurfaceView
+abstract class BaseCameraGLView extends GLSurfaceView
         implements MediaEncoder.MediaEncoderListener,
         Camera.PreviewCallback {
 

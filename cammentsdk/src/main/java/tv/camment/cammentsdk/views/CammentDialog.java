@@ -17,7 +17,7 @@ import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 
 
-public class CammentDialog extends DialogFragment {
+public final class CammentDialog extends DialogFragment {
 
     private BaseMessage message;
 

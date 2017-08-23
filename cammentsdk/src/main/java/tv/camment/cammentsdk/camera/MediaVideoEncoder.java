@@ -1,26 +1,5 @@
 package tv.camment.cammentsdk.camera;
-/*
- * AudioVideoRecordingSample
- * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
- *
- * Copyright (c) 2014-2015 saki t_saki@serenegiant.com
- *
- * File name: MediaVideoEncoder.java
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- * All files in the folder are under this Apache License, Version 2.0.
-*/
+
 
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
@@ -32,11 +11,11 @@ import android.view.Surface;
 
 import java.io.IOException;
 
-class MediaVideoEncoder extends MediaEncoder {
+final class MediaVideoEncoder extends MediaEncoder {
 	private static final String TAG = "MediaVideoEncoder";
 
 	private static final String MIME_TYPE = "video/avc";
-	// parameters for recording
+
     private static final int DEFAULT_FRAME_RATE = 25;
     private static final int DEFAULT_IFRAME_INTERVAL = 10;
     private static final float BPP = 0.25f;

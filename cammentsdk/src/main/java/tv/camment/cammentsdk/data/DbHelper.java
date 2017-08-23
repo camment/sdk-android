@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 
-class DbHelper extends SQLiteOpenHelper {
+final class DbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "cammentsdk";
     private static final int DB_VERSION = 1;

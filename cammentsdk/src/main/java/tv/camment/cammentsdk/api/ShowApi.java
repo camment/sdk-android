@@ -12,7 +12,7 @@ import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 
 
-public class ShowApi extends CammentAsyncClient {
+public final class ShowApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 

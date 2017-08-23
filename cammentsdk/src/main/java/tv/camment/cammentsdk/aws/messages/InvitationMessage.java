@@ -1,7 +1,7 @@
 package tv.camment.cammentsdk.aws.messages;
 
 
-public class InvitationMessage extends BaseMessage {
+public final class InvitationMessage extends BaseMessage {
 
     public Body body;
 

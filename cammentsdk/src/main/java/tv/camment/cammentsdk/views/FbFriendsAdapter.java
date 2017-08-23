@@ -12,7 +12,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.R;
 
-class FbFriendsAdapter extends RecyclerView.Adapter
+final class FbFriendsAdapter extends RecyclerView.Adapter
         implements FbFriendViewHolder.ActionListener {
 
     private static final int FB_FRIEND = 0;

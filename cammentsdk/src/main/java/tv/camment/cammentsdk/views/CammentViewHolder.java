@@ -22,7 +22,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 
-class CammentViewHolder extends RecyclerView.ViewHolder {
+final class CammentViewHolder extends RecyclerView.ViewHolder {
 
     private final CammentsAdapter.ActionListener actionListener;
     private Camment camment;

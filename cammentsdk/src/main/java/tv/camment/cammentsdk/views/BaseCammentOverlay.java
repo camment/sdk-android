@@ -53,7 +53,7 @@ import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
 
-class BaseCammentOverlay extends RelativeLayout
+abstract class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,

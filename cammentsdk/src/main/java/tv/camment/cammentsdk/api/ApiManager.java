@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import tv.camment.cammentsdk.aws.AWSManager;
 
 
-public class ApiManager {
+public final class ApiManager {
 
     private static ApiManager INSTANCE;
 

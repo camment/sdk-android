@@ -24,7 +24,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 
-public class FbFriendsBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener, FbFriendsAdapter.ActionListener {
+public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener, FbFriendsAdapter.ActionListener {
 
     private Button btnCancel;
     private Button btnDone;

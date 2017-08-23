@@ -16,7 +16,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 
-class KeystoreHelper extends CammentAsyncClient {
+final class KeystoreHelper extends CammentAsyncClient {
 
     KeystoreHelper(ExecutorService executorService) {
         super(executorService);

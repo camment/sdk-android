@@ -16,7 +16,7 @@ import java.util.Arrays;
 import tv.camment.cammentsdk.api.ApiManager;
 
 
-public class FacebookHelper {
+public final class FacebookHelper {
 
     private static final String TAG = FacebookHelper.class.getSimpleName();
 

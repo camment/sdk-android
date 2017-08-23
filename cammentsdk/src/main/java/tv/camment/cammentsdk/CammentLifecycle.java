@@ -9,7 +9,7 @@ import com.facebook.FacebookActivity;
 
 import java.lang.ref.WeakReference;
 
-class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
+abstract class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
     private WeakReference<Activity> currentActivity;
 

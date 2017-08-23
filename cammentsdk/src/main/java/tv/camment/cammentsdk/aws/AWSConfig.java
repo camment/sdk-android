@@ -1,6 +1,6 @@
 package tv.camment.cammentsdk.aws;
 
-class AWSConfig {
+final class AWSConfig {
 
     static final String BUCKET_ID = "camment-camments";
 

@@ -19,7 +19,7 @@ import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 
 
-public class GroupApi extends CammentAsyncClient {
+public final class GroupApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 

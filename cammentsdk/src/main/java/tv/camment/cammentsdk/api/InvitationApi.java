@@ -21,7 +21,7 @@ import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 
 
-public class InvitationApi extends CammentAsyncClient {
+public final class InvitationApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 

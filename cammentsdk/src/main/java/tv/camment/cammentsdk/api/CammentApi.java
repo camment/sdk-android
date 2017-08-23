@@ -18,7 +18,7 @@ import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 
 
-public class CammentApi extends CammentAsyncClient {
+public final class CammentApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 
@@ -53,7 +53,7 @@ public class CammentApi extends CammentAsyncClient {
         };
     }
 
-    public void getUserGroupCamments() {
+    void getUserGroupCamments() {
         submitTask(new Callable<CammentList>() {
             @Override
             public CammentList call() throws Exception {

@@ -15,7 +15,7 @@ import com.camment.clientsdk.model.Camment;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 
-class CammentBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
+final class CammentBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
 
     private Camment camment;
 

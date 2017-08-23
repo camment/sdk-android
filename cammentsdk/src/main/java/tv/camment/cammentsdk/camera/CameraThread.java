@@ -18,7 +18,7 @@ import java.util.List;
 import tv.camment.cammentsdk.SDKConfig;
 
 @SuppressWarnings("deprecation")
-class CameraThread extends Thread {
+final class CameraThread extends Thread {
 
     private final Object readyFence = new Object();
     private final WeakReference<BaseCameraGLView> cameraGlViewWeakRef;

@@ -3,7 +3,7 @@ package tv.camment.cammentsdk.data.model;
 import com.camment.clientsdk.model.Camment;
 
 
-public class CCamment extends Camment {
+public final class CCamment extends Camment {
 
     private long timestamp;
     private int transferId = -1;

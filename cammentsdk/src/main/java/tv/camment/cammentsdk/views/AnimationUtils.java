@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import tv.camment.cammentsdk.views.SquareFrameLayout;
 import tv.camment.cammentsdk.views.TooltipView;
 
-class AnimationUtils {
+final class AnimationUtils {
 
     private static ObjectAnimator recordAnimator;
     private static ValueAnimator animator;
@@ -102,7 +102,7 @@ class AnimationUtils {
         animatorSet.start();
     }
 
-    static void animateTooltip(final TooltipView tooltipView) {
+    static void animateTooltip(final BaseTooltipView tooltipView) {
         ObjectAnimator objectAnimator =
                 ObjectAnimator.ofFloat(tooltipView, "translationY", 0, 0, -30, 0, -15, 0, 0);
 

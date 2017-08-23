@@ -10,7 +10,8 @@ import java.io.File;
 
 import tv.camment.cammentsdk.CammentSDK;
 
-public class FileUtils {
+
+public final class FileUtils {
 
     private static final String ROOT_DIR = CammentSDK.getInstance().getApplicationContext().getFilesDir().getPath();
     private static final String UPLOADS_DIR = ROOT_DIR + File.separator + "uploads" + File.separator;

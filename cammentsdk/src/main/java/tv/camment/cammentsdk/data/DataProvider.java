@@ -18,7 +18,7 @@ import static tv.camment.cammentsdk.data.DataContract.Tables;
 import static tv.camment.cammentsdk.data.DataContract.UserGroup;
 
 
-public class DataProvider extends ContentProvider {
+public final class DataProvider extends ContentProvider {
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 

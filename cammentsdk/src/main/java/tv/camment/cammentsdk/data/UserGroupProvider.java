@@ -9,7 +9,7 @@ import com.camment.clientsdk.model.Usergroup;
 import tv.camment.cammentsdk.CammentSDK;
 
 
-public class UserGroupProvider {
+public final class UserGroupProvider {
 
     private static final String[] USER_GROUP_PROJECTION = {
             DataContract.UserGroup._ID,
@@ -31,7 +31,7 @@ public class UserGroupProvider {
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserGroup.CONTENT_URI, cv);
     }
 
-    public static void deleteUserGroups() {
+    static void deleteUserGroups() {
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .delete(DataContract.UserGroup.CONTENT_URI, null, null);
     }

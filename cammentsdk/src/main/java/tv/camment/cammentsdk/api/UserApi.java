@@ -19,7 +19,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 
 
-public class UserApi extends CammentAsyncClient {
+public final class UserApi extends CammentAsyncClient {
 
     private final DevcammentClient devcammentClient;
 

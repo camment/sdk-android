@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
-public class SquareView extends View {
+public final class SquareView extends View {
     public SquareView(Context context) {
         super(context);
     }

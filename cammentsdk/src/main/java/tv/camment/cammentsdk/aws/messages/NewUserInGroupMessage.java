@@ -1,7 +1,7 @@
 package tv.camment.cammentsdk.aws.messages;
 
 
-public class NewUserInGroupMessage extends BaseMessage {
+public final class NewUserInGroupMessage extends BaseMessage {
 
     public Body body;
 

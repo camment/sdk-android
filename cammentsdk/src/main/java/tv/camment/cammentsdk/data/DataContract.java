@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 
-class DataContract {
+final class DataContract {
 
     static final String AUTHORITY = "tv.camment.cammentsdk";
     /**

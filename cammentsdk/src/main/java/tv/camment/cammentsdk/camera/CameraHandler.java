@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-class CameraHandler extends Handler {
+final class CameraHandler extends Handler {
 
     private static final int MSG_PREVIEW_START = 1;
     private static final int MSG_PREVIEW_STOP = 2;

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-public class SquareFrameLayout extends FrameLayout {
+public final class SquareFrameLayout extends FrameLayout {
 
     private float customScale = 1.0f;
 

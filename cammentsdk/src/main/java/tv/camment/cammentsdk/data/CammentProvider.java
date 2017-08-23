@@ -15,7 +15,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CCamment;
 
 
-public class CammentProvider {
+public final class CammentProvider {
 
     private static final String[] CAMMENT_PROJECTION = {
             DataContract.Camment._ID,

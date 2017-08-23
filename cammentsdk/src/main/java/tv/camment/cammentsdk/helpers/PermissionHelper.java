@@ -15,7 +15,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import tv.camment.cammentsdk.R;
 
 
-public class PermissionHelper implements EasyPermissions.PermissionCallbacks {
+public final class PermissionHelper implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = PermissionHelper.class.getSimpleName();
 

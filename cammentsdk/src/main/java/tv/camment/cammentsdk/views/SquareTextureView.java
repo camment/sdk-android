@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.TextureView;
 
-public class SquareTextureView extends TextureView {
+public final class SquareTextureView extends TextureView {
 
     public SquareTextureView(Context context) {
         super(context);

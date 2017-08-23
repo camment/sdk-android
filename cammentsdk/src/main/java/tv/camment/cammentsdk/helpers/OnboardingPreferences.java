@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class OnboardingPreferences extends BasePreferences {
+public final class OnboardingPreferences extends BasePreferences {
 
     private static final String PREFS_NAME = "camment_onboarding_prefs";
 

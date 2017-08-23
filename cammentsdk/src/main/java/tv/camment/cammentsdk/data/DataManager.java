@@ -6,7 +6,7 @@ import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.FbFriendsBottomSheetDialog;
 
 
-public class DataManager {
+public final class DataManager {
 
     private static DataManager INSTANCE;
 

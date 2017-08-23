@@ -9,7 +9,7 @@ import com.camment.clientsdk.model.Show;
 import tv.camment.cammentsdk.CammentSDK;
 
 
-public class ShowProvider {
+public final class ShowProvider {
 
     private static final String[] SHOW_PROJECTION = {
             DataContract.Show._ID,

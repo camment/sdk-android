@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class DbUtils {
+final class DbUtils {
 
     private static final String TAG = "DbUtils";
 

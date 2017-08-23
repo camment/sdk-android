@@ -19,7 +19,7 @@ import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 
-class BaseCammentSDK extends CammentLifecycle {
+abstract class BaseCammentSDK extends CammentLifecycle {
 
     static CammentSDK INSTANCE;
 

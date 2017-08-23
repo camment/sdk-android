@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-class CameraSurfaceRenderer implements
+final class CameraSurfaceRenderer implements
         GLSurfaceView.Renderer,
         SurfaceTexture.OnFrameAvailableListener {
 

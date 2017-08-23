@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 
-public class CameraGLView extends BaseCameraGLView {
+public final class CameraGLView extends BaseCameraGLView {
 
     public CameraGLView(Context context) {
         super(context);

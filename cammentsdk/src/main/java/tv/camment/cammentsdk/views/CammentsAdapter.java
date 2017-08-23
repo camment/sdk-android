@@ -19,7 +19,7 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.CCammentComparator;
 
 
-class CammentsAdapter extends RecyclerView.Adapter {
+final class CammentsAdapter extends RecyclerView.Adapter {
 
     private static final int CAMMENT = 0;
 

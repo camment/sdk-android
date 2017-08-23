@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 
-public class CammentRecyclerView extends RecyclerView {
+public final class CammentRecyclerView extends RecyclerView {
 
     public CammentRecyclerView(Context context) {
         super(context);

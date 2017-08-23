@@ -5,6 +5,13 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.Guideline
+        android:id="@+id/g_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.03" />
+
+    <android.support.constraint.Guideline
         android:id="@+id/g_camment_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.86" />
 
     <tv.camment.cammentsdk.views.SquareFrameLayout
         android:id="@+id/fl_camera"
@@ -35,7 +42,7 @@
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/g_camment_list"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/g_top">
 
         <View
             android:layout_width="match_parent"
@@ -51,7 +58,7 @@
         android:alpha="0"
         app:layout_constraintLeft_toRightOf="@+id/g_camment_list"
         app:layout_constraintRight_toLeftOf="@+id/g_record_indicator"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/g_top"
         android:background="@drawable/cmmsdk_red_circle"/>
 
     <tv.camment.cammentsdk.views.CammentRecyclerView
@@ -67,7 +74,7 @@
         android:id="@+id/ib_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:scaleType="fitXY"
         android:scaleX="0.8"

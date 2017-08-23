@@ -72,6 +72,13 @@ public class OnboardingOverlay extends RelativeLayout
     }
 
     public void displayTooltip(Step step) {
+        if (tooltipViewMap != null
+                && tooltipViewMap.size() > 0) {
+            return;
+        }
+
+        OnboardingPreferences.getInstance().putOnboardingStepDisplayed(step, true);
+
         final TooltipView tooltipView = new TooltipView(getContext());
         addView(tooltipView);
 
@@ -124,8 +131,6 @@ public class OnboardingOverlay extends RelativeLayout
         });
 
         tooltipViewMap.put(step, tooltipView);
-
-        OnboardingPreferences.getInstance().putOnboardingStepDisplayed(step, true);
     }
 
     public void hideTooltipIfNeeded(Step step) {
@@ -135,6 +140,9 @@ public class OnboardingOverlay extends RelativeLayout
             if (tooltipView != null) {
                 removeView(tooltipView);
             }
+            tooltipViewMap.remove(step);
+        } else {
+            return;
         }
 
         Step nextStep = OnboardingPreferences.getInstance().getNextOnboardingStep();
@@ -166,4 +174,17 @@ public class OnboardingOverlay extends RelativeLayout
         }
     }
 
+    @Override
+    public void addView(View child) {
+        child.setAlpha(0.0f);
+        child.setTranslationY(16);
+        super.addView(child);
+        child.animate().alpha(1.0f).translationY(0).setDuration(500).start();
+    }
+
+    @Override
+    public void removeView(View child) {
+        child.animate().alpha(1.0f).setDuration(500).start();
+        super.removeView(child);
+    }
 }

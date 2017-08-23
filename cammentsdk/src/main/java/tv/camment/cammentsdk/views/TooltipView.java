@@ -63,13 +63,41 @@ public class TooltipView extends RelativeLayout {
         } else {
             params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
         }
-        int marginTop = CommonUtils.dpToPx(getContext(), 32);
+        int marginTop = 0;
+
+        switch (step) {
+            case RECORD:
+                marginTop = CommonUtils.dpToPx(getContext(), 24);
+                break;
+            case INVITE:
+                marginTop = CommonUtils.dpToPx(getContext(), 18);
+                break;
+            case PLAY:
+            case DELETE:
+            case HIDE:
+            case SHOW:
+                marginTop = CommonUtils.dpToPx(getContext(), 10);
+                break;
+        }
+
+
         int marginRight = 0;
         int marginLeft = 0;
         if (orientation == Orientation.RIGHT) {
             marginRight = CommonUtils.getScreenWidth(getContext()) - areas[0] + CommonUtils.dpToPx(getContext(), 4);
         } else {
-            marginLeft = anchor.getRight() + CommonUtils.dpToPx(getContext(), 4);
+            switch (step) {
+                case PLAY:
+                case DELETE:
+                    marginLeft = (anchor.getRight() / 2) + CommonUtils.dpToPx(getContext(), 4);
+                    break;
+                case HIDE:
+                    marginLeft = anchor.getRight() + CommonUtils.dpToPx(getContext(), 4);
+                    break;
+                case SHOW:
+                    marginLeft = CommonUtils.dpToPx(getContext(), 4);
+                    break;
+            }
         }
         params.setMargins(marginLeft, marginTop, marginRight, 0);
 

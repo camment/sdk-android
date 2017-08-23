@@ -356,6 +356,7 @@ class BaseCammentOverlay extends RelativeLayout
                         }
                         break;
                     case HIDE:
+                        stopCammentPlayback();
                         onboardingOverlay.hideTooltipIfNeeded(Step.HIDE);
 
                         if (ibRecord != null) {

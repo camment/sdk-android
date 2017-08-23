@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements CammentAudioListe
 
     private SimpleExoPlayer player;
     private SimpleExoPlayerView showPlayerView;
-    private CammentOverlay cammentOverlay;
     private float previousVolume;
 
     @Override
@@ -43,6 +42,27 @@ public class MainActivity extends AppCompatActivity implements CammentAudioListe
 
         showPlayerView = (SimpleExoPlayerView) findViewById(R.id.showPlayerView);
 
+        CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.cammentOverlay);
+
+        cammentOverlay.setParentViewGroup(showPlayerView);
+        cammentOverlay.setCammentAudioListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (player != null) {
+            player.stop();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        prepareAndPlayVideo();
+        super.onResume();
+    }
+
+    private void prepareAndPlayVideo() {
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
@@ -56,11 +76,6 @@ public class MainActivity extends AppCompatActivity implements CammentAudioListe
         MediaSource videoSource = new ExtractorMediaSource(Uri.parse("https://dl3zp6ge83i42.cloudfront.net/camment-app-shows/dc54f691-4af7-49cc-8352-4cd080e4e948.mp4"), dataSourceFactory, extractorsFactory, null, null);
         player.setPlayWhenReady(true);
         player.prepare(videoSource);
-
-        cammentOverlay = (CammentOverlay) findViewById(R.id.cammentOverlay);
-
-        cammentOverlay.setParentViewGroup(showPlayerView);
-        cammentOverlay.setCammentAudioListener(this);
     }
 
     @Override

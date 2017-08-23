@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MotionEventCompat;
@@ -161,7 +162,28 @@ class BaseCammentOverlay extends RelativeLayout
         PermissionHelper.getInstance().initPermissionHelper(CammentSDK.getInstance().getCurrentActivity());
     }
 
-//    @Override
+    @Override
+    protected void onDetachedFromWindow() {
+        stopCammentPlayback();
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        stopCammentPlayback();
+        return super.onSaveInstanceState();
+    }
+
+    private void stopCammentPlayback() {
+        if (player != null) {
+            player.stop();
+        }
+        if (rvCamments != null) {
+            rvCamments.showSmallThumbnailsForAllChildren();
+        }
+    }
+
+    //    @Override
 //    protected Parcelable onSaveInstanceState() {
 //        Log.d("OVERLAY", "onSaveInstanceState");
 //        Bundle bundle = new Bundle();

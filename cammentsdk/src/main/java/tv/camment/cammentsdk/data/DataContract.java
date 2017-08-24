@@ -3,10 +3,12 @@ package tv.camment.cammentsdk.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import tv.camment.cammentsdk.BuildConfig;
+
 
 final class DataContract {
 
-    static final String AUTHORITY = "tv.camment.cammentsdk";
+    static final String AUTHORITY = BuildConfig.CAMMENT_AUTHORITY;
     /**
      * The content:// style URL for the top-level authority
      */

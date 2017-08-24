@@ -68,7 +68,6 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                Log.d("onSuccess", "createEmptyUsergroup " + usergroup.getUuid());
                 UserGroupProvider.insertUserGroup(usergroup);
                 ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
             }
@@ -84,7 +83,6 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                Log.d("onSuccess", "createEmptyUsergroup " + usergroup.getUuid());
                 UserGroupProvider.insertUserGroup(usergroup);
 
                 camment.setUserGroupUuid(usergroup.getUuid());

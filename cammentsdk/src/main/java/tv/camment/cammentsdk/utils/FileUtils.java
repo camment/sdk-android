@@ -2,7 +2,6 @@ package tv.camment.cammentsdk.utils;
 
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.camment.clientsdk.model.Camment;
 
@@ -43,7 +42,6 @@ public final class FileUtils {
         final File dir = new File(UPLOADS_DIR);
         dir.mkdirs();
         if (dir.canWrite()) {
-            Log.d("FileUtils", "canWrite");
             return new File(dir, cammentUuid + ".mp4");
         }
         return null;
@@ -59,7 +57,6 @@ public final class FileUtils {
 
         File file = new File(filePath);
         if (file.isFile()) {
-            Log.d("File deleted", filePath);
             file.delete();
         }
     }

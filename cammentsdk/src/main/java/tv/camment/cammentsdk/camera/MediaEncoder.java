@@ -249,7 +249,6 @@ abstract class MediaEncoder implements Runnable {
                 // wait for MediaCodec encoder is ready to encode
                 // nothing to do here because MediaCodec#dequeueInputBuffer(TIMEOUT_USEC)
                 // will wait for maximum TIMEOUT_USEC(10msec) on each call
-                Log.d(TAG, "MediaCodec.INFO_TRY_AGAIN_LATER");
             }
         }
     }
@@ -304,7 +303,6 @@ abstract class MediaEncoder implements Runnable {
                 }
             } else if (encoderStatus < 0) {
                 // unexpected status
-                Log.d(TAG, "unexpected status");
             } else {
                 final ByteBuffer encodedData = encoderOutputBuffers[encoderStatus];
                 if (encodedData == null) {

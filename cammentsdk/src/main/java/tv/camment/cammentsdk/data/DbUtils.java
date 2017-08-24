@@ -1,7 +1,5 @@
 package tv.camment.cammentsdk.data;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,9 +98,7 @@ final class DbUtils {
                 ddl.append(") ON CONFLICT REPLACE");
             }
             ddl.append(")");
-            String ddlString = ddl.toString();
-            Log.d(TAG, ddlString);
-            return ddlString;
+            return ddl.toString();
         }
 
         private static class ColumnDef {

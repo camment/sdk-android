@@ -95,7 +95,6 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
             @Override
             public void onSuccess(FacebookFriendList facebookFriendList) {
                 if (facebookFriendList != null) {
-                    Log.d("onSuccess", "getFacebookFriends");
                     adapter.setFacebookFriends(facebookFriendList.getItems());
                 }
             }
@@ -123,7 +122,6 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "sendInvitation");
                 if (getOwnerActivity() instanceof AppCompatActivity) {
                     BaseMessage baseMessage = new BaseMessage();
                     baseMessage.type = MessageType.INVITATION_SENT;

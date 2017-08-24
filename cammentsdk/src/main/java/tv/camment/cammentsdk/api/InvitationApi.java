@@ -70,7 +70,6 @@ public final class InvitationApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "acceptInvitation");
                 DataManager.getInstance().clearDataForUserGroupChange();
 
                 Usergroup usergroup = new Usergroup();

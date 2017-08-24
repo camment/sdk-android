@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -61,13 +60,11 @@ public final class PermissionHelper implements EasyPermissions.PermissionCallbac
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsGranted");
+
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.d(TAG, "onPermissionsDenied");
-
         if (activityWeakRef != null && activityWeakRef.get() != null) {
             if (EasyPermissions.somePermissionPermanentlyDenied(activityWeakRef.get(), perms)) {
                 new AppSettingsDialog.Builder(activityWeakRef.get()).build().show();
@@ -77,14 +74,12 @@ public final class PermissionHelper implements EasyPermissions.PermissionCallbac
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionsResult");
-
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            Log.d("onActivityResult", "resultCode: " + resultCode);
+
         }
     }
 

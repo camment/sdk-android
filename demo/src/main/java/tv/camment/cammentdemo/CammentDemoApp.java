@@ -10,7 +10,7 @@ public class CammentDemoApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CammentSDK.getInstance().init(this, BuildConfig.CAMMENT_API_KEY);
+        CammentSDK.getInstance().init(this);
 
     }
 

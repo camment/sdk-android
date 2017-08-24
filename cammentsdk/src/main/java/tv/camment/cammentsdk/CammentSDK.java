@@ -18,8 +18,8 @@ public final class CammentSDK extends BaseCammentSDK {
         super();
     }
 
-    public synchronized void init(Context context, String apiKey) {
-        super.init(context, apiKey);
+    public synchronized void init(Context context) {
+        super.init(context);
     }
 
     public Context getApplicationContext() {
@@ -38,10 +38,6 @@ public final class CammentSDK extends BaseCammentSDK {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public String getApiKey() {
-        return apiKey;
     }
 
 }

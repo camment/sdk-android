@@ -25,7 +25,6 @@ final class CameraHandler extends Handler {
      * @param needWait need to wait for stopping camera preview
      */
     void stopPreview(final boolean needWait) {
-        Log.d("CAMERA", "stop preview");
         synchronized (this) {
             sendEmptyMessage(MSG_PREVIEW_STOP);
             if (needWait && mThread.isRunning()) {

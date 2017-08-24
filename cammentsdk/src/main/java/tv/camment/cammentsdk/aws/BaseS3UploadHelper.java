@@ -65,7 +65,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-                Log.d("onSuccess", "uploadCammentFile");
+
             }
 
             @Override
@@ -79,7 +79,6 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         return new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
-                Log.d("onStateChanged", state.name() + " id: " + id);
                 if (state == TransferState.COMPLETED) {
                     final CCamment camment = CammentProvider.getCammentByTransferId(id);
                     if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
@@ -90,15 +89,12 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
 
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                Log.d("onProgressChanged", bytesCurrent + " - " + bytesTotal);
+
             }
 
             @Override
             public void onError(int id, Exception ex) {
-                Log.e("onError", "transfer", ex);
                 if (ex instanceof AmazonClientException) {
-                    //TODO check also ex.getMessage() More data read (4793) than expected (3225)?
-                    Log.d("onError", "retry");
                     final CCamment camment = CammentProvider.getCammentByTransferId(id);
                     uploadCammentFile(camment);
                 }

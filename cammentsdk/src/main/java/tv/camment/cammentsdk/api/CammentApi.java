@@ -42,7 +42,6 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<Camment>() {
             @Override
             public void onSuccess(Camment camment) {
-                Log.d("onSuccess", "createUserGroupCamment");
                 CammentProvider.insertCamment(new CCamment(camment));
             }
 
@@ -68,8 +67,6 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<CammentList>() {
             @Override
             public void onSuccess(CammentList cammentList) {
-                Log.d("onSuccess", "getUserGroupCamments");
-
                 if (cammentList != null) {
                     CammentProvider.insertCamments(cammentList.getItems());
                 }
@@ -96,7 +93,6 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "deleteUserGroupCamment");
                 CammentProvider.deleteCammentByUuid(camment.getUuid());
             }
 

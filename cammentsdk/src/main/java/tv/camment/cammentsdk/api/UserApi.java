@@ -56,7 +56,7 @@ public final class UserApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "updateUserInfo");
+
             }
 
             @Override

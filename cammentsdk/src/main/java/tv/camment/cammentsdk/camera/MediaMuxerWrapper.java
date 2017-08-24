@@ -4,12 +4,9 @@ package tv.camment.cammentsdk.camera;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
-import android.util.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import tv.camment.cammentsdk.utils.FileUtils;
 

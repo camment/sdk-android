@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.camment.clientsdk.model.Show;
 
@@ -27,19 +26,15 @@ abstract class BaseCammentSDK extends CammentLifecycle {
 
     private IoTHelper ioTHelper;
 
-    String apiKey;
-
-    synchronized void init(Context context, String apiKey) {
+    synchronized void init(Context context) {
         if (applicationContext == null || applicationContext.get() == null) {
             if (context == null || !(context instanceof Application)) {
                 throw new IllegalArgumentException("Can't init CammentSDK with null application context");
             }
-            if (TextUtils.isEmpty(apiKey) || SDKConfig.API_KEY_DUMMY.equals(apiKey)) {
+            if (TextUtils.isEmpty(BuildConfig.CAMMENT_API_KEY) || SDKConfig.API_KEY_DUMMY.equals(BuildConfig.CAMMENT_API_KEY)) {
                 throw new IllegalArgumentException("Invalid CammentSDK API key");
             }
             applicationContext = new WeakReference<>(context);
-
-            this.apiKey = apiKey;
 
             AWSManager.getInstance().checkKeyStore();
 
@@ -77,8 +72,6 @@ abstract class BaseCammentSDK extends CammentLifecycle {
     void onActivityResult(int requestCode, int resultCode, Intent data) {
         boolean fbHandled = FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
-        Log.d("FACEBOOK", "handled? " + fbHandled);
-
         if (fbHandled) {
             DataManager.getInstance().handleFbPermissionsResult();
         }
@@ -88,10 +81,6 @@ abstract class BaseCammentSDK extends CammentLifecycle {
 
     void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionHelper.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public String getApiKey() {
-        return apiKey;
     }
 
 }

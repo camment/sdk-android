@@ -3,7 +3,6 @@ package tv.camment.cammentsdk.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 
 final class DbHelper extends SQLiteOpenHelper {
@@ -17,7 +16,6 @@ final class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("database", "onCreate");
         db.execSQL(createUserGroupTable());
         db.execSQL(createShowTable());
         db.execSQL(createCammentTable());
@@ -25,8 +23,7 @@ final class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //TODO do we need to do upgrade?
-        //we can alter tables
+        //will handle upgrade if needed in the future
     }
 
     private String createUserGroupTable() {

@@ -69,7 +69,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-                Log.d("onSuccess", "connect");
+
             }
 
             @Override
@@ -96,7 +96,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-                Log.d("onSuccess", "subscribe");
+
             }
 
             @Override
@@ -115,7 +115,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                     try {
                         message = new String(data, "UTF-8");
-                        Log.d("iot message", message);
                     } catch (Exception e) {
                         Log.e("IoTHelper", "invalid message format", e);
                     }
@@ -163,7 +162,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-                Log.d("onSuccess", "disconnect");
+
             }
 
             @Override
@@ -268,7 +267,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         camment.setThumbnail(message.body.thumbnail);
         camment.setUrl(message.body.url);
         camment.setUserCognitoIdentityId(message.body.userCognitoIdentityId);
-        //TODO check camment message timestamp
         camment.setTimestamp(System.currentTimeMillis());
         camment.setRecorded(true);
         camment.setTransferId(-1);

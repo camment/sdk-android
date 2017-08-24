@@ -52,12 +52,12 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "startRecording");
+
             }
 
             @Override
             public void onException(Exception exception) {
-                Log.d("onException", "startRecording");
+                Log.e("onException", "startRecording", exception);
             }
         };
     }
@@ -104,8 +104,8 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
             }
 
             @Override
-            public void onException(Exception exception) {
-                Log.d("onException", "stopRecording");
+            public void onException(Exception e) {
+                Log.e("onException", "stopRecording", e);
             }
         };
     }

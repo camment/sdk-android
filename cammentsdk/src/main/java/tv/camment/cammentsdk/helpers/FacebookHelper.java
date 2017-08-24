@@ -44,18 +44,17 @@ public final class FacebookHelper {
     private FacebookCallback<LoginResult> loginResultFacebookCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            Log.d(TAG, "onSuccess");
             ApiManager.getInstance().getUserApi().updateUserInfo();
         }
 
         @Override
         public void onCancel() {
-            Log.d(TAG, "onCancel");
+
         }
 
         @Override
         public void onError(FacebookException error) {
-            Log.d(TAG, "onError");
+            Log.e(TAG, "onError", error);
         }
     };
 

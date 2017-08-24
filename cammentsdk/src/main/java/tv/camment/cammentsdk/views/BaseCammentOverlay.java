@@ -14,7 +14,6 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
@@ -93,7 +92,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d("Loader", "onLoadFinished");
         List<CCamment> camments = CammentProvider.listFromCursor(data);
         adapter.setData(camments);
 
@@ -183,45 +181,13 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
     }
 
-    //    @Override
-//    protected Parcelable onSaveInstanceState() {
-//        Log.d("OVERLAY", "onSaveInstanceState");
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable(ARG_SUPER_STATE, super.onSaveInstanceState());
-//        final Usergroup usergroup = UserGroupProvider.getUserGroup();
-//        bundle.putString(ARG_ACTIVE_GROUP_UUID, activeGroupUuid);
-//        return bundle;
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(Parcelable state) {
-//        Log.d("OVERLAY", "onRestoreInstanceState");
-//        if (state instanceof Bundle) {
-//            Bundle bundle = (Bundle) state;
-//            activeGroupUuid = bundle.getString(ARG_ACTIVE_GROUP_UUID);
-//            state = bundle.getParcelable(ARG_SUPER_STATE);
-//        }
-//        super.onRestoreInstanceState(state);
-//    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        Log.d("OVERLAY", "onAttachedToWindow");
-
         if (getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
         }
-
-//        if (TextUtils.isEmpty(activeGroupUuid)) {
-//            final Usergroup usergroup = UserGroupProvider.getUserGroup();
-//            if (usergroup == null || TextUtils.isEmpty(usergroup.getUuid())) {
-//                ApiManager.getInstance().getGroupApi().createEmptyUsergroup();
-//            } else {
-//                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-//            }
-//        }
     }
 
     @Override
@@ -459,12 +425,11 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         @Override
         public void onAnimationEnd(Animator animator) {
-            Log.d("recording", "onAnimationEnd");
+
         }
 
         @Override
         public void onAnimationCancel(Animator animator) {
-            Log.d("delayed", "cancel");
             getHandler().removeCallbacksAndMessages(null);
         }
 

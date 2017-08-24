@@ -4,7 +4,6 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -113,7 +112,6 @@ final class CameraSurfaceRenderer implements
      * when GLSurface context will be destroyed soon
      */
     void onSurfaceDestroyed() {
-        Log.d("CAMERArender", "onSurfaceDestroyed");
         if (drawer2D != null) {
             drawer2D = null;
         }
@@ -142,7 +140,6 @@ final class CameraSurfaceRenderer implements
             Matrix.setIdentityM(mvpMatrix, 0);
 
             final double viewAspectRatio = viewWidth / (double) viewHeight;
-            Log.d("CameraSurface", String.format("view(%d,%d)%f,video(%1.0f,%1.0f)", viewWidth, viewHeight, viewAspectRatio, videoWidth, videoHeight));
 
             //square scale
             int viewX = 0;
@@ -168,8 +165,6 @@ final class CameraSurfaceRenderer implements
             } else {
                 scaleY = 1 / videoAspectRatio;
             }
-
-            Log.d("CameraSurface", "scale square: " + scaleX + " - " + scaleY);
 
             GLES20.glViewport(viewX, viewY, newPreviewSize, newPreviewSize);
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);

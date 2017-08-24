@@ -60,7 +60,7 @@ final class KeystoreHelper extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "checkKeyStoreCallback");
+
             }
 
             @Override

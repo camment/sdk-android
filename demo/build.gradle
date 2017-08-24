@@ -12,8 +12,6 @@ android {
 
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
-
-        buildConfigField "String", "CAMMENT_API_KEY", (project.hasProperty('CAMMENT_API_KEY') ? "\"$CAMMENT_API_KEY\"" : "\"Your Camment API key\"")
     }
 
     buildTypes {

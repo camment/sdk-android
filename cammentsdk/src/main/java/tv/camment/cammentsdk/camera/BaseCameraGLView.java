@@ -6,7 +6,6 @@ import android.hardware.Camera;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import tv.camment.cammentsdk.SDKConfig;
@@ -63,7 +62,6 @@ abstract class BaseCameraGLView extends GLSurfaceView
     }
 
     synchronized void startPreview() {
-        Log.d("CAMERA", "startPreview");
         if (cameraHandler == null) {
             final CameraThread cameraThread = new CameraThread(this);
             cameraThread.start();
@@ -74,8 +72,6 @@ abstract class BaseCameraGLView extends GLSurfaceView
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("CAMERA", "surfaceDestroyed");
-
         if (cameraHandler != null) {
             cameraHandler.stopPreview(true);
             cameraHandler = null;

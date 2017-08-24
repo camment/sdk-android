@@ -34,7 +34,7 @@ public final class ShowApi extends CammentAsyncClient {
         return new CammentCallback<ShowList>() {
             @Override
             public void onSuccess(ShowList result) {
-                Log.d("onSuccess", result.getItems().size() + " shows");
+
             }
 
             @Override

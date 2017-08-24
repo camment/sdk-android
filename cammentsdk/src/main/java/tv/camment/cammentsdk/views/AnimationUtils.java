@@ -9,9 +9,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
 
-import tv.camment.cammentsdk.views.SquareFrameLayout;
-import tv.camment.cammentsdk.views.TooltipView;
-
 final class AnimationUtils {
 
     private static ObjectAnimator recordAnimator;

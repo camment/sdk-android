@@ -79,8 +79,8 @@ final class AnimationUtils {
     }
 
     static void animateActivateRecordingButton(final ImageButton ibRecord) {
-        ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 0.8f, 1.5f);
-        ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 0.8f, 1.5f);
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 1.0f, 1.5f);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 1.0f, 1.5f);
         ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(ibRecord, "alpha", 0.5f, 0.9f);
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -91,8 +91,8 @@ final class AnimationUtils {
     }
 
     static void animateDeactivateRecordingButton(final ImageButton ibRecord) {
-        ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 1.5f, 0.8f);
-        ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 1.5f, 0.8f);
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(ibRecord, "scaleX", 1.5f, 1.0f);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(ibRecord, "scaleY", 1.5f, 1.0f);
         ObjectAnimator animatorAlpha = ObjectAnimator.ofFloat(ibRecord, "alpha", 0.9f, 0.5f);
 
         AnimatorSet animatorSet = new AnimatorSet();

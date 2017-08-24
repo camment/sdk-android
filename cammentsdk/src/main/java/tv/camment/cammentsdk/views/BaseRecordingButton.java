@@ -21,7 +21,7 @@ import tv.camment.cammentsdk.utils.CommonUtils;
 
 
 @SuppressWarnings("deprecation")
-abstract class BaseRecordingButton extends AppCompatImageButton implements CammentDialog.ActionListener {
+abstract class BaseRecordingButton extends SquareImageButton implements CammentDialog.ActionListener {
 
     private static final int MOVE_THRESHOLD = 10;
 
@@ -64,8 +64,8 @@ abstract class BaseRecordingButton extends AppCompatImageButton implements Camme
 
                 if (Math.abs(prevY - event.getRawY()) > MOVE_THRESHOLD) {
                     setAlpha(0.5f);
-                    setScaleX(0.8f);
-                    setScaleY(0.8f);
+                    setScaleX(1.0f);
+                    setScaleY(1.0f);
 
                     if (actionsListener != null) {
                         actionsListener.onRecordingStop(true);

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -9,11 +10,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionName project.VERSION_NAME
-        versionCode Integer.parseInt(project.VERSION_CODE)
-
-        buildConfigField "String", "CAMMENT_API_KEY", (project.hasProperty('CAMMENT_API_KEY') ? "\"$CAMMENT_API_KEY\"" : "\"Your Camment API key\"")
-        buildConfigField "String", "CAMMENT_AUTHORITY", (project.hasProperty('CAMMENT_AUTHORITY') ? "\"$CAMMENT_AUTHORITY\"" : "\"tv.camment.cammentsdk\"")
+        versionName "1.0.0"
+        versionCode 1
     }
 
     buildTypes {
@@ -30,11 +28,6 @@ android {
             useProguard false
             debuggable true
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
@@ -86,4 +79,33 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:1.7.1'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'tv.camment.cammentsdk'
+            artifactId 'cammentsdk'
+            version '0.0.9'
+            artifact "$buildDir/outputs/aar/cammentsdk-release.aar" //aar artifact you want to publish
+
+            //generate pom nodes for dependencies
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each { dependency ->
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dependency.group)
+                    dependencyNode.appendNode('artifactId', dependency.name)
+                    dependencyNode.appendNode('version', dependency.version)
+                }
+            }
+        }
+    }
+
+    //publish to filesystem repo
+    repositories{
+        maven {
+            url "$buildDir/repo"
+        }
+    }
 }

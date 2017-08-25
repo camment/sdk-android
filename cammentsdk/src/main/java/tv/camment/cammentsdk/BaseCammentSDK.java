@@ -4,6 +4,9 @@ package tv.camment.cammentsdk;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -31,10 +34,11 @@ abstract class BaseCammentSDK extends CammentLifecycle {
             if (context == null || !(context instanceof Application)) {
                 throw new IllegalArgumentException("Can't init CammentSDK with null application context");
             }
-            if (TextUtils.isEmpty(BuildConfig.CAMMENT_API_KEY) || SDKConfig.API_KEY_DUMMY.equals(BuildConfig.CAMMENT_API_KEY)) {
-                throw new IllegalArgumentException("Invalid CammentSDK API key");
-            }
             applicationContext = new WeakReference<>(context);
+
+            if (TextUtils.isEmpty(getApiKey())) {
+                throw new IllegalArgumentException("Missing CammentSDK API key");
+            }
 
             AWSManager.getInstance().checkKeyStore();
 
@@ -81,6 +85,19 @@ abstract class BaseCammentSDK extends CammentLifecycle {
 
     void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionHelper.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public String getApiKey() {
+        String apiKey = null;
+        try {
+            ApplicationInfo ai = getApplicationContext().getPackageManager()
+                    .getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+            Bundle bundle = ai.metaData;
+            apiKey = bundle.getString("tv.camment.cammentsdk.ApiKey");
+        } catch (PackageManager.NameNotFoundException | NullPointerException e) {
+            throw new IllegalArgumentException("Missing CammentSDK API key");
+        }
+        return apiKey;
     }
 
 }

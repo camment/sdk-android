@@ -46,11 +46,6 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <provider
-            android:name=".data.DataProvider"
-            android:authorities="tv.camment.cammentsdk"
-            android:exported="false" />
-
     </application>
 
 </manifest>

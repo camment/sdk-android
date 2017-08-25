@@ -2,15 +2,19 @@ package tv.camment.cammentsdk.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
+import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import static tv.camment.cammentsdk.data.DataContract.AUTHORITY;
+import static tv.camment.cammentsdk.data.DataContract.AUTHORITY_URI;
 import static tv.camment.cammentsdk.data.DataContract.Camment;
 import static tv.camment.cammentsdk.data.DataContract.Codes;
 import static tv.camment.cammentsdk.data.DataContract.Show;
@@ -20,16 +24,7 @@ import static tv.camment.cammentsdk.data.DataContract.UserGroup;
 
 public final class DataProvider extends ContentProvider {
 
-    private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-    static {
-        uriMatcher.addURI(AUTHORITY, Tables.USER_GROUP, Codes.USER_GROUP);
-        uriMatcher.addURI(AUTHORITY, Tables.USER_GROUP_ID, Codes.USER_GROUP_ID);
-        uriMatcher.addURI(AUTHORITY, Tables.SHOW, Codes.SHOW);
-        uriMatcher.addURI(AUTHORITY, Tables.SHOW_ID, Codes.SHOW_ID);
-        uriMatcher.addURI(AUTHORITY, Tables.CAMMENT, Codes.CAMMENT);
-        uriMatcher.addURI(AUTHORITY, Tables.CAMMENT_ID, Codes.CAMMENT_ID);
-    }
+    private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     private SQLiteDatabase db;
 
@@ -38,6 +33,23 @@ public final class DataProvider extends ContentProvider {
         DbHelper dbHelper = new DbHelper(getContext());
         db = dbHelper.getWritableDatabase();
         return (db != null);
+    }
+
+    @Override
+    public void attachInfo(Context context, ProviderInfo info) {
+        super.attachInfo(context, info);
+
+        AUTHORITY = info.authority;
+        AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
+
+        Log.d("AUTHORITY", AUTHORITY);
+
+        uriMatcher.addURI(AUTHORITY, Tables.USER_GROUP, Codes.USER_GROUP);
+        uriMatcher.addURI(AUTHORITY, Tables.USER_GROUP_ID, Codes.USER_GROUP_ID);
+        uriMatcher.addURI(AUTHORITY, Tables.SHOW, Codes.SHOW);
+        uriMatcher.addURI(AUTHORITY, Tables.SHOW_ID, Codes.SHOW_ID);
+        uriMatcher.addURI(AUTHORITY, Tables.CAMMENT, Codes.CAMMENT);
+        uriMatcher.addURI(AUTHORITY, Tables.CAMMENT_ID, Codes.CAMMENT_ID);
     }
 
     @Override

@@ -2,18 +2,18 @@ package tv.camment.cammentsdk.data;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
-
-import tv.camment.cammentsdk.BuildConfig;
+import android.util.Log;
 
 
 final class DataContract {
 
-    static final String AUTHORITY = BuildConfig.CAMMENT_AUTHORITY;
+    static String AUTHORITY;
+
+    static Uri AUTHORITY_URI;
+
     /**
      * The content:// style URL for the top-level authority
      */
-    private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
-
     private DataContract() {
     }
 

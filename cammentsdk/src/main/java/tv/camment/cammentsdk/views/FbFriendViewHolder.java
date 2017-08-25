@@ -49,7 +49,7 @@ final class FbFriendViewHolder extends RecyclerView.ViewHolder {
 
         tvName.setText(facebookFriend.getName());
 
-        Uri pictureUri = ImageRequest.getProfilePictureUri(String.valueOf(facebookFriend.getId().longValue()), 270, 270);
+        Uri pictureUri = ImageRequest.getProfilePictureUri(String.valueOf(facebookFriend.getId()), 270, 270);
 
         Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(pictureUri).into(new BitmapImageViewTarget(ivAvatar) {
             @Override

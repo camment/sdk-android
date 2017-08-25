@@ -70,7 +70,7 @@ public final class UserApi extends CammentAsyncClient {
         submitTask(new Callable<FacebookFriendList>() {
             @Override
             public FacebookFriendList call() throws Exception {
-                return devcammentClient.meFbFriendsGet(AccessToken.getCurrentAccessToken().getToken());
+                return devcammentClient.meFbFriendsGet();
             }
         }, getFacebookFriendsCallback);
     }

@@ -88,7 +88,7 @@ abstract class BaseCammentSDK extends CammentLifecycle {
     }
 
     public String getApiKey() {
-        String apiKey = null;
+        String apiKey;
         try {
             ApplicationInfo ai = getApplicationContext().getPackageManager()
                     .getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);

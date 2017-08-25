@@ -5,7 +5,7 @@ import android.util.Log;
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
 import com.camment.clientsdk.model.FacebookFriend;
-import com.camment.clientsdk.model.UserInAddToGroupRequest;
+import com.camment.clientsdk.model.UserFacebookIdListInRequest;
 import com.camment.clientsdk.model.Usergroup;
 
 import java.util.ArrayList;
@@ -37,12 +37,12 @@ public final class InvitationApi extends CammentAsyncClient {
                 final String showUuid = ShowProvider.getShow().getUuid();
                 final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
 
-                UserInAddToGroupRequest userInAddToGroupRequest = new UserInAddToGroupRequest();
+                UserFacebookIdListInRequest userInAddToGroupRequest = new UserFacebookIdListInRequest();
                 userInAddToGroupRequest.setShowUuid(showUuid);
 
                 List<String> fbUserIdsStrings = new ArrayList<>();
                 for (FacebookFriend fbFriend : fbFriends) {
-                    fbUserIdsStrings.add(String.valueOf(fbFriend.getId().longValue()));
+                    fbUserIdsStrings.add(String.valueOf(fbFriend.getId()));
                 }
                 userInAddToGroupRequest.setUserFacebookIdList(fbUserIdsStrings);
 

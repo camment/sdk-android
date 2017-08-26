@@ -40,7 +40,7 @@ final class CammentBottomSheetDialog extends BottomSheetDialog implements Dialog
         setCanceledOnTouchOutside(true);
         setOnShowListener(this);
 
-        TextView tvDeleteCamment = (TextView) findViewById(R.id.tv_delete_camment);
+        TextView tvDeleteCamment = (TextView) findViewById(R.id.cmmsdk_tv_delete_camment);
 
         if (tvDeleteCamment != null) {
             tvDeleteCamment.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +54,7 @@ final class CammentBottomSheetDialog extends BottomSheetDialog implements Dialog
             });
         }
 
-        TextView tvCancel = (TextView) findViewById(R.id.tv_cancel);
+        TextView tvCancel = (TextView) findViewById(R.id.cmmsdk_tv_cancel);
 
         if (tvCancel != null) {
             tvCancel.setOnClickListener(new View.OnClickListener() {

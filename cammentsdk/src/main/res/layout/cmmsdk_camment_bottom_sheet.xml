@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_choose_action"
+        android:id="@+id/cmmsdk_tv_choose_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="0.6"
@@ -22,7 +22,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tv_delete_camment"
+        android:id="@+id/cmmsdk_tv_delete_camment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/cmmsdk_button_ripple"
@@ -39,7 +39,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tv_cancel"
+        android:id="@+id/cmmsdk_tv_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/cmmsdk_button_ripple"

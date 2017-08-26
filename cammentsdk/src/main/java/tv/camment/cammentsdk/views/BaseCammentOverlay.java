@@ -219,11 +219,11 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     protected void onFinishInflate() {
-        flCamera = (SquareFrameLayout) findViewById(R.id.fl_camera);
-        vRecordIndicator = findViewById(R.id.v_record_indicator);
+        flCamera = (SquareFrameLayout) findViewById(R.id.cmmsdk_fl_camera);
+        vRecordIndicator = findViewById(R.id.cmmsdk_v_record_indicator);
 
-        rvCamments = (CammentRecyclerView) findViewById(R.id.rv_camments);
-        ibRecord = (RecordingButton) findViewById(R.id.ib_record);
+        rvCamments = (CammentRecyclerView) findViewById(R.id.cmmsdk_rv_camments);
+        ibRecord = (RecordingButton) findViewById(R.id.cmmsdk_ib_record);
 
         adapter = new CammentsAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -233,7 +233,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         ibRecord.setListener(this);
 
-        onboardingOverlay = (OnboardingOverlay) findViewById(R.id.onboarding_overlay);
+        onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
 
         super.onFinishInflate();

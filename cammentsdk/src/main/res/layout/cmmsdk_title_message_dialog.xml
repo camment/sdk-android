@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/cmmsdk_tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -20,10 +20,10 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tv_message"
+        android:id="@+id/cmmsdk_tv_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_title"
+        android:layout_below="@+id/cmmsdk_tv_title"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:paddingBottom="24dp"
@@ -34,12 +34,12 @@
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/btn_negative"
+        android:id="@+id/cmmsdk_btn_negative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_message"
+        android:layout_below="@+id/cmmsdk_tv_message"
         android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/btn_positive"
+        android:layout_toStartOf="@+id/cmmsdk_btn_positive"
         android:background="@drawable/cmmsdk_button_ripple"
         android:ellipsize="end"
         android:maxLines="1"
@@ -49,11 +49,11 @@
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/btn_positive"
+        android:id="@+id/cmmsdk_btn_positive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tv_message"
+        android:layout_below="@+id/cmmsdk_tv_message"
         android:layout_marginStart="8dp"
         android:background="@drawable/cmmsdk_button_ripple"
         android:ellipsize="end"

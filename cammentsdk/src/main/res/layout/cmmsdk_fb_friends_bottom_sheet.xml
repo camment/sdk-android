@@ -2,11 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <Button
-        android:id="@+id/btn_cancel"
+        android:id="@+id/cmmsdk_btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -21,7 +20,7 @@
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/btn_done"
+        android:id="@+id/cmmsdk_btn_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -38,19 +37,19 @@
         android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_friends"
+        android:id="@+id/cmmsdk_rv_friends"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btn_done"
+        android:layout_below="@+id/cmmsdk_btn_done"
         android:overScrollMode="never" />
 
     <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/cl_progressbar"
+        android:id="@+id/cmmsdk_cl_progressbar"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_below="@+id/btn_cancel"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="32dp"
         android:layout_width="48dp"
-        android:layout_height="48dp" />
+        android:layout_height="48dp"
+        android:layout_below="@+id/cmmsdk_btn_cancel"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="32dp" />
 
 </RelativeLayout>

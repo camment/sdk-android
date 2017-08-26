@@ -60,10 +60,10 @@ public final class CammentDialog extends DialogFragment {
 
         View view = inflater.inflate(R.layout.cmmsdk_title_message_dialog, container);
 
-        tvTitle = (TextView) view.findViewById(R.id.tv_title);
-        tvMessage = (TextView) view.findViewById(R.id.tv_message);
-        btnPositive = (Button) view.findViewById(R.id.btn_positive);
-        btnNegative = (Button) view.findViewById(R.id.btn_negative);
+        tvTitle = (TextView) view.findViewById(R.id.cmmsdk_tv_title);
+        tvMessage = (TextView) view.findViewById(R.id.cmmsdk_tv_message);
+        btnPositive = (Button) view.findViewById(R.id.cmmsdk_btn_positive);
+        btnNegative = (Button) view.findViewById(R.id.cmmsdk_btn_negative);
 
         btnPositive.setOnClickListener(new View.OnClickListener() {
             @Override

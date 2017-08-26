@@ -96,7 +96,7 @@ abstract class BaseTooltipView extends RelativeLayout {
 
         setLayoutParams(params);
 
-        tvTooltipText = (TextView) findViewById(R.id.tv_tooltip_text);
+        tvTooltipText = (TextView) findViewById(R.id.cmmsdk_tv_tooltip_text);
 
         showText();
 

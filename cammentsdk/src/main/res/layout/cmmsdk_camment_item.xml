@@ -6,20 +6,20 @@
     android:layout_marginTop="2dp">
 
     <tv.camment.cammentsdk.views.SquareTextureView
-        android:id="@+id/texture_view"
+        android:id="@+id/cmmsdk_texture_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="2dp" />
 
     <tv.camment.cammentsdk.views.SquareImageView
-        android:id="@+id/iv_thumbnail"
+        android:id="@+id/cmmsdk_iv_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="2dp"
         android:scaleType="centerCrop" />
 
     <View
-        android:id="@+id/v_border"
+        android:id="@+id/cmmsdk_v_border"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/cmmsdk_rounded_inside_corners" />

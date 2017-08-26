@@ -5,35 +5,35 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.Guideline
-        android:id="@+id/g_top"
+        android:id="@+id/cmmsdk_g_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.02" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/g_camment_list"
+        android:id="@+id/cmmsdk_g_camment_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.15" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/g_record_indicator"
+        android:id="@+id/cmmsdk_g_record_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.17" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/g_record_camment"
+        android:id="@+id/cmmsdk_g_record_camment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.86" />
 
     <tv.camment.cammentsdk.views.SquareFrameLayout
-        android:id="@+id/fl_camera"
+        android:id="@+id/cmmsdk_fl_camera"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
@@ -41,8 +41,8 @@
         android:layout_marginTop="4dp"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/g_camment_list"
-        app:layout_constraintTop_toTopOf="@+id/g_top">
+        app:layout_constraintRight_toLeftOf="@+id/cmmsdk_g_camment_list"
+        app:layout_constraintTop_toTopOf="@+id/cmmsdk_g_top">
 
         <View
             android:layout_width="match_parent"
@@ -51,27 +51,27 @@
     </tv.camment.cammentsdk.views.SquareFrameLayout>
 
     <tv.camment.cammentsdk.views.SquareView
-        android:id="@+id/v_record_indicator"
+        android:id="@+id/cmmsdk_v_record_indicator"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:alpha="0"
         android:background="@drawable/cmmsdk_red_circle"
-        app:layout_constraintLeft_toLeftOf="@+id/g_camment_list"
-        app:layout_constraintRight_toLeftOf="@+id/g_record_indicator"
-        app:layout_constraintTop_toTopOf="@+id/g_top" />
+        app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_g_camment_list"
+        app:layout_constraintRight_toLeftOf="@+id/cmmsdk_g_record_indicator"
+        app:layout_constraintTop_toTopOf="@+id/cmmsdk_g_top" />
 
     <tv.camment.cammentsdk.views.CammentRecyclerView
-        android:id="@+id/rv_camments"
+        android:id="@+id/cmmsdk_rv_camments"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:overScrollMode="never"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/g_camment_list"
-        app:layout_constraintTop_toBottomOf="@+id/fl_camera" />
+        app:layout_constraintRight_toLeftOf="@+id/cmmsdk_g_camment_list"
+        app:layout_constraintTop_toBottomOf="@+id/cmmsdk_fl_camera" />
 
     <tv.camment.cammentsdk.views.RecordingButton
-        android:id="@+id/ib_record"
+        android:id="@+id/cmmsdk_ib_record"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -81,12 +81,12 @@
         android:background="@null"
         android:scaleType="fitXY"
         android:src="@drawable/cmmsdk_camment_icon_shadow"
-        app:layout_constraintLeft_toLeftOf="@+id/g_record_camment"
+        app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_g_record_camment"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <tv.camment.cammentsdk.views.OnboardingOverlay
-        android:id="@+id/onboarding_overlay"
+        android:id="@+id/cmmsdk_onboarding_overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -34,9 +34,9 @@ final class FbFriendViewHolder extends RecyclerView.ViewHolder {
 
         this.actionListener = actionListener;
 
-        ivAvatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
-        tvName = (TextView) itemView.findViewById(R.id.tv_name);
-        cbSelect = (CheckBox) itemView.findViewById(R.id.cb_select);
+        ivAvatar = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_avatar);
+        tvName = (TextView) itemView.findViewById(R.id.cmmsdk_tv_name);
+        cbSelect = (CheckBox) itemView.findViewById(R.id.cmmsdk_cb_select);
 
         cbSelect.setOnCheckedChangeListener(checkedChangeListener);
     }

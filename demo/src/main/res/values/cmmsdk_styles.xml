@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="CammentSdkAppTheme.FullScreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>

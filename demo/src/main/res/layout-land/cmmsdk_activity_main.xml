@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tv.camment.cammentdemo.MainActivity">
+    tools:context="tv.camment.cammentdemo.CammentDemoMainActivity">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/showPlayerView"
+        android:id="@+id/cmmsdk_showPlayerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:resize_mode="fill" />
 
     <tv.camment.cammentsdk.views.CammentOverlay
-        android:id="@+id/cammentOverlay"
+        android:id="@+id/cmmsdk_cammentOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

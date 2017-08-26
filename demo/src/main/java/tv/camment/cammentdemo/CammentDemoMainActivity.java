@@ -27,7 +27,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
-public class MainActivity extends AppCompatActivity implements CammentAudioListener {
+public class CammentDemoMainActivity extends AppCompatActivity implements CammentAudioListener {
 
     private SimpleExoPlayer player;
     private SimpleExoPlayerView showPlayerView;
@@ -36,12 +36,12 @@ public class MainActivity extends AppCompatActivity implements CammentAudioListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.cmmsdk_activity_main);
         CammentSDK.getInstance().setShowUuid("df64bc2e-7b76-11e7-bb31-be2e44b06b34");
 
-        showPlayerView = (SimpleExoPlayerView) findViewById(R.id.showPlayerView);
+        showPlayerView = (SimpleExoPlayerView) findViewById(R.id.cmmsdk_showPlayerView);
 
-        CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.cammentOverlay);
+        CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.cmmsdk_cammentOverlay);
 
         cammentOverlay.setParentViewGroup(showPlayerView);
         cammentOverlay.setCammentAudioListener(this);
@@ -49,16 +49,16 @@ public class MainActivity extends AppCompatActivity implements CammentAudioListe
 
     @Override
     protected void onPause() {
-        super.onPause();
         if (player != null) {
             player.stop();
         }
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
-        prepareAndPlayVideo();
         super.onResume();
+        prepareAndPlayVideo();
     }
 
     private void prepareAndPlayVideo() {

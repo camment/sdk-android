@@ -7,7 +7,7 @@
     android:padding="4dp">
 
     <TextView
-        android:id="@+id/tv_tooltip_text"
+        android:id="@+id/cmmsdk_tv_tooltip_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"

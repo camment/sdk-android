@@ -1,5 +1,5 @@
 <resources>
-    <string name="cmmsdk_app_name" translatable="false">CammentSDK</string>
+    <string name="cmmsdk_app_name" translatable="false">Camment</string>
 
     <string name="cmmsdk_facebook_app_id" translatable="false">272405646569362</string>
     <string name="cmmsdk_fb_login_protocol_scheme" translatable="false">fb272405646569362</string>

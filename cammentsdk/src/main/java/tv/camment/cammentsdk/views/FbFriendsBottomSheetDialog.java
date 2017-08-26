@@ -59,13 +59,13 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
         setCanceledOnTouchOutside(true);
         setOnShowListener(this);
 
-        contentLoadingProgressBar = findViewById(R.id.cl_progressbar);
+        contentLoadingProgressBar = findViewById(R.id.cmmsdk_cl_progressbar);
         contentLoadingProgressBar.getIndeterminateDrawable()
                 .setColorFilter(getContext().getResources().getColor(android.R.color.holo_blue_dark),
                         PorterDuff.Mode.SRC_IN);
         contentLoadingProgressBar.show();
 
-        btnCancel = (Button) findViewById(R.id.btn_cancel);
+        btnCancel = (Button) findViewById(R.id.cmmsdk_btn_cancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +73,7 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
             }
         });
 
-        btnDone = (Button) findViewById(R.id.btn_done);
+        btnDone = (Button) findViewById(R.id.cmmsdk_btn_done);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +86,7 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
 
         enableDoneButton(false);
 
-        rvFriends = (RecyclerView) findViewById(R.id.rv_friends);
+        rvFriends = (RecyclerView) findViewById(R.id.cmmsdk_rv_friends);
         rvFriends.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         adapter = new FbFriendsAdapter(this);
         rvFriends.setAdapter(adapter);

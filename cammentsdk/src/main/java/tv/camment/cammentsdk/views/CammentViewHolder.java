@@ -37,8 +37,8 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         itemView.setPivotX(0);
         itemView.setPivotY(0);
 
-        ivThumbnail = (ImageView) itemView.findViewById(R.id.iv_thumbnail);
-        textureView = (TextureView) itemView.findViewById(R.id.texture_view);
+        ivThumbnail = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_thumbnail);
+        textureView = (TextureView) itemView.findViewById(R.id.cmmsdk_texture_view);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

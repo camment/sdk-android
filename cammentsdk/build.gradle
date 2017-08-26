@@ -47,6 +47,7 @@ ext {
             apiGatewayCore          :       "com.amazonaws:aws-android-sdk-apigateway-core:${awsVersion}",
             s3                      :       "com.amazonaws:aws-android-sdk-s3:${awsVersion}",
             iot                     :       "com.amazonaws:aws-android-sdk-iot:${awsVersion}",
+            analytics               :       "com.amazonaws:aws-android-sdk-mobileanalytics:${awsVersion}",
     ]
 
     facebookDependencies = [

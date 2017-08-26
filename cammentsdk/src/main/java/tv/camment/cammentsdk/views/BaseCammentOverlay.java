@@ -14,6 +14,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.amazonaws.mobileconnectors.amazonmobileanalytics.InitializationException;
+import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
 import com.camment.clientsdk.model.Camment;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -84,6 +87,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     private ExoPlayer.EventListener exoEventListener;
     private String lastVideoCammentUuid;
+
+    private static MobileAnalyticsManager analytics;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -158,17 +163,35 @@ abstract class BaseCammentOverlay extends RelativeLayout
         player.setPlayWhenReady(true);
 
         PermissionHelper.getInstance().initPermissionHelper(CammentSDK.getInstance().getCurrentActivity());
+
+        try {
+            analytics = MobileAnalyticsManager.getOrCreateInstance(
+                    CammentSDK.getInstance().getApplicationContext(),
+                    "ea4151c5b77046bfb7213de5d02f514f",
+                    "us-east-1:71549a59-04b7-4924-9973-0c35c9278e78"
+            );
+        } catch(InitializationException ex) {
+            Log.e("CammentSDK", "Failed to initialize Amazon Mobile Analytics", ex);
+        }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         stopCammentPlayback();
+        if (analytics != null) {
+            analytics.getSessionClient().pauseSession();
+            analytics.getEventClient().submitEvents();
+        }
         super.onDetachedFromWindow();
     }
 
     @Override
     protected Parcelable onSaveInstanceState() {
         stopCammentPlayback();
+        if (analytics != null) {
+            analytics.getSessionClient().pauseSession();
+            analytics.getEventClient().submitEvents();
+        }
         return super.onSaveInstanceState();
     }
 
@@ -187,6 +210,10 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         if (getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
+        }
+
+        if (analytics != null) {
+            analytics.getSessionClient().resumeSession();
         }
     }
 

@@ -19,6 +19,8 @@ import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 
 public final class CammentDialog extends DialogFragment {
 
+    private static final String ARGS_MESSAGE = "args_messgae";
+
     private BaseMessage message;
 
     private TextView tvTitle;
@@ -30,8 +32,18 @@ public final class CammentDialog extends DialogFragment {
 
     public static CammentDialog createInstance(BaseMessage message) {
         CammentDialog dialog = new CammentDialog();
-        dialog.message = message;
+        Bundle args = new Bundle();
+        args.putParcelable(ARGS_MESSAGE, message);
+        dialog.setArguments(args);
         return dialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            dismiss();
+        }
     }
 
     @Nullable
@@ -43,6 +55,8 @@ public final class CammentDialog extends DialogFragment {
                 window.requestFeature(Window.FEATURE_NO_TITLE);
             }
         }
+
+        message = getArguments().getParcelable(ARGS_MESSAGE);
 
         View view = inflater.inflate(R.layout.cmmsdk_title_message_dialog, container);
 

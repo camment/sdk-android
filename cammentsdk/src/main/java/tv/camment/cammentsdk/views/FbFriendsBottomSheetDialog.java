@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +31,7 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
     private Button btnCancel;
     private Button btnDone;
     private RecyclerView rvFriends;
+    private ContentLoadingProgressBar contentLoadingProgressBar;
     private FbFriendsAdapter adapter;
 
     public FbFriendsBottomSheetDialog(@NonNull Context context) {
@@ -55,6 +58,12 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
         setCancelable(true);
         setCanceledOnTouchOutside(true);
         setOnShowListener(this);
+
+        contentLoadingProgressBar = findViewById(R.id.cl_progressbar);
+        contentLoadingProgressBar.getIndeterminateDrawable()
+                .setColorFilter(getContext().getResources().getColor(android.R.color.holo_blue_dark),
+                        PorterDuff.Mode.SRC_IN);
+        contentLoadingProgressBar.show();
 
         btnCancel = (Button) findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -94,13 +103,19 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
         return new CammentCallback<FacebookFriendList>() {
             @Override
             public void onSuccess(FacebookFriendList facebookFriendList) {
-                if (facebookFriendList != null) {
+                if (contentLoadingProgressBar != null) {
+                    contentLoadingProgressBar.hide();
+                }
+                if (facebookFriendList != null && adapter != null) {
                     adapter.setFacebookFriends(facebookFriendList.getItems());
                 }
             }
 
             @Override
             public void onException(Exception exception) {
+                if (contentLoadingProgressBar != null) {
+                    contentLoadingProgressBar.hide();
+                }
                 Log.e("onException", "getFacebookFriends", exception);
             }
         };

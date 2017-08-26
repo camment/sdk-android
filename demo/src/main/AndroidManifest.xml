@@ -9,14 +9,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/CammentSdkAppTheme">
 
         <meta-data android:name="tv.camment.cammentsdk.ApiKey"
             android:value="Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi" />
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.FullScreen">
+            android:theme="@style/CammentSdkAppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

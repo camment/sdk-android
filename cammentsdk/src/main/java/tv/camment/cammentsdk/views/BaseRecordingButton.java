@@ -24,7 +24,6 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
     private static final int MOVE_THRESHOLD = 10;
 
     private int initMargin;
-    private int prevX;
     private int prevY;
     private int screenHeight;
     private boolean handledPullDown;
@@ -52,9 +51,6 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
             case MotionEvent.ACTION_MOVE:
                 if (!PermissionHelper.getInstance().hasPermissions()
                         || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
-                    par.leftMargin += (int) event.getRawX() - prevX;
-                    prevX = (int) event.getRawX();
-                    setLayoutParams(par);
                     return true;
                 }
 
@@ -130,7 +126,6 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                     screenHeight = CommonUtils.getScreenHeight(getContext());
 
                     prevY = (int) event.getRawY();
-                    prevX = (int) event.getRawX();
                     initMargin = par.topMargin;
                     par.bottomMargin = -2 * getHeight();
 

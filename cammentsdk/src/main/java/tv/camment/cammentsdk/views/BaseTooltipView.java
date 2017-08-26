@@ -50,12 +50,6 @@ abstract class BaseTooltipView extends RelativeLayout {
             View.inflate(getContext(), R.layout.cmmsdk_tooltip_right, this);
         }
 
-        int[] areas = new int[4];
-        areas[0] = anchor.getLeft();
-        areas[1] = anchor.getTop();
-        areas[2] = anchor.getRight();
-        areas[3] = anchor.getBottom();
-
         LayoutParams params = (LayoutParams) getLayoutParams();
         if (orientation == Orientation.RIGHT) {
             params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
@@ -66,16 +60,18 @@ abstract class BaseTooltipView extends RelativeLayout {
 
         switch (step) {
             case RECORD:
-                marginTop = CommonUtils.dpToPx(getContext(), 24);
+                marginTop = anchor.getTop() + (anchor.getHeight() / 2) - CommonUtils.dpToPx(getContext(), 20);
                 break;
             case INVITE:
-                marginTop = CommonUtils.dpToPx(getContext(), 18);
+                marginTop = anchor.getTop() + (anchor.getHeight() / 2) - CommonUtils.dpToPx(getContext(), 30);
                 break;
             case PLAY:
             case DELETE:
+                marginTop = anchor.getTop() + (anchor.getRight() / 4) - CommonUtils.dpToPx(getContext(), 20);
+                break;
             case HIDE:
             case SHOW:
-                marginTop = CommonUtils.dpToPx(getContext(), 10);
+                marginTop = CommonUtils.getScreenHeight(getContext()) / 2 - CommonUtils.dpToPx(getContext(), 18);
                 break;
         }
 
@@ -83,7 +79,7 @@ abstract class BaseTooltipView extends RelativeLayout {
         int marginRight = 0;
         int marginLeft = 0;
         if (orientation == Orientation.RIGHT) {
-            marginRight = CommonUtils.getScreenWidth(getContext()) - areas[0] + CommonUtils.dpToPx(getContext(), 4);
+            marginRight = CommonUtils.getScreenWidth(getContext()) - anchor.getLeft() + CommonUtils.dpToPx(getContext(), 4);
         } else {
             switch (step) {
                 case PLAY:
@@ -91,8 +87,6 @@ abstract class BaseTooltipView extends RelativeLayout {
                     marginLeft = (anchor.getRight() / 2) + CommonUtils.dpToPx(getContext(), 4);
                     break;
                 case HIDE:
-                    marginLeft = anchor.getRight() + CommonUtils.dpToPx(getContext(), 4);
-                    break;
                 case SHOW:
                     marginLeft = CommonUtils.dpToPx(getContext(), 4);
                     break;

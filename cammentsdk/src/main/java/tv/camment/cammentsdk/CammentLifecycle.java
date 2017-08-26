@@ -23,12 +23,18 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStarted(Activity activity) {
+        if (activity instanceof FacebookActivity)
+            return;
 
+        currentActivity = new WeakReference<>(activity);
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
+        if (activity instanceof FacebookActivity)
+            return;
 
+        currentActivity = new WeakReference<>(activity);
     }
 
     @Override

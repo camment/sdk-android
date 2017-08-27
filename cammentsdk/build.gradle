@@ -88,16 +88,18 @@ publishing {
             groupId 'tv.camment.cammentsdk'
             artifactId 'cammentsdk'
             version '0.0.9'
-            artifact "$buildDir/outputs/aar/cammentsdk-debug.aar" //aar artifact you want to publish
+            artifact "$buildDir/outputs/aar/cammentsdk-release.aar" //aar artifact you want to publish
 
             //generate pom nodes for dependencies
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
                 configurations.compile.allDependencies.each { dependency ->
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dependency.group)
-                    dependencyNode.appendNode('artifactId', dependency.name)
-                    dependencyNode.appendNode('version', dependency.version)
+                    if (dependency.name != "unspecified") {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dependency.group)
+                        dependencyNode.appendNode('artifactId', dependency.name)
+                        dependencyNode.appendNode('version', dependency.version)
+                    }
                 }
             }
         }

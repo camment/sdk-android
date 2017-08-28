@@ -27,12 +27,8 @@ final class MediaMuxerWrapper {
      * @throws IOException
      */
     MediaMuxerWrapper(String cammentUuid) throws IOException {
-        try {
-            mCammentUuid = cammentUuid;
-            mOutputPath = FileUtils.getInstance().getUploadCammentPath(cammentUuid);
-        } catch (final NullPointerException e) {
-            throw new RuntimeException("This app has no permission of writing external storage");
-        }
+        mCammentUuid = cammentUuid;
+        mOutputPath = FileUtils.getInstance().getUploadCammentPath(cammentUuid);
         mMediaMuxer = new MediaMuxer(mOutputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
         mEncoderCount = mStatredCount = 0;
         mIsStarted = false;
@@ -77,7 +73,7 @@ final class MediaMuxerWrapper {
      *
      * @param encoder instance of MediaVideoEncoder or MediaAudioEncoder
      */
-     void addEncoder(final MediaEncoder encoder) {
+    void addEncoder(final MediaEncoder encoder) {
         if (encoder instanceof MediaVideoEncoder) {
             if (mVideoEncoder != null)
                 throw new IllegalArgumentException("Video encoder already added.");

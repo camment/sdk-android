@@ -59,7 +59,7 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
         setCanceledOnTouchOutside(true);
         setOnShowListener(this);
 
-        contentLoadingProgressBar = findViewById(R.id.cmmsdk_cl_progressbar);
+        contentLoadingProgressBar = (ContentLoadingProgressBar) findViewById(R.id.cmmsdk_cl_progressbar);
         contentLoadingProgressBar.getIndeterminateDrawable()
                 .setColorFilter(getContext().getResources().getColor(android.R.color.holo_blue_dark),
                         PorterDuff.Mode.SRC_IN);

@@ -89,12 +89,12 @@ final class CameraThread extends Thread {
 
                 // request closest supported preview size
                 final Camera.Size closestSize = getClosestSupportedSize(
-                        params.getSupportedPreviewSizes(), SDKConfig.CAMMENT_SIZE, SDKConfig.CAMMENT_SIZE);
+                        params.getSupportedPreviewSizes(), 1280, 720);
                 params.setPreviewSize(closestSize.width, closestSize.height);
 
                 // request closest picture size for an aspect ratio issue on Nexus7
                 final Camera.Size pictureSize = getClosestSupportedSize(
-                        params.getSupportedPictureSizes(), SDKConfig.CAMMENT_SIZE, SDKConfig.CAMMENT_SIZE);
+                        params.getSupportedPictureSizes(), 1280, 720);
                 params.setPictureSize(pictureSize.width, pictureSize.height);
 
                 // rotate camera preview according to the device orientation

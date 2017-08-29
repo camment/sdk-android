@@ -50,5 +50,6 @@ ext {
 
 dependencies {
     compile supportDependencies.values()
-    compile project(path: ':cammentsdk')
+    debugCompile project(path: ':cammentsdk', configuration: 'debug')
+    releaseCompile project(path: ':cammentsdk', configuration: 'release')
 }

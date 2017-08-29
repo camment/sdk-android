@@ -145,7 +145,7 @@ public final class InvitationApi extends CammentAsyncClient {
         submitBgTask(new Callable<Deeplink>() {
             @Override
             public Deeplink call() throws Exception {
-                String ipAddress = DeeplinkUtils.getIpAddress();
+                String ipAddress = DeeplinkUtils.getMyExternalIP();
 
                 String androidVersion = Build.VERSION.RELEASE;
 
@@ -154,7 +154,7 @@ public final class InvitationApi extends CammentAsyncClient {
                 sb.append("|");
                 sb.append("Android");
                 sb.append("|");
-                sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion.replace(".", "_"));
+                sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion);
 
                 Log.d("DEEPLINK before", sb.toString());
 

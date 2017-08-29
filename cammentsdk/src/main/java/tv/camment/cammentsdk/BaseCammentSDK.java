@@ -80,7 +80,9 @@ abstract class BaseCammentSDK extends CammentLifecycle {
         boolean fbHandled = FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         if (fbHandled) {
+            ApiManager.getInstance().getUserApi().updateUserInfo();
             DataManager.getInstance().handleFbPermissionsResult();
+            connectToIoT();
         }
 
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);

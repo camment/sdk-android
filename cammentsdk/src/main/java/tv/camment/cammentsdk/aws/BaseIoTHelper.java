@@ -49,6 +49,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                Log.d("IDENTITY", AWSManager.getInstance().getUserIdentityId());
+
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                 }
@@ -115,6 +117,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                     try {
                         message = new String(data, "UTF-8");
+                        Log.d("IDENTITY", message);
                     } catch (Exception e) {
                         Log.e("IoTHelper", "invalid message format", e);
                     }

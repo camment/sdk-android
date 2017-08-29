@@ -79,7 +79,7 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
             public void onClick(View view) {
                 ApiManager.getInstance().getGroupApi()
                         .createEmptyUsergroupIfNeededAndSendInvitation(adapter.getSelectedFacebookFriends(),
-                                sendInvitationCallback(), true);
+                                sendInvitationCallback(), false);
                 dismiss();
             }
         });

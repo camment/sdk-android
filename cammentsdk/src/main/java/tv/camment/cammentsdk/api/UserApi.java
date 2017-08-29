@@ -52,6 +52,15 @@ public final class UserApi extends CammentAsyncClient {
         }, updateUserInfoCallback());
     }
 
+    //keep public
+    public class FbUserInfo {
+
+        public String facebookId;
+        public String name;
+        public String picture;
+
+    }
+
     private CammentCallback<Object> updateUserInfoCallback() {
         return new CammentCallback<Object>() {
             @Override
@@ -73,14 +82,6 @@ public final class UserApi extends CammentAsyncClient {
                 return devcammentClient.meFbFriendsGet(AccessToken.getCurrentAccessToken().getToken());
             }
         }, getFacebookFriendsCallback);
-    }
-
-    private class FbUserInfo {
-
-        private String facebookId;
-        private String name;
-        private String picture;
-
     }
 
     public void getMyUserCognitoId(CammentCallback<String> getMyUserCognitoIdCallback) {

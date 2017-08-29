@@ -44,7 +44,7 @@ public final class FacebookHelper {
     private FacebookCallback<LoginResult> loginResultFacebookCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            ApiManager.getInstance().getUserApi().updateUserInfo();
+
         }
 
         @Override

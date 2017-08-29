@@ -1,17 +1,14 @@
 package tv.camment.cammentsdk.api;
 
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.List;
+import java.util.Scanner;
 
-public final class DeeplinkUtils {
+final class DeeplinkUtils {
 
-    public static String calculateMD5(String in) {
+    static String calculateMD5(String in) {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("MD5");
@@ -31,21 +28,11 @@ public final class DeeplinkUtils {
         return "";
     }
 
-    public static String getIpAddress() throws SocketException {
-        List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-        for (NetworkInterface intf : interfaces) {
-            List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-            for (InetAddress addr : addrs) {
-                if (!addr.isLoopbackAddress()) {
-                    String sAddr = addr.getHostAddress();
-                    //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                    boolean isIPv4 = sAddr.indexOf(':') < 0;
-
-                    if (isIPv4) {
-                        return sAddr;
-                    }
-                }
-            }
+    static String getMyExternalIP() {
+        try (Scanner s = new Scanner(new URL("https://api.ipify.org").openStream(), "UTF-8").useDelimiter("\\A")) {
+            return s.next();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
         return "";
     }

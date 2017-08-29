@@ -26,6 +26,7 @@ import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 
 
 public final class InvitationApi extends CammentAsyncClient {
@@ -142,42 +143,48 @@ public final class InvitationApi extends CammentAsyncClient {
     }
 
     public void getDeferredDeepLink() {
-        submitBgTask(new Callable<Deeplink>() {
-            @Override
-            public Deeplink call() throws Exception {
-                String ipAddress = DeeplinkUtils.getMyExternalIP();
+        if (!GeneralPreferences.getInstance().wasInitialDeepLinkRead()) {
 
-                String androidVersion = Build.VERSION.RELEASE;
+            submitBgTask(new Callable<Deeplink>() {
+                @Override
+                public Deeplink call() throws Exception {
+                    String ipAddress = DeeplinkUtils.getMyExternalIP();
 
-                StringBuilder sb = new StringBuilder();
-                sb.append(TextUtils.isEmpty(ipAddress) ? "" : ipAddress);
-                sb.append("|");
-                sb.append("Android");
-                sb.append("|");
-                sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion);
+                    String androidVersion = Build.VERSION.RELEASE;
 
-                Log.d("DEEPLINK before", sb.toString());
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(TextUtils.isEmpty(ipAddress) ? "" : ipAddress);
+                    sb.append("|");
+                    sb.append("Android");
+                    sb.append("|");
+                    sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion);
+                    
+                    String md5 = DeeplinkUtils.calculateMD5(sb.toString());
 
-                String md5 = DeeplinkUtils.calculateMD5(sb.toString());
-                Log.d("DEEPLINK hash", md5);
-
-                return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5);
-            }
-        }, getDeferredDeepLinkCallback());
+                    return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5);
+                }
+            }, getDeferredDeepLinkCallback());
+        }
     }
 
     private CammentCallback<Deeplink> getDeferredDeepLinkCallback() {
-        return new CammentCallback<Deeplink>()
-
-        {
+        return new CammentCallback<Deeplink>() {
             @Override
             public void onSuccess(Deeplink result) {
-                Log.d("onSuccess", "getDeferredDeepLink " + result.getUrl());
+                GeneralPreferences.getInstance().recordInitialDeeplinkRead();
+                if (!TextUtils.isEmpty(result.getUrl())) {
+                    String[] split = result.getUrl().split("/");
+                    if (split.length > 0) {
+                        Usergroup usergroup = new Usergroup();
+                        usergroup.setUuid(split[split.length - 1]);
+                        UserGroupProvider.insertUserGroup(usergroup);
+                    }
+                }
             }
 
             @Override
             public void onException(Exception exception) {
-
+                GeneralPreferences.getInstance().recordInitialDeeplinkRead();
             }
         };
     }

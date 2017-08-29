@@ -117,7 +117,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                     try {
                         message = new String(data, "UTF-8");
-                        Log.d("IDENTITY", message);
+                        Log.d("AWS message", message);
                     } catch (Exception e) {
                         Log.e("IoTHelper", "invalid message format", e);
                     }

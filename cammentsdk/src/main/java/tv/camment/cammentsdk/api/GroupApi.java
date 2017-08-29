@@ -29,18 +29,23 @@ public final class GroupApi extends CammentAsyncClient {
     }
 
     public void createEmptyUsergroupIfNeededAndSendInvitation(final List<FacebookFriend> fbFriends,
-                                                              final CammentCallback<Object> sendInvitationCallback) {
+                                                              final CammentCallback<Object> sendInvitationCallback,
+                                                              final boolean shouldUseDeepLink) {
         Usergroup usergroup = UserGroupProvider.getUserGroup();
 
         if (usergroup != null && !TextUtils.isEmpty(usergroup.getUuid())) {
-            ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
+            if (shouldUseDeepLink) {
+                ApiManager.getInstance().getInvitationApi().getDeeplinkToShare(fbFriends);
+            } else {
+                ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
+            }
         } else {
             submitBgTask(new Callable<Usergroup>() {
                 @Override
                 public Usergroup call() throws Exception {
                     return devcammentClient.usergroupsPost();
                 }
-            }, createEmptyUsergroupInvitationCallback(fbFriends, sendInvitationCallback));
+            }, createEmptyUsergroupInvitationCallback(fbFriends, sendInvitationCallback, shouldUseDeepLink));
         }
     }
 
@@ -64,12 +69,17 @@ public final class GroupApi extends CammentAsyncClient {
     }
 
     private CammentCallback<Usergroup> createEmptyUsergroupInvitationCallback(final List<FacebookFriend> fbFriends,
-                                                                              final CammentCallback<Object> sendInvitationCallback) {
+                                                                              final CammentCallback<Object> sendInvitationCallback,
+                                                                              final boolean shouldUseDeepLink) {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
                 UserGroupProvider.insertUserGroup(usergroup);
-                ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
+                if (shouldUseDeepLink) {
+                    ApiManager.getInstance().getInvitationApi().getDeeplinkToShare(fbFriends);
+                } else {
+                    ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
+                }
             }
 
             @Override

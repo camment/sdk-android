@@ -1,9 +1,14 @@
 package tv.camment.cammentsdk.api;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
+import com.camment.clientsdk.model.Deeplink;
 import com.camment.clientsdk.model.FacebookFriend;
 import com.camment.clientsdk.model.UserFacebookIdListInRequest;
 import com.camment.clientsdk.model.Usergroup;
@@ -13,6 +18,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
@@ -30,7 +37,8 @@ public final class InvitationApi extends CammentAsyncClient {
         this.devcammentClient = devcammentClient;
     }
 
-    void sendInvitation(final List<FacebookFriend> fbFriends, final CammentCallback<Object> sendInvitationCallback) {
+    void sendInvitation(final List<FacebookFriend> fbFriends,
+                        final CammentCallback<Object> sendInvitationCallback) {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -83,6 +91,93 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "acceptInvitation", exception);
+            }
+        };
+    }
+
+    public void getDeeplinkToShare(final List<FacebookFriend> fbFriends) {
+        submitTask(new Callable<Deeplink>() {
+            @Override
+            public Deeplink call() throws Exception {
+                final String showUuid = ShowProvider.getShow().getUuid();
+                final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
+
+                UserFacebookIdListInRequest userInAddToGroupRequest = new UserFacebookIdListInRequest();
+                userInAddToGroupRequest.setShowUuid(showUuid);
+
+                List<String> fbUserIdsStrings = new ArrayList<>();
+                for (FacebookFriend fbFriend : fbFriends) {
+                    fbUserIdsStrings.add(String.valueOf(fbFriend.getId()));
+                }
+                userInAddToGroupRequest.setUserFacebookIdList(fbUserIdsStrings);
+
+                return devcammentClient.usergroupsGroupUuidDeeplinkPost(userGroupUuid, userInAddToGroupRequest);
+            }
+        }, getDeeplinkToShareCalback());
+    }
+
+    private CammentCallback<Deeplink> getDeeplinkToShareCalback() {
+        return new CammentCallback<Deeplink>() {
+            @Override
+            public void onSuccess(Deeplink result) {
+                if (result != null
+                        && !TextUtils.isEmpty(result.getUrl())) {
+                    Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
+                    if (currentActivity != null) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_TEXT, result.getUrl());
+                        intent.setType("text/plain");
+
+                        currentActivity.startActivity(Intent.createChooser(intent, currentActivity.getString(R.string.cmmsdk_share)));
+                    }
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getDeeplinkToShare", exception);
+            }
+        };
+    }
+
+    public void getDeferredDeepLink() {
+        submitBgTask(new Callable<Deeplink>() {
+            @Override
+            public Deeplink call() throws Exception {
+                String ipAddress = DeeplinkUtils.getIpAddress();
+
+                String androidVersion = Build.VERSION.RELEASE;
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(TextUtils.isEmpty(ipAddress) ? "" : ipAddress);
+                sb.append("|");
+                sb.append("Android");
+                sb.append("|");
+                sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion.replace(".", "_"));
+
+                Log.d("DEEPLINK before", sb.toString());
+
+                String md5 = DeeplinkUtils.calculateMD5(sb.toString());
+                Log.d("DEEPLINK hash", md5);
+
+                return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5);
+            }
+        }, getDeferredDeepLinkCallback());
+    }
+
+    private CammentCallback<Deeplink> getDeferredDeepLinkCallback() {
+        return new CammentCallback<Deeplink>()
+
+        {
+            @Override
+            public void onSuccess(Deeplink result) {
+                Log.d("onSuccess", "getDeferredDeepLink " + result.getUrl());
+            }
+
+            @Override
+            public void onException(Exception exception) {
+
             }
         };
     }

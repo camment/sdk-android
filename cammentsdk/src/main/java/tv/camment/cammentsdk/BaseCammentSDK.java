@@ -14,6 +14,7 @@ import com.camment.clientsdk.model.Show;
 
 import java.lang.ref.WeakReference;
 
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.data.DataManager;
@@ -48,6 +49,8 @@ abstract class BaseCammentSDK extends CammentLifecycle {
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
             connectToIoT();
+
+            ApiManager.getInstance().getInvitationApi().getDeferredDeepLink();
         }
     }
 

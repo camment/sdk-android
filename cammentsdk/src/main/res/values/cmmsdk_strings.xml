@@ -37,4 +37,6 @@
     <string name="cmmsdk_camment_actions_title">Choose action</string>
     <string name="cmmsdk_camment_actions_delete_camment">Delete camment</string>
 
+    <string name="cmmsdk_share">Share</string>
+
 </resources>

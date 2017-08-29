@@ -158,7 +158,7 @@ public final class InvitationApi extends CammentAsyncClient {
                     sb.append("Android");
                     sb.append("|");
                     sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion);
-                    
+
                     String md5 = DeeplinkUtils.calculateMD5(sb.toString());
 
                     return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5);

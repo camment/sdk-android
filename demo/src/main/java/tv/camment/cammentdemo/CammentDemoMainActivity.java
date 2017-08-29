@@ -45,6 +45,8 @@ public class CammentDemoMainActivity extends AppCompatActivity implements Cammen
 
         cammentOverlay.setParentViewGroup(showPlayerView);
         cammentOverlay.setCammentAudioListener(this);
+
+        CammentSDK.getInstance().handleDeeplink(getIntent().getData(), "camment");
     }
 
     @Override

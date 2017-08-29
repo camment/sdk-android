@@ -3,6 +3,7 @@ package tv.camment.cammentsdk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 public final class CammentSDK extends BaseCammentSDK {
@@ -38,6 +39,10 @@ public final class CammentSDK extends BaseCammentSDK {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void handleDeeplink(Uri data, String scheme) {
+        super.handleDeeplink(data, scheme);
     }
 
 }

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import tv.camment.cammentsdk.CammentSDK;
 
-public class CammentDemoApp extends Application {
+public class CammentApp extends Application {
 
     @Override
     public void onCreate() {

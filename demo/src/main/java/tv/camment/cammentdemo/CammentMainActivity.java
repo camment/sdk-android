@@ -1,5 +1,6 @@
 package tv.camment.cammentdemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,20 +25,29 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
-public class CammentDemoMainActivity extends AppCompatActivity implements CammentAudioListener {
+public class CammentMainActivity extends AppCompatActivity implements CammentAudioListener {
+
+    private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
     private SimpleExoPlayer player;
     private SimpleExoPlayerView showPlayerView;
     private float previousVolume;
 
+    public static void start(Context context, String showUuid) {
+        Intent intent = new Intent(context, CammentMainActivity.class);
+        intent.putExtra(EXTRA_SHOW_UUID, showUuid);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cmmsdk_activity_main);
-        CammentSDK.getInstance().setShowUuid("df64bc2e-7b76-11e7-bb31-be2e44b06b34");
+        setContentView(R.layout.cament_activity_main);
+        CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
 
         showPlayerView = (SimpleExoPlayerView) findViewById(R.id.cmmsdk_showPlayerView);
 
@@ -74,7 +84,11 @@ public class CammentDemoMainActivity extends AppCompatActivity implements Cammen
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "Camment"));
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        MediaSource videoSource = new ExtractorMediaSource(Uri.parse("https://dl3zp6ge83i42.cloudfront.net/camment-app-shows/dc54f691-4af7-49cc-8352-4cd080e4e948.mp4"), dataSourceFactory, extractorsFactory, null, null);
+
+        Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
+
+        MediaSource videoSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+
         player.setPlayWhenReady(true);
         player.prepare(videoSource);
     }
@@ -113,6 +127,12 @@ public class CammentDemoMainActivity extends AppCompatActivity implements Cammen
     @Override
     public void onCammentRecordingEnded() {
         player.setVolume(previousVolume);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.camment_slide_in_left, R.anim.camment_slide_out_right);
     }
 
 }

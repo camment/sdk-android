@@ -24,6 +24,7 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 
 abstract class BaseCammentSDK extends CammentLifecycle {
@@ -70,7 +71,7 @@ abstract class BaseCammentSDK extends CammentLifecycle {
         Show show = new Show();
         show.setUuid(showUuid);
 
-        ShowProvider.insertShow(show);
+        GeneralPreferences.getInstance().setActiveShowUuid(show.getUuid());
     }
 
     private void connectToIoT() {

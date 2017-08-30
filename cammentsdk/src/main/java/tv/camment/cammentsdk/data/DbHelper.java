@@ -40,6 +40,7 @@ final class DbHelper extends SQLiteOpenHelper {
                 .primaryKey(DataContract.Show._ID)
                 .columnTextUnique(DataContract.Show.uuid)
                 .columnText(DataContract.Show.url)
+                .columnText(DataContract.Show.thumbnail)
                 .build();
     }
 

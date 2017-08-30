@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.data.ShowProvider;
 
 
 public final class ShowApi extends CammentAsyncClient {
@@ -21,11 +22,11 @@ public final class ShowApi extends CammentAsyncClient {
         this.devcammentClient = devcammentClient;
     }
 
-    public void getShows() {
+    public void getShows(final String passcode) {
         submitTask(new Callable<ShowList>() {
             @Override
             public ShowList call() throws Exception {
-                return devcammentClient.showsGet();
+                return devcammentClient.showsGet(passcode);
             }
         }, getShowsCallback());
     }
@@ -34,7 +35,10 @@ public final class ShowApi extends CammentAsyncClient {
         return new CammentCallback<ShowList>() {
             @Override
             public void onSuccess(ShowList result) {
-
+                if (result != null
+                        && result.getItems() != null) {
+                    ShowProvider.insertShows(result.getItems());
+                }
             }
 
             @Override

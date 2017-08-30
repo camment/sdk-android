@@ -3,25 +3,33 @@
     package="tv.camment.cammentdemo">
 
     <application
-        android:name=".CammentDemoApp"
+        android:name=".CammentApp"
         android:allowBackup="true"
         android:icon="@mipmap/cmmsdk_ic_launcher"
         android:label="@string/cmmsdk_demo_app_name"
         android:supportsRtl="false"
-        android:theme="@style/CammentSdkAppTheme.FullScreen">
-
-        <meta-data android:name="tv.camment.cammentsdk.ApiKey"
+        android:theme="@style/CammentSdkAppTheme">
+        <meta-data
+            android:name="tv.camment.cammentsdk.ApiKey"
             android:value="Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi" />
 
         <activity
-            android:name=".CammentDemoMainActivity"
-            android:theme="@style/CammentSdkAppTheme.FullScreen">
+            android:name=".CammentSplashActivity"
+            android:theme="@style/CammentSdkAppTheme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+
+        <activity android:name=".CammentShowsActivity"
+            android:label="@string/cmmsdk_shows"/>
+
+        <activity
+            android:name=".CammentMainActivity"
+            android:theme="@style/CammentSdkAppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -43,7 +43,7 @@ public final class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final String showUuid = ShowProvider.getShow().getUuid();
+                final String showUuid = GeneralPreferences.getInstance().getActiveShowUuid();
                 final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
 
                 UserFacebookIdListInRequest userInAddToGroupRequest = new UserFacebookIdListInRequest();
@@ -100,7 +100,7 @@ public final class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Deeplink>() {
             @Override
             public Deeplink call() throws Exception {
-                final String showUuid = ShowProvider.getShow().getUuid();
+                final String showUuid = GeneralPreferences.getInstance().getActiveShowUuid();
                 final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
 
                 UserFacebookIdListInRequest userInAddToGroupRequest = new UserFacebookIdListInRequest();

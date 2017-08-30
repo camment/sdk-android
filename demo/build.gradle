@@ -43,13 +43,16 @@ ext {
     supportLibVersion = rootProject.ext.supportLibVersion
 
     supportDependencies = [
-            appCompat               :       "com.android.support:appcompat-v7:${supportLibVersion}",
-            supportAnnotation       :       "com.android.support:support-annotations:${supportLibVersion}",
+            appCompat        : "com.android.support:appcompat-v7:${supportLibVersion}",
+            supportAnnotation: "com.android.support:support-annotations:${supportLibVersion}",
     ]
 }
+
+
 
 dependencies {
     compile supportDependencies.values()
     debugCompile project(path: ':cammentsdk', configuration: 'debug')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

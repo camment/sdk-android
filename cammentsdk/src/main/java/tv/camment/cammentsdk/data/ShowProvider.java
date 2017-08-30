@@ -3,8 +3,13 @@ package tv.camment.cammentsdk.data;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 import com.camment.clientsdk.model.Show;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 
@@ -14,19 +19,28 @@ public final class ShowProvider {
     private static final String[] SHOW_PROJECTION = {
             DataContract.Show._ID,
             DataContract.Show.uuid,
-            DataContract.Show.url};
+            DataContract.Show.url,
+            DataContract.Show.thumbnail};
 
-    public static void insertShow(Show show) {
-        if (show == null)
+    public static void insertShows(List<Show> shows) {
+        if (shows == null || shows.size() == 0)
             return;
 
-        deleteShows();
+        List<ContentValues> values = new ArrayList<>();
+        ContentValues cv;
 
-        ContentValues cv = new ContentValues();
-        cv.put(DataContract.Show.uuid, show.getUuid());
-        cv.put(DataContract.Show.url, show.getUrl());
+        for (Show show : shows) {
+            cv = new ContentValues();
 
-        CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.Show.CONTENT_URI, cv);
+            cv.put(DataContract.Show.uuid, show.getUuid());
+            cv.put(DataContract.Show.url, show.getUrl());
+            cv.put(DataContract.Show.thumbnail, show.getThumbnail());
+
+            values.add(cv);
+        }
+
+        CammentSDK.getInstance().getApplicationContext().getContentResolver()
+                .bulkInsert(DataContract.Show.CONTENT_URI, values.toArray(new ContentValues[values.size()]));
     }
 
     public static void deleteShows() {
@@ -34,10 +48,13 @@ public final class ShowProvider {
                 .delete(DataContract.Show.CONTENT_URI, null, null);
     }
 
-    public static Show getShow() {
+    public static Show getShowByUuid(String uuid) {
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
 
-        Cursor cursor = cr.query(DataContract.Show.CONTENT_URI, SHOW_PROJECTION, null, null, null);
+        String where = DataContract.Show.uuid + "=?";
+        String[] selectionArgs = {uuid};
+
+        Cursor cursor = cr.query(DataContract.Show.CONTENT_URI, SHOW_PROJECTION, where, selectionArgs, null);
 
         Show show = null;
         if (cursor != null) {
@@ -51,12 +68,32 @@ public final class ShowProvider {
         return show;
     }
 
+    public static List<Show> listFromCursor(Cursor cursor) {
+        List<Show> shows = new ArrayList<>();
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                Show show;
+                do {
+                    show = fromCursor(cursor);
+                    shows.add(show);
+                } while (cursor.moveToNext());
+            }
+        }
+        return shows;
+    }
+
     private static Show fromCursor(Cursor cursor) {
         Show show = new Show();
         show.setUuid(cursor.getString(cursor.getColumnIndex(DataContract.Show.uuid)));
         show.setUrl(cursor.getString(cursor.getColumnIndex(DataContract.Show.url)));
+        show.setThumbnail(cursor.getString(cursor.getColumnIndex(DataContract.Show.thumbnail)));
 
         return show;
+    }
+
+    public static Loader<Cursor> getShowLoader() {
+        return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Show.CONTENT_URI,
+                null, null, null, null);
     }
 
 }

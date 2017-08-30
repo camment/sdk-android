@@ -58,6 +58,7 @@ final class DataContract {
     private interface ShowColumns {
         String uuid = "uuid";
         String url = "url";
+        String thumbnail = "thumbnail";
     }
 
     static final class Show implements BaseColumns, ShowColumns {

@@ -59,7 +59,9 @@ abstract class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
         RecordingButton.ActionsListener,
-        LoaderManager.LoaderCallbacks<Cursor>, OnPreviewStartedListener, CammentPlayerEventListener.OnResetLastCammentPlayedListener {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        OnPreviewStartedListener,
+        CammentPlayerEventListener.OnResetLastCammentPlayedListener {
 
     private static final int THRESHOLD_X = 100;
     private static final int THRESHOLD_Y = 150;
@@ -170,7 +172,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
                     "ea4151c5b77046bfb7213de5d02f514f",
                     "us-east-1:71549a59-04b7-4924-9973-0c35c9278e78"
             );
-        } catch(InitializationException ex) {
+        } catch (InitializationException ex) {
             Log.e("CammentSDK", "Failed to initialize Amazon Mobile Analytics", ex);
         }
     }
@@ -312,7 +314,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
                 if (Math.abs(startX - stopX) > THRESHOLD_X) {
                     if (Math.abs(startY - stopY) < THRESHOLD_Y) {
                         if (startX < stopX) {
-                            if (event.getPointerCount() == 1) {
+                            if (event.getPointerCount() == 1
+                                    && mode != Mode.GOING_BACK) {
                                 mode = Mode.SHOW;
                             } else if (event.getPointerCount() == 2) {
                                 mode = Mode.GOING_BACK;
@@ -335,7 +338,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
                     case GOING_BACK:
                         Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
                         if (currentActivity != null) {
-                            currentActivity.finish();
+                            currentActivity.onBackPressed();
                         }
                         break;
                     case SHOW:

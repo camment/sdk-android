@@ -14,8 +14,8 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
-import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 
@@ -110,7 +110,7 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
     }
 
     private Camment getNewUploadCamment() {
-        final String showUuid = ShowProvider.getShow().getUuid();
+        final String showUuid = GeneralPreferences.getInstance().getActiveShowUuid();
 
         CCamment camment = new CCamment();
         camment.setUuid(UUID.randomUUID().toString());

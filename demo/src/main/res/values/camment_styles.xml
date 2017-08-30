@@ -1,0 +1,19 @@
+<resources>
+
+    <style name="CammentSdkAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/cmmsdk_camment_grey</item>
+        <item name="colorPrimary">@color/cmmsdk_camment_grey</item>
+    </style>
+
+    <style name="CammentSdkAppTheme.FullScreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="CammentSdkAppTheme.SplashScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/camment_bg_splash</item>
+        <item name="colorPrimaryDark">@color/cmmsdk_camment_button_grey</item>
+    </style>
+
+</resources>

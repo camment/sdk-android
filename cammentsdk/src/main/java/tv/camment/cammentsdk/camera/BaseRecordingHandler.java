@@ -72,7 +72,6 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
                         mediaMuxer.stopRecording();
                         cammentUuid = mediaMuxer.getCammentUuid();
                     }
-                    mediaMuxer = null;
                     return cammentUuid;
                 }
             }, stopRecordingCallback(cancelled, cammentAudioListener));

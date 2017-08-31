@@ -37,6 +37,7 @@ public final class ShowApi extends CammentAsyncClient {
             public void onSuccess(ShowList result) {
                 if (result != null
                         && result.getItems() != null) {
+                    ShowProvider.deleteShows();
                     ShowProvider.insertShows(result.getItems());
                 }
             }

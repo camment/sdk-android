@@ -22,6 +22,10 @@ public final class ApiManager {
         return INSTANCE;
     }
 
+    public static void clearInstance() {
+        INSTANCE = null;
+    }
+
     private ApiManager() {
         devcammentClient = AWSManager.getInstance().getDevcammentClient();
         executorService = Executors.newSingleThreadExecutor();

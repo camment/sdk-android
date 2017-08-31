@@ -25,6 +25,8 @@ import android.widget.RelativeLayout;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.InitializationException;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
 import com.camment.clientsdk.model.Camment;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -44,6 +46,7 @@ import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
@@ -91,6 +94,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private String lastVideoCammentUuid;
 
     private static MobileAnalyticsManager analytics;
+
+    private ProfileTracker profileTracker;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -175,6 +180,15 @@ abstract class BaseCammentOverlay extends RelativeLayout
         } catch (InitializationException ex) {
             Log.e("CammentSDK", "Failed to initialize Amazon Mobile Analytics", ex);
         }
+
+        profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                ApiManager.getInstance().getUserApi().updateUserInfo();
+            }
+        };
+
+        profileTracker.startTracking();
     }
 
     @Override
@@ -183,6 +197,10 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (analytics != null) {
             analytics.getSessionClient().pauseSession();
             analytics.getEventClient().submitEvents();
+        }
+        if (profileTracker != null
+                && profileTracker.isTracking()) {
+            profileTracker.stopTracking();
         }
         super.onDetachedFromWindow();
     }
@@ -193,6 +211,10 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (analytics != null) {
             analytics.getSessionClient().pauseSession();
             analytics.getEventClient().submitEvents();
+        }
+        if (profileTracker != null
+                && profileTracker.isTracking()) {
+            profileTracker.stopTracking();
         }
         return super.onSaveInstanceState();
     }
@@ -216,6 +238,11 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         if (analytics != null) {
             analytics.getSessionClient().resumeSession();
+        }
+
+        if (profileTracker != null
+                && !profileTracker.isTracking()) {
+            profileTracker.startTracking();
         }
     }
 

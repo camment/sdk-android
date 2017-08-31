@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:text="@string/camment_passcode_hint"
+        android:textColor="@color/cmmsdk_camment_text_grey"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_passcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title"
+        android:hint="@string/camment_passcode"
+        android:inputType="textVisiblePassword"
+        android:paddingBottom="24dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:textColor="@color/cmmsdk_camment_text_grey"
+        android:textColorHint="@color/cmmsdk_camment_button_grey"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_negative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_passcode"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@+id/cmmsdk_btn_positive"
+        android:background="@drawable/cmmsdk_button_ripple"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="16dp"
+        android:text="@string/cmmsdk_cancel"
+        android:textAllCaps="false"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/et_passcode"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/cmmsdk_button_ripple"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="16dp"
+        android:text="@string/cmmsdk_ok"
+        android:textAllCaps="false"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

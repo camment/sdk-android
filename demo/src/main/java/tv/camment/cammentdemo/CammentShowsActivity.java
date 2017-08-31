@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.camment.clientsdk.model.Show;
 
@@ -18,9 +22,10 @@ import java.util.List;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.views.CammentDialog;
 
 public class CammentShowsActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, CammentShowsAdapter.ActionListener {
+        implements LoaderManager.LoaderCallbacks<Cursor>, CammentShowsAdapter.ActionListener, CammentPasscodeDialog.ActionListener {
 
     private RecyclerView rvShows;
     private CammentShowsAdapter adapter;
@@ -72,10 +77,37 @@ public class CammentShowsActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.camment_menu_shows, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.mi_passcode) {
+
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("PasscodeDialog");
+
+            if (fragment == null || !fragment.isAdded()) {
+                CammentPasscodeDialog passcodeDialog = CammentPasscodeDialog.createInstance();
+                passcodeDialog.setActionListener(this);
+                passcodeDialog.show(getSupportFragmentManager(), "PasscodeDialog");
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void onShowClick(Show show) {
         CammentMainActivity.start(this, show.getUuid());
 
         overridePendingTransition(R.anim.camment_slide_in_right, R.anim.camment_slide_out_left);
+    }
+
+    @Override
+    public void onPositiveButtonClick(String passcode) {
+        ApiManager.getInstance().getShowApi().getShows(passcode);
     }
 
 }

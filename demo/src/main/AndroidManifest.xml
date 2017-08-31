@@ -6,7 +6,7 @@
         android:name=".CammentApp"
         android:allowBackup="true"
         android:icon="@mipmap/cmmsdk_ic_launcher"
-        android:label="@string/cmmsdk_demo_app_name"
+        android:label="@string/camment_demo_app_name"
         android:supportsRtl="false"
         android:theme="@style/CammentSdkAppTheme">
         <meta-data
@@ -25,7 +25,7 @@
 
 
         <activity android:name=".CammentShowsActivity"
-            android:label="@string/cmmsdk_shows"/>
+            android:label="@string/camment_shows"/>
 
         <activity
             android:name=".CammentMainActivity"

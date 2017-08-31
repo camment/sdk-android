@@ -21,7 +21,6 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.data.DataManager;
-import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
@@ -53,6 +52,7 @@ abstract class BaseCammentSDK extends CammentLifecycle {
             DataManager.getInstance().clearDataForUserGroupChange();
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
+
             connectToIoT();
 
             ApiManager.getInstance().getInvitationApi().getDeferredDeepLink();
@@ -85,8 +85,10 @@ abstract class BaseCammentSDK extends CammentLifecycle {
         boolean fbHandled = FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         if (fbHandled) {
-            ApiManager.getInstance().getUserApi().updateUserInfo();
+            ApiManager.clearInstance();
+
             DataManager.getInstance().handleFbPermissionsResult();
+            ApiManager.getInstance().getUserApi().updateUserInfo();
             connectToIoT();
         }
 

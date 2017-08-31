@@ -2,5 +2,5 @@
     <string name="camment_demo_app_name">Camment</string>
     <string name="camment_shows">Shows</string>
     <string name="camment_passcode">Passcode</string>
-    <string name="camment_passcode_hint">Please enter your passcode</string>
+    <string name="camment_passcode_hint">Enter passcode</string>
 </resources>

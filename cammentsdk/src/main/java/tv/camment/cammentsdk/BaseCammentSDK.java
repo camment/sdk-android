@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Show;
-import com.camment.clientsdk.model.Usergroup;
+import com.facebook.AccessToken;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -21,7 +21,6 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.data.DataManager;
-import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -125,9 +124,12 @@ abstract class BaseCammentSDK extends CammentLifecycle {
             case "group":
                 if (segments != null
                         && segments.size() == 1) {
-                    Usergroup usergroup = new Usergroup();
-                    usergroup.setUuid(segments.get(0));
-                    UserGroupProvider.insertUserGroup(usergroup);
+                    //TODO check if fb logged in
+                    //TODO do accept and then insert user group
+                    //#facebooKId
+                    if (FacebookHelper.getInstance().isLoggedIn()) {
+                        ApiManager.getInstance().getInvitationApi().acceptInvitation(segments.get(0), "#" + AccessToken.getCurrentAccessToken().getUserId());
+                    }
                 }
                 break;
         }

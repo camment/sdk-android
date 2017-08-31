@@ -62,27 +62,27 @@ public final class InvitationApi extends CammentAsyncClient {
         }, sendInvitationCallback);
     }
 
-    public void acceptInvitation(final InvitationMessage invitationMessage) {
+    public void acceptInvitation(final String groupUuid, final String key) {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 AcceptInvitationRequest acceptInvitationRequest = new AcceptInvitationRequest();
-                acceptInvitationRequest.setInvitationKey(invitationMessage.body.key);
-                devcammentClient.usergroupsGroupUuidInvitationsPut(invitationMessage.body.groupUuid, acceptInvitationRequest);
+                acceptInvitationRequest.setInvitationKey(key);
+                devcammentClient.usergroupsGroupUuidInvitationsPut(groupUuid, acceptInvitationRequest);
 
                 return new Object();
             }
-        }, acceptInvitationCallback(invitationMessage));
+        }, acceptInvitationCallback(groupUuid));
     }
 
-    private CammentCallback<Object> acceptInvitationCallback(final InvitationMessage invitationMessage) {
+    private CammentCallback<Object> acceptInvitationCallback(final String groupUuid) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
                 DataManager.getInstance().clearDataForUserGroupChange();
 
                 Usergroup usergroup = new Usergroup();
-                usergroup.setUuid(invitationMessage.body.groupUuid);
+                usergroup.setUuid(groupUuid);
 
                 UserGroupProvider.insertUserGroup(usergroup);
 
@@ -130,7 +130,7 @@ public final class InvitationApi extends CammentAsyncClient {
                         intent.putExtra(Intent.EXTRA_TEXT, result.getUrl());
                         intent.setType("text/plain");
 
-                        currentActivity.startActivity(Intent.createChooser(intent, currentActivity.getString(R.string.cmmsdk_share)));
+                        currentActivity.startActivity(Intent.createChooser(intent, currentActivity.getString(R.string.cmmsdk_invite)));
                     }
                 }
             }

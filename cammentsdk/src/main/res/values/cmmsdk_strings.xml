@@ -37,6 +37,8 @@
     <string name="cmmsdk_camment_actions_title">Choose action</string>
     <string name="cmmsdk_camment_actions_delete_camment">Delete camment</string>
 
-    <string name="cmmsdk_share">Share</string>
+    <string name="cmmsdk_invite">Invite</string>
+
+    <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
 
 </resources>

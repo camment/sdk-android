@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
     tools:context="tv.camment.cammentdemo.CammentMainActivity">
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/cmmsdk_showPlayerView"
+    <FrameLayout
+        android:id="@+id/fl_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:resize_mode="fit" />
+        android:layout_height="match_parent">
+
+        <VideoView
+            android:id="@+id/show_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <tv.camment.cammentsdk.views.CammentOverlay
-        android:id="@+id/cmmsdk_cammentOverlay"
+        android:id="@+id/camment_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

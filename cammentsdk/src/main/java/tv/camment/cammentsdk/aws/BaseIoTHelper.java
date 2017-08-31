@@ -285,7 +285,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     public void onPositiveButtonClick(BaseMessage baseMessage) {
         switch (baseMessage.type) {
             case INVITATION:
-                ApiManager.getInstance().getInvitationApi().acceptInvitation((InvitationMessage) baseMessage);
+                InvitationMessage invitationMessage = (InvitationMessage) baseMessage;
+                ApiManager.getInstance().getInvitationApi().acceptInvitation(invitationMessage.body.groupUuid, invitationMessage.body.key);
                 break;
         }
     }

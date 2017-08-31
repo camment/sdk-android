@@ -2,40 +2,29 @@ package tv.camment.cammentdemo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
+import android.widget.FrameLayout;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
-public class CammentMainActivity extends AppCompatActivity implements CammentAudioListener {
+public class CammentMainActivity extends AppCompatActivity
+        implements CammentAudioListener {
 
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
-    private SimpleExoPlayer player;
-    private SimpleExoPlayerView showPlayerView;
-    private float previousVolume;
+    private VideoView videoView;
+    private int previousVolume;
+    private MediaController mediaController;
+    ;
 
     public static void start(Context context, String showUuid) {
         Intent intent = new Intent(context, CammentMainActivity.class);
@@ -47,13 +36,19 @@ public class CammentMainActivity extends AppCompatActivity implements CammentAud
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cament_activity_main);
+
         CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
 
-        showPlayerView = (SimpleExoPlayerView) findViewById(R.id.cmmsdk_showPlayerView);
+        videoView = (VideoView) findViewById(R.id.show_player);
 
-        CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.cmmsdk_cammentOverlay);
+        mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoView);
 
-        cammentOverlay.setParentViewGroup(showPlayerView);
+        FrameLayout parentViewGroup = (FrameLayout) findViewById(R.id.fl_parent);
+
+        CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.camment_overlay);
+
+        cammentOverlay.setParentViewGroup(parentViewGroup);
         cammentOverlay.setCammentAudioListener(this);
 
         CammentSDK.getInstance().handleDeeplink(getIntent().getData(), "camment");
@@ -61,8 +56,8 @@ public class CammentMainActivity extends AppCompatActivity implements CammentAud
 
     @Override
     protected void onPause() {
-        if (player != null) {
-            player.stop();
+        if (videoView != null) {
+            videoView.stopPlayback();
         }
         super.onPause();
     }
@@ -74,23 +69,13 @@ public class CammentMainActivity extends AppCompatActivity implements CammentAud
     }
 
     private void prepareAndPlayVideo() {
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
-
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
-
-        showPlayerView.setPlayer(player);
-
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "Camment"));
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-
-        Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
-
-        MediaSource videoSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
-
-        player.setPlayWhenReady(true);
-        player.prepare(videoSource);
+        if (videoView != null
+                && mediaController != null) {
+            Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
+            videoView.setMediaController(mediaController);
+            videoView.setVideoURI(uri);
+            videoView.start();
+        }
     }
 
     @Override
@@ -109,24 +94,30 @@ public class CammentMainActivity extends AppCompatActivity implements CammentAud
 
     @Override
     public void onCammentPlaybackStarted() {
-        previousVolume = player.getVolume();
-        player.setVolume(previousVolume / 2);
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        previousVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, previousVolume / 2, 0);
     }
 
     @Override
     public void onCammentPlaybackEnded() {
-        player.setVolume(previousVolume);
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, previousVolume, 0);
     }
 
     @Override
     public void onCammentRecordingStarted() {
-        previousVolume = player.getVolume();
-        player.setVolume(0.0f);
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        previousVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
     }
 
     @Override
     public void onCammentRecordingEnded() {
-        player.setVolume(previousVolume);
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, previousVolume, 0);
     }
 
     @Override

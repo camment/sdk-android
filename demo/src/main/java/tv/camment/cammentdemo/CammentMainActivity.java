@@ -21,10 +21,12 @@ public class CammentMainActivity extends AppCompatActivity
 
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
+    private static final String ARGS_PLAYER_POSITION = "args_player_position";
+
     private VideoView videoView;
     private int previousVolume;
     private MediaController mediaController;
-    ;
+    private int currentPosition;
 
     public static void start(Context context, String showUuid) {
         Intent intent = new Intent(context, CammentMainActivity.class);
@@ -35,7 +37,11 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cament_activity_main);
+        setContentView(R.layout.camment_activity_main);
+
+        if (savedInstanceState != null) {
+            currentPosition = savedInstanceState.getInt(ARGS_PLAYER_POSITION);
+        }
 
         CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
 
@@ -52,11 +58,20 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setCammentAudioListener(this);
 
         CammentSDK.getInstance().handleDeeplink(getIntent().getData(), "camment");
+
+        prepareAndPlayVideo();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ARGS_PLAYER_POSITION, currentPosition);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onPause() {
         if (videoView != null) {
+            currentPosition = videoView.getCurrentPosition();
             videoView.stopPlayback();
         }
         super.onPause();
@@ -65,7 +80,9 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        prepareAndPlayVideo();
+        if (videoView != null) {
+            videoView.seekTo(currentPosition);
+        }
     }
 
     private void prepareAndPlayVideo() {
@@ -74,6 +91,7 @@ public class CammentMainActivity extends AppCompatActivity
             Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(uri);
+            videoView.seekTo(currentPosition);
             videoView.start();
         }
     }

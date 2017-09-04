@@ -3,12 +3,16 @@ package tv.camment.cammentsdk.views;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.lang.reflect.Field;
 
 import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.R;
@@ -88,6 +92,23 @@ public final class CammentDialog extends DialogFragment {
         setupButtons();
 
         return view;
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        try {
+            Field mDismissed = DialogFragment.class.getDeclaredField("mDismissed");
+            Field mShownByMe = DialogFragment.class.getDeclaredField("mShownByMe");
+            mDismissed.setAccessible(true);
+            mShownByMe.setAccessible(true);
+            mDismissed.setBoolean(this, false);
+            mShownByMe.setBoolean(this, true);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(this, tag);
+        ft.commitAllowingStateLoss();
     }
 
     private void setupTitle() {

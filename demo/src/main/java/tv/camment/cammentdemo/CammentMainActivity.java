@@ -3,6 +3,7 @@ package tv.camment.cammentdemo;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -89,6 +90,12 @@ public class CammentMainActivity extends AppCompatActivity
             Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(uri);
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.setLooping(true);
+                }
+            });
             videoView.seekTo(currentPosition);
             videoView.start();
         }

@@ -3,6 +3,7 @@ package tv.camment.cammentdemo;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.camment.clientsdk.model.Show;
 
@@ -53,6 +55,23 @@ public class CammentShowsActivity extends AppCompatActivity
         getSupportLoaderManager().initLoader(1, null, this);
 
         CammentSDK.getInstance().checkLogin();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkInternetConnection();
+    }
+
+    private void checkInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean isConnected = cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isAvailable()
+                && cm.getActiveNetworkInfo().isConnected();
+
+        if (!isConnected) {
+            Toast.makeText(this, R.string.camment_no_network, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

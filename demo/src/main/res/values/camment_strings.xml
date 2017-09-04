@@ -4,4 +4,5 @@
     <string name="camment_shows">Shows</string>
     <string name="camment_passcode">Passcode</string>
     <string name="camment_passcode_hint">Enter passcode</string>
+    <string name="camment_no_network">Please check your internet connection</string>
 </resources>

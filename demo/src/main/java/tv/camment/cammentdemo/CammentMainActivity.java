@@ -58,7 +58,7 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setParentViewGroup(parentViewGroup);
         cammentOverlay.setCammentAudioListener(this);
 
-        prepareAndPlayVideo();
+        prepareAndPlayVideo(true);
     }
 
     @Override
@@ -79,12 +79,13 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (videoView != null) {
-            videoView.seekTo(currentPosition);
+        if (videoView != null
+                && mediaController != null) {
+            prepareAndPlayVideo(false);
         }
     }
 
-    private void prepareAndPlayVideo() {
+    private void prepareAndPlayVideo(boolean start) {
         if (videoView != null
                 && mediaController != null) {
             Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
@@ -97,7 +98,9 @@ public class CammentMainActivity extends AppCompatActivity
                 }
             });
             videoView.seekTo(currentPosition);
-            videoView.start();
+            if (start) {
+                videoView.start();
+            }
         }
     }
 

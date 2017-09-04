@@ -19,7 +19,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.api.UserApi;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;

@@ -11,7 +11,7 @@
         android:theme="@style/CammentSdkAppTheme">
         <meta-data
             android:name="tv.camment.cammentsdk.ApiKey"
-            android:value="Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi" />
+            android:value="@string/camment_api_key" />
 
         <activity
             android:name=".CammentSplashActivity"

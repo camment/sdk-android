@@ -8,6 +8,7 @@
         to video and audio recording</string>
 
     <string name="cmmsdk_user_invited_to_chat">%s invited you to a private chat</string>
+    <string name="cmmsdk_anonymous_invited_to_chat">Your friend invited you to a private chat</string>
     <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
 
     <string name="cmmsdk_join">Join</string>
@@ -40,5 +41,6 @@
     <string name="cmmsdk_invite">Invite</string>
 
     <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
+    <string name="cmmsdk_invitation_error">You are not allowed to join this group.</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
@@ -92,7 +93,11 @@ public final class CammentDialog extends DialogFragment {
     private void setupTitle() {
         switch (message.type) {
             case INVITATION:
-                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_invited_to_chat), ((InvitationMessage) message).body.invitingUser.name));
+                if (BuildConfig.USE_DEEPLINK) {
+                    tvTitle.setText(R.string.cmmsdk_anonymous_invited_to_chat);
+                } else {
+                    tvTitle.setText(String.format(getString(R.string.cmmsdk_user_invited_to_chat), ((InvitationMessage) message).body.invitingUser.name));
+                }
                 break;
             case INVITATION_SENT:
                 tvTitle.setText(R.string.cmmsdk_user_invitation_sent_title);

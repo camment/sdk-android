@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
@@ -22,9 +23,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
-import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.data.DataManager;
-import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 
@@ -92,6 +91,14 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "acceptInvitation", exception);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                                CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_invitation_error),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         };
     }
@@ -143,35 +150,31 @@ public final class InvitationApi extends CammentAsyncClient {
     }
 
     public void getDeferredDeepLink() {
-        if (!GeneralPreferences.getInstance().wasInitialDeepLinkRead()) {
+        submitBgTask(new Callable<Deeplink>() {
+            @Override
+            public Deeplink call() throws Exception {
+                String ipAddress = DeeplinkUtils.getMyExternalIP();
 
-            submitBgTask(new Callable<Deeplink>() {
-                @Override
-                public Deeplink call() throws Exception {
-                    String ipAddress = DeeplinkUtils.getMyExternalIP();
+                String androidVersion = Build.VERSION.RELEASE;
 
-                    String androidVersion = Build.VERSION.RELEASE;
+                StringBuilder sb = new StringBuilder();
+                sb.append(TextUtils.isEmpty(ipAddress) ? "" : ipAddress);
+                sb.append("|");
+                sb.append("Android");
+                sb.append("|");
+                sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion);
 
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(TextUtils.isEmpty(ipAddress) ? "" : ipAddress);
-                    sb.append("|");
-                    sb.append("Android");
-                    sb.append("|");
-                    sb.append(TextUtils.isEmpty(androidVersion) ? "" : androidVersion);
+                String md5 = DeeplinkUtils.calculateMD5(sb.toString());
 
-                    String md5 = DeeplinkUtils.calculateMD5(sb.toString());
-
-                    return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5);
-                }
-            }, getDeferredDeepLinkCallback());
-        }
+                return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5);
+            }
+        }, getDeferredDeepLinkCallback());
     }
 
     private CammentCallback<Deeplink> getDeferredDeepLinkCallback() {
         return new CammentCallback<Deeplink>() {
             @Override
             public void onSuccess(Deeplink result) {
-                GeneralPreferences.getInstance().recordInitialDeeplinkRead();
                 if (!TextUtils.isEmpty(result.getUrl())) {
                     String[] split = result.getUrl().split("/");
                     if (split.length > 0) {
@@ -184,7 +187,7 @@ public final class InvitationApi extends CammentAsyncClient {
 
             @Override
             public void onException(Exception exception) {
-                GeneralPreferences.getInstance().recordInitialDeeplinkRead();
+
             }
         };
     }

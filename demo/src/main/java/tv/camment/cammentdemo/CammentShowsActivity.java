@@ -19,13 +19,14 @@ import com.camment.clientsdk.model.Show;
 
 import java.util.List;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.ShowProvider;
-import tv.camment.cammentsdk.helpers.GeneralPreferences;
-import tv.camment.cammentsdk.views.CammentDialog;
 
 public class CammentShowsActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, CammentShowsAdapter.ActionListener, CammentPasscodeDialog.ActionListener {
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        CammentShowsAdapter.ActionListener,
+        CammentPasscodeDialog.ActionListener {
 
     private RecyclerView rvShows;
     private CammentShowsAdapter adapter;
@@ -50,6 +51,8 @@ public class CammentShowsActivity extends AppCompatActivity
         rvShows.setItemAnimator(null);
 
         getSupportLoaderManager().initLoader(1, null, this);
+
+        CammentSDK.getInstance().checkLogin();
     }
 
     @Override
@@ -108,6 +111,13 @@ public class CammentShowsActivity extends AppCompatActivity
     @Override
     public void onPositiveButtonClick(String passcode) {
         ApiManager.getInstance().getShowApi().getShows(passcode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data, false);
     }
 
 }

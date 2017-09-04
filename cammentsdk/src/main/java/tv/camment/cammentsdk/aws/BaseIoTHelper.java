@@ -49,8 +49,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                Log.d("IDENTITY", AWSManager.getInstance().getUserIdentityId());
-
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                 }
@@ -236,7 +234,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && usergroup.getUuid().equals(m.body.userGroupUuid);
     }
 
-    private void handleInvitationMessage(BaseMessage message) {
+    void handleInvitationMessage(BaseMessage message) {
         Activity activity = CammentSDK.getInstance().getCurrentActivity();
         if (activity instanceof AppCompatActivity) {
             dismissInvitationSentIfNeeded(((AppCompatActivity) activity).getSupportFragmentManager().getFragments());

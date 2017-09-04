@@ -21,6 +21,10 @@ public final class InvitationMessage extends BaseMessage {
         public String showUuid;
         public InvitingUser invitingUser;
 
+        public Body() {
+
+        }
+
         Body(Parcel in) {
             timestamp = in.readString();
             groupUuid = in.readString();

@@ -21,7 +21,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+
+        <activity
+            android:name=".CammentShowsActivity"
+            android:label="@string/camment_shows">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -31,10 +36,6 @@
                 <data android:scheme="camment" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".CammentShowsActivity"
-            android:label="@string/camment_shows"/>
 
         <activity
             android:name=".CammentMainActivity"

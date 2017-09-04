@@ -45,7 +45,7 @@ public final class ShowApi extends CammentAsyncClient {
                     if (result.getItems().size() == 0) {
                         Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
                                 CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_passcode_error),
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_LONG).show();
                     }
                 }
             }

@@ -57,8 +57,6 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setParentViewGroup(parentViewGroup);
         cammentOverlay.setCammentAudioListener(this);
 
-        CammentSDK.getInstance().handleDeeplink(getIntent().getData(), "camment");
-
         prepareAndPlayVideo();
     }
 
@@ -100,7 +98,7 @@ public class CammentMainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
+        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data, true);
     }
 
     @Override

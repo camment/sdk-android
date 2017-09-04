@@ -32,7 +32,11 @@ public final class CammentSDK extends BaseCammentSDK {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data, true);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data, boolean showFbFriends) {
+        super.onActivityResult(requestCode, resultCode, data, showFbFriends);
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -45,4 +49,7 @@ public final class CammentSDK extends BaseCammentSDK {
         super.handleDeeplink(data, scheme);
     }
 
+    public void checkLogin() {
+        super.checkLogin();
+    }
 }

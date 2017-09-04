@@ -3,6 +3,8 @@ package tv.camment.cammentsdk.aws;
 import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+
 public final class IoTHelper extends BaseIoTHelper {
 
     IoTHelper(ExecutorService executorService,
@@ -16,6 +18,10 @@ public final class IoTHelper extends BaseIoTHelper {
 
     public void disconnect() {
         super.disconnect();
+    }
+
+    public void handleInvitationMessage(InvitationMessage message) {
+        super.handleInvitationMessage(message);
     }
 
 }

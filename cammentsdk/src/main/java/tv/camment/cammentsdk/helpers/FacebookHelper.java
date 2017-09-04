@@ -61,7 +61,9 @@ public final class FacebookHelper {
     };
 
     public boolean isLoggedIn() {
-        return AccessToken.getCurrentAccessToken() != null && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken());
+        return AccessToken.getCurrentAccessToken() != null
+                && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken())
+                && AccessToken.getCurrentAccessToken().getExpires().getTime() > System.currentTimeMillis();
     }
 
     public boolean isMessageForMe(String userId) {

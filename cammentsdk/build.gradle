@@ -15,6 +15,8 @@ android {
 
         defaultPublishConfig 'release'
         publishNonDefault true
+
+        buildConfigField "boolean", "USE_DEEPLINK", "true"
     }
 
     buildTypes {

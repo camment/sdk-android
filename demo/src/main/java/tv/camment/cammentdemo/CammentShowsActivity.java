@@ -136,7 +136,7 @@ public class CammentShowsActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data, false);
+        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
 }

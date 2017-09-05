@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.data;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.FbFriendsBottomSheetDialog;
@@ -29,8 +30,9 @@ public final class DataManager {
     }
 
     public void handleFbPermissionsResult() {
-        if (FacebookHelper.getInstance().isLoggedIn()) {
-            new FbFriendsBottomSheetDialog(CammentSDK.getInstance().getCurrentActivity()).show();
+        if (FacebookHelper.getInstance().isLoggedIn()
+                && FacebookHelper.getInstance().showShareOptions()) {
+            ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         }
     }
 

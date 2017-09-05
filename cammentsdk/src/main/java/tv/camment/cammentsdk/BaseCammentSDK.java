@@ -10,10 +10,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.camment.clientsdk.model.Show;
 import com.facebook.AccessToken;
+import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -81,20 +84,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         }
     }
 
-    void onActivityResult(int requestCode, int resultCode, Intent data, boolean showFbFriends) {
-        boolean fbHandled = FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
-
-        if (fbHandled) {
-            ApiManager.clearInstance();
-
-            if (showFbFriends) {
-                DataManager.getInstance().handleFbPermissionsResult();
-            }
-            ApiManager.getInstance().getUserApi().updateUserInfo();
-            connectToIoT();
-
-            handleDeeplink(getCurrentActivity().getIntent().getData(), "camment");
-        }
+    void onActivityResult(int requestCode, int resultCode, Intent data) {
+        FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
     }
@@ -116,7 +107,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         return apiKey;
     }
 
-    void handleDeeplink(Uri data, String scheme) {
+    private void handleDeeplink(Uri data, String scheme) {
         if (data == null
                 || !scheme.equals(data.getScheme())) {
             return;
@@ -157,14 +148,33 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
     @Override
     public void OnTokenRefreshFailed(FacebookException exception) {
-        Uri data = getCurrentActivity().getIntent().getData();
-
-        if (data == null
-                || !"camment".equals(data.getScheme())) {
-            return;
-        }
-
-        FacebookHelper.getInstance().logIn(getCurrentActivity());
+        FacebookHelper.getInstance().logIn(getCurrentActivity(), false);
     }
 
+    FacebookCallback<LoginResult> getLoginResultFbCallback() {
+        return new FacebookCallback<LoginResult>() {
+
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                ApiManager.clearInstance();
+
+                DataManager.getInstance().handleFbPermissionsResult();
+
+                ApiManager.getInstance().getUserApi().updateUserInfo();
+                connectToIoT();
+
+                handleDeeplink(getCurrentActivity().getIntent().getData(), "camment");
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e("FacebookLogin", "onError", error);
+            }
+        };
+    }
 }

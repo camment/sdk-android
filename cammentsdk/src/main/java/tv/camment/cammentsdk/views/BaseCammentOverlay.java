@@ -403,10 +403,10 @@ abstract class BaseCammentOverlay extends RelativeLayout
         onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
 
         if (FacebookHelper.getInstance().isLoggedIn()) {
-            new FbFriendsBottomSheetDialog(getContext()).show();
+            ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         } else {
             if (getContext() instanceof Activity) {
-                FacebookHelper.getInstance().logIn((Activity) getContext());
+                FacebookHelper.getInstance().logIn((Activity) getContext(), true);
             }
         }
     }

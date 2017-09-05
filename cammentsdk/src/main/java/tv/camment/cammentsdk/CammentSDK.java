@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.facebook.FacebookCallback;
+import com.facebook.login.LoginResult;
+
 public final class CammentSDK extends BaseCammentSDK {
 
     public static CammentSDK getInstance() {
@@ -32,11 +35,7 @@ public final class CammentSDK extends BaseCammentSDK {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data, true);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data, boolean showFbFriends) {
-        super.onActivityResult(requestCode, resultCode, data, showFbFriends);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -45,11 +44,12 @@ public final class CammentSDK extends BaseCammentSDK {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void handleDeeplink(Uri data, String scheme) {
-        super.handleDeeplink(data, scheme);
-    }
-
     public void checkLogin() {
         super.checkLogin();
     }
+
+    public FacebookCallback<LoginResult> getLoginResultFbCallback() {
+        return super.getLoginResultFbCallback();
+    }
+
 }

@@ -11,6 +11,7 @@ import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
 import com.camment.clientsdk.model.Deeplink;
 import com.camment.clientsdk.model.FacebookFriend;
+import com.camment.clientsdk.model.ShowUuid;
 import com.camment.clientsdk.model.UserFacebookIdListInRequest;
 import com.camment.clientsdk.model.Usergroup;
 
@@ -103,23 +104,17 @@ public final class InvitationApi extends CammentAsyncClient {
         };
     }
 
-    public void getDeeplinkToShare(final List<FacebookFriend> fbFriends) {
+    void getDeeplinkToShare() {
         submitTask(new Callable<Deeplink>() {
             @Override
             public Deeplink call() throws Exception {
                 final String showUuid = GeneralPreferences.getInstance().getActiveShowUuid();
                 final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
 
-                UserFacebookIdListInRequest userInAddToGroupRequest = new UserFacebookIdListInRequest();
-                userInAddToGroupRequest.setShowUuid(showUuid);
+                ShowUuid show = new ShowUuid();
+                show.setShowUuid(showUuid);
 
-                List<String> fbUserIdsStrings = new ArrayList<>();
-                for (FacebookFriend fbFriend : fbFriends) {
-                    fbUserIdsStrings.add(String.valueOf(fbFriend.getId()));
-                }
-                userInAddToGroupRequest.setUserFacebookIdList(fbUserIdsStrings);
-
-                return devcammentClient.usergroupsGroupUuidDeeplinkPost(userGroupUuid, userInAddToGroupRequest);
+                return devcammentClient.usergroupsGroupUuidDeeplinkPost(userGroupUuid, show);
             }
         }, getDeeplinkToShareCalback());
     }

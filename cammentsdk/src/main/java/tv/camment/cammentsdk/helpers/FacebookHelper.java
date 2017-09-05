@@ -8,13 +8,12 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
 
-import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.CammentSDK;
 
 
 public final class FacebookHelper {
@@ -29,6 +28,8 @@ public final class FacebookHelper {
     private final LoginManager loginManager;
     private final CallbackManager callbackManager;
 
+    private boolean showShareOptions;
+
     public static FacebookHelper getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FacebookHelper();
@@ -39,26 +40,8 @@ public final class FacebookHelper {
     private FacebookHelper() {
         callbackManager = CallbackManager.Factory.create();
         loginManager = LoginManager.getInstance();
-        loginManager.registerCallback(callbackManager, loginResultFacebookCallback);
+        loginManager.registerCallback(callbackManager, CammentSDK.getInstance().getLoginResultFbCallback());
     }
-
-    private FacebookCallback<LoginResult> loginResultFacebookCallback = new FacebookCallback<LoginResult>() {
-
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-
-        }
-
-        @Override
-        public void onCancel() {
-
-        }
-
-        @Override
-        public void onError(FacebookException error) {
-            Log.e(TAG, "onError", error);
-        }
-    };
 
     public boolean isLoggedIn() {
         return AccessToken.getCurrentAccessToken() != null
@@ -74,12 +57,17 @@ public final class FacebookHelper {
         return callbackManager;
     }
 
-    public synchronized void logIn(Activity activity) {
+    public synchronized void logIn(Activity activity, boolean showShareOptions) {
+        this.showShareOptions = showShareOptions;
         loginManager.logInWithReadPermissions(activity, Arrays.asList(permissions));
     }
 
     public synchronized void logOut() {
         loginManager.logOut();
+    }
+
+    public boolean showShareOptions() {
+        return showShareOptions;
     }
 
 }

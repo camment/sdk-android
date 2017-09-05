@@ -184,7 +184,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                ApiManager.getInstance().getUserApi().updateUserInfo();
+                ApiManager.getInstance().getUserApi().updateUserInfo(false);
             }
         };
 

@@ -6,6 +6,7 @@ public final class GeneralPreferences extends BasePreferences {
 
     private static final String PREFS_ACTIVE_SHOW_UUID = "general_active_show_uuid";
     private static final String PREFS_PROVIDER_PASSCODE = "general_provider_passcode";
+    private static final String PREFS_FIRST_STARTUP = "general_first_startup";
 
     private static GeneralPreferences INSTANCE;
 
@@ -39,6 +40,14 @@ public final class GeneralPreferences extends BasePreferences {
 
     public String getProviderPasscode() {
         return getString(PREFS_PROVIDER_PASSCODE, "");
+    }
+
+    public void setFirstStartup() {
+        putBoolean(PREFS_FIRST_STARTUP, false);
+    }
+
+    public boolean isFirstStartup() {
+        return getBoolean(PREFS_FIRST_STARTUP, true);
     }
 
 }

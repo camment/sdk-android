@@ -116,10 +116,10 @@ public final class InvitationApi extends CammentAsyncClient {
 
                 return devcammentClient.usergroupsGroupUuidDeeplinkPost(userGroupUuid, show);
             }
-        }, getDeeplinkToShareCalback());
+        }, getDeeplinkToShareCallback());
     }
 
-    private CammentCallback<Deeplink> getDeeplinkToShareCalback() {
+    private CammentCallback<Deeplink> getDeeplinkToShareCallback() {
         return new CammentCallback<Deeplink>() {
             @Override
             public void onSuccess(Deeplink result) {
@@ -175,7 +175,8 @@ public final class InvitationApi extends CammentAsyncClient {
                     if (split.length > 0) {
                         Usergroup usergroup = new Usergroup();
                         usergroup.setUuid(split[split.length - 1]);
-                        UserGroupProvider.insertUserGroup(usergroup);
+                        //TODO
+                        //UserGroupProvider.insertUserGroup(usergroup);
                     }
                 }
             }

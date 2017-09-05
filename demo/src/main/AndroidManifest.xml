@@ -15,7 +15,8 @@
 
         <activity
             android:name=".CammentSplashActivity"
-            android:theme="@style/CammentSdkAppTheme.SplashScreen">
+            android:theme="@style/CammentSdkAppTheme.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +27,8 @@
 
         <activity
             android:name=".CammentShowsActivity"
-            android:label="@string/camment_shows">
+            android:label="@string/camment_shows"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

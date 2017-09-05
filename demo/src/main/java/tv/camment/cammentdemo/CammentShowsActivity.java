@@ -24,6 +24,7 @@ import java.util.List;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 
 public class CammentShowsActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -78,7 +79,7 @@ public class CammentShowsActivity extends AppCompatActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            ApiManager.getInstance().getShowApi().getShows("");
+            ApiManager.getInstance().getShowApi().getShows(GeneralPreferences.getInstance().getProviderPasscode());
         }
     }
 
@@ -129,6 +130,7 @@ public class CammentShowsActivity extends AppCompatActivity
 
     @Override
     public void onPositiveButtonClick(String passcode) {
+        GeneralPreferences.getInstance().setProviderPasscode(passcode);
         ApiManager.getInstance().getShowApi().getShows(passcode);
     }
 

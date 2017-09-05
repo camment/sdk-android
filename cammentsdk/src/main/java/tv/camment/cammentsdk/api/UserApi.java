@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
@@ -28,7 +29,7 @@ public final class UserApi extends CammentAsyncClient {
         this.devcammentClient = devcammentClient;
     }
 
-    public void updateUserInfo() {
+    public void updateUserInfo(boolean handleDeeplink) {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -49,7 +50,7 @@ public final class UserApi extends CammentAsyncClient {
 
                 return new Object();
             }
-        }, updateUserInfoCallback());
+        }, updateUserInfoCallback(handleDeeplink));
     }
 
     //keep public
@@ -61,11 +62,17 @@ public final class UserApi extends CammentAsyncClient {
 
     }
 
-    private CammentCallback<Object> updateUserInfoCallback() {
+    private CammentCallback<Object> updateUserInfoCallback(final boolean handleDeeplink) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
                 Log.d("onSuccess", "updateUserInfo");
+
+                CammentSDK.getInstance().connectToIoT();
+
+                if (handleDeeplink) {
+                    CammentSDK.getInstance().handleDeeplink("camment");
+                }
             }
 
             @Override

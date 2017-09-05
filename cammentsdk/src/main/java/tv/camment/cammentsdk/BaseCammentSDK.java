@@ -77,7 +77,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         GeneralPreferences.getInstance().setActiveShowUuid(show.getUuid());
     }
 
-    private void connectToIoT() {
+    public void connectToIoT() {
         if (ioTHelper != null
                 && FacebookHelper.getInstance().isLoggedIn()) {
             ioTHelper.connect();
@@ -107,9 +107,15 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         return apiKey;
     }
 
-    private void handleDeeplink(Uri data, String scheme) {
+    public void handleDeeplink(String scheme) {
+        Uri data = CammentSDK.getInstance().getCurrentActivity().getIntent().getData();
+
         if (data == null
                 || !scheme.equals(data.getScheme())) {
+            if (GeneralPreferences.getInstance().isFirstStartup()) {
+                ApiManager.getInstance().getInvitationApi().getDeferredDeepLink();
+                GeneralPreferences.getInstance().setFirstStartup();
+            }
             return;
         }
 
@@ -141,9 +147,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
     @Override
     public void OnTokenRefreshed(AccessToken accessToken) {
-        ApiManager.getInstance().getUserApi().updateUserInfo();
-
-        handleDeeplink(getCurrentActivity().getIntent().getData(), "camment");
+        ApiManager.getInstance().getUserApi().updateUserInfo(true);
     }
 
     @Override
@@ -160,10 +164,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
                 DataManager.getInstance().handleFbPermissionsResult();
 
-                ApiManager.getInstance().getUserApi().updateUserInfo();
-                connectToIoT();
-
-                handleDeeplink(getCurrentActivity().getIntent().getData(), "camment");
+                ApiManager.getInstance().getUserApi().updateUserInfo(true);
             }
 
             @Override

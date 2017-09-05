@@ -4,6 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -76,6 +79,12 @@ public abstract class CammentAsyncClient {
     }
 
     private <T> void onException(final Exception e, final CammentCallback<T> callback, final boolean deliverOnUI) {
+        if (e != null
+                && (e instanceof NotAuthorizedException
+                || e.getCause() instanceof NotAuthorizedException)) {
+            return;
+        }
+
         if (callback != null) {
             if (deliverOnUI) {
                 runOnUiThread(new Runnable() {

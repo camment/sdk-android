@@ -87,6 +87,12 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                 }
                 mqttManager.subscribeToTopic(AWSConfig.IOT_TOPIC, AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
+
+                Usergroup usergroup = UserGroupProvider.getUserGroup();
+                if (usergroup != null) {
+                    mqttManager.subscribeToTopic(AWSConfig.IOT_GROUP_TOPIC + usergroup.getUuid(), AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
+                }
+
                 return new Object();
             }
         }, subscribeCallback());
@@ -110,6 +116,13 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new AWSIotMqttNewMessageCallback() {
             @Override
             public void onMessageArrived(String topic, byte[] data) {
+                Usergroup usergroup = UserGroupProvider.getUserGroup();
+
+                String iotGroupTopic = "";
+                if (usergroup != null) {
+                    iotGroupTopic = AWSConfig.IOT_GROUP_TOPIC + usergroup.getUuid();
+                }
+
                 if (AWSConfig.IOT_TOPIC.equals(topic)) {
                     String message = null;
 
@@ -141,6 +154,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                                 break;
                         }
                     }
+                } else if (iotGroupTopic.equals(topic)) {
+                    //TODO
                 }
             }
         };

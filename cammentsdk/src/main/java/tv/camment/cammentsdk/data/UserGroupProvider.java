@@ -29,6 +29,8 @@ public final class UserGroupProvider {
         cv.put(DataContract.UserGroup.timestamp, usergroup.getTimestamp());
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserGroup.CONTENT_URI, cv);
+
+        CammentSDK.getInstance().connectToIoT();
     }
 
     static void deleteUserGroups() {

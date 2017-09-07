@@ -2,6 +2,8 @@ package tv.camment.cammentdemo;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import tv.camment.cammentsdk.CammentSDK;
 
 public class CammentApp extends Application {
@@ -10,8 +12,11 @@ public class CammentApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CammentSDK.getInstance().init(this);
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
 
+        CammentSDK.getInstance().init(this);
     }
 
 }

@@ -162,7 +162,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
             @Override
             public void onException(Exception exception) {
-                Log.d("DEFERRED", "nothing");
+
             }
         };
     }

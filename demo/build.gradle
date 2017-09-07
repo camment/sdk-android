@@ -1,8 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+
+    def MAJOR_VERSION = 0;
+
+    def MINOR_VERSION = 0;
 
     defaultConfig {
         applicationId "tv.camment.cammentdemo"
@@ -10,10 +15,23 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        versionName "1.0.0"
-        versionCode 1
+        versionName "1." + MAJOR_VERSION + "." + MINOR_VERSION
+        versionCode 1 * 100000000 + 10000 * MAJOR_VERSION + MINOR_VERSION
 
         resValue "string", "camment_api_key", "Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('../signing/debug.keystore')
+        }
+
+        release {
+            storeFile file('../signing/release.jks')
+            storePassword "C4mm3nt!5t0r3#P5wd"
+            keyAlias "Camment2017"
+            keyPassword "C4mm3nt!K3y#P5wd"
+        }
     }
 
     dexOptions {
@@ -25,12 +43,16 @@ android {
             minifyEnabled false
             useProguard false
             debuggable true
+
+            signingConfig signingConfigs.debug
         }
 
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
         }
     }
 
@@ -57,4 +79,7 @@ dependencies {
     debugCompile project(path: ':cammentsdk', configuration: 'debug')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }

@@ -11,9 +11,9 @@ public enum MessageType {
     @SerializedName("invitation")
     INVITATION(0),
 
-    INVITATION_SENT(1),
+    INVITATION_SENT(1), //internal
 
-    ONBOARDING(2),
+    ONBOARDING(2), //internal
 
     @SerializedName("new-user-in-group")
     NEW_USER_IN_GROUP(3),
@@ -22,7 +22,15 @@ public enum MessageType {
     CAMMENT(4),
 
     @SerializedName("camment-deleted")
-    CAMMENT_DELETED(5);
+    CAMMENT_DELETED(5),
+
+    @SerializedName("membership-request")
+    MEMBERSHIP_REQUEST(6),
+
+    @SerializedName("membership-accepted")
+    MEMBERSHIP_ACCEPTED(7),
+
+    SHARE(8); //internal
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

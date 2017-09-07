@@ -13,6 +13,7 @@
 
     <string name="cmmsdk_join">Join</string>
     <string name="cmmsdk_no">No</string>
+    <string name="cmmsdk_yes">Yes</string>
     <string name="cmmsdk_ok">OK</string>
     <string name="cmmsdk_cancel">Cancel</string>
     <string name="cmmsdk_done">Done</string>
@@ -42,5 +43,15 @@
 
     <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
     <string name="cmmsdk_invitation_error">You are not allowed to join this group.</string>
+
+    <string name="cmmsdk_user_wants_to_join_title">%s wants to join your group</string>
+    <string name="cmmsdk_user_wants_to_join_desc">Do you accept the join request?</string>
+
+    <string name="cmmsdk_joined_private_chat">You have joined the private chat!</string>
+
+    <string name="cmmsdk_invitation_link_title">Send the invitation link</string>
+    <string name="cmmsdk_invitation_link_desc">Invite users by sharing the invitation link via channel of your choice</string>
+
+    <string name="cmmsdk_invitation_sharing_options">Choose the sharing channel</string>
 
 </resources>

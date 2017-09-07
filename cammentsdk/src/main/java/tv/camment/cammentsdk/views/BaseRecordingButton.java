@@ -152,6 +152,11 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
         }
     }
 
+    @Override
+    public void onNegativeButtonClick(BaseMessage baseMessage) {
+
+    }
+
     interface ActionsListener {
 
         void onPulledDown();

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.camment.clientsdk.model.Deeplink;
 import com.camment.clientsdk.model.Show;
 import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
@@ -22,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
@@ -113,7 +115,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         if (data == null
                 || !scheme.equals(data.getScheme())) {
             if (GeneralPreferences.getInstance().isFirstStartup()) {
-                ApiManager.getInstance().getInvitationApi().getDeferredDeepLink();
+                ApiManager.getInstance().getInvitationApi().getDeferredDeepLink(getDeferredDeepLinkCallback());
                 GeneralPreferences.getInstance().setFirstStartup();
             }
             return;
@@ -129,11 +131,40 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
                         && segments.size() == 1) {
                     if (FacebookHelper.getInstance().isLoggedIn()
                             && ioTHelper != null) {
-                        //TODO
+                        InvitationMessage invitationMessage = new InvitationMessage();
+                        invitationMessage.type = MessageType.INVITATION;
+                        invitationMessage.body = new InvitationMessage.Body();
+                        invitationMessage.body.groupUuid = segments.get(0);
+                        invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
+                        ioTHelper.handleInvitationMessage(invitationMessage);
                     }
                 }
                 break;
         }
+    }
+
+    private CammentCallback<Deeplink> getDeferredDeepLinkCallback() {
+        return new CammentCallback<Deeplink>() {
+            @Override
+            public void onSuccess(Deeplink result) {
+                if (!TextUtils.isEmpty(result.getUrl())) {
+                    String[] split = result.getUrl().split("/");
+                    if (split.length > 0) {
+                        InvitationMessage invitationMessage = new InvitationMessage();
+                        invitationMessage.type = MessageType.INVITATION;
+                        invitationMessage.body = new InvitationMessage.Body();
+                        invitationMessage.body.groupUuid = split[split.length - 1];
+                        invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
+                        ioTHelper.handleInvitationMessage(invitationMessage);
+                    }
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.d("DEFERRED", "nothing");
+            }
+        };
     }
 
     void checkLogin() {

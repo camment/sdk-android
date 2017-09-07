@@ -52,7 +52,7 @@ public final class CammentApi extends CammentAsyncClient {
         };
     }
 
-    void getUserGroupCamments() {
+    public void getUserGroupCamments() {
         submitTask(new Callable<CammentList>() {
             @Override
             public CammentList call() throws Exception {

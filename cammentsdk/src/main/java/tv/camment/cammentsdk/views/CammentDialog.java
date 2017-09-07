@@ -18,6 +18,7 @@ import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.aws.messages.MembershipRequestMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 
@@ -83,6 +84,9 @@ public final class CammentDialog extends DialogFragment {
         btnNegative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (actionListener != null) {
+                    actionListener.onNegativeButtonClick(message);
+                }
                 dismiss();
             }
         });
@@ -129,6 +133,12 @@ public final class CammentDialog extends DialogFragment {
             case ONBOARDING:
                 tvTitle.setText(R.string.cmmsdk_setup_use_camment_chat);
                 break;
+            case MEMBERSHIP_REQUEST:
+                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_wants_to_join_title), ((MembershipRequestMessage) message).body.joiningUser.name));
+                break;
+            case SHARE:
+                tvTitle.setText(R.string.cmmsdk_invitation_link_title);
+                break;
         }
     }
 
@@ -145,6 +155,12 @@ public final class CammentDialog extends DialogFragment {
                 break;
             case ONBOARDING:
                 tvMessage.setText(R.string.cmmsdk_setup_what_is_camment);
+                break;
+            case MEMBERSHIP_REQUEST:
+                tvMessage.setText(R.string.cmmsdk_user_wants_to_join_desc);
+                break;
+            case SHARE:
+                tvMessage.setText(R.string.cmmsdk_invitation_link_desc);
                 break;
         }
     }
@@ -164,6 +180,14 @@ public final class CammentDialog extends DialogFragment {
                 btnPositive.setText(R.string.cmmsdk_setup_sounds_fun);
                 btnNegative.setText(R.string.cmmsdk_setup_maybe_later);
                 break;
+            case MEMBERSHIP_REQUEST:
+                btnPositive.setText(R.string.cmmsdk_yes);
+                btnNegative.setText(R.string.cmmsdk_no);
+                break;
+            case SHARE:
+                btnPositive.setText(R.string.cmmsdk_ok);
+                btnNegative.setText(R.string.cmmsdk_cancel);
+                break;
         }
     }
 
@@ -178,6 +202,8 @@ public final class CammentDialog extends DialogFragment {
     public interface ActionListener {
 
         void onPositiveButtonClick(BaseMessage baseMessage);
+
+        void onNegativeButtonClick(BaseMessage baseMessage);
 
     }
 

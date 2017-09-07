@@ -175,6 +175,11 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
     }
 
     @Override
+    public void onNegativeButtonClick(BaseMessage baseMessage) {
+
+    }
+
+    @Override
     public void addView(View child) {
         child.setAlpha(0.0f);
         child.setTranslationY(16);

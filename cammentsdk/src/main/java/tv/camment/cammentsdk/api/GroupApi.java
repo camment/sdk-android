@@ -48,7 +48,7 @@ public final class GroupApi extends CammentAsyncClient {
         Usergroup usergroup = UserGroupProvider.getUserGroup();
 
         if (usergroup != null && !TextUtils.isEmpty(usergroup.getUuid())) {
-            ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
+            ApiManager.getInstance().getInvitationApi().sendInvitation(sendInvitationCallback);
         } else {
             submitBgTask(new Callable<Usergroup>() {
                 @Override
@@ -101,7 +101,7 @@ public final class GroupApi extends CammentAsyncClient {
             public void onSuccess(Usergroup usergroup) {
                 UserGroupProvider.insertUserGroup(usergroup);
 
-                ApiManager.getInstance().getInvitationApi().sendInvitation(fbFriends, sendInvitationCallback);
+                ApiManager.getInstance().getInvitationApi().sendInvitation(sendInvitationCallback);
             }
 
             @Override

@@ -18,6 +18,14 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/cl_progressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        android:layout_gravity="center" />
+
     <tv.camment.cammentsdk.views.CammentOverlay
         android:id="@+id/camment_overlay"
         android:layout_width="match_parent"

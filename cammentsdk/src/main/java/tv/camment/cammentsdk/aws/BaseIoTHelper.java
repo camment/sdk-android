@@ -94,10 +94,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 mqttManager.subscribeToTopic(AWSConfig.IOT_TOPIC, AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
 
                 mqttManager.subscribeToTopic(AWSConfig.IOT_USER_TOPIC + AWSManager.getInstance().getUserIdentityId(), AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
-//                Usergroup usergroup = UserGroupProvider.getUserGroup();
-//                if (usergroup != null) {
-//                    mqttManager.subscribeToTopic(AWSConfig.IOT_GROUP_TOPIC + usergroup.getUuid(), AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
-//                }
 
                 return new Object();
             }
@@ -122,7 +118,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new AWSIotMqttNewMessageCallback() {
             @Override
             public void onMessageArrived(String topic, byte[] data) {
-                String iotUserTopic = AWSConfig.IOT_USER_TOPIC + AWSManager.getInstance().getUserIdentityId();
+                String identityId = AWSManager.getInstance().getUserIdentityId();
+                String iotUserTopic = AWSConfig.IOT_USER_TOPIC + identityId;
 
                 if (AWSConfig.IOT_TOPIC.equals(topic)
                         || iotUserTopic.equals(topic)) {
@@ -140,27 +137,27 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         switch (baseMessage.type) {
                             case INVITATION:
                                 baseMessage = new Gson().fromJson(message, InvitationMessage.class);
-                                handleMessage(baseMessage);
+                                handleMessage(baseMessage, identityId);
                                 break;
                             case NEW_USER_IN_GROUP:
                                 baseMessage = new Gson().fromJson(message, NewUserInGroupMessage.class);
-                                handleMessage(baseMessage);
+                                handleMessage(baseMessage, identityId);
                                 break;
                             case CAMMENT:
                                 baseMessage = new Gson().fromJson(message, CammentMessage.class);
-                                handleMessage(baseMessage);
+                                handleMessage(baseMessage, identityId);
                                 break;
                             case CAMMENT_DELETED:
                                 baseMessage = new Gson().fromJson(message, CammentMessage.class);
-                                handleMessage(baseMessage);
+                                handleMessage(baseMessage, identityId);
                                 break;
                             case MEMBERSHIP_REQUEST:
                                 baseMessage = new Gson().fromJson(message, MembershipRequestMessage.class);
-                                handleMessage(baseMessage);
+                                handleMessage(baseMessage, identityId);
                                 break;
                             case MEMBERSHIP_ACCEPTED:
                                 baseMessage = new Gson().fromJson(message, MembershipAcceptedMessage.class);
-                                handleMessage(baseMessage);
+                                handleMessage(baseMessage, identityId);
                                 break;
                         }
                     }
@@ -196,7 +193,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         };
     }
 
-    private void handleMessage(final BaseMessage message) {
+    private void handleMessage(final BaseMessage message, final String identityId) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -225,7 +222,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         }
                         break;
                     case MEMBERSHIP_REQUEST:
-                        if (isMembershipRequestValid((MembershipRequestMessage) message)) {
+                        if (isMembershipRequestValid((MembershipRequestMessage) message, identityId)) {
                             handleInvitationMessage(message);
                         }
                         break;
@@ -266,11 +263,12 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && usergroup.getUuid().equals(m.body.userGroupUuid);
     }
 
-    private boolean isMembershipRequestValid(MembershipRequestMessage m) {
+    private boolean isMembershipRequestValid(MembershipRequestMessage m, String identityId) {
         return m.body != null
                 && m.body.joiningUser != null
                 && !TextUtils.isEmpty(m.body.joiningUser.name)
-                && !TextUtils.isEmpty(m.body.joiningUser.userCognitoIdentityId);
+                && !TextUtils.isEmpty(m.body.joiningUser.userCognitoIdentityId)
+                && !TextUtils.equals(m.body.joiningUser.userCognitoIdentityId, identityId);
     }
 
     private boolean isMembershipAcceptedValid(MembershipAcceptedMessage m) {

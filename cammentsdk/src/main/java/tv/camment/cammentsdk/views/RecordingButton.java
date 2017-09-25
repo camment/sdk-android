@@ -28,7 +28,7 @@ public final class RecordingButton extends BaseRecordingButton {
     }
 
     public void hide() {
-        super.show();
+        super.hide();
     }
 
     interface ActionsListener

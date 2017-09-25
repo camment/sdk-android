@@ -174,6 +174,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
     @Override
     public void OnTokenRefreshed(AccessToken accessToken) {
         ApiManager.getInstance().getUserApi().updateUserInfo(true);
+
+        ApiManager.getInstance().retryFailedCallsIfNeeded();
     }
 
     @Override
@@ -191,6 +193,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
                 DataManager.getInstance().handleFbPermissionsResult();
 
                 ApiManager.getInstance().getUserApi().updateUserInfo(true);
+
+                ApiManager.getInstance().retryFailedCallsIfNeeded();
             }
 
             @Override

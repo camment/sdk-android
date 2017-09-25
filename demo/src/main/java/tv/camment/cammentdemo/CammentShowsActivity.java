@@ -54,8 +54,6 @@ public class CammentShowsActivity extends AppCompatActivity
         rvShows.setItemAnimator(null);
 
         getSupportLoaderManager().initLoader(1, null, this);
-
-        CammentSDK.getInstance().checkLogin();
     }
 
     @Override

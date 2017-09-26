@@ -7,6 +7,7 @@ public final class GeneralPreferences extends BasePreferences {
     private static final String PREFS_ACTIVE_SHOW_UUID = "general_active_show_uuid";
     private static final String PREFS_PROVIDER_PASSCODE = "general_provider_passcode";
     private static final String PREFS_FIRST_STARTUP = "general_first_startup";
+    private static final String PREFS_DEEPLINK_UUID = "general_deeplink_uuid";
 
     private static GeneralPreferences INSTANCE;
 
@@ -48,6 +49,14 @@ public final class GeneralPreferences extends BasePreferences {
 
     public boolean isFirstStartup() {
         return getBoolean(PREFS_FIRST_STARTUP, true);
+    }
+
+    public void setDeeplinkUuid(String uuid) {
+        putString(PREFS_DEEPLINK_UUID, uuid);
+    }
+
+    public String getDeeplinkUuid() {
+        return getString(PREFS_DEEPLINK_UUID, "");
     }
 
 }

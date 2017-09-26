@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -20,7 +19,6 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -110,36 +108,27 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
     }
 
     public void handleDeeplink(String scheme) {
-        Uri data = CammentSDK.getInstance().getCurrentActivity().getIntent().getData();
+        String groupUuid = GeneralPreferences.getInstance().getDeeplinkUuid();
 
-        if (data == null
-                || !scheme.equals(data.getScheme())) {
-            if (GeneralPreferences.getInstance().isFirstStartup()) {
-                ApiManager.getInstance().getInvitationApi().getDeferredDeepLink(getDeferredDeepLinkCallback());
-                GeneralPreferences.getInstance().setFirstStartup();
-            }
+        if (TextUtils.isEmpty(groupUuid)
+                && GeneralPreferences.getInstance().isFirstStartup()) {
+            ApiManager.getInstance().getInvitationApi().getDeferredDeepLink(getDeferredDeepLinkCallback());
+            GeneralPreferences.getInstance().setFirstStartup();
             return;
         }
 
-        String authority = data.getAuthority();
+        if (!TextUtils.isEmpty(groupUuid)) {
+            if (FacebookHelper.getInstance().isLoggedIn()
+                    && ioTHelper != null) {
+                GeneralPreferences.getInstance().setDeeplinkUuid("");
 
-        List<String> segments = data.getPathSegments();
-
-        switch (authority) {
-            case "group":
-                if (segments != null
-                        && segments.size() == 1) {
-                    if (FacebookHelper.getInstance().isLoggedIn()
-                            && ioTHelper != null) {
-                        InvitationMessage invitationMessage = new InvitationMessage();
-                        invitationMessage.type = MessageType.INVITATION;
-                        invitationMessage.body = new InvitationMessage.Body();
-                        invitationMessage.body.groupUuid = segments.get(0);
-                        invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
-                        ioTHelper.handleInvitationMessage(invitationMessage);
-                    }
-                }
-                break;
+                InvitationMessage invitationMessage = new InvitationMessage();
+                invitationMessage.type = MessageType.INVITATION;
+                invitationMessage.body = new InvitationMessage.Body();
+                invitationMessage.body.groupUuid = groupUuid;
+                invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
+                ioTHelper.handleInvitationMessage(invitationMessage);
+            }
         }
     }
 

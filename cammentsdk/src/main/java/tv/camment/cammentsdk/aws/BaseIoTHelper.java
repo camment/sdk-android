@@ -121,17 +121,17 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 String identityId = AWSManager.getInstance().getUserIdentityId();
                 String iotUserTopic = AWSConfig.IOT_USER_TOPIC + identityId;
 
+                String message = null;
+
+                try {
+                    message = new String(data, "UTF-8");
+                    Log.d("AWS message", message);
+                } catch (Exception e) {
+                    Log.e("IoTHelper", "invalid message format", e);
+                }
+
                 if (AWSConfig.IOT_TOPIC.equals(topic)
                         || iotUserTopic.equals(topic)) {
-                    String message = null;
-
-                    try {
-                        message = new String(data, "UTF-8");
-                        Log.d("AWS message", message);
-                    } catch (Exception e) {
-                        Log.e("IoTHelper", "invalid message format", e);
-                    }
-
                     if (!TextUtils.isEmpty(message)) {
                         BaseMessage baseMessage = new Gson().fromJson(message, BaseMessage.class);
                         switch (baseMessage.type) {

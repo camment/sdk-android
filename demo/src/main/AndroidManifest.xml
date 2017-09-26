@@ -13,10 +13,14 @@
             android:name="tv.camment.cammentsdk.ApiKey"
             android:value="@string/camment_api_key" />
 
+        <meta-data
+            android:name="net.hockeyapp.android.appIdentifier"
+            android:value="${HOCKEYAPP_APP_ID}" />
+
         <activity
             android:name=".CammentSplashActivity"
-            android:theme="@style/CammentSdkAppTheme.SplashScreen"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/CammentSdkAppTheme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.camment.clientsdk.model.Show;
 
+import net.hockeyapp.android.UpdateManager;
+
 import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
@@ -54,12 +56,20 @@ public class CammentShowsActivity extends AppCompatActivity
         rvShows.setItemAnimator(null);
 
         getSupportLoaderManager().initLoader(1, null, this);
+
+        checkForUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         checkInternetConnection();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterManagers();
     }
 
     private void checkInternetConnection() {
@@ -70,6 +80,18 @@ public class CammentShowsActivity extends AppCompatActivity
 
         if (!isConnected) {
             Toast.makeText(this, R.string.camment_no_network, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void checkForUpdates() {
+        if (!BuildConfig.DEBUG) {
+            UpdateManager.register(this);
+        }
+    }
+
+    private void unregisterManagers() {
+        if (!BuildConfig.DEBUG) {
+            UpdateManager.unregister();
         }
     }
 

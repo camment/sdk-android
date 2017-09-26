@@ -19,6 +19,8 @@ android {
         versionCode 1 * 100000000 + 10000 * MAJOR_VERSION + MINOR_VERSION
 
         resValue "string", "camment_api_key", "Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi"
+
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "de862235c96844f8ad503d33d826e5b9"]
     }
 
     signingConfigs {
@@ -78,7 +80,7 @@ dependencies {
     compile supportDependencies.values()
     debugCompile project(path: ':cammentsdk', configuration: 'debug')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'net.hockeyapp.android:HockeySDK:5.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }

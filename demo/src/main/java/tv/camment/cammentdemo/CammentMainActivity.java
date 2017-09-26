@@ -22,7 +22,7 @@ import tv.camment.cammentsdk.views.CammentOverlay;
 
 public class CammentMainActivity extends AppCompatActivity
         implements CammentAudioListener,
-        OnDeeplinkGetListener {
+        OnDeeplinkGetListener, MediaPlayer.OnPreparedListener {
 
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
@@ -34,6 +34,7 @@ public class CammentMainActivity extends AppCompatActivity
     private int currentPosition;
 
     private ContentLoadingProgressBar contentLoadingProgressBar;
+    private MediaPlayer mediaPlayer;
 
     public static void start(Context context, String showUuid) {
         Intent intent = new Intent(context, CammentMainActivity.class);
@@ -101,12 +102,7 @@ public class CammentMainActivity extends AppCompatActivity
             Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(uri);
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.setLooping(true);
-                }
-            });
+            videoView.setOnPreparedListener(this);
             videoView.seekTo(currentPosition);
             if (start) {
                 videoView.start();
@@ -131,29 +127,27 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     public void onCammentPlaybackStarted() {
         AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        previousVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+        previousVolume = (int) Math.floor(am.getStreamVolume(AudioManager.STREAM_MUSIC) * 20 / 3);
 
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, previousVolume / 2, 0);
+        setVolume(previousVolume / 2);
     }
 
     @Override
     public void onCammentPlaybackEnded() {
-        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, previousVolume, 0);
+        setVolume(previousVolume);
     }
 
     @Override
     public void onCammentRecordingStarted() {
         AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        previousVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+        previousVolume = (int) Math.floor(am.getStreamVolume(AudioManager.STREAM_MUSIC) * 20 / 3);
 
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+        setVolume(0);
     }
 
     @Override
     public void onCammentRecordingEnded() {
-        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, previousVolume, 0);
+        setVolume(previousVolume);
     }
 
     @Override
@@ -176,4 +170,17 @@ public class CammentMainActivity extends AppCompatActivity
         }
     }
 
+    private void setVolume(int amount) {
+        final int max = 100;
+        final double numerator = max - amount > 0 ? Math.log(max - amount) : 0;
+        final float volume = (float) (1 - (numerator / Math.log(max)));
+
+        mediaPlayer.setVolume(volume, volume);
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+        mediaPlayer.setLooping(true);
+    }
 }

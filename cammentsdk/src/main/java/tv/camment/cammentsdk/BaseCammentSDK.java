@@ -128,6 +128,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
                 invitationMessage.body.groupUuid = groupUuid;
                 invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
                 ioTHelper.handleInvitationMessage(invitationMessage);
+            } else if (!FacebookHelper.getInstance().isLoggedIn()) {
+                CammentSDK.getInstance().checkLogin();
             }
         }
     }

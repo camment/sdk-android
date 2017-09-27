@@ -1,5 +1,6 @@
 package tv.camment.cammentdemo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -10,13 +11,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.VideoView;
+
+import java.util.concurrent.TimeUnit;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.OnDeeplinkGetListener;
 import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.utils.DateTimeUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
@@ -59,7 +68,15 @@ public class CammentMainActivity extends AppCompatActivity
                         PorterDuff.Mode.SRC_IN);
         videoView = (VideoView) findViewById(R.id.show_player);
 
-        mediaController = new MediaController(this);
+        mediaController = new MediaController(this, false) {
+            public boolean dispatchKeyEvent(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    onBackPressed();
+                }
+
+                return super.dispatchKeyEvent(event);
+            }
+        };
         mediaController.setAnchorView(videoView);
 
         FrameLayout parentViewGroup = (FrameLayout) findViewById(R.id.fl_parent);
@@ -82,17 +99,26 @@ public class CammentMainActivity extends AppCompatActivity
     protected void onPause() {
         if (videoView != null) {
             currentPosition = videoView.getCurrentPosition();
-            videoView.stopPlayback();
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if (videoView != null) {
+            currentPosition = videoView.getCurrentPosition();
+            videoView.stopPlayback();
+        }
+        super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (videoView != null
+                && !videoView.isPlaying()
                 && mediaController != null) {
-            prepareAndPlayVideo(false);
+            prepareAndPlayVideo(true);
         }
     }
 
@@ -182,5 +208,44 @@ public class CammentMainActivity extends AppCompatActivity
     public void onPrepared(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
         mediaPlayer.setLooping(true);
+
+        int duration = mediaPlayer.getDuration();
+
+        Log.d("SYNC", "duration --> " + duration);
+
+        if (duration > 0) {
+            syncUser(duration);
+        }
+
+        int topContainerId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
+        SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(topContainerId);
+        seekBarVideo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
     }
+
+    private void syncUser(int duration) {
+        Log.d("SYNC", "syncing...");
+        long millis = DateTimeUtils.getCurrentUTCTimestamp();
+
+        long days = TimeUnit.MILLISECONDS.toDays(millis);
+        millis -= TimeUnit.DAYS.toMillis(days);
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        millis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        millis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+        millis -= TimeUnit.SECONDS.toMillis(seconds);
+
+        int current = (int) (TimeUnit.MINUTES.toMillis(minutes)
+                + TimeUnit.SECONDS.toMillis(seconds)
+                + millis);
+        int seekTo = current % duration;
+
+        videoView.seekTo(seekTo);
+    }
+
 }

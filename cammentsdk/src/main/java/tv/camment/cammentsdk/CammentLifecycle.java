@@ -13,24 +13,23 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     private WeakReference<Activity> currentActivity;
     private WeakReference<Activity> previousActivity;
-    private int count = 0;
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
         if (activity instanceof FacebookActivity
-                || activity instanceof CammentDeeplinkActivity)
+                || activity instanceof CammentDeeplinkActivity
+                || activity instanceof DeeplinkIgnore)
             return;
 
         previousActivity = currentActivity;
         currentActivity = new WeakReference<>(activity);
-
-        count++;
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
         if (activity instanceof FacebookActivity
-                || activity instanceof CammentDeeplinkActivity)
+                || activity instanceof CammentDeeplinkActivity
+                || activity instanceof DeeplinkIgnore)
             return;
 
         previousActivity = currentActivity;
@@ -40,15 +39,15 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
     @Override
     public void onActivityResumed(Activity activity) {
         if (activity instanceof FacebookActivity
-                || activity instanceof CammentDeeplinkActivity)
+                || activity instanceof CammentDeeplinkActivity
+                || activity instanceof DeeplinkIgnore)
             return;
 
         previousActivity = currentActivity;
         currentActivity = new WeakReference<>(activity);
 
         if (previousActivity != null
-                && previousActivity.get() != null
-                && count > 1) { //to skip splash, TODO provide way to define ignored activities
+                && previousActivity.get() != null) {
             CammentSDK.getInstance().handleDeeplink("camment");
         }
     }

@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
-public class CammentSplashActivity extends AppCompatActivity {
+import tv.camment.cammentsdk.DeeplinkIgnore;
+
+public class CammentSplashActivity extends AppCompatActivity
+        implements DeeplinkIgnore {
 
     private static final int SPLASH_TIME_OUT = 1000;
 

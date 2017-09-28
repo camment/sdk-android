@@ -23,11 +23,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import java.util.concurrent.TimeUnit;
-
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.OnDeeplinkGetListener;
 import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.utils.DateTimeUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
@@ -37,6 +36,8 @@ public class CammentMainActivity extends AppCompatActivity
         OnDeeplinkGetListener, MediaPlayer.OnPreparedListener {
 
     private static final long START_TIMESTAMP = 1506621600000L;
+
+    private static final String PASSCODE = "test";
 
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
@@ -75,7 +76,10 @@ public class CammentMainActivity extends AppCompatActivity
 
         tvShowOnHold = (TextView) findViewById(R.id.tv_on_hold);
 
-        tvShowOnHold.setVisibility(showStarted ? View.GONE : View.VISIBLE);
+        if (isTestPasscode()) {
+            tvShowOnHold.setText("Show starts at " + DateTimeUtils.getTimeOnlyStringForUI(START_TIMESTAMP));
+            tvShowOnHold.setVisibility(showStarted ? View.GONE : View.VISIBLE);
+        }
 
         contentLoadingProgressBar = (ContentLoadingProgressBar) findViewById(R.id.cl_progressbar);
         contentLoadingProgressBar.getIndeterminateDrawable()
@@ -83,7 +87,7 @@ public class CammentMainActivity extends AppCompatActivity
                         PorterDuff.Mode.SRC_IN);
         videoView = (VideoView) findViewById(R.id.show_player);
 
-        mediaController = new MediaController(this, false) {
+        mediaController = new MediaController(this, !isTestPasscode()) {
             public boolean dispatchKeyEvent(KeyEvent event) {
                 if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
                     onBackPressed();
@@ -101,13 +105,17 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setParentViewGroup(parentViewGroup);
         cammentOverlay.setCammentAudioListener(this);
 
-        prepareAndPlayVideo(showStarted);
+        prepareAndPlayVideo(!isTestPasscode() || showStarted);
     }
 
     private boolean didShowStart() {
         long currentUTCTimestamp = DateTimeUtils.getCurrentUTCTimestamp();
 
         return currentUTCTimestamp >= START_TIMESTAMP;
+    }
+
+    private boolean isTestPasscode() {
+        return TextUtils.equals(PASSCODE, GeneralPreferences.getInstance().getProviderPasscode());
     }
 
     @Override
@@ -127,25 +135,28 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (broadcastReceiver == null) {
-            broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (TextUtils.equals(intent.getAction(), Intent.ACTION_TIME_TICK)) {
-                        Log.d("TIME TICK", "time tick");
-                        if (didShowStart()) {
-                            startShow();
+        if (isTestPasscode()) {
+            if (broadcastReceiver == null) {
+                broadcastReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if (TextUtils.equals(intent.getAction(), Intent.ACTION_TIME_TICK)) {
+                            Log.d("TIME TICK", "time tick");
+                            if (didShowStart()) {
+                                startShow();
+                            }
                         }
                     }
-                }
-            };
+                };
+            }
+            registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         }
-        registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
     @Override
     protected void onStop() {
-        if (broadcastReceiver != null) {
+        if (isTestPasscode()
+                && broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
         }
         if (videoView != null) {
@@ -161,9 +172,13 @@ public class CammentMainActivity extends AppCompatActivity
         if (videoView != null
                 && !videoView.isPlaying()
                 && mediaController != null) {
-            boolean showStarted = didShowStart();
-            tvShowOnHold.setVisibility(showStarted ? View.GONE : View.VISIBLE);
-            prepareAndPlayVideo(showStarted);
+            if (isTestPasscode()) {
+                boolean showStarted = didShowStart();
+                tvShowOnHold.setVisibility(showStarted ? View.GONE : View.VISIBLE);
+                prepareAndPlayVideo(showStarted);
+            } else {
+                prepareAndPlayVideo(true);
+            }
         }
     }
 
@@ -254,18 +269,20 @@ public class CammentMainActivity extends AppCompatActivity
         this.mediaPlayer = mediaPlayer;
         mediaPlayer.setLooping(true);
 
-        Log.d("SYNC", "sync");
+        if (isTestPasscode()) {
+            Log.d("SYNC", "sync");
 
-        syncUser();
+            syncUser();
 
-        int topContainerId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
-        SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(topContainerId);
-        seekBarVideo.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
+            int topContainerId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
+            SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(topContainerId);
+            seekBarVideo.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            });
+        }
     }
 
     private void syncUser() {

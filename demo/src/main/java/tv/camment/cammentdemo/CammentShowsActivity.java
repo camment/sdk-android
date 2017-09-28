@@ -84,15 +84,11 @@ public class CammentShowsActivity extends AppCompatActivity
     }
 
     private void checkForUpdates() {
-        if (!BuildConfig.DEBUG) {
-            UpdateManager.register(this);
-        }
+        UpdateManager.register(this);
     }
 
     private void unregisterManagers() {
-        if (!BuildConfig.DEBUG) {
-            UpdateManager.unregister();
-        }
+        UpdateManager.unregister();
     }
 
     @Override

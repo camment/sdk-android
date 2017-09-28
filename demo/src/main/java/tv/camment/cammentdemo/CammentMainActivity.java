@@ -1,8 +1,9 @@
 package tv.camment.cammentdemo;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import java.util.concurrent.TimeUnit;
@@ -33,6 +36,8 @@ public class CammentMainActivity extends AppCompatActivity
         implements CammentAudioListener,
         OnDeeplinkGetListener, MediaPlayer.OnPreparedListener {
 
+    private static final long START_TIMESTAMP = 1506621600000L;
+
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
     private static final String ARGS_PLAYER_POSITION = "args_player_position";
@@ -42,8 +47,12 @@ public class CammentMainActivity extends AppCompatActivity
     private MediaController mediaController;
     private int currentPosition;
 
+    private TextView tvShowOnHold;
+
     private ContentLoadingProgressBar contentLoadingProgressBar;
     private MediaPlayer mediaPlayer;
+
+    private BroadcastReceiver broadcastReceiver;
 
     public static void start(Context context, String showUuid) {
         Intent intent = new Intent(context, CammentMainActivity.class);
@@ -61,6 +70,12 @@ public class CammentMainActivity extends AppCompatActivity
         }
 
         CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
+
+        boolean showStarted = didShowStart();
+
+        tvShowOnHold = (TextView) findViewById(R.id.tv_on_hold);
+
+        tvShowOnHold.setVisibility(showStarted ? View.GONE : View.VISIBLE);
 
         contentLoadingProgressBar = (ContentLoadingProgressBar) findViewById(R.id.cl_progressbar);
         contentLoadingProgressBar.getIndeterminateDrawable()
@@ -86,7 +101,13 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setParentViewGroup(parentViewGroup);
         cammentOverlay.setCammentAudioListener(this);
 
-        prepareAndPlayVideo(true);
+        prepareAndPlayVideo(showStarted);
+    }
+
+    private boolean didShowStart() {
+        long currentUTCTimestamp = DateTimeUtils.getCurrentUTCTimestamp();
+
+        return currentUTCTimestamp >= START_TIMESTAMP;
     }
 
     @Override
@@ -104,7 +125,29 @@ public class CammentMainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (TextUtils.equals(intent.getAction(), Intent.ACTION_TIME_TICK)) {
+                        Log.d("TIME TICK", "time tick");
+                        if (didShowStart()) {
+                            startShow();
+                        }
+                    }
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+    }
+
+    @Override
     protected void onStop() {
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+        }
         if (videoView != null) {
             currentPosition = videoView.getCurrentPosition();
             videoView.stopPlayback();
@@ -118,7 +161,9 @@ public class CammentMainActivity extends AppCompatActivity
         if (videoView != null
                 && !videoView.isPlaying()
                 && mediaController != null) {
-            prepareAndPlayVideo(true);
+            boolean showStarted = didShowStart();
+            tvShowOnHold.setVisibility(showStarted ? View.GONE : View.VISIBLE);
+            prepareAndPlayVideo(showStarted);
         }
     }
 
@@ -209,13 +254,9 @@ public class CammentMainActivity extends AppCompatActivity
         this.mediaPlayer = mediaPlayer;
         mediaPlayer.setLooping(true);
 
-        int duration = mediaPlayer.getDuration();
+        Log.d("SYNC", "sync");
 
-        Log.d("SYNC", "duration --> " + duration);
-
-        if (duration > 0) {
-            syncUser(duration);
-        }
+        syncUser();
 
         int topContainerId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
         SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(topContainerId);
@@ -227,25 +268,18 @@ public class CammentMainActivity extends AppCompatActivity
         });
     }
 
-    private void syncUser(int duration) {
+    private void syncUser() {
         Log.d("SYNC", "syncing...");
-        long millis = DateTimeUtils.getCurrentUTCTimestamp();
-
-        long days = TimeUnit.MILLISECONDS.toDays(millis);
-        millis -= TimeUnit.DAYS.toMillis(days);
-        long hours = TimeUnit.MILLISECONDS.toHours(millis);
-        millis -= TimeUnit.HOURS.toMillis(hours);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
-        millis -= TimeUnit.MINUTES.toMillis(minutes);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
-        millis -= TimeUnit.SECONDS.toMillis(seconds);
-
-        int current = (int) (TimeUnit.MINUTES.toMillis(minutes)
-                + TimeUnit.SECONDS.toMillis(seconds)
-                + millis);
-        int seekTo = current % duration;
+        int seekTo = (int) (DateTimeUtils.getCurrentUTCTimestamp() - START_TIMESTAMP);
 
         videoView.seekTo(seekTo);
+    }
+
+    private void startShow() {
+        if (videoView != null) {
+            videoView.seekTo(currentPosition);
+            videoView.start();
+        }
     }
 
 }

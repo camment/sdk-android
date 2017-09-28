@@ -33,9 +33,16 @@ public final class DateTimeUtils {
         return getCurrentUTCCalendar().getTimeInMillis();
     }
 
-    public static synchronized Calendar getCurrentUTCCalendar() {
+    private static synchronized Calendar getCurrentUTCCalendar() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        return calendar;
+    }
+
+    public static synchronized Calendar getCalendarForTimeZone(TimeZone timeZone) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(timeZone);
         calendar.setTimeInMillis(System.currentTimeMillis());
         return calendar;
     }

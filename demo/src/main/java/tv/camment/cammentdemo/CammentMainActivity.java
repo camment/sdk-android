@@ -135,7 +135,7 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (isTestPasscode()) {
+        if (isTestPasscode() && !didShowStart()) {
             if (broadcastReceiver == null) {
                 broadcastReceiver = new BroadcastReceiver() {
                     @Override
@@ -143,6 +143,8 @@ public class CammentMainActivity extends AppCompatActivity
                         if (TextUtils.equals(intent.getAction(), Intent.ACTION_TIME_TICK)) {
                             Log.d("TIME TICK", "time tick");
                             if (didShowStart()) {
+                                unregisterReceiver(broadcastReceiver);
+                                broadcastReceiver = null;
                                 startShow();
                             }
                         }
@@ -186,7 +188,7 @@ public class CammentMainActivity extends AppCompatActivity
         if (videoView != null
                 && mediaController != null) {
             Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
-            videoView.setMediaController(mediaController);
+            videoView.setMediaController(isTestPasscode() ? null : mediaController);
             videoView.setVideoURI(uri);
             videoView.setOnPreparedListener(this);
             videoView.seekTo(currentPosition);
@@ -272,6 +274,7 @@ public class CammentMainActivity extends AppCompatActivity
         if (isTestPasscode()) {
             Log.d("SYNC", "sync");
 
+            mediaPlayer.setLooping(false);
             syncUser();
 
             int topContainerId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
@@ -294,6 +297,7 @@ public class CammentMainActivity extends AppCompatActivity
 
     private void startShow() {
         if (videoView != null) {
+            tvShowOnHold.setVisibility(View.GONE);
             videoView.seekTo(currentPosition);
             videoView.start();
         }

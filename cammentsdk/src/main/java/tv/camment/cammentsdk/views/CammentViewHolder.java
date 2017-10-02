@@ -16,8 +16,7 @@ import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
-import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 
@@ -51,25 +50,17 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public boolean onLongClick(View view) {
                 if (!TextUtils.isEmpty(camment.getUserCognitoIdentityId())) {
-                    ApiManager.getInstance().getUserApi().getMyUserCognitoId(new CammentCallback<String>() {
-                        @Override
-                        public void onSuccess(String cognitoId) {
-                            if (actionListener != null) {
-                                actionListener.onCammentBottomSheetDisplayed();
-                            }
+                    final String cognitoId = IdentityPreferences.getInstance().getIdentityId();
 
-                            if (camment.getUserCognitoIdentityId().equals(cognitoId)) {
-                                CammentBottomSheetDialog dialog = new CammentBottomSheetDialog(itemView.getContext());
-                                dialog.setCamment(camment);
-                                dialog.show();
-                            }
-                        }
+                    if (actionListener != null) {
+                        actionListener.onCammentBottomSheetDisplayed();
+                    }
 
-                        @Override
-                        public void onException(Exception exception) {
-
-                        }
-                    });
+                    if (camment.getUserCognitoIdentityId().equals(cognitoId)) {
+                        CammentBottomSheetDialog dialog = new CammentBottomSheetDialog(itemView.getContext());
+                        dialog.setCamment(camment);
+                        dialog.show();
+                    }
                 }
                 return true;
             }

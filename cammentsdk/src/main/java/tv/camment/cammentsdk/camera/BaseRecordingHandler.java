@@ -16,6 +16,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 
@@ -118,6 +119,7 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
         camment.setUrl(FileUtils.getInstance().getUploadCammentFile(camment.getUuid()).toString());
         camment.setRecorded(false);
         camment.setTimestamp(System.currentTimeMillis());
+        camment.setUserCognitoIdentityId(IdentityPreferences.getInstance().getIdentityId());
 
         CammentProvider.insertCamment(camment);
 

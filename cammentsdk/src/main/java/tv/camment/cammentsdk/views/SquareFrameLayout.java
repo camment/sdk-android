@@ -2,11 +2,12 @@ package tv.camment.cammentsdk.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 public final class SquareFrameLayout extends FrameLayout {
 
-    private float customScale = 1.0f;
+    private float customScale = 0.5f;
 
     public SquareFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -21,8 +22,11 @@ public final class SquareFrameLayout extends FrameLayout {
     }
 
     public void setCustomScale(float customScale) {
-        this.customScale = customScale;
-        requestLayout();
+        Log.d("customScale", this.toString() + "" + customScale);
+        if (this.customScale != customScale) {
+            this.customScale = customScale;
+            requestLayout();
+        }
     }
 
     public float getCustomScale() {

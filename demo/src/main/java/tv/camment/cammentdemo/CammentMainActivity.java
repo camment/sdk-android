@@ -175,7 +175,11 @@ public class CammentMainActivity extends AppCompatActivity
         final double numerator = max - amount > 0 ? Math.log(max - amount) : 0;
         final float volume = (float) (1 - (numerator / Math.log(max)));
 
-        mediaPlayer.setVolume(volume, volume);
+        try {
+            mediaPlayer.setVolume(volume, volume);
+        } catch (Exception e) {
+
+        }
     }
 
     @Override

@@ -36,6 +36,7 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BaseIoTHelper extends CammentAsyncClient
@@ -93,7 +94,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 }
                 mqttManager.subscribeToTopic(AWSConfig.IOT_TOPIC, AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
 
-                mqttManager.subscribeToTopic(AWSConfig.IOT_USER_TOPIC + AWSManager.getInstance().getUserIdentityId(), AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
+                mqttManager.subscribeToTopic(AWSConfig.IOT_USER_TOPIC + IdentityPreferences.getInstance().getIdentityId(), AWSIotMqttQos.QOS0, getAWSIotMqttNewMessageCallback());
 
                 return new Object();
             }
@@ -104,7 +105,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-
+                Log.d("onSuccess", "subscribeToIoT");
             }
 
             @Override
@@ -118,7 +119,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new AWSIotMqttNewMessageCallback() {
             @Override
             public void onMessageArrived(String topic, byte[] data) {
-                String identityId = AWSManager.getInstance().getUserIdentityId();
+                String identityId = IdentityPreferences.getInstance().getIdentityId();
                 String iotUserTopic = AWSConfig.IOT_USER_TOPIC + identityId;
 
                 String message = null;

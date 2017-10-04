@@ -58,7 +58,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
 
-            connectToIoT();
+            //connectToIoT();
         }
     }
 

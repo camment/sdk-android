@@ -28,7 +28,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
     private final String KEY_FORMAT = "uploads/%s.mp4";
     private final String MIME_TYPE = "video/mp4";
 
-    private final TransferUtility transferUtility;
+    private TransferUtility transferUtility;
 
     private TransferObserver transferObserver;
 
@@ -75,11 +75,21 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         };
     }
 
+    private void cleanup(int id) {
+        transferUtility.deleteTransferRecord(id);
+        transferUtility = null;
+        transferObserver.cleanTransferListener();
+        transferObserver = null;
+        executorService.shutdown();
+        executorService = null;
+    }
+
     private TransferListener getTransferListener() {
         return new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
+                    cleanup(id);
                     final CCamment camment = CammentProvider.getCammentByTransferId(id);
                     if (camment != null && !TextUtils.isEmpty(camment.getUuid())) {
                         ApiManager.getInstance().getCammentApi().createUserGroupCamment(camment);
@@ -96,7 +106,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
             public void onError(int id, Exception ex) {
                 if (ex instanceof AmazonClientException) {
                     final CCamment camment = CammentProvider.getCammentByTransferId(id);
-                    uploadCammentFile(camment);
+                    AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
                 }
             }
         };

@@ -24,7 +24,7 @@ public abstract class CammentAsyncClient {
     private static final Handler UI_HANDLER = new Handler(Looper.getMainLooper());
     private static final Thread UI_THREAD = Looper.getMainLooper().getThread();
 
-    private final ExecutorService executorService;
+    protected ExecutorService executorService;
 
     protected CammentAsyncClient(ExecutorService executorService) {
         this.executorService = executorService;

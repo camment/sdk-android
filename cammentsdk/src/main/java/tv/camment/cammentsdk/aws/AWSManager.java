@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 public final class AWSManager {
@@ -76,7 +77,7 @@ public final class AWSManager {
     }
 
     private TransferUtility getTransferUtility() {
-        return new TransferUtility(getAmazonS3(), CammentSDK.getInstance().getApplicationContext());
+        return TransferUtility.builder().s3Client(getAmazonS3()).context(CammentSDK.getInstance().getApplicationContext()).build();
     }
 
     private KeystoreHelper getKeystoreHelper() {
@@ -92,7 +93,7 @@ public final class AWSManager {
     }
 
     AWSIotMqttManager getAWSIotMqttManager() {
-        return new AWSIotMqttManager(getUserIdentityId(), AWSConfig.IOT_ENDPOINT);
+        return new AWSIotMqttManager(IdentityPreferences.getInstance().getIdentityId(), AWSConfig.IOT_ENDPOINT);
     }
 
     private KeyStore getClientKeyStore() {

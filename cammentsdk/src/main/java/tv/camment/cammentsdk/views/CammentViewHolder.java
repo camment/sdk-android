@@ -114,7 +114,6 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
             }
         } else {
             Glide.with(CammentSDK.getInstance().getApplicationContext())
-                    .asBitmap()
                     .load(camment.getThumbnail())
                     .into(ivThumbnail);
         }

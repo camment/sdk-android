@@ -108,7 +108,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
     }
 
     public void handleDeeplink(String scheme) {
-        String groupUuid = GeneralPreferences.getInstance().getDeeplinkUuid();
+        String groupUuid = GeneralPreferences.getInstance().getDeeplinkGroupUuid();
+        String showUuid = GeneralPreferences.getInstance().getDeeplinkShowUuid();
 
         if (TextUtils.isEmpty(groupUuid)
                 && GeneralPreferences.getInstance().isFirstStartup()) {
@@ -120,12 +121,14 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         if (!TextUtils.isEmpty(groupUuid)) {
             if (FacebookHelper.getInstance().isLoggedIn()
                     && ioTHelper != null) {
-                GeneralPreferences.getInstance().setDeeplinkUuid("");
+                GeneralPreferences.getInstance().setDeeplinkGroupUuid("");
+                GeneralPreferences.getInstance().setDeeplinkShowUuid("");
 
                 InvitationMessage invitationMessage = new InvitationMessage();
                 invitationMessage.type = MessageType.INVITATION;
                 invitationMessage.body = new InvitationMessage.Body();
                 invitationMessage.body.groupUuid = groupUuid;
+                invitationMessage.body.showUuid = showUuid;
                 invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
                 ioTHelper.handleInvitationMessage(invitationMessage);
             } else if (!FacebookHelper.getInstance().isLoggedIn()) {

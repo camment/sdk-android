@@ -105,7 +105,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-                Log.d("onSuccess", "subscribeToIoT");
+
             }
 
             @Override
@@ -327,7 +327,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d("GROUP ACCEPTED", message.body.groupUuid);
                 Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
                         R.string.cmmsdk_joined_private_chat, Toast.LENGTH_LONG).show();
             }
@@ -341,8 +340,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         UserGroupProvider.insertUserGroup(usergroup);
 
         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-
-        Log.d("GROUP ACCEPTED SET", UserGroupProvider.getUserGroup().getUuid());
     }
 
     @Override

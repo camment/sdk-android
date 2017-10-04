@@ -3,13 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
+    android:background="@android:color/black"
     android:layout_marginTop="2dp">
-
-    <tv.camment.cammentsdk.views.SquareTextureView
-        android:id="@+id/cmmsdk_texture_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="2dp" />
 
     <tv.camment.cammentsdk.views.SquareImageView
         android:id="@+id/cmmsdk_iv_thumbnail"

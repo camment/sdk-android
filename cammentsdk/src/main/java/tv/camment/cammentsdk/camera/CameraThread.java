@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import tv.camment.cammentsdk.SDKConfig;
-
 @SuppressWarnings("deprecation")
 final class CameraThread extends Thread {
 

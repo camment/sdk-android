@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import static tv.camment.cammentsdk.data.DataContract.AUTHORITY;
 import static tv.camment.cammentsdk.data.DataContract.AUTHORITY_URI;
@@ -41,8 +40,6 @@ public final class DataProvider extends ContentProvider {
 
         AUTHORITY = info.authority;
         AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
-
-        Log.d("AUTHORITY", AUTHORITY);
 
         uriMatcher.addURI(AUTHORITY, Tables.USER_GROUP, Codes.USER_GROUP);
         uriMatcher.addURI(AUTHORITY, Tables.USER_GROUP_ID, Codes.USER_GROUP_ID);

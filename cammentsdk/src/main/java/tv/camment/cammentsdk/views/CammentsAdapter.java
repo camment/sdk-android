@@ -33,6 +33,11 @@ final class CammentsAdapter extends RecyclerView.Adapter {
     }
 
     public void setData(List<CCamment> camments) {
+        if (this.camments != null
+                && this.camments.size() == camments.size()) {
+            return;
+        }
+
         Set<CCamment> cammentSet = new HashSet<>();
         cammentSet.addAll(camments);
 

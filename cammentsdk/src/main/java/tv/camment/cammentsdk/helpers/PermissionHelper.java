@@ -79,7 +79,7 @@ public final class PermissionHelper implements EasyPermissions.PermissionCallbac
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-
+            //TODO do we need to handle this?
         }
     }
 

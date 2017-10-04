@@ -22,6 +22,7 @@ final class CameraHandler extends Handler {
 
     /**
      * request to stop camera preview
+     *
      * @param needWait need to wait for stopping camera preview
      */
     void stopPreview(final boolean needWait) {

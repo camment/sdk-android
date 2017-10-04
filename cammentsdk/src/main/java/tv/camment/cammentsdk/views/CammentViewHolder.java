@@ -7,8 +7,10 @@ import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +19,7 @@ import com.camment.clientsdk.model.Camment;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 
@@ -28,6 +31,8 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivThumbnail;
     private TextureView textureView;
 
+    private boolean cammentClicked;
+
     CammentViewHolder(final View itemView, final CammentsAdapter.ActionListener actionListener) {
         super(itemView);
 
@@ -37,7 +42,6 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         itemView.setPivotY(0);
 
         ivThumbnail = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_thumbnail);
-        textureView = (TextureView) itemView.findViewById(R.id.cmmsdk_texture_view);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,31 +75,46 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
 
     private void handleOnItemClick() {
         if (camment != null && actionListener != null) {
+            cammentClicked = true;
+            textureView = new SquareTextureView(itemView.getContext());
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+            int dp2 = CommonUtils.dpToPx(CammentSDK.getInstance().getApplicationContext(), 2);
+            params.setMargins(dp2, dp2, dp2, dp2);
+            ((SquareFrameLayout) itemView).addView(textureView, 0, params);
             actionListener.onCammentClick(this, camment, textureView);
         }
     }
 
-    public void setItemViewScale(float scale) {
+    void setItemViewScale(float scale) {
         if (itemView instanceof SquareFrameLayout) {
-            ((SquareFrameLayout) itemView).setCustomScale(scale);
-            if (scale == 0.5f) {
-                setThumbnailVisibility(View.VISIBLE);
+            if (getItemViewScale() != scale) {
+                ((SquareFrameLayout) itemView).setCustomScale(scale);
+                if (scale == 0.5f) {
+                    setThumbnailVisibility(View.VISIBLE);
+                }
+                if (textureView != null
+                        && !cammentClicked
+                        && scale == 0.5f) {
+                    ((SquareFrameLayout) itemView).removeView(textureView);
+                }
             }
+            cammentClicked = false;
         }
     }
 
-    public void setThumbnailVisibility(int visibility) {
+    void setThumbnailVisibility(int visibility) {
         ivThumbnail.setVisibility(visibility);
     }
 
-    public float getItemViewScale() {
+    float getItemViewScale() {
         if (itemView instanceof SquareFrameLayout) {
             return ((SquareFrameLayout) itemView).getCustomScale();
         }
         return 1.0f;
     }
 
-    public void bindData(Camment camment) {
+    void bindData(Camment camment) {
         if (camment == null)
             return;
 

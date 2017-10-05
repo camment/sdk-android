@@ -34,6 +34,15 @@ public final class CammentSDK extends BaseCammentSDK {
         super.setShowUuid(showUuid);
     }
 
+    public void setOnDeeplinkShowOpenListener(OnDeeplinkShowOpenListener onDeeplinkShowOpenListener) {
+        super.setOnDeeplinkShowOpenListener(onDeeplinkShowOpenListener);
+    }
+
+    public OnDeeplinkShowOpenListener getOnDeeplinkShowOpenListener() {
+        return super.getOnDeeplinkShowOpenListener();
+    }
+
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }

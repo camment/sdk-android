@@ -39,6 +39,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
     private IoTHelper ioTHelper;
 
+    private OnDeeplinkShowOpenListener onDeeplinkShowOpenListener;
+
     synchronized void init(Context context) {
         if (applicationContext == null || applicationContext.get() == null) {
             if (context == null || !(context instanceof Application)) {
@@ -75,6 +77,14 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         show.setUuid(showUuid);
 
         GeneralPreferences.getInstance().setActiveShowUuid(show.getUuid());
+    }
+
+    void setOnDeeplinkShowOpenListener(OnDeeplinkShowOpenListener onDeeplinkShowOpenListener) {
+        this.onDeeplinkShowOpenListener = onDeeplinkShowOpenListener;
+    }
+
+    OnDeeplinkShowOpenListener getOnDeeplinkShowOpenListener() {
+        return onDeeplinkShowOpenListener;
     }
 
     public void connectToIoT() {
@@ -143,11 +153,12 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
             public void onSuccess(Deeplink result) {
                 if (!TextUtils.isEmpty(result.getUrl())) {
                     String[] split = result.getUrl().split("/");
-                    if (split.length > 0) {
+                    if (split.length > 3) {
                         InvitationMessage invitationMessage = new InvitationMessage();
                         invitationMessage.type = MessageType.INVITATION;
                         invitationMessage.body = new InvitationMessage.Body();
-                        invitationMessage.body.groupUuid = split[split.length - 1];
+                        invitationMessage.body.groupUuid = split[split.length - 3];
+                        invitationMessage.body.showUuid = split[split.length - 1];
                         invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
                         ioTHelper.handleInvitationMessage(invitationMessage);
                     }
@@ -202,4 +213,5 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
             }
         };
     }
+
 }

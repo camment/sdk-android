@@ -17,6 +17,7 @@ public class CammentApp extends Application {
         }
 
         CammentSDK.getInstance().init(this);
+        CammentSDK.getInstance().setOnDeeplinkShowOpenListener(new ShowNavigator());
     }
 
 }

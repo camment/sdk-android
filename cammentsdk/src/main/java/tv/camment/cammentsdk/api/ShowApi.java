@@ -1,9 +1,11 @@
 package tv.camment.cammentsdk.api;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.camment.clientsdk.DevcammentClient;
+import com.camment.clientsdk.model.Show;
 import com.camment.clientsdk.model.ShowList;
 
 import java.util.concurrent.Callable;
@@ -52,7 +54,33 @@ public final class ShowApi extends CammentAsyncClient {
 
             @Override
             public void onException(Exception exception) {
-                Log.e("onException", "shows", exception);
+                Log.e("onException", "getShows", exception);
+            }
+        };
+    }
+
+    public void getShowByUuid(final String uuid) {
+        submitTask(new Callable<Show>() {
+            @Override
+            public Show call() throws Exception {
+                return devcammentClient.showsUuidGet(uuid);
+            }
+        }, getShowByUuidCallback());
+    }
+
+    private CammentCallback<Show> getShowByUuidCallback() {
+        return new CammentCallback<Show>() {
+            @Override
+            public void onSuccess(Show show) {
+                if (show != null
+                        && !TextUtils.isEmpty(show.getUrl())) {
+                    ShowProvider.insertShow(show);
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getShows", exception);
             }
         };
     }

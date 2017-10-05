@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -38,8 +39,21 @@ public class CammentMainActivity extends AppCompatActivity
 
     public static void start(Context context, String showUuid) {
         Intent intent = new Intent(context, CammentMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_SHOW_UUID, showUuid);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        currentPosition = 0;
+        if (videoView != null) {
+            videoView.stopPlayback();
+            videoView.suspend();
+        }
+        prepareAndPlayVideo(true);
     }
 
     @Override

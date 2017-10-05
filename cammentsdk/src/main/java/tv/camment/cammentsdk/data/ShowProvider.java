@@ -96,4 +96,18 @@ public final class ShowProvider {
                 null, null, null, null);
     }
 
+    public static void insertShow(Show show) {
+        if (show == null)
+            return;
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(DataContract.Show.uuid, show.getUuid());
+        cv.put(DataContract.Show.url, show.getUrl());
+        cv.put(DataContract.Show.thumbnail, show.getThumbnail());
+
+        CammentSDK.getInstance().getApplicationContext().getContentResolver()
+                .insert(DataContract.Show.CONTENT_URI, cv);
+    }
+
 }

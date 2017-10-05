@@ -347,7 +347,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         switch (baseMessage.type) {
             case INVITATION:
                 InvitationMessage invitationMessage = (InvitationMessage) baseMessage;
-                ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid);
+                ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
                 break;
             case MEMBERSHIP_REQUEST:
                 MembershipRequestMessage membershipRequestMessage = (MembershipRequestMessage) baseMessage;

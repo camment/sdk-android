@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.OnDeeplinkGetListener;
+import tv.camment.cammentsdk.OnDeeplinkShowOpenListener;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -52,7 +53,7 @@ public final class InvitationApi extends CammentAsyncClient {
         }, sendInvitationCallback);
     }
 
-    public void sendInvitationForDeeplink(final String groupUuid) {
+    public void sendInvitationForDeeplink(final String groupUuid, final String showUuid) {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -60,14 +61,17 @@ public final class InvitationApi extends CammentAsyncClient {
 
                 return new Object();
             }
-        }, sendInvitationForDeeplinkCallback());
+        }, sendInvitationForDeeplinkCallback(showUuid));
     }
 
-    private CammentCallback<Object> sendInvitationForDeeplinkCallback() {
+    private CammentCallback<Object> sendInvitationForDeeplinkCallback(final String showUuid) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-
+                final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
+                if (onDeeplinkShowOpenListener != null) {
+                    onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
+                }
             }
 
             @Override
@@ -223,8 +227,6 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Object result) {
                 if (accepted) {
-                    Log.d("GROUP ACCEPT SEND", groupUuid);
-
                     DataManager.getInstance().clearDataForUserGroupChange();
 
                     Usergroup usergroup = new Usergroup();
@@ -233,8 +235,6 @@ public final class InvitationApi extends CammentAsyncClient {
                     UserGroupProvider.insertUserGroup(usergroup);
 
                     ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-
-                    Log.d("GROUP ACCEPT SET", UserGroupProvider.getUserGroup().getUuid());
                 }
             }
 

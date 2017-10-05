@@ -2,7 +2,6 @@ package tv.camment.cammentsdk.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 public final class SquareFrameLayout extends FrameLayout {
@@ -22,7 +21,6 @@ public final class SquareFrameLayout extends FrameLayout {
     }
 
     public void setCustomScale(float customScale) {
-        Log.d("customScale", this.toString() + "" + customScale);
         if (this.customScale != customScale) {
             this.customScale = customScale;
             requestLayout();

@@ -37,12 +37,13 @@ public final class GroupApi extends CammentAsyncClient {
             submitBgTask(new Callable<Usergroup>() {
                 @Override
                 public Usergroup call() throws Exception {
-                    return devcammentClient.usergroupsPost();
+                     return devcammentClient.usergroupsPost();
                 }
             }, createEmptyUsergroupInvitationCallback());
         }
     }
 
+    @Deprecated
     public void createEmptyUsergroupIfNeededAndSendInvitation(final List<FacebookFriend> fbFriends,
                                                               final CammentCallback<Object> sendInvitationCallback) {
         Usergroup usergroup = UserGroupProvider.getUserGroup();

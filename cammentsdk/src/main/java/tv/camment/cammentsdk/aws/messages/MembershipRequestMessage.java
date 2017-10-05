@@ -14,10 +14,12 @@ public class MembershipRequestMessage extends BaseMessage {
 
     public static class Body implements Parcelable {
         public String groupUuid;
+        public String showUuid;
         public JoiningUser joiningUser;
 
         Body(Parcel in) {
             groupUuid = in.readString();
+            showUuid = in.readString();
             joiningUser = in.readParcelable(JoiningUser.class.getClassLoader());
         }
 
@@ -41,6 +43,7 @@ public class MembershipRequestMessage extends BaseMessage {
         @Override
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeString(groupUuid);
+            parcel.writeString(showUuid);
             parcel.writeParcelable(joiningUser, i);
         }
     }

@@ -40,13 +40,14 @@ public final class InvitationApi extends CammentAsyncClient {
         this.devcammentClient = devcammentClient;
     }
 
+    @Deprecated
     void sendInvitation(final CammentCallback<Object> sendInvitationCallback) {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
 
-                devcammentClient.usergroupsGroupUuidUsersPost(userGroupUuid);
+                devcammentClient.usergroupsGroupUuidUsersPost(userGroupUuid, "");
 
                 return new Object();
             }
@@ -57,7 +58,7 @@ public final class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                devcammentClient.usergroupsGroupUuidUsersPost(groupUuid);
+                devcammentClient.usergroupsGroupUuidUsersPost(groupUuid, showUuid);
 
                 return new Object();
             }
@@ -203,17 +204,17 @@ public final class InvitationApi extends CammentAsyncClient {
 
                 String md5 = DeeplinkUtils.calculateMD5(sb.toString());
 
-                return devcammentClient.deferredDeeplinkDeeplinkHashGet(md5, "Android");
+                return devcammentClient.deferredDeeplinkGet(md5, "Android");
             }
         }, deferredDeepLinkCallback);
     }
 
-    public void replyToMembershipRequest(final String userId, final String groupUuid, final boolean accept) {
+    public void replyToMembershipRequest(final String userId, final String groupUuid, final String showUuid, final boolean accept) {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 if (accept) {
-                    devcammentClient.usergroupsGroupUuidUsersUserIdPut(userId, groupUuid);
+                    devcammentClient.usergroupsGroupUuidUsersUserIdPut(userId, groupUuid, showUuid);
                 } else {
                     devcammentClient.usergroupsGroupUuidUsersUserIdDelete(userId, groupUuid);
                 }

@@ -354,6 +354,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 ApiManager.getInstance().getInvitationApi().replyToMembershipRequest(
                         membershipRequestMessage.body.joiningUser.userCognitoIdentityId,
                         membershipRequestMessage.body.groupUuid,
+                        membershipRequestMessage.body.showUuid,
                         true
                 );
                 break;
@@ -368,6 +369,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 ApiManager.getInstance().getInvitationApi().replyToMembershipRequest(
                         membershipRequestMessage.body.joiningUser.userCognitoIdentityId,
                         membershipRequestMessage.body.groupUuid,
+                        membershipRequestMessage.body.showUuid,
                         false
                 );
                 break;

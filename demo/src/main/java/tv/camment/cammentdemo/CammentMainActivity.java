@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.camment.clientsdk.model.Show;
+
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.OnDeeplinkGetListener;
 import tv.camment.cammentsdk.data.ShowProvider;
@@ -113,13 +115,16 @@ public class CammentMainActivity extends AppCompatActivity
     private void prepareAndPlayVideo(boolean start) {
         if (videoView != null
                 && mediaController != null) {
-            Uri uri = Uri.parse(ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID)).getUrl());
-            videoView.setMediaController(mediaController);
-            videoView.setVideoURI(uri);
-            videoView.setOnPreparedListener(this);
-            videoView.seekTo(currentPosition);
-            if (start) {
-                videoView.start();
+            final Show show = ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
+            if (show != null) {
+                Uri uri = Uri.parse(show.getUrl());
+                videoView.setMediaController(mediaController);
+                videoView.setVideoURI(uri);
+                videoView.setOnPreparedListener(this);
+                videoView.seekTo(currentPosition);
+                if (start) {
+                    videoView.start();
+                }
             }
         }
     }

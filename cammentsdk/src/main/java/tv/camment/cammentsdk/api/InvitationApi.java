@@ -70,7 +70,8 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Object result) {
                 final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
-                if (onDeeplinkShowOpenListener != null) {
+                if (onDeeplinkShowOpenListener != null
+                        && !TextUtils.isEmpty(showUuid)) {
                     onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
                 }
             }
@@ -220,10 +221,10 @@ public final class InvitationApi extends CammentAsyncClient {
                 }
                 return new Object();
             }
-        }, replyToMembershipRequestCallback(groupUuid, accept));
+        }, replyToMembershipRequestCallback(groupUuid, showUuid, accept));
     }
 
-    private CammentCallback<Object> replyToMembershipRequestCallback(final String groupUuid, final boolean accepted) {
+    private CammentCallback<Object> replyToMembershipRequestCallback(final String groupUuid, final String showUuid, final boolean accepted) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
@@ -236,6 +237,12 @@ public final class InvitationApi extends CammentAsyncClient {
                     UserGroupProvider.insertUserGroup(usergroup);
 
                     ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+
+                    final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
+                    if (onDeeplinkShowOpenListener != null
+                            && !TextUtils.isEmpty(showUuid)) {
+                        onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
+                    }
                 }
             }
 

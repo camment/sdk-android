@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Show;
 
@@ -49,6 +50,9 @@ public final class ShowProvider {
     }
 
     public static Show getShowByUuid(String uuid) {
+        if (TextUtils.isEmpty(uuid))
+            return null;
+
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
 
         String where = DataContract.Show.uuid + "=?";

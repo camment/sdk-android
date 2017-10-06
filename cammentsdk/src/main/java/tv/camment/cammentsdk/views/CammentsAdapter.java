@@ -95,6 +95,21 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
         void onCammentBottomSheetDisplayed();
 
+        void stopCammentIfPlaying(Camment camment);
+
+    }
+
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        if (holder instanceof CammentViewHolder) {
+            ((CammentViewHolder) holder).setItemViewScale(0.5f);
+            ((CammentViewHolder) holder).stopCammentIfPlaying();
+        }
     }
 
 }

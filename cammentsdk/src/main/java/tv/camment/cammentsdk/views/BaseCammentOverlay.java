@@ -222,6 +222,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private void stopCammentPlayback() {
         if (player != null) {
             player.stop();
+            lastVideoCammentUuid = null;
         }
         if (rvCamments != null) {
             rvCamments.showSmallThumbnailsForAllChildren();
@@ -307,6 +308,17 @@ abstract class BaseCammentOverlay extends RelativeLayout
     @Override
     public void onCammentBottomSheetDisplayed() {
         onboardingOverlay.hideTooltipIfNeeded(Step.DELETE);
+    }
+
+    @Override
+    public void stopCammentIfPlaying(Camment camment) {
+        if (camment.getUuid().equals(lastVideoCammentUuid)) {
+            if (cammentAudioListener != null) {
+                cammentAudioListener.onCammentPlaybackEnded();
+            }
+            player.stop();
+            this.lastVideoCammentUuid = null;
+        }
     }
 
     @Override
@@ -415,6 +427,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     public void onRecordingStart() {
         if (PermissionHelper.getInstance().hasPermissions()) {
             onboardingOverlay.hideTooltipIfNeeded(Step.RECORD);
+            stopCammentPlayback();
 
             if (flCamera.getChildCount() < 2) {
                 if (cameraGLView == null) {

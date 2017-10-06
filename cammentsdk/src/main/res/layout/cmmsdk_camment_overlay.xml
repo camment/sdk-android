@@ -64,8 +64,9 @@
     <tv.camment.cammentsdk.views.CammentRecyclerView
         android:id="@+id/cmmsdk_rv_camments"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/cmmsdk_g_camment_list"
         app:layout_constraintTop_toBottomOf="@+id/cmmsdk_fl_camera" />

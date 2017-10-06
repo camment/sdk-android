@@ -103,6 +103,12 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    void stopCammentIfPlaying() {
+        if (actionListener != null) {
+            actionListener.stopCammentIfPlaying(camment);
+        }
+    }
+
     void setThumbnailVisibility(int visibility) {
         ivThumbnail.setVisibility(visibility);
     }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import tv.camment.cammentsdk.api.ApiManager;
+
 
 final class DbHelper extends SQLiteOpenHelper {
 
@@ -20,6 +22,8 @@ final class DbHelper extends SQLiteOpenHelper {
         db.execSQL(createShowTable());
         db.execSQL(createCammentTable());
         db.execSQL(createUserInfoTable());
+
+        ApiManager.getInstance().getUserApi().getMyUserGroups();
     }
 
     @Override

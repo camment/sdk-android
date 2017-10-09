@@ -27,6 +27,7 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.model.CUserGroup;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.views.CammentDialog;
 
@@ -231,17 +232,18 @@ public final class InvitationApi extends CammentAsyncClient {
                 if (accepted) {
                     DataManager.getInstance().clearDataForUserGroupChange();
 
-                    Usergroup usergroup = new Usergroup();
-                    usergroup.setUuid(groupUuid);
+                    CUserGroup userGroupByUuid = UserGroupProvider.getUserGroupByUuid(groupUuid); //TODO what if not in db
 
-                    UserGroupProvider.insertUserGroup(usergroup);
+                    if (userGroupByUuid != null) {
+                        UserGroupProvider.insertUserGroup(userGroupByUuid);
 
-                    ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
 
-                    final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
-                    if (onDeeplinkShowOpenListener != null
-                            && !TextUtils.isEmpty(showUuid)) {
-                        onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
+                        final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
+                        if (onDeeplinkShowOpenListener != null
+                                && !TextUtils.isEmpty(showUuid)) {
+                            onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
+                        }
                     }
                 }
             }

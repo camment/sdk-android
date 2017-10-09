@@ -181,6 +181,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         ApiManager.getInstance().getUserApi().updateUserInfo(true);
 
         ApiManager.getInstance().retryFailedCallsIfNeeded();
+
+        ApiManager.getInstance().getUserApi().getMyUserGroups();
     }
 
     @Override
@@ -200,6 +202,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
                 ApiManager.getInstance().getUserApi().updateUserInfo(true);
 
                 ApiManager.getInstance().retryFailedCallsIfNeeded();
+
+                ApiManager.getInstance().getUserApi().getMyUserGroups();
             }
 
             @Override

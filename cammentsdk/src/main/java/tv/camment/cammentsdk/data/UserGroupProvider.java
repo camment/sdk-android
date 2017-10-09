@@ -3,6 +3,7 @@ package tv.camment.cammentsdk.data;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -14,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.model.CUserGroup;
+import tv.camment.cammentsdk.utils.DateTimeUtils;
 
 
 public final class UserGroupProvider {
@@ -30,15 +33,22 @@ public final class UserGroupProvider {
         if (usergroup == null)
             return;
 
+        Usergroup activeUserGroup = getActiveUserGroup();
+        if (activeUserGroup != null) {
+            setActive(activeUserGroup.getUuid(), false);
+        }
+
         ContentValues cv = new ContentValues();
         cv.put(DataContract.UserGroup.uuid, usergroup.getUuid());
         cv.put(DataContract.UserGroup.userCognitoIdentityId, usergroup.getUserCognitoIdentityId());
-        cv.put(DataContract.UserGroup.timestamp, usergroup.getTimestamp());
+        cv.put(DataContract.UserGroup.timestamp, DateTimeUtils.getTimestampFromIsoDateString(usergroup.getTimestamp()));
         cv.put(DataContract.UserGroup.active, 1);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserGroup.CONTENT_URI, cv);
 
         CammentSDK.getInstance().connectToIoT();
+
+        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
     }
 
     public static void insertUserGroups(List<UsergroupListItem> usergroups) {
@@ -55,7 +65,7 @@ public final class UserGroupProvider {
             cv = new ContentValues();
 
             cv.put(DataContract.UserGroup.uuid, usergroup.getGroupUuid());
-            cv.put(DataContract.UserGroup.timestamp, usergroup.getTimestamp());
+            cv.put(DataContract.UserGroup.timestamp, DateTimeUtils.getTimestampFromIsoDateString(usergroup.getTimestamp()));
             cv.put(DataContract.UserGroup.active, TextUtils.equals(activeUserGroupUuid, usergroup.getGroupUuid()) ? 1 : 0);
 
             values.add(cv);
@@ -90,6 +100,17 @@ public final class UserGroupProvider {
         return usergroup;
     }
 
+    public static void setAllAsNotActive() {
+        DbHelper dbHelper = new DbHelper(CammentSDK.getInstance().getApplicationContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (db != null
+                && db.isOpen()) {
+            db.execSQL("UPDATE " + DataContract.Tables.USER_GROUP + " SET " + DataContract.UserGroup.active + " = 0");
+
+            db.close();
+        }
+    }
+
     public static void setActive(String groupUuid, boolean active) {
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
 
@@ -108,7 +129,7 @@ public final class UserGroupProvider {
         usergroup.setUuid(cursor.getString(cursor.getColumnIndex(DataContract.UserGroup.uuid)));
         usergroup.setUserCognitoIdentityId(cursor.
                 getString(cursor.getColumnIndex(DataContract.UserGroup.userCognitoIdentityId)));
-        usergroup.setTimestamp(cursor.getString(cursor.getColumnIndex(DataContract.UserGroup.timestamp)));
+        usergroup.setLongTimestamp(cursor.getLong(cursor.getColumnIndex(DataContract.UserGroup.timestamp)));
         usergroup.setActive(cursor.getInt(cursor.getColumnIndex(DataContract.UserGroup.active)) == 1);
 
         return usergroup;

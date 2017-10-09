@@ -21,9 +21,7 @@ public final class DataManager {
     }
 
     public void clearDataForUserGroupChange() {
-        UserGroupProvider.deleteUserGroups();
-        CammentProvider.deleteCamments();
-        UserInfoProvider.deleteUserInfos();
+        UserGroupProvider.setAllAsNotActive();
 
         FileUtils.getInstance().deleteAllFiles();
     }

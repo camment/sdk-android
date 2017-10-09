@@ -6,7 +6,7 @@ public final class CUserGroupComparator implements Comparator<CUserGroup> {
 
     @Override
     public int compare(CUserGroup lhs, CUserGroup rhs) {
-        return Long.compare(Long.valueOf(rhs.getTimestamp()), Long.valueOf(lhs.getTimestamp()));
+        return Long.compare(rhs.getLongTimestamp(), lhs.getLongTimestamp());
     }
 
 }

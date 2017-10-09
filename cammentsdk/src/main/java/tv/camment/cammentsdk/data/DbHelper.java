@@ -37,7 +37,7 @@ final class DbHelper extends SQLiteOpenHelper {
                 .primaryKey(DataContract.UserGroup._ID)
                 .columnTextUnique(DataContract.UserGroup.uuid)
                 .columnText(DataContract.UserGroup.userCognitoIdentityId)
-                .columnText(DataContract.UserGroup.timestamp)
+                .columnInt(DataContract.UserGroup.timestamp)
                 .columnInt(DataContract.UserGroup.active)
                 .build();
     }

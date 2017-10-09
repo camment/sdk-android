@@ -212,5 +212,4 @@ public final class DataProvider extends ContentProvider {
         return updateCount;
     }
 
-
 }

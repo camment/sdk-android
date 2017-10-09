@@ -126,6 +126,13 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     }
 
+    void onActiveGroupChanged() {
+        if (getContext() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(1);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
+        }
+    }
+
     private enum Mode {
         GOING_BACK,
         HIDE,

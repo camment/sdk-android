@@ -10,6 +10,7 @@ import java.util.List;
 public final class CUserGroup extends Usergroup {
 
     private boolean active;
+    private long longTimestamp;
     private List<Userinfo> users;
 
     public CUserGroup() {
@@ -41,6 +42,14 @@ public final class CUserGroup extends Usergroup {
 
     public void setUsers(List<Userinfo> users) {
         this.users = users;
+    }
+
+    public long getLongTimestamp() {
+        return longTimestamp;
+    }
+
+    public void setLongTimestamp(long longTimestamp) {
+        this.longTimestamp = longTimestamp;
     }
 
 }

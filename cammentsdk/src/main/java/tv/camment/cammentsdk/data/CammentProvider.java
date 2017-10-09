@@ -5,8 +5,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Camment;
+import com.camment.clientsdk.model.Usergroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,11 +217,18 @@ public final class CammentProvider {
     }
 
     public static Loader<Cursor> getCammentLoader() {
-        String selection = DataContract.Camment.recorded + "=?";
-        String[] selectionArgs = {"1"};
+        Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
 
-        return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
-                null, selection, selectionArgs, DataContract.Camment.timestamp + " DESC");
+        if (activeUserGroup != null
+                && !TextUtils.isEmpty(activeUserGroup.getUuid())) {
+            String selection =  DataContract.Camment.recorded + "=? AND " + DataContract.Camment.userGroupUuid + "=?";
+            String[] selectionArgs = new String[]{"1", activeUserGroup.getUuid()};
+
+            return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
+                    null, selection, selectionArgs, DataContract.Camment.timestamp + " DESC");
+        } else {
+            return null;
+        }
     }
 
 }

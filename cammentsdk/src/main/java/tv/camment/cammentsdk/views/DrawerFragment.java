@@ -1,19 +1,24 @@
 package tv.camment.cammentsdk.views;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.camment.clientsdk.model.Usergroup;
+
 import java.util.List;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -26,6 +31,8 @@ public class DrawerFragment extends Fragment
 
     private RecyclerView rvGroups;
     private UserGroupAdapter adapter;
+
+    private CammentOverlay cammentOverlay;
 
     public static DrawerFragment newInstance() {
         return new DrawerFragment();
@@ -43,6 +50,34 @@ public class DrawerFragment extends Fragment
         return layout;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof AppCompatActivity) {
+            ViewGroup rootView = ((AppCompatActivity) context).findViewById(android.R.id.content);
+            if (rootView != null) {
+                findCammentOverlay(rootView);
+            }
+        }
+
+    }
+
+    private boolean findCammentOverlay(ViewGroup viewGroup) {
+        boolean result = false;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View childAt = viewGroup.getChildAt(i);
+            if (childAt instanceof CammentOverlay) {
+                cammentOverlay = ((CammentOverlay) childAt);
+                result = true;
+                break;
+            } else if (childAt instanceof ViewGroup) {
+                result = findCammentOverlay((ViewGroup) childAt);
+            }
+        }
+        return result;
+    }
+
     private void setupRecyclerView() {
         adapter = new UserGroupAdapter(this);
 
@@ -56,7 +91,7 @@ public class DrawerFragment extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         getLoaderManager().initLoader(1, null, this);
 
         ApiManager.getInstance().getUserApi().getMyUserGroups();
@@ -64,7 +99,20 @@ public class DrawerFragment extends Fragment
 
     @Override
     public void onUserGroupClick(CUserGroup userGroup) {
+        Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+        if (activeUserGroup != null) {
+            UserGroupProvider.setActive(activeUserGroup.getUuid(), false);
+        }
 
+        UserGroupProvider.setActive(userGroup.getUuid(), true);
+
+        if (cammentOverlay != null) {
+            cammentOverlay.onActiveGroupChanged();
+        }
+
+        CammentSDK.getInstance().connectToIoT();
+
+        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
     }
 
     @Override

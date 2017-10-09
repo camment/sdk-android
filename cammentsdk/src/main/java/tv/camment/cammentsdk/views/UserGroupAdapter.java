@@ -30,18 +30,13 @@ final class UserGroupAdapter extends RecyclerView.Adapter {
     }
 
     public void setData(List<CUserGroup> userGroups) {
-        if (this.userGroups != null
-                && this.userGroups.size() == userGroups.size()) {
-            return;
-        }
-
         Set<CUserGroup> userGroupSet = new HashSet<>();
         userGroupSet.addAll(userGroups);
 
         this.userGroups = new ArrayList<>();
 
         this.userGroups.addAll(userGroupSet);
-        //Collections.sort(this.userGroups, new CUserGroupComparator());
+        Collections.sort(this.userGroups, new CUserGroupComparator());
 
         notifyDataSetChanged();
     }

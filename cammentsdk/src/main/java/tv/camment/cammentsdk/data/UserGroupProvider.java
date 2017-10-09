@@ -11,12 +11,15 @@ import android.text.TextUtils;
 import com.camment.clientsdk.model.Usergroup;
 import com.camment.clientsdk.model.UsergroupListItem;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.model.CUserGroup;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.utils.DateTimeUtils;
 
 
@@ -45,6 +48,8 @@ public final class UserGroupProvider {
         cv.put(DataContract.UserGroup.active, 1);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserGroup.CONTENT_URI, cv);
+
+        EventBus.getDefault().post(new UserGroupChangeEvent());
 
         CammentSDK.getInstance().connectToIoT();
 

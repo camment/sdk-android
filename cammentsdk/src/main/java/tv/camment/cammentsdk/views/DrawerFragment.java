@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import com.camment.clientsdk.model.Usergroup;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
@@ -23,6 +25,8 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CUserGroup;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
+import tv.camment.cammentsdk.utils.CommonUtils;
 
 
 public class DrawerFragment extends Fragment
@@ -31,8 +35,6 @@ public class DrawerFragment extends Fragment
 
     private RecyclerView rvGroups;
     private UserGroupAdapter adapter;
-
-    private CammentOverlay cammentOverlay;
 
     public static DrawerFragment newInstance() {
         return new DrawerFragment();
@@ -48,34 +50,6 @@ public class DrawerFragment extends Fragment
         setupRecyclerView();
 
         return layout;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof AppCompatActivity) {
-            ViewGroup rootView = ((AppCompatActivity) context).findViewById(android.R.id.content);
-            if (rootView != null) {
-                findCammentOverlay(rootView);
-            }
-        }
-
-    }
-
-    private boolean findCammentOverlay(ViewGroup viewGroup) {
-        boolean result = false;
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View childAt = viewGroup.getChildAt(i);
-            if (childAt instanceof CammentOverlay) {
-                cammentOverlay = ((CammentOverlay) childAt);
-                result = true;
-                break;
-            } else if (childAt instanceof ViewGroup) {
-                result = findCammentOverlay((ViewGroup) childAt);
-            }
-        }
-        return result;
     }
 
     private void setupRecyclerView() {
@@ -106,9 +80,7 @@ public class DrawerFragment extends Fragment
 
         UserGroupProvider.setActive(userGroup.getUuid(), true);
 
-        if (cammentOverlay != null) {
-            cammentOverlay.onActiveGroupChanged();
-        }
+        EventBus.getDefault().post(new UserGroupChangeEvent());
 
         CammentSDK.getInstance().connectToIoT();
 

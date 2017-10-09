@@ -33,6 +33,12 @@ final class CammentsAdapter extends RecyclerView.Adapter {
     }
 
     public void setData(List<CCamment> camments) {
+        if (camments == null) {
+            this.camments = null;
+            notifyDataSetChanged();
+            return;
+        }
+
         if (this.camments != null
                 && this.camments.size() == camments.size()) {
             return;

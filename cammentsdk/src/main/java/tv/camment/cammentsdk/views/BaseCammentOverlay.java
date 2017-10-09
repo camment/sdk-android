@@ -42,6 +42,10 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -52,6 +56,7 @@ import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -124,13 +129,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    void onActiveGroupChanged() {
-        if (getContext() instanceof AppCompatActivity) {
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(1);
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
-        }
     }
 
     private enum Mode {
@@ -211,6 +209,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
                 && profileTracker.isTracking()) {
             profileTracker.stopTracking();
         }
+        EventBus.getDefault().unregister(this);
         super.onDetachedFromWindow();
     }
 
@@ -254,6 +253,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
                 && !profileTracker.isTracking()) {
             profileTracker.startTracking();
         }
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -547,6 +548,18 @@ abstract class BaseCammentOverlay extends RelativeLayout
     @Override
     public void onOnboardingStart() {
         onboardingOverlay.displayTooltip(Step.RECORD);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UserGroupChangeEvent event) {
+        if (adapter != null) {
+            adapter.setData(null);
+        }
+
+        if (getContext() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(1);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
+        }
     }
 
 }

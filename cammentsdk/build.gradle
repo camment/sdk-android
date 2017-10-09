@@ -44,6 +44,7 @@ ext {
     exoPlayerVersion                =   'r2.4.4'
     glideVersion                    =   '4.0.0'
     easyPermissionsVersion          =   '0.4.2'
+    eventBusVersion                 =   '3.0.0'
 
     awsDependencies = [
             core                    :       "com.amazonaws:aws-android-sdk-core:${awsVersion}",
@@ -65,6 +66,7 @@ ext {
             constraintLayout        :       "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
             exoPlayer               :       "com.google.android.exoplayer:exoplayer:${exoPlayerVersion}",
             easyPermissions         :       "pub.devrel:easypermissions:${easyPermissionsVersion}",
+            eventBus                :       "org.greenrobot:eventbus:${eventBusVersion}",
     ]
 
     glideDependencies = [

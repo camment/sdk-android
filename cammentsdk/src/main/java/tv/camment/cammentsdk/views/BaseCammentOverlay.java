@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
@@ -87,7 +88,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
     private OnboardingOverlay onboardingOverlay;
-    private FrameLayout flDrawer;
 
     private CammentsAdapter adapter;
 
@@ -103,6 +103,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private static MobileAnalyticsManager analytics;
 
     private ProfileTracker profileTracker;
+
+    private DrawerLayout drawerLayout;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -275,6 +277,9 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
+
+//        drawerLayout = (DrawerLayout) findViewById(R.id.cmmsdk_drawer_layout);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         if (getContext() instanceof AppCompatActivity) {
             FragmentManager fm = ((AppCompatActivity) getContext()).getSupportFragmentManager();

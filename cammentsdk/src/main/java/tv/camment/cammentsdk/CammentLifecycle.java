@@ -69,7 +69,7 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
+        previousActivity = null;
     }
 
     public Activity getCurrentActivity() {

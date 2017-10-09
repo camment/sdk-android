@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
@@ -47,15 +48,20 @@ public class CammentMainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        currentPosition = 0;
-        if (videoView != null) {
-            videoView.stopPlayback();
-            videoView.suspend();
+    protected void onNewIntent(Intent newIntent) {
+        super.onNewIntent(newIntent);
+
+        Intent oldIntent = getIntent();
+
+        if (!TextUtils.equals(oldIntent.getStringExtra(EXTRA_SHOW_UUID), newIntent.getStringExtra(EXTRA_SHOW_UUID))) {
+            setIntent(newIntent);
+            currentPosition = 0;
+            if (videoView != null) {
+                videoView.stopPlayback();
+                videoView.suspend();
+            }
+            prepareAndPlayVideo(true);
         }
-        prepareAndPlayVideo(true);
     }
 
     @Override

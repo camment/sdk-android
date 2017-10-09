@@ -85,6 +85,27 @@ public final class UserGroupProvider {
                 .delete(DataContract.UserGroup.CONTENT_URI, null, null);
     }
 
+
+    public static CUserGroup getUserGroupByUuid(String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserGroup.uuid + "=?";
+        String[] selectionArgs = {groupUuid};
+
+        Cursor cursor = cr.query(DataContract.UserGroup.CONTENT_URI, USER_GROUP_PROJECTION, where, selectionArgs, null);
+
+        CUserGroup usergroup = null;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                usergroup = fromCursor(cursor);
+            }
+
+            cursor.close();
+        }
+
+        return usergroup;
+    }
+
     public static Usergroup getActiveUserGroup() {
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
 

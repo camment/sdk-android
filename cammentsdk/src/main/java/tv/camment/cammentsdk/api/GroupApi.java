@@ -29,7 +29,7 @@ public final class GroupApi extends CammentAsyncClient {
     }
 
     public void createEmptyUsergroupIfNeededAndGetDeeplink() {
-        Usergroup usergroup = UserGroupProvider.getUserGroup();
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup != null && !TextUtils.isEmpty(usergroup.getUuid())) {
             ApiManager.getInstance().getInvitationApi().getDeeplinkToShare();
@@ -46,7 +46,7 @@ public final class GroupApi extends CammentAsyncClient {
     @Deprecated
     public void createEmptyUsergroupIfNeededAndSendInvitation(final List<FacebookFriend> fbFriends,
                                                               final CammentCallback<Object> sendInvitationCallback) {
-        Usergroup usergroup = UserGroupProvider.getUserGroup();
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup != null && !TextUtils.isEmpty(usergroup.getUuid())) {
             ApiManager.getInstance().getInvitationApi().sendInvitation(sendInvitationCallback);
@@ -61,7 +61,7 @@ public final class GroupApi extends CammentAsyncClient {
     }
 
     public void createEmptyUsergroupIfNeededAndUploadCamment(final CCamment camment) {
-        Usergroup usergroup = UserGroupProvider.getUserGroup();
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup != null && !TextUtils.isEmpty(usergroup.getUuid())) {
             camment.setUserGroupUuid(usergroup.getUuid());

@@ -116,4 +116,12 @@ final class DbUtils {
 
     }
 
+    /**
+     * Drops the table with given name.
+     */
+    static String dropTable(String tableName) {
+        return "DROP TABLE IF EXISTS " + tableName;
+    }
+
+
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp">
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:padding="8dp"
+        android:textColor="@color/cmmsdk_camment_text_grey"
+        android:textSize="14sp" />
+
+    <View
+        android:id="@+id/cmmsdk_v_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/cmmsdk_tv_group"
+        android:background="@color/cmmsdk_camment_button_grey" />
+
+</RelativeLayout>

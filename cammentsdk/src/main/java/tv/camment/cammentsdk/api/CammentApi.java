@@ -56,7 +56,7 @@ public final class CammentApi extends CammentAsyncClient {
         submitTask(new Callable<CammentList>() {
             @Override
             public CammentList call() throws Exception {
-                final Usergroup usergroup = UserGroupProvider.getUserGroup();
+                final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
                 return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid());
             }

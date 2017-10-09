@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.FacebookFriendList;
+import com.camment.clientsdk.model.UsergroupList;
 import com.camment.clientsdk.model.UserinfoInRequest;
+import com.camment.clientsdk.model.UserinfoList;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
@@ -18,6 +20,8 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.UserInfoProvider;
 
 
 public final class UserApi extends CammentAsyncClient {
@@ -98,6 +102,60 @@ public final class UserApi extends CammentAsyncClient {
                 return AWSManager.getInstance().getCognitoCachingCredentialsProvider().getIdentityId();
             }
         }, getMyUserCognitoIdCallback);
+    }
+
+    public void getMyUserGroups() {
+        submitBgTask(new Callable<UsergroupList>() {
+            @Override
+            public UsergroupList call() throws Exception {
+                return devcammentClient.meGroupsGet();
+            }
+        }, getMyUserGroupsCallback());
+    }
+
+    private CammentCallback<UsergroupList> getMyUserGroupsCallback() {
+        return new CammentCallback<UsergroupList>() {
+            @Override
+            public void onSuccess(UsergroupList result) {
+                Log.d("onSuccess", "getMyUserGroups");
+                if (result != null
+                        && result.getItems() != null) {
+                    UserGroupProvider.insertUserGroups(result.getItems());
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getMyUserGroups", exception);
+            }
+        };
+    }
+
+    public void getUserInfosForGroupUuid(final String groupUuid) {
+        submitBgTask(new Callable<UserinfoList>() {
+            @Override
+            public UserinfoList call() throws Exception {
+                return devcammentClient.usergroupsGroupUuidUsersGet(groupUuid);
+            }
+        }, getUserInfosForGroupUuidCallback(groupUuid));
+    }
+
+    private CammentCallback<UserinfoList> getUserInfosForGroupUuidCallback(final String groupUuid) {
+        return new CammentCallback<UserinfoList>() {
+            @Override
+            public void onSuccess(UserinfoList result) {
+                Log.d("onSuccess", "getUserInfosForGroupUuid");
+                if (result != null
+                        && result.getItems() != null) {
+                    UserInfoProvider.insertUserInfos(result.getItems(), groupUuid);
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getUserInfosForGroupUuid", exception);
+            }
+        };
     }
 
 }

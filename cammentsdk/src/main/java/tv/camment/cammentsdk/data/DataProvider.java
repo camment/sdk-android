@@ -47,6 +47,8 @@ public final class DataProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Tables.SHOW_ID, Codes.SHOW_ID);
         uriMatcher.addURI(AUTHORITY, Tables.CAMMENT, Codes.CAMMENT);
         uriMatcher.addURI(AUTHORITY, Tables.CAMMENT_ID, Codes.CAMMENT_ID);
+        uriMatcher.addURI(AUTHORITY, Tables.USER_INFO, Codes.USER_INFO);
+        uriMatcher.addURI(AUTHORITY, Tables.USER_INFO_ID, Codes.USER_INFO_ID);
     }
 
     @Override
@@ -63,6 +65,10 @@ public final class DataProvider extends ContentProvider {
             case Codes.CAMMENT:
                 return Camment.CONTENT_TYPE;
             case Codes.CAMMENT_ID:
+                return Camment.CONTENT_TYPE_ITEM;
+            case Codes.USER_INFO:
+                return Camment.CONTENT_TYPE;
+            case Codes.USER_INFO_ID:
                 return Camment.CONTENT_TYPE_ITEM;
             default:
                 throw new IllegalArgumentException("unknown uri " + uri);
@@ -84,6 +90,9 @@ public final class DataProvider extends ContentProvider {
             case Codes.CAMMENT:
                 queryBuilder.setTables(Tables.CAMMENT);
                 break;
+            case Codes.USER_INFO:
+                queryBuilder.setTables(Tables.USER_INFO);
+                break;
         }
 
         Cursor cursor = queryBuilder.query(db, projection, selection,
@@ -104,6 +113,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.CAMMENT:
                 id = db.insertWithOnConflict(Tables.CAMMENT, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+                break;
+            case Codes.USER_INFO:
+                id = db.insertWithOnConflict(Tables.USER_INFO, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
                 break;
         }
 
@@ -128,6 +140,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.CAMMENT:
                 table = Tables.CAMMENT;
+                break;
+            case Codes.USER_INFO:
+                table = Tables.USER_INFO;
                 break;
         }
 
@@ -160,6 +175,9 @@ public final class DataProvider extends ContentProvider {
             case Codes.CAMMENT:
                 delCount = db.delete(Tables.CAMMENT, selection, selectionArgs);
                 break;
+            case Codes.USER_INFO:
+                delCount = db.delete(Tables.USER_INFO, selection, selectionArgs);
+                break;
         }
         if (delCount > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
@@ -182,6 +200,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.CAMMENT:
                 updateCount = db.update(Tables.CAMMENT, values, selection, selectionArgs);
+                break;
+            case Codes.USER_INFO:
+                updateCount = db.update(Tables.USER_INFO, values, selection, selectionArgs);
                 break;
         }
 

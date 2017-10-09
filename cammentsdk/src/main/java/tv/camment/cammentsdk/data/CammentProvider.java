@@ -82,7 +82,7 @@ public final class CammentProvider {
                 .bulkInsert(DataContract.Camment.CONTENT_URI, values.toArray(new ContentValues[values.size()]));
     }
 
-    public static void deleteCamments() {
+    static void deleteCamments() {
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .delete(DataContract.Camment.CONTENT_URI, null, null);
     }
@@ -155,9 +155,7 @@ public final class CammentProvider {
 
         ContentValues cv = new ContentValues();
 
-        int rec = recorded ? 1 : 0;
-
-        cv.put(DataContract.Camment.recorded, String.valueOf(rec));
+        cv.put(DataContract.Camment.recorded, String.valueOf(recorded ? 1 : 0));
 
         cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
     }

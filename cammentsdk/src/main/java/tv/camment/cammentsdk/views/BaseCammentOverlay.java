@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MotionEventCompat;
@@ -81,6 +82,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
     private OnboardingOverlay onboardingOverlay;
+    private FrameLayout flDrawer;
 
     private CammentsAdapter adapter;
 
@@ -265,6 +267,11 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
+
+        if (getContext() instanceof AppCompatActivity) {
+            FragmentManager fm = ((AppCompatActivity) getContext()).getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.drawer, DrawerFragment.newInstance()).commit();
+        }
 
         super.onFinishInflate();
     }

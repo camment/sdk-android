@@ -242,7 +242,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private boolean isNewUserInGroupValid(NewUserInGroupMessage m) {
-        Usergroup usergroup = UserGroupProvider.getUserGroup();
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         return usergroup != null
                 && !TextUtils.isEmpty(usergroup.getUuid())
@@ -254,7 +254,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private boolean isCammentValid(CammentMessage m) {
-        Usergroup usergroup = UserGroupProvider.getUserGroup();
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         return usergroup != null
                 && !TextUtils.isEmpty(usergroup.getUuid())

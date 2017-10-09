@@ -32,6 +32,8 @@ final class DataContract {
         String SHOW_ID = "show/*";
         String CAMMENT = "camment";
         String CAMMENT_ID = "camment/*";
+        String USER_INFO = "user_info";
+        String USER_INFO_ID = "user_info/*";
     }
 
     interface Codes {
@@ -41,12 +43,15 @@ final class DataContract {
         int SHOW_ID = 201;
         int CAMMENT = 400;
         int CAMMENT_ID = 401;
+        int USER_INFO = 500;
+        int USER_INFO_ID = 501;
     }
 
     private interface UserGroupColumns {
         String userCognitoIdentityId = "userCognitoIdentityId";
         String uuid = "uuid";
         String timestamp = "timestamp";
+        String active = "active";
     }
 
     static final class UserGroup implements BaseColumns, UserGroupColumns {
@@ -83,6 +88,19 @@ final class DataContract {
         static final String CONTENT_TYPE = buildContentTypeDir(Tables.CAMMENT);
         static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.CAMMENT);
         static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.CAMMENT_ID);
+    }
+
+    private interface UserInfoColumns {
+        String userCognitoIdentityId = "userCognitoIdentityId";
+        String name = "name";
+        String picture = "picture";
+        String groupUuid = "groupUuid";
+    }
+
+    static final class UserInfo implements BaseColumns, UserInfoColumns {
+        static final String CONTENT_TYPE = buildContentTypeDir(Tables.USER_INFO);
+        static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.USER_INFO);
+        static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.USER_INFO_ID);
     }
 
 }

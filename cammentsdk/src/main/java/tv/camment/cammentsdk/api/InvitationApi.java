@@ -45,7 +45,7 @@ public final class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
+                final String userGroupUuid = UserGroupProvider.getActiveUserGroup().getUuid();
 
                 devcammentClient.usergroupsGroupUuidUsersPost(userGroupUuid, "");
 
@@ -133,7 +133,7 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public Deeplink call() throws Exception {
                 final String showUuid = GeneralPreferences.getInstance().getActiveShowUuid();
-                final String userGroupUuid = UserGroupProvider.getUserGroup().getUuid();
+                final String userGroupUuid = UserGroupProvider.getActiveUserGroup().getUuid();
 
                 ShowUuid show = new ShowUuid();
                 show.setShowUuid(showUuid);

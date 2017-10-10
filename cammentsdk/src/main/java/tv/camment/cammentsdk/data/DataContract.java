@@ -64,6 +64,7 @@ final class DataContract {
         String uuid = "uuid";
         String url = "url";
         String thumbnail = "thumbnail";
+        String startAt = "startAt";
     }
 
     static final class Show implements BaseColumns, ShowColumns {

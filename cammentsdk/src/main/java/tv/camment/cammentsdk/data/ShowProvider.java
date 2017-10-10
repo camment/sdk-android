@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Show;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,8 @@ public final class ShowProvider {
             DataContract.Show._ID,
             DataContract.Show.uuid,
             DataContract.Show.url,
-            DataContract.Show.thumbnail};
+            DataContract.Show.thumbnail,
+            DataContract.Show.startAt};
 
     public static void insertShows(List<Show> shows) {
         if (shows == null || shows.size() == 0)
@@ -36,6 +38,7 @@ public final class ShowProvider {
             cv.put(DataContract.Show.uuid, show.getUuid());
             cv.put(DataContract.Show.url, show.getUrl());
             cv.put(DataContract.Show.thumbnail, show.getThumbnail());
+            cv.put(DataContract.Show.startAt, show.getStartAt() != null ? show.getStartAt().longValue() * 1000 : -1);
 
             values.add(cv);
         }
@@ -91,6 +94,8 @@ public final class ShowProvider {
         show.setUuid(cursor.getString(cursor.getColumnIndex(DataContract.Show.uuid)));
         show.setUrl(cursor.getString(cursor.getColumnIndex(DataContract.Show.url)));
         show.setThumbnail(cursor.getString(cursor.getColumnIndex(DataContract.Show.thumbnail)));
+        long startAt = cursor.getLong(cursor.getColumnIndex(DataContract.Show.startAt));
+        show.setStartAt(startAt == -1 ? null : BigDecimal.valueOf(startAt));
 
         return show;
     }
@@ -109,6 +114,7 @@ public final class ShowProvider {
         cv.put(DataContract.Show.uuid, show.getUuid());
         cv.put(DataContract.Show.url, show.getUrl());
         cv.put(DataContract.Show.thumbnail, show.getThumbnail());
+        cv.put(DataContract.Show.startAt, show.getStartAt() != null ? show.getStartAt().longValue() * 1000 : -1);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Show.CONTENT_URI, cv);

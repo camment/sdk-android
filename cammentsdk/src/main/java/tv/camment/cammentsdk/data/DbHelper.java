@@ -10,7 +10,7 @@ import tv.camment.cammentsdk.api.ApiManager;
 final class DbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "cammentsdk";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -22,8 +22,6 @@ final class DbHelper extends SQLiteOpenHelper {
         db.execSQL(createShowTable());
         db.execSQL(createCammentTable());
         db.execSQL(createUserInfoTable());
-
-        ApiManager.getInstance().getUserApi().getMyUserGroups();
     }
 
     @Override
@@ -52,6 +50,7 @@ final class DbHelper extends SQLiteOpenHelper {
                 .columnTextUnique(DataContract.Show.uuid)
                 .columnText(DataContract.Show.url)
                 .columnText(DataContract.Show.thumbnail)
+                .columnInt(DataContract.Show.startAt)
                 .build();
     }
 

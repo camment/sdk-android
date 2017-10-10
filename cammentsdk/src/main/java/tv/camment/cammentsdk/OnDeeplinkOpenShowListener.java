@@ -1,7 +1,7 @@
 package tv.camment.cammentsdk;
 
 
-public interface OnDeeplinkShowOpenListener {
+public interface OnDeeplinkOpenShowListener {
 
     void onOpenShowWithUuid(String showUuid);
 

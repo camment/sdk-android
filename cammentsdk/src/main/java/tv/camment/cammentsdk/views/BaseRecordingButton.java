@@ -7,7 +7,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import tv.camment.cammentsdk.CammentSDK;
@@ -48,9 +47,6 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         final ConstraintLayout.LayoutParams par = (ConstraintLayout.LayoutParams) getLayoutParams();
-
-        Log.d("MOVE", "event: " + MotionEventCompat.getActionMasked(event));
-
 
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_MOVE:

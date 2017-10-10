@@ -3,7 +3,6 @@ package tv.camment.cammentsdk;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.facebook.FacebookCallback;
@@ -34,12 +33,12 @@ public final class CammentSDK extends BaseCammentSDK {
         super.setShowUuid(showUuid);
     }
 
-    public void setOnDeeplinkShowOpenListener(OnDeeplinkShowOpenListener onDeeplinkShowOpenListener) {
-        super.setOnDeeplinkShowOpenListener(onDeeplinkShowOpenListener);
+    public void setOnDeeplinkOpenShowListener(OnDeeplinkOpenShowListener onDeeplinkOpenShowListener) {
+        super.setOnDeeplinkOpenShowListener(onDeeplinkOpenShowListener);
     }
 
-    public OnDeeplinkShowOpenListener getOnDeeplinkShowOpenListener() {
-        return super.getOnDeeplinkShowOpenListener();
+    public OnDeeplinkOpenShowListener getOnDeeplinkOpenShowListener() {
+        return super.getOnDeeplinkOpenShowListener();
     }
 
 

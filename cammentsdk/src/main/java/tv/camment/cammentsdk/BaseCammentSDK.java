@@ -39,7 +39,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
 
     private IoTHelper ioTHelper;
 
-    private OnDeeplinkShowOpenListener onDeeplinkShowOpenListener;
+    private OnDeeplinkOpenShowListener onDeeplinkOpenShowListener;
 
     synchronized void init(Context context) {
         if (applicationContext == null || applicationContext.get() == null) {
@@ -79,12 +79,12 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
         GeneralPreferences.getInstance().setActiveShowUuid(show.getUuid());
     }
 
-    void setOnDeeplinkShowOpenListener(OnDeeplinkShowOpenListener onDeeplinkShowOpenListener) {
-        this.onDeeplinkShowOpenListener = onDeeplinkShowOpenListener;
+    void setOnDeeplinkOpenShowListener(OnDeeplinkOpenShowListener onDeeplinkOpenShowListener) {
+        this.onDeeplinkOpenShowListener = onDeeplinkOpenShowListener;
     }
 
-    OnDeeplinkShowOpenListener getOnDeeplinkShowOpenListener() {
-        return onDeeplinkShowOpenListener;
+    OnDeeplinkOpenShowListener getOnDeeplinkOpenShowListener() {
+        return onDeeplinkOpenShowListener;
     }
 
     public void connectToIoT() {

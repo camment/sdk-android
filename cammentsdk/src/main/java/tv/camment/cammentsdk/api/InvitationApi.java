@@ -12,14 +12,13 @@ import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.AcceptInvitationRequest;
 import com.camment.clientsdk.model.Deeplink;
 import com.camment.clientsdk.model.ShowUuid;
-import com.camment.clientsdk.model.Usergroup;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.OnDeeplinkGetListener;
-import tv.camment.cammentsdk.OnDeeplinkShowOpenListener;
+import tv.camment.cammentsdk.OnDeeplinkOpenShowListener;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -70,10 +69,10 @@ public final class InvitationApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
-                if (onDeeplinkShowOpenListener != null
+                final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
+                if (onDeeplinkOpenShowListener != null
                         && !TextUtils.isEmpty(showUuid)) {
-                    onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
+                    onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
                 }
             }
 
@@ -239,10 +238,10 @@ public final class InvitationApi extends CammentAsyncClient {
 
                         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
 
-                        final OnDeeplinkShowOpenListener onDeeplinkShowOpenListener = CammentSDK.getInstance().getOnDeeplinkShowOpenListener();
-                        if (onDeeplinkShowOpenListener != null
+                        final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
+                        if (onDeeplinkOpenShowListener != null
                                 && !TextUtils.isEmpty(showUuid)) {
-                            onDeeplinkShowOpenListener.onOpenShowWithUuid(showUuid);
+                            onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
                         }
                     }
                 }

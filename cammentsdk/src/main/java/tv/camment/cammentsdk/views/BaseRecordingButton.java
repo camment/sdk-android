@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import tv.camment.cammentsdk.CammentSDK;
@@ -30,6 +31,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
 
     ActionsListener actionsListener;
     private long lastClick;
+    private boolean recordingStopCalled;
 
     BaseRecordingButton(Context context) {
         super(context);
@@ -47,6 +49,9 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
     public boolean onTouchEvent(MotionEvent event) {
         final ConstraintLayout.LayoutParams par = (ConstraintLayout.LayoutParams) getLayoutParams();
 
+        Log.d("MOVE", "event: " + MotionEventCompat.getActionMasked(event));
+
+
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_MOVE:
                 if (!PermissionHelper.getInstance().hasPermissions()
@@ -54,7 +59,8 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                     return true;
                 }
 
-                if (Math.abs(prevY - event.getRawY()) > MOVE_THRESHOLD) {
+                if (Math.abs(prevY - event.getRawY()) > MOVE_THRESHOLD
+                        && !recordingStopCalled) {
                     setAlpha(0.5f);
                     setScaleX(1.0f);
                     setScaleY(1.0f);
@@ -62,6 +68,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                     if (actionsListener != null) {
                         actionsListener.onRecordingStop(true);
                     }
+                    recordingStopCalled = true;
                 }
 
                 if (prevY >= screenHeight / 2) {
@@ -72,6 +79,9 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                         if (actionsListener != null) {
                             actionsListener.onPulledDown();
                         }
+                    } else {
+                        par.topMargin = prevY;
+                        setLayoutParams(par);
                     }
                 } else {
                     par.topMargin += (int) event.getRawY() - prevY;
@@ -86,7 +96,8 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                     return true;
                 }
 
-                if (actionsListener != null) {
+                if (actionsListener != null
+                        && !recordingStopCalled) {
                     actionsListener
                             .onRecordingStop(MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_CANCEL);
                 }
@@ -99,6 +110,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                 return true;
             case MotionEvent.ACTION_DOWN:
                 handledPullDown = false;
+                recordingStopCalled = false;
 
                 if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
                     BaseMessage message = new BaseMessage();

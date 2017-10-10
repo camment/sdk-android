@@ -468,6 +468,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onRecordingStop(boolean cancelled) {
+        Log.d("MOVE", "onRecordingStop");
         AnimationUtils.cancelAppearAnimation();
 
         if (recordingHandler != null) {

@@ -59,30 +59,13 @@ public final class ShowApi extends CammentAsyncClient {
         };
     }
 
-    public void getShowByUuid(final String uuid) {
+    public void getShowByUuid(final String uuid, final CammentCallback<Show> getShowByUuidCallback) {
         submitTask(new Callable<Show>() {
             @Override
             public Show call() throws Exception {
                 return devcammentClient.showsUuidGet(uuid);
             }
-        }, getShowByUuidCallback());
-    }
-
-    private CammentCallback<Show> getShowByUuidCallback() {
-        return new CammentCallback<Show>() {
-            @Override
-            public void onSuccess(Show show) {
-                if (show != null
-                        && !TextUtils.isEmpty(show.getUrl())) {
-                    ShowProvider.insertShow(show);
-                }
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("onException", "getShows", exception);
-            }
-        };
+        }, getShowByUuidCallback);
     }
 
 }

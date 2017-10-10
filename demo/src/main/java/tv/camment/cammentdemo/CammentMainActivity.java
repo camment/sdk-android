@@ -20,6 +20,8 @@ import com.camment.clientsdk.model.Show;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.OnDeeplinkGetListener;
+import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
@@ -131,8 +133,29 @@ public class CammentMainActivity extends AppCompatActivity
                 if (start) {
                     videoView.start();
                 }
+            } else {
+                ApiManager.getInstance().getShowApi()
+                        .getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID), getShowByUuidCallback());
             }
         }
+    }
+
+    private CammentCallback<Show> getShowByUuidCallback() {
+        return new CammentCallback<Show>() {
+            @Override
+            public void onSuccess(Show show) {
+                if (show != null
+                        && !TextUtils.isEmpty(show.getUrl())) {
+                    ShowProvider.insertShow(show);
+                    prepareAndPlayVideo(true);
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getShows", exception);
+            }
+        };
     }
 
     @Override
@@ -212,4 +235,5 @@ public class CammentMainActivity extends AppCompatActivity
         this.mediaPlayer = mediaPlayer;
         mediaPlayer.setLooping(true);
     }
+
 }

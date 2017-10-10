@@ -11,6 +11,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
+
 public final class CammentPasscodeDialog extends DialogFragment {
 
     private EditText etPasscode;
@@ -44,6 +46,9 @@ public final class CammentPasscodeDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.camment_passcode_dialog, container);
 
         etPasscode = (EditText) view.findViewById(R.id.et_passcode);
+        etPasscode.setText(GeneralPreferences.getInstance().getProviderPasscode());
+        etPasscode.setSelection(etPasscode.getText().length());
+
         btnPositive = (Button) view.findViewById(R.id.btn_positive);
         btnNegative = (Button) view.findViewById(R.id.btn_negative);
 

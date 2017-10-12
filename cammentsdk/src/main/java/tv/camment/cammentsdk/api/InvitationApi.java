@@ -47,7 +47,7 @@ public final class InvitationApi extends CammentAsyncClient {
             public Object call() throws Exception {
                 final String userGroupUuid = UserGroupProvider.getActiveUserGroup().getUuid();
 
-                devcammentClient.usergroupsGroupUuidUsersPost(userGroupUuid, "");
+                devcammentClient.usergroupsGroupUuidUsersPost(userGroupUuid, null);
 
                 return new Object();
             }
@@ -58,7 +58,9 @@ public final class InvitationApi extends CammentAsyncClient {
         submitTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                devcammentClient.usergroupsGroupUuidUsersPost(groupUuid, showUuid);
+                ShowUuid showuuid = new ShowUuid();
+                showuuid.setShowUuid(showUuid);
+                devcammentClient.usergroupsGroupUuidUsersPost(groupUuid, showuuid);
 
                 return new Object();
             }

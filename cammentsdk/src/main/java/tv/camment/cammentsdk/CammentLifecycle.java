@@ -43,6 +43,8 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
                 || activity instanceof DeeplinkIgnore)
             return;
 
+        CammentSDK.getInstance().connectToIoT();
+
         previousActivity = currentActivity;
         currentActivity = new WeakReference<>(activity);
 

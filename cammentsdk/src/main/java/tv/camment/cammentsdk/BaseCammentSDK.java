@@ -88,8 +88,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
     }
 
     public void connectToIoT() {
-        if (ioTHelper != null
-                && FacebookHelper.getInstance().isLoggedIn()) {
+        if (ioTHelper != null) {
             ioTHelper.connect();
         }
     }

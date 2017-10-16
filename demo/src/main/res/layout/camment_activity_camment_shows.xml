@@ -42,8 +42,9 @@
                 android:lines="1"
                 android:text="@string/camment_disconnected"
                 android:textAllCaps="true"
+                android:layout_marginTop="-4dp"
                 android:textColor="@color/cmmsdk_camment_text_grey"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 

@@ -9,6 +9,8 @@ android {
 
     def MINOR_VERSION = 0;
 
+    def MICRO_VERSION = 3;
+
     defaultConfig {
         applicationId "tv.camment.cammentdemo"
 
@@ -16,7 +18,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
 
         versionName "1." + MAJOR_VERSION + "." + MINOR_VERSION
-        versionCode 1 * 100000000 + 10000 * MAJOR_VERSION + MINOR_VERSION
+        versionCode 1 * 100000000 + 10000 * MAJOR_VERSION + 100 * MINOR_VERSION + MICRO_VERSION
 
         resValue "string", "camment_api_key", "Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi"
 

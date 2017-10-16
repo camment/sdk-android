@@ -43,11 +43,6 @@ public final class ShowApi extends CammentAsyncClient {
                         && result.getItems() != null) {
                     ShowProvider.deleteShows();
                     ShowProvider.insertShows(result.getItems());
-                    if (result.getItems().size() == 0) {
-                        Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
-                                CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_passcode_error),
-                                Toast.LENGTH_LONG).show();
-                    }
                 }
             }
 

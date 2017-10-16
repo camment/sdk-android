@@ -1,5 +1,6 @@
 package tv.camment.cammentdemo;
 
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,7 +24,7 @@ class CammentShowViewHolder extends RecyclerView.ViewHolder {
 
         ivShowThumbnail = (ImageView) itemView.findViewById(R.id.iv_show_thumbnail);
 
-        ivShowThumbnail.setOnClickListener(clickListener);
+        itemView.setOnClickListener(clickListener);
     }
 
     void bindData(Show show) {
@@ -34,11 +35,17 @@ class CammentShowViewHolder extends RecyclerView.ViewHolder {
                 .into(ivShowThumbnail);
     }
 
-
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (actionListener != null) {
+                ivShowThumbnail.setColorFilter(itemView.getResources().getColor(R.color.cmmsdk_camment_button_grey), PorterDuff.Mode.MULTIPLY);
+                itemView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ivShowThumbnail.clearColorFilter();
+                    }
+                }, 100);
                 actionListener.onShowClick(show);
             }
         }

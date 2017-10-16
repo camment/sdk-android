@@ -12,9 +12,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.camment.clientsdk.model.Show;
@@ -33,8 +33,8 @@ public class CammentShowsActivity extends AppCompatActivity
         CammentShowsAdapter.ActionListener,
         CammentPasscodeDialog.ActionListener {
 
-    private RecyclerView rvShows;
     private CammentShowsAdapter adapter;
+    private LinearLayout llEmpty;
 
     public static void startClearHistory(Context context) {
         Intent intent = new Intent(context, CammentShowsActivity.class);
@@ -47,7 +47,17 @@ public class CammentShowsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camment_activity_camment_shows);
 
-        rvShows = (RecyclerView) findViewById(R.id.rv_shows);
+        RecyclerView rvShows = (RecyclerView) findViewById(R.id.rv_shows);
+
+        Button btnPasscode = (Button) findViewById(R.id.btn_passcode);
+        btnPasscode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPasscodeClick();
+            }
+        });
+
+        llEmpty = (LinearLayout) findViewById(R.id.ll_empty);
 
         adapter = new CammentShowsAdapter(this);
         LinearLayoutManager layoutManager = new CammentPrecachingLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -58,6 +68,16 @@ public class CammentShowsActivity extends AppCompatActivity
         getSupportLoaderManager().initLoader(1, null, this);
 
         checkForUpdates();
+    }
+
+    private void onPasscodeClick() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("PasscodeDialog");
+
+        if (fragment == null || !fragment.isAdded()) {
+            CammentPasscodeDialog passcodeDialog = CammentPasscodeDialog.createInstance();
+            passcodeDialog.setActionListener(this);
+            passcodeDialog.show(getSupportFragmentManager(), "PasscodeDialog");
+        }
     }
 
     @Override
@@ -111,34 +131,19 @@ public class CammentShowsActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         List<Show> showList = ShowProvider.listFromCursor(data);
+
+        if (showList == null || showList.size() == 0) {
+            llEmpty.setVisibility(View.VISIBLE);
+        } else {
+            llEmpty.setVisibility(View.GONE);
+        }
+
         adapter.setData(showList);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.camment_menu_shows, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.mi_passcode) {
-
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag("PasscodeDialog");
-
-            if (fragment == null || !fragment.isAdded()) {
-                CammentPasscodeDialog passcodeDialog = CammentPasscodeDialog.createInstance();
-                passcodeDialog.setActionListener(this);
-                passcodeDialog.show(getSupportFragmentManager(), "PasscodeDialog");
-            }
-        }
-        return true;
     }
 
     @Override

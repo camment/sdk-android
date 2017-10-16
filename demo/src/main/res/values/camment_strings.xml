@@ -5,4 +5,13 @@
     <string name="camment_passcode">Passcode</string>
     <string name="camment_passcode_hint">Enter passcode</string>
     <string name="camment_no_network">Please check your internet connection</string>
+
+    <string name="camment_connecting">Connecting…</string>
+    <string name="camment_connected">Online</string>
+    <string name="camment_connection_lost">Connection Lost</string>
+    <string name="camment_reconnecting">Reconnecting…</string>
+    <string name="camment_disconnected">Offline</string>
+
+    <string name="camment_empty_title">Welcome!</string>
+    <string name="camment_empty_msg">To get started open an INVITATION link from your friend or enter a PASSCODE</string>
 </resources>

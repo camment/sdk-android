@@ -14,8 +14,6 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
 import com.camment.clientsdk.model.Usergroup;
 import com.google.gson.Gson;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.security.KeyStore;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -24,7 +22,6 @@ import java.util.concurrent.ExecutorService;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.api.GroupApi;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
@@ -38,8 +35,6 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
-import tv.camment.cammentsdk.data.model.CUserGroup;
-import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.views.CammentDialog;

@@ -2,13 +2,11 @@ package tv.camment.cammentdemo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,7 +17,6 @@ import android.widget.VideoView;
 import com.camment.clientsdk.model.Show;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.OnDeeplinkGetListener;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;
@@ -27,8 +24,7 @@ import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
 public class CammentMainActivity extends AppCompatActivity
-        implements CammentAudioListener,
-        OnDeeplinkGetListener, MediaPlayer.OnPreparedListener {
+        implements CammentAudioListener, MediaPlayer.OnPreparedListener {
 
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
@@ -39,7 +35,6 @@ public class CammentMainActivity extends AppCompatActivity
     private MediaController mediaController;
     private int currentPosition;
 
-    private ContentLoadingProgressBar contentLoadingProgressBar;
     private MediaPlayer mediaPlayer;
 
     public static void start(Context context, String showUuid) {
@@ -77,10 +72,6 @@ public class CammentMainActivity extends AppCompatActivity
 
         CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
 
-        contentLoadingProgressBar = (ContentLoadingProgressBar) findViewById(R.id.cl_progressbar);
-        contentLoadingProgressBar.getIndeterminateDrawable()
-                .setColorFilter(getResources().getColor(android.R.color.holo_blue_dark),
-                        PorterDuff.Mode.SRC_IN);
         videoView = (VideoView) findViewById(R.id.show_player);
 
         mediaController = new MediaController(this);
@@ -202,20 +193,6 @@ public class CammentMainActivity extends AppCompatActivity
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.camment_slide_in_left, R.anim.camment_slide_out_right);
-    }
-
-    @Override
-    public void onDeeplinkGetStarted() {
-        if (contentLoadingProgressBar != null) {
-            contentLoadingProgressBar.show();
-        }
-    }
-
-    @Override
-    public void onDeeplinkGetEnded() {
-        if (contentLoadingProgressBar != null) {
-            contentLoadingProgressBar.hide();
-        }
     }
 
     private void setVolume(int amount) {

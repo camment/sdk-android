@@ -24,7 +24,7 @@ public class CammentDeeplinkActivity extends Activity {
 
         finish();
 
-        if (CammentSDK.getInstance().getPreviousActivity() == null) {
+        if (!CammentSDK.getInstance().isSomeActivityOpened()) {
             Intent i = CammentSDK.getInstance().getApplicationContext().getPackageManager()
                     .getLaunchIntentForPackage(CammentSDK.getInstance().getApplicationContext().getPackageName());
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

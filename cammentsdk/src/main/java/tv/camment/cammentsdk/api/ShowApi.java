@@ -27,6 +27,8 @@ public final class ShowApi extends CammentAsyncClient {
     }
 
     public void getShows(final String passcode) {
+        CammentSDK.getInstance().showProgressBar();
+
         submitTask(new Callable<ShowList>() {
             @Override
             public ShowList call() throws Exception {
@@ -39,6 +41,8 @@ public final class ShowApi extends CammentAsyncClient {
         return new CammentCallback<ShowList>() {
             @Override
             public void onSuccess(ShowList result) {
+                CammentSDK.getInstance().hideProgressBar();
+
                 if (result != null
                         && result.getItems() != null) {
                     ShowProvider.deleteShows();
@@ -49,6 +53,7 @@ public final class ShowApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getShows", exception);
+                CammentSDK.getInstance().hideProgressBar();
             }
         };
     }

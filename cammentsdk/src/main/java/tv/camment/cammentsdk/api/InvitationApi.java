@@ -17,7 +17,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.OnDeeplinkGetListener;
 import tv.camment.cammentsdk.OnDeeplinkOpenShowListener;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
@@ -121,15 +120,7 @@ public final class InvitationApi extends CammentAsyncClient {
     }
 
     void getDeeplinkToShare() {
-        OnDeeplinkGetListener listener = null;
-        Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
-        if (currentActivity instanceof OnDeeplinkGetListener) {
-            listener = (OnDeeplinkGetListener) currentActivity;
-        }
-
-        if (listener != null) {
-            listener.onDeeplinkGetStarted();
-        }
+        CammentSDK.getInstance().showProgressBar();
 
         submitTask(new Callable<Deeplink>() {
             @Override
@@ -142,16 +133,14 @@ public final class InvitationApi extends CammentAsyncClient {
 
                 return devcammentClient.usergroupsGroupUuidDeeplinkPost(userGroupUuid, show);
             }
-        }, getDeeplinkToShareCallback(listener));
+        }, getDeeplinkToShareCallback());
     }
 
-    private CammentCallback<Deeplink> getDeeplinkToShareCallback(final OnDeeplinkGetListener listener) {
+    private CammentCallback<Deeplink> getDeeplinkToShareCallback() {
         return new CammentCallback<Deeplink>() {
             @Override
             public void onSuccess(final Deeplink result) {
-                if (listener != null) {
-                    listener.onDeeplinkGetEnded();
-                }
+                CammentSDK.getInstance().hideProgressBar();
 
                 if (result != null
                         && !TextUtils.isEmpty(result.getUrl())) {
@@ -187,9 +176,7 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getDeeplinkToShare", exception);
-                if (listener != null) {
-                    listener.onDeeplinkGetEnded();
-                }
+                CammentSDK.getInstance().hideProgressBar();
             }
         };
     }

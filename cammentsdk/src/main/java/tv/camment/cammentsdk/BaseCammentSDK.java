@@ -127,7 +127,7 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
             return;
         }
 
-        if (!TextUtils.isEmpty(groupUuid)) {
+         if (!TextUtils.isEmpty(groupUuid)) {
             if (FacebookHelper.getInstance().isLoggedIn()
                     && ioTHelper != null) {
                 GeneralPreferences.getInstance().setDeeplinkGroupUuid("");

@@ -2,14 +2,10 @@ package tv.camment.cammentsdk.helpers;
 
 import android.app.Activity;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
 

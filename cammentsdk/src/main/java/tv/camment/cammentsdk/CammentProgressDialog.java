@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,11 +75,6 @@ public final class CammentProgressDialog extends DialogFragment {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
         ft.commitAllowingStateLoss();
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
     }
 
     @Override

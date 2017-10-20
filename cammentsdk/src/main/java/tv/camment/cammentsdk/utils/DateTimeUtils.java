@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class DateTimeUtils {
+public final class DateTimeUtils {
 
     private static final SimpleDateFormat ISO_DATE_FORMAT;
     private static final SimpleDateFormat TIME_ONLY_FORMAT;

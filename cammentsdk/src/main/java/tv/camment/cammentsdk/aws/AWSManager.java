@@ -2,7 +2,6 @@ package tv.camment.cammentsdk.aws;
 
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
@@ -55,10 +54,6 @@ public final class AWSManager {
                 Regions.EU_CENTRAL_1);
         credentialsProvider.setLogins(getAwsLoginsMap());
         return credentialsProvider;
-    }
-
-    public String getUserIdentityId() {
-        return getCognitoCachingCredentialsProvider().getIdentityId();
     }
 
     private ApiClientFactory getApiClientFactory() {

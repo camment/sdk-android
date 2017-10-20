@@ -139,8 +139,6 @@ final class CameraSurfaceRenderer implements
 
             Matrix.setIdentityM(mvpMatrix, 0);
 
-            final double viewAspectRatio = viewWidth / (double) viewHeight;
-
             //square scale
             int viewX = 0;
             int viewY = 0;

@@ -13,7 +13,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 
-class CammentPlayerEventListener implements ExoPlayer.EventListener {
+final class CammentPlayerEventListener implements ExoPlayer.EventListener {
 
     private final CammentAudioListener cammentAudioListener;
     private final CammentViewHolder cammentViewHolder;

@@ -11,7 +11,6 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -349,7 +348,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
             dispatched = parentViewGroup.dispatchTouchEvent(event);
         }
 
-        switch (MotionEventCompat.getActionMasked(event)) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mode = Mode.NONE;
                 startX = event.getX();
@@ -555,6 +554,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         onboardingOverlay.displayTooltip(Step.RECORD);
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UserGroupChangeEvent event) {
         if (adapter != null) {

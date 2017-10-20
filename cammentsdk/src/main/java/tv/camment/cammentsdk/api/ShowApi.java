@@ -1,7 +1,6 @@
 package tv.camment.cammentsdk.api;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.Show;
@@ -11,7 +10,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;

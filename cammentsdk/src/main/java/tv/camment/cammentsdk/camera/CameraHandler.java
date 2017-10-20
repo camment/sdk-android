@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+@SuppressWarnings("deprecation")
 final class CameraHandler extends Handler {
 
     private static final int MSG_PREVIEW_START = 1;

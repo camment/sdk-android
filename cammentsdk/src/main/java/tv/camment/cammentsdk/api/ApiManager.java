@@ -87,8 +87,8 @@ public final class ApiManager {
             for (Callable call : retrySet) {
                 executorService.submit(call);
             }
+            retrySet.clear();
         }
-        retrySet.clear();
     }
 
 }

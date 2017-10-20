@@ -1,13 +1,11 @@
 package tv.camment.cammentsdk.views;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,10 +24,9 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CUserGroup;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
-import tv.camment.cammentsdk.utils.CommonUtils;
 
 
-public class DrawerFragment extends Fragment
+public final class DrawerFragment extends Fragment
         implements UserGroupAdapter.ActionListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 

@@ -2,7 +2,6 @@ package tv.camment.cammentsdk.data;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 
 final class DataContract {

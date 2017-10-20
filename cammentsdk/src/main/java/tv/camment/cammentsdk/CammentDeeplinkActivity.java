@@ -11,7 +11,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 
-public class CammentDeeplinkActivity extends Activity {
+public final class CammentDeeplinkActivity extends Activity {
 
     private static final String GROUP_PATH = "group";
     private static final String SHOW_PATH = "show";

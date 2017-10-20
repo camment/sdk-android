@@ -187,6 +187,7 @@ public class CammentShowsActivity extends AppCompatActivity
         CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(IoTStatusChangeEvent event) {
         if (event != null

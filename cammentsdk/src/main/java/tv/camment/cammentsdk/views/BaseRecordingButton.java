@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -18,7 +17,6 @@ import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.CommonUtils;
 
 
-@SuppressWarnings("deprecation")
 abstract class BaseRecordingButton extends SquareImageButton implements CammentDialog.ActionListener {
 
     private static final int MOVE_THRESHOLD = 10;
@@ -48,7 +46,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
     public boolean onTouchEvent(MotionEvent event) {
         final ConstraintLayout.LayoutParams par = (ConstraintLayout.LayoutParams) getLayoutParams();
 
-        switch (MotionEventCompat.getActionMasked(event)) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 if (!PermissionHelper.getInstance().hasPermissions()
                         || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
@@ -95,7 +93,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                 if (actionsListener != null
                         && !recordingStopCalled) {
                     actionsListener
-                            .onRecordingStop(MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_CANCEL);
+                            .onRecordingStop(event.getAction() == MotionEvent.ACTION_CANCEL);
                 }
 
                 AnimationUtils.animateDeactivateRecordingButton(this);

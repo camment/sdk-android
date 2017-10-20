@@ -7,7 +7,6 @@ import android.widget.Toast;
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.FacebookFriend;
 import com.camment.clientsdk.model.Usergroup;
-import com.camment.clientsdk.model.UserinfoList;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,7 +19,6 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
-import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;

@@ -203,7 +203,7 @@ public class CammentMainActivity extends AppCompatActivity
         try {
             mediaPlayer.setVolume(volume, volume);
         } catch (Exception e) {
-
+            Log.e("mediaPlayer", "setVolume", e);
         }
     }
 

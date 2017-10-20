@@ -245,7 +245,7 @@ public class SplashActivity extends AppCompatActivity
 ```
 In such case ```Activity``` (which doesn't implement ```DeeplinkIgnore``` interface)  following the ```SplashActivity``` will present the invitation dialog.
 
-Deeplinks contain information about a show (show uuid). User should be navigated to the show no matter if he was inviter or invitee. As CammentSDK can't do this for you, implement ```OnDeeplinkOpenShowListener``` interface where it is suitable for your code:
+Deeplinks contain information about a show (show uuid). User should be navigated to the show no matter if he was inviter or invitee. As CammentSDK can't do this for you, implement ```OnDeeplinkOpenShowListener``` interface where it is suitable for your code and pass the listener to CammentSDK (in your Application object):
 ```java
 public interface OnDeeplinkOpenShowListener {
 
@@ -253,4 +253,16 @@ public interface OnDeeplinkOpenShowListener {
 
 }
 ```
-```onOpenShowWithUuid``` will be called by CammentSDK when user reacts positively to any invitation request.
+```java
+public class CammentApp extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ...
+        CammentSDK.getInstance().init(this);
+        CammentSDK.getInstance().setOnDeeplinkOpenShowListener(new YourObject());
+    }
+}
+```
+```onOpenShowWithUuid``` will be called by CammentSDK when user reacts positively to any invitation request. You should open your activity with video playback for the given showUuid.

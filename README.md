@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 1.0.0**
+**current version: 1.0.1**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK in an existing project. 
 
@@ -26,6 +26,7 @@ CammentSDK relies on following dependencies:
 - Google Exoplayer (v2.4.4)
 - Glide library (v4.0.0)
 - EasyPermissions library (v0.4.2)
+- Greenrobot EventBus (v3.0.0)
 - Android Support AppCompat-v7 (v26.0.1)
 - Android Support Design Library (v26.0.1)
 - Android Support RecyclerView (v26.0.1)
@@ -192,14 +193,17 @@ protected void onCreate(Bundle savedInstanceState) {
 ```
 ## Pass onActivityResult and onRequestPermissionsResult to CammentSDK
 CammentSDK handles permissions which it needs as well as Facebook Login. In order to complete the flow correctly, pass results of ```onActivityResult``` and ```onRequestPermissionsResult``` to CammentSDK. 
-This should be done in the activity where CammentSDK Overlay is used.
+
+```onActivityResult``` should be overriden in all activities (use your BaseActivity or similar parent activity) where CammentSDK is used as Facebook Login may be performed e.g. when invitation request is received. 
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
 }
-
+```
+```onRequestPermissionsResult``` should be overriden in the activity where CammentOverlay is used.
+```java
 @Override
 public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -240,3 +244,13 @@ public class SplashActivity extends AppCompatActivity
         implements DeeplinkIgnore
 ```
 In such case ```Activity``` (which doesn't implement ```DeeplinkIgnore``` interface)  following the ```SplashActivity``` will present the invitation dialog.
+
+Deeplinks contain information about a show (show uuid). User should be navigated to the show no matter if he was inviter or invitee. As CammentSDK can't do this for you, implement ```OnDeeplinkOpenShowListener``` interface where it is suitable for your code:
+```java
+public interface OnDeeplinkOpenShowListener {
+
+    void onOpenShowWithUuid(String showUuid);
+
+}
+```
+```onOpenShowWithUuid``` will be called by CammentSDK when user reacts positively to any invitation request.

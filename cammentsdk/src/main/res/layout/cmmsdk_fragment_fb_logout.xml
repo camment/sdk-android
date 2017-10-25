@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cmmsdk_camment_silver"
+    android:padding="4dp"
+    tools:context="tv.camment.cammentsdk.views.FbLogoutFragment">
+
+    <ImageButton
+        android:id="@+id/cmmsdk_ib_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/cmmsdk_button_ripple"
+        android:padding="8dp"
+        android:src="@drawable/cmmsdk_ic_user" />
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_ib_user"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/cmmsdk_drawer_logout_fb_msg"
+        android:textColor="@color/cmmsdk_camment_text_grey" />
+
+    <Button
+        android:id="@+id/cmmsdk_btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_below="@+id/cmmsdk_tv_logout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/cmmsdk_camment_red"
+        android:text="@string/cmmsdk_drawer_logout_fb"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

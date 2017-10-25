@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cmmsdk_camment_silver"
+    android:padding="4dp"
+    tools:context="tv.camment.cammentsdk.views.FbUserFragment">
+
+    <ImageButton
+        android:id="@+id/cmmsdk_ib_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="8dp"
+        android:background="@drawable/cmmsdk_button_ripple"
+        android:src="@drawable/cmmsdk_ic_settings" />
+
+    <ImageView
+        android:id="@+id/cmmsdk_iv_avatar"
+        android:layout_width="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/cmmsdk_ib_settings"
+        android:src="@drawable/cmmsdk_ic_user"
+        android:layout_height="60dp" />
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_iv_avatar"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/cmmsdk_camment_text_grey" />
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_tv_name"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/cmmsdk_camment_text_grey" />
+
+
+</RelativeLayout>
+

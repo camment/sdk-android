@@ -12,6 +12,7 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
 import com.camment.clientsdk.model.Usergroup;
+import com.camment.clientsdk.model.Userinfo;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +37,7 @@ import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
@@ -288,6 +290,18 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         } else {
             showInvitationDialog(message);
         }
+
+        if (message.type == MessageType.NEW_USER_IN_GROUP
+                && message instanceof NewUserInGroupMessage) {
+            Userinfo userinfo = new Userinfo();
+            userinfo.setName(((NewUserInGroupMessage) message).body.user.name);
+            userinfo.setPicture(((NewUserInGroupMessage) message).body.user.picture);
+            userinfo.setUserCognitoIdentityId(((NewUserInGroupMessage) message).body.user.userCognitoIdentityId);
+
+            UserInfoProvider.insertUserInfo(userinfo, ((NewUserInGroupMessage) message).body.groupUuid);
+
+            ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(((NewUserInGroupMessage) message).body.groupUuid);
+        }
     }
 
     void showInvitationDialog(BaseMessage message) {
@@ -353,6 +367,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         UserGroupProvider.insertUserGroup(usergroup);
 
         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+        ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(message.body.groupUuid);
     }
 
     @Override
@@ -370,6 +385,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         membershipRequestMessage.body.showUuid,
                         true
                 );
+
+                ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(membershipRequestMessage.body.groupUuid);
                 break;
         }
     }

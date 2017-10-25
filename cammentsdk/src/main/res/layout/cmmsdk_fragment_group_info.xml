@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="8dp">
+
+    <RelativeLayout
+        android:id="@+id/cmmsdk_rl_invite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/cmmsdk_tv_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/cmmsdk_drawer_invite_friends_msg"
+            android:textColor="@color/cmmsdk_camment_text_grey" />
+
+        <TextView
+            android:id="@+id/cmmsdk_tv_learn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cmmsdk_tv_invite"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:background="@drawable/cmmsdk_button_ripple"
+            android:padding="8dp"
+            android:text="@string/cmmsdk_drawer_learn_more"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <Button
+            android:id="@+id/cmmsdk_btn_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_below="@+id/cmmsdk_tv_learn_more"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/cmmsdk_red_ripple"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:text="@string/cmmsdk_drawer_invite_friends"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/cmmsdk_rl_group_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/cmmsdk_tv_people_in_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textSize="10sp"
+            android:text="@string/cmmsdk_drawer_people_in_chat"
+            android:textColor="@color/cmmsdk_camment_button_grey" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cmmsdk_rv_groups_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/cmmsdk_tv_people_in_group"
+            android:overScrollMode="never" />
+
+    </RelativeLayout>
+
+</FrameLayout>

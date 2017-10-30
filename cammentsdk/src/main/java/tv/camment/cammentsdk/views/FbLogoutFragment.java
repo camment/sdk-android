@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 public class FbLogoutFragment extends Fragment {
@@ -66,6 +69,11 @@ public class FbLogoutFragment extends Fragment {
 
     private void handleFbLogout() {
         FacebookHelper.getInstance().logOut();
+
+        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clear();
+        ApiManager.clearInstance();
+        CammentSDK.getInstance().connectToIoT();
+
         if (onSwitchViewListener != null) {
             onSwitchViewListener.hideUserInfoContainer();
         }

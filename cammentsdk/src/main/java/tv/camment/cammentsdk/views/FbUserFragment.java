@@ -1,10 +1,14 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
@@ -19,14 +23,20 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
 
+import java.util.List;
+
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.model.CUserGroup;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 
-public class FbUserFragment extends Fragment {
+public class FbUserFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private ImageView ivAvatar;
     private TextView tvName;
+    private TextView tvGroups;
 
     private OnSwitchViewListener onSwitchViewListener;
 
@@ -41,8 +51,7 @@ public class FbUserFragment extends Fragment {
 
         ivAvatar = (ImageView) rootView.findViewById(R.id.cmmsdk_iv_avatar);
         tvName = (TextView) rootView.findViewById(R.id.cmmsdk_tv_name);
-
-        fillFbInfo();
+        tvGroups = (TextView) rootView.findViewById(R.id.cmmsdk_tv_groups);
 
         ImageButton ibSettings = (ImageButton) rootView.findViewById(R.id.cmmsdk_ib_settings);
         ibSettings.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +62,15 @@ public class FbUserFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        fillFbInfo();
+
+        getLoaderManager().initLoader(1, null, this);
     }
 
     @Override
@@ -67,6 +85,27 @@ public class FbUserFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         onSwitchViewListener = null;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return UserGroupProvider.getUserGroupLoader();
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        List<CUserGroup> userGroups = UserGroupProvider.listFromCursor(data);
+        if (userGroups == null
+                || userGroups.size() == 0) {
+            tvGroups.setText(R.string.cmmsdk_drawer_no_chat_groups);
+        } else {
+            tvGroups.setText(String.format(getString(R.string.cmmsdk_drawer_chat_groups), userGroups.size()));
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     private void fillFbInfo() {

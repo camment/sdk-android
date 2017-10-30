@@ -46,6 +46,7 @@ public final class DrawerFragment extends Fragment
 
         if (FacebookHelper.getInstance().isLoggedIn()) {
             displayFbSignedInUser();
+            ApiManager.getInstance().getUserApi().getMyUserGroups();
         } else {
             hideFbUserView();
         }
@@ -145,6 +146,7 @@ public final class DrawerFragment extends Fragment
         if (FacebookHelper.getInstance().isLoggedIn()
                 && !isFbUserViewDisplayed()) {
             displayFbSignedInUser();
+            ApiManager.getInstance().getUserApi().getMyUserGroups();
         }
     }
 

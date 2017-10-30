@@ -10,6 +10,7 @@
         android:layout_centerVertical="true"
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="4dp" />
 
     <TextView
@@ -17,15 +18,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/cmmsdk_iv_avatar"
         android:ellipsize="end"
         android:gravity="start"
-        android:maxLines="2"
+        android:lines="1"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:textColor="@color/cmmsdk_camment_text_grey"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:textSize="12sp" />
+
+    <View
+        android:id="@+id/cmmsdk_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/cmmsdk_tv_name"
+        android:alpha="0.7"
+        android:background="@color/cmmsdk_camment_divider_grey" />
 
 </RelativeLayout>

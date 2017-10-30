@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -58,6 +59,18 @@ public class FbUserFragment extends Fragment
             @Override
             public void onClick(View view) {
                 handleOnSettingsClick();
+            }
+        });
+
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Profile profile = Profile.getCurrentProfile();
+                if (profile != null
+                        && profile.getLinkUri() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, profile.getLinkUri());
+                    startActivity(intent);
+                }
             }
         });
 

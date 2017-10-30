@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:alpha="0.6"
         android:background="@drawable/cmmsdk_button_ripple"
         android:padding="8dp"
         android:src="@drawable/cmmsdk_ic_user" />

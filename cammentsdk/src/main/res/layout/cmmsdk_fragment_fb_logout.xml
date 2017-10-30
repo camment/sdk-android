@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/cmmsdk_camment_silver"
-    android:padding="4dp"
     tools:context="tv.camment.cammentsdk.views.FbLogoutFragment">
 
     <ImageButton
@@ -20,8 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cmmsdk_ib_user"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:gravity="center"
         android:text="@string/cmmsdk_drawer_logout_fb_msg"
         android:textColor="@color/cmmsdk_camment_text_grey" />

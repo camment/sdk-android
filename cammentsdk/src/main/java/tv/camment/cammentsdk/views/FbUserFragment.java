@@ -79,10 +79,12 @@ public class FbUserFragment extends Fragment {
                 Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(pictureUri).into(new BitmapImageViewTarget(ivAvatar) {
                     @Override
                     protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        ivAvatar.setImageDrawable(circularBitmapDrawable);
+                        if (getContext() != null) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            ivAvatar.setImageDrawable(circularBitmapDrawable);
+                        }
                     }
                 });
 

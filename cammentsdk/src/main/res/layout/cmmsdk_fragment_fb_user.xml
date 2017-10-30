@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/cmmsdk_camment_silver"
-    android:padding="4dp"
     tools:context="tv.camment.cammentsdk.views.FbUserFragment">
 
     <ImageButton

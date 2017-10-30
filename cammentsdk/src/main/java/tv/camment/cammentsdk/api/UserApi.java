@@ -13,6 +13,8 @@ import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -22,6 +24,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
+import tv.camment.cammentsdk.events.FbLoginChangedEvent;
 
 
 public final class UserApi extends CammentAsyncClient {
@@ -51,6 +54,8 @@ public final class UserApi extends CammentAsyncClient {
                 userinfoInRequest.setUserinfojson(new Gson().toJson(fbUserInfo));
 
                 devcammentClient.userinfoPost(userinfoInRequest);
+
+                EventBus.getDefault().post(new FbLoginChangedEvent());
 
                 return new Object();
             }

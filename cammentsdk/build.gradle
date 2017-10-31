@@ -44,7 +44,7 @@ android {
 
 ext {
     supportLibVersion = rootProject.ext.supportLibVersion
-    awsVersion = '2.6.3'
+    awsVersion = '2.6.6'
     facebookVersion = '4.25.0'
     constraintLayoutVersion = '1.0.2'
     exoPlayerVersion = 'r2.4.4'

@@ -11,6 +11,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.amazonaws.auth.IdentityChangedListener;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.Record;
+import com.amazonaws.mobileconnectors.cognito.SyncConflict;
+import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.camment.clientsdk.model.Deeplink;
 import com.camment.clientsdk.model.Show;
 import com.facebook.AccessToken;
@@ -19,6 +24,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -31,7 +37,9 @@ import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 
-abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.AccessTokenRefreshCallback {
+abstract class BaseCammentSDK extends CammentLifecycle
+        implements AccessToken.AccessTokenRefreshCallback,
+        IdentityChangedListener {
 
     static CammentSDK INSTANCE;
 
@@ -61,6 +69,8 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
             ioTHelper = AWSManager.getInstance().getIoTHelper();
 
             connectToIoT();
+
+            AWSManager.getInstance().getCognitoCachingCredentialsProvider().registerIdentityChangedListener(this);
         }
     }
 
@@ -215,6 +225,48 @@ abstract class BaseCammentSDK extends CammentLifecycle implements AccessToken.Ac
                 Log.e("FacebookLogin", "onError", error);
             }
         };
+    }
+
+    @Override
+    public void identityChanged(String oldIdentityId, String newIdentityId) {
+        if (!TextUtils.isEmpty(oldIdentityId)
+                && !TextUtils.isEmpty(newIdentityId)
+                && !TextUtils.equals(oldIdentityId, newIdentityId)) {
+            Dataset identitySet = AWSManager.getInstance().getCognitoSyncManager().openOrCreateDataset("identitySet");
+            if (identitySet != null) {
+                identitySet.put(newIdentityId, oldIdentityId);
+                identitySet.synchronize(new Dataset.SyncCallback() {
+                    @Override
+                    public void onSuccess(Dataset dataset, List<Record> updatedRecords) {
+                        Log.d("synchronize", "onSuccess");
+                        //TODO notify camment server
+                    }
+
+                    @Override
+                    public boolean onConflict(Dataset dataset, List<SyncConflict> conflicts) {
+                        Log.d("synchronize", "onConflict");
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onDatasetDeleted(Dataset dataset, String datasetName) {
+                        Log.d("synchronize", "onDatasetDeleted");
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onDatasetsMerged(Dataset dataset, List<String> datasetNames) {
+                        Log.d("synchronize", "onDatasetMerged");
+                        return false;
+                    }
+
+                    @Override
+                    public void onFailure(DataStorageException dse) {
+                        Log.e("synchronize", "onFailure", dse);
+                    }
+                });
+            }
+        }
     }
 
 }

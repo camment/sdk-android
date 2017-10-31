@@ -13,6 +13,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 public class FbLogoutFragment extends Fragment {
@@ -70,8 +71,13 @@ public class FbLogoutFragment extends Fragment {
     private void handleFbLogout() {
         FacebookHelper.getInstance().logOut();
 
-        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clear();
         ApiManager.clearInstance();
+
+        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clear();
+
+        //ApiManager.getInstance().getUserApi().refreshCognitoCredentials();
+
+        DataManager.getInstance().clearDataForUserGroupChange();
         CammentSDK.getInstance().connectToIoT();
 
         if (onSwitchViewListener != null) {

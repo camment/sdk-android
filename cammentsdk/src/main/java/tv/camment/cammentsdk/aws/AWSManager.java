@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -53,7 +54,15 @@ public final class AWSManager {
                 AWSConfig.IDENTITY_POOL,
                 Regions.EU_CENTRAL_1);
         credentialsProvider.setLogins(getAwsLoginsMap());
+        credentialsProvider.registerIdentityChangedListener(CammentSDK.getInstance());
         return credentialsProvider;
+    }
+
+    public CognitoSyncManager getCognitoSyncManager() {
+        return new CognitoSyncManager(
+                CammentSDK.getInstance().getApplicationContext(),
+                Regions.EU_CENTRAL_1,
+                getCognitoCachingCredentialsProvider());
     }
 
     private ApiClientFactory getApiClientFactory() {

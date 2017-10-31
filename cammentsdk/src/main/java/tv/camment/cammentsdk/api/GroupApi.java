@@ -140,6 +140,29 @@ public final class GroupApi extends CammentAsyncClient {
         };
     }
 
+    public void getUserGroupByUuid(final String uuid) {
+        submitTask(new Callable<Usergroup>() {
+            @Override
+            public Usergroup call() throws Exception {
+                return devcammentClient.usergroupsGroupUuidGet(uuid);
+            }
+        }, getUserGroupByUuidCallback());
+    }
+
+    private CammentCallback<Usergroup> getUserGroupByUuidCallback() {
+        return new CammentCallback<Usergroup>() {
+            @Override
+            public void onSuccess(Usergroup usergroup) {
+                Log.d("onSuccess", "getUserGroupByUuid");
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getUserGroupByUuid", exception);
+            }
+        };
+    }
+
     public void getUserGroupByUuid(final String uuid, BaseMessage message) {
         submitTask(new Callable<Usergroup>() {
             @Override

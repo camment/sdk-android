@@ -1,18 +1,12 @@
 package tv.camment.cammentsdk.views;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.camment.clientsdk.model.Usergroup;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -20,15 +14,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.events.FbLoginChangedEvent;
-import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 
 public final class DrawerFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>,
-        OnSwitchViewListener {
+        implements OnSwitchViewListener {
 
     public static DrawerFragment newInstance() {
         return new DrawerFragment();
@@ -52,27 +43,6 @@ public final class DrawerFragment extends Fragment
         }
 
         displayGroupInfo();
-
-        //getLoaderManager().initLoader(1, null, this);
-
-        //ApiManager.getInstance().getUserApi().getMyUserGroups();
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        //return UserGroupProvider.getUserGroupLoader();
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        //List<CUserGroup> userGroups = UserGroupProvider.listFromCursor(data);
-        //adapter.setData(userGroups);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     @Override
@@ -103,6 +73,8 @@ public final class DrawerFragment extends Fragment
         if (fragmentById != null) {
             fm.beginTransaction().remove(fragmentById).commit();
         }
+
+        displayGroupInfo();
     }
 
     private boolean isFbUserViewDisplayed() {
@@ -138,6 +110,17 @@ public final class DrawerFragment extends Fragment
     @Override
     public void hideUserInfoContainer() {
         hideFbUserView();
+    }
+
+    @Override
+    public void switchGroupContainer() {
+        FragmentManager fm = getChildFragmentManager();
+        Fragment fragmentById = fm.findFragmentById(R.id.cmmsdk_group_container);
+        if (fragmentById instanceof GroupInfoFragment) {
+            displayGroupList();
+        } else {
+            displayGroupInfo();
+        }
     }
 
     @SuppressWarnings("unused")

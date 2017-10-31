@@ -74,6 +74,15 @@ public class FbUserFragment extends Fragment
             }
         });
 
+        tvGroups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onSwitchViewListener != null) {
+                    onSwitchViewListener.switchGroupContainer();
+                }
+            }
+        });
+
         return rootView;
     }
 

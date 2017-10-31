@@ -146,8 +146,8 @@ public final class GroupInfoFragment extends Fragment
         if (activeUserGroup != null) {
             count = UserInfoProvider.getConnectedUsersCountByGroupUuid(activeUserGroup.getUuid());
         }
-        rlInvite.setVisibility(activeUserGroup == null || count == 0 ? View.VISIBLE : View.GONE);
-        rlGroupInfo.setVisibility(activeUserGroup == null || count == 0 ? View.GONE : View.VISIBLE);
+        rlInvite.setVisibility(activeUserGroup == null || count < 2 ? View.VISIBLE : View.GONE);
+        rlGroupInfo.setVisibility(activeUserGroup == null || count < 2 ? View.GONE : View.VISIBLE);
     }
 
     private void openCammentWebSite() {

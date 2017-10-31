@@ -1,6 +1,8 @@
 package tv.camment.cammentsdk.helpers;
 
 
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+
 import tv.camment.cammentsdk.aws.AWSManager;
 
 public final class IdentityPreferences extends BasePreferences {
@@ -34,4 +36,11 @@ public final class IdentityPreferences extends BasePreferences {
         return AWSManager.getInstance().getCognitoCachingCredentialsProvider().getIdentityPoolId() + "." + key;
     }
 
+    public String getOldIdentityId() {
+        Dataset identitySet = AWSManager.getInstance().getCognitoSyncManager().openOrCreateDataset("identitySet");
+        if (identitySet != null) {
+            return identitySet.get(getIdentityId());
+        }
+        return "";
+    }
 }

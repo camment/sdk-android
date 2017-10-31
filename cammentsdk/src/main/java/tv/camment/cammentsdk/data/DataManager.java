@@ -20,11 +20,11 @@ public final class DataManager {
 
     }
 
-    public void clearDataForUserGroupChange() {
+    public void clearDataForUserGroupChange(boolean deactivateGroups) {
         UserGroupProvider.setAllAsNotActive();
-        UserInfoProvider.deleteUserInfos();
-
         FileUtils.getInstance().deleteAllFiles();
+
+        UserInfoProvider.deleteUserInfos();
     }
 
     public void handleFbPermissionsResult() {

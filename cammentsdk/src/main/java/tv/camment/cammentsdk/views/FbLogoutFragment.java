@@ -9,11 +9,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import org.greenrobot.eventbus.EventBus;
+
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 public class FbLogoutFragment extends Fragment {
@@ -77,7 +81,10 @@ public class FbLogoutFragment extends Fragment {
 
         //ApiManager.getInstance().getUserApi().refreshCognitoCredentials();
 
-        DataManager.getInstance().clearDataForUserGroupChange();
+        DataManager.getInstance().clearDataForUserGroupChange(false);
+
+        EventBus.getDefault().post(new UserGroupChangeEvent());
+
         CammentSDK.getInstance().connectToIoT();
 
         if (onSwitchViewListener != null) {

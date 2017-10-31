@@ -9,4 +9,6 @@ interface OnSwitchViewListener {
 
     void hideUserInfoContainer();
 
+    void switchGroupContainer();
+
 }

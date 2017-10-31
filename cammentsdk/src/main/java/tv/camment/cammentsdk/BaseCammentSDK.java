@@ -24,6 +24,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.api.ApiManager;
@@ -33,6 +34,7 @@ import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
+import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -64,7 +66,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
             ((Application) context).registerActivityLifecycleCallbacks(this);
 
-            DataManager.getInstance().clearDataForUserGroupChange();
+            DataManager.getInstance().clearDataForUserGroupChange(true);
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
 
@@ -232,6 +234,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
         if (!TextUtils.isEmpty(oldIdentityId)
                 && !TextUtils.isEmpty(newIdentityId)
                 && !TextUtils.equals(oldIdentityId, newIdentityId)) {
+            Log.d("synchronize", "OLD identity: " + oldIdentityId);
             Dataset identitySet = AWSManager.getInstance().getCognitoSyncManager().openOrCreateDataset("identitySet");
             if (identitySet != null) {
                 identitySet.put(newIdentityId, oldIdentityId);
@@ -239,13 +242,21 @@ abstract class BaseCammentSDK extends CammentLifecycle
                     @Override
                     public void onSuccess(Dataset dataset, List<Record> updatedRecords) {
                         Log.d("synchronize", "onSuccess");
-                        //TODO notify camment server
+                        ApiManager.getInstance().getUserApi().sendCongnitoIdChanged();
                     }
 
                     @Override
                     public boolean onConflict(Dataset dataset, List<SyncConflict> conflicts) {
                         Log.d("synchronize", "onConflict");
-                        return false;
+                        List<Record> records = new ArrayList<>();
+                        if (conflicts != null
+                                && conflicts.size() > 0) {
+                            for (SyncConflict conflict : conflicts) {
+                                records.add(conflict.resolveWithLocalRecord());
+                            }
+                            dataset.resolve(records);
+                        }
+                        return true;
                     }
 
                     @Override

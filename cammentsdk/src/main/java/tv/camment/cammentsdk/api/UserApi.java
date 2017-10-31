@@ -185,4 +185,24 @@ public final class UserApi extends CammentAsyncClient {
         });
     }
 
+    public void sendCongnitoIdChanged() {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                devcammentClient.meUuidPut();
+                return new Object();
+            }
+        }, new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("sendCongnitoIdChanged", "onSuccess");
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("sendCongnitoIdChanged", "onException", e);
+            }
+        });
+    }
+
 }

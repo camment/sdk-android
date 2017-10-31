@@ -218,7 +218,7 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Object result) {
                 if (accepted) {
-                    DataManager.getInstance().clearDataForUserGroupChange();
+                    DataManager.getInstance().clearDataForUserGroupChange(true);
 
                     CUserGroup userGroupByUuid = UserGroupProvider.getUserGroupByUuid(groupUuid); //TODO what if not in db
 

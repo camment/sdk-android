@@ -231,6 +231,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
     @Override
     public void identityChanged(String oldIdentityId, String newIdentityId) {
+        AWSManager.getInstance().getIoTHelper().connect();
+
         if (!TextUtils.isEmpty(oldIdentityId)
                 && !TextUtils.isEmpty(newIdentityId)
                 && !TextUtils.equals(oldIdentityId, newIdentityId)) {

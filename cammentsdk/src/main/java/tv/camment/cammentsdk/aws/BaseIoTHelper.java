@@ -57,6 +57,11 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     void connect() {
+        if (TextUtils.isEmpty(IdentityPreferences.getInstance().getIdentityId())) {
+            Log.d("IOT", "connection skipped, identity id is empty");
+            return;
+        }
+
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {

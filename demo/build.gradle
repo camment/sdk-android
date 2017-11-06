@@ -20,9 +20,11 @@ android {
         versionName "1." + MAJOR_VERSION + "." + MINOR_VERSION
         versionCode 1 * 100000000 + 10000 * MAJOR_VERSION + 100 * MINOR_VERSION + MICRO_VERSION
 
-        resValue "string", "camment_api_key", "Zxp1xJXY9ya6MUovcRkiD6lufkg51fhw2x3ATSvi"
-
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "de862235c96844f8ad503d33d826e5b9"]
+
+        buildConfigField("boolean", "USE_FABRICS", "true")
+        buildConfigField("boolean", "USE_HOCKEYAPP", "true")
+        buildConfigField("boolean", "USE_MIXPANEL", "true")
     }
 
     signingConfigs {
@@ -43,20 +45,44 @@ android {
     }
 
     buildTypes {
-        debug {
+        debug { //PROD
             minifyEnabled false
             useProguard false
             debuggable true
 
             signingConfig signingConfigs.debug
+
+            resValue "string", "camment_api_key", "tijWQGtPxA4EZjvsno1g1a6NVDKmVU333n7Eo1v0"
         }
 
-        release {
+        debugDev { //DEV
+            minifyEnabled false
+            useProguard false
+            debuggable true
+
+            signingConfig signingConfigs.debug
+
+            resValue "string", "camment_api_key", "iYeooUSdMZ8FOBMZeL2zb9YDLdW0uvbVlitykh7d"
+        }
+
+        release { //PROD
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             signingConfig signingConfigs.release
+
+            resValue "string", "camment_api_key", "tijWQGtPxA4EZjvsno1g1a6NVDKmVU333n7Eo1v0"
+        }
+
+        releaseDev { //DEV
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+
+            resValue "string", "camment_api_key", "iYeooUSdMZ8FOBMZeL2zb9YDLdW0uvbVlitykh7d"
         }
     }
 
@@ -81,7 +107,9 @@ ext {
 dependencies {
     compile supportDependencies.values()
     debugCompile project(path: ':cammentsdk', configuration: 'debug')
+    debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')
+    releaseDevCompile project(path: ':cammentsdk', configuration: 'releaseDev')
     compile 'net.hockeyapp.android:HockeySDK:5.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;

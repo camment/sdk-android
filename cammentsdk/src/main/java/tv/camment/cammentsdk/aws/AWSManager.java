@@ -20,7 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.api.DevcammentClientDev;
+import tv.camment.cammentsdk.api.DevcammentClientProd;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 
@@ -51,7 +54,7 @@ public final class AWSManager {
     public CognitoCachingCredentialsProvider getCognitoCachingCredentialsProvider() {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 CammentSDK.getInstance().getApplicationContext(),
-                AWSConfig.IDENTITY_POOL,
+                BuildConfig.IDENTITY_POOL,
                 Regions.EU_CENTRAL_1);
         credentialsProvider.setLogins(getAwsLoginsMap());
         credentialsProvider.registerIdentityChangedListener(CammentSDK.getInstance());
@@ -73,7 +76,15 @@ public final class AWSManager {
     }
 
     public DevcammentClient getDevcammentClient() {
-        return getApiClientFactory().build(DevcammentClient.class);
+        switch (BuildConfig.BUILD_TYPE) {
+            case "debugDev":
+            case "releaseDev":
+                return getApiClientFactory().build(DevcammentClientDev.class);
+            case "debug":
+            case "release":
+            default:
+                return getApiClientFactory().build(DevcammentClientProd.class);
+        }
     }
 
     private AmazonS3 getAmazonS3() {
@@ -97,12 +108,12 @@ public final class AWSManager {
     }
 
     AWSIotMqttManager getAWSIotMqttManager() {
-        return new AWSIotMqttManager(IdentityPreferences.getInstance().getIdentityId(), AWSConfig.IOT_ENDPOINT);
+        return new AWSIotMqttManager(IdentityPreferences.getInstance().getIdentityId(), BuildConfig.IOT_ENDPOINT);
     }
 
     private KeyStore getClientKeyStore() {
-        return AWSIotKeystoreHelper.getIotKeystore(AWSConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
-                AWSConfig.CERT_KEYSTORE_NAME, AWSConfig.CERT_KEYSTORE_PWD);
+        return AWSIotKeystoreHelper.getIotKeystore(BuildConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
+                BuildConfig.CERT_KEYSTORE_NAME, BuildConfig.CERT_KEYSTORE_PWD);
     }
 
     public IoTHelper getIoTHelper() {

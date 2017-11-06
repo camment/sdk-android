@@ -3,6 +3,7 @@ package tv.camment.cammentdemo;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+
 import io.fabric.sdk.android.Fabric;
 import tv.camment.cammentsdk.CammentSDK;
 
@@ -12,7 +13,7 @@ public class CammentApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.USE_FABRICS) {
             Fabric.with(this, new Crashlytics());
         }
 

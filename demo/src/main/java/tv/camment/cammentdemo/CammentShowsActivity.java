@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -125,13 +126,13 @@ public class CammentShowsActivity extends AppCompatActivity
     }
 
     private void checkForUpdates() {
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.USE_HOCKEYAPP) {
             UpdateManager.register(this);
         }
     }
 
     private void unregisterManagers() {
-        if (!BuildConfig.DEBUG) {
+        if (!BuildConfig.USE_HOCKEYAPP) {
             UpdateManager.unregister();
         }
     }
@@ -190,6 +191,7 @@ public class CammentShowsActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(IoTStatusChangeEvent event) {
+        Log.d("EVENT", event.getStatus().name());
         if (event != null
                 && tvConnection != null) {
             int textResId = R.string.camment_disconnected;

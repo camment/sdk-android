@@ -26,18 +26,60 @@ android {
     }
 
     buildTypes {
-        release {
+        debug { //PROD
+            minifyEnabled false
+            useProguard false
+            debuggable true
+
+            buildConfigField("String", "IDENTITY_POOL", "\"eu-central-1:a57fbb10-a8ff-49e0-a69b-b6903a058868\"")
+            buildConfigField("String", "BUCKET_ID", "\"camment-prod-camments\"")
+            buildConfigField("String", "IOT_ENDPOINT", "\"a1ptuiv94cuwdn.iot.eu-central-1.amazonaws.com\"")
+            buildConfigField("String", "CERT_KEYSTORE_NAME", "\"awsiot-store-prod.bks\"")
+            buildConfigField("String", "CERT_KEYSTORE_PWD", "\"{4?Z9p.8#cGpDK7H\"")
+            buildConfigField("String", "CERT_ID", "\"1\"")
+        }
+
+        debugDev { //DEV
+            minifyEnabled false
+            useProguard false
+            debuggable true
+
+            buildConfigField("String", "IDENTITY_POOL", "\"eu-central-1:aa96090c-0423-46d1-a584-20086c0e134d\"")
+            buildConfigField("String", "BUCKET_ID", "\"camment-dev-camments\"")
+            buildConfigField("String", "IOT_ENDPOINT", "\"a33ob3cdhetxbp.iot.eu-central-1.amazonaws.com\"")
+            buildConfigField("String", "CERT_KEYSTORE_NAME", "\"awsiot-store-dev.bks\"")
+            buildConfigField("String", "CERT_KEYSTORE_PWD", "\"?ko8z7re\$X=X=22e\"")
+            buildConfigField("String", "CERT_ID", "\"1\"")
+        }
+
+        release { //PROD
             minifyEnabled true
             useProguard true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "IDENTITY_POOL", "\"eu-central-1:a57fbb10-a8ff-49e0-a69b-b6903a058868\"")
+            buildConfigField("String", "BUCKET_ID", "\"camment-prod-camments\"")
+            buildConfigField("String", "IOT_ENDPOINT", "\"a1ptuiv94cuwdn.iot.eu-central-1.amazonaws.com\"")
+            buildConfigField("String", "CERT_KEYSTORE_NAME", "\"awsiot-store-prod.bks\"")
+            buildConfigField("String", "CERT_KEYSTORE_PWD", "\"{4?Z9p.8#cGpDK7H\"")
+            buildConfigField("String", "CERT_ID", "\"1\"")
         }
 
-        debug {
-            minifyEnabled false
-            useProguard false
-            debuggable true
+        releaseDev { //DEV
+            minifyEnabled true
+            useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "IDENTITY_POOL", "\"eu-central-1:aa96090c-0423-46d1-a584-20086c0e134d\"")
+            buildConfigField("String", "BUCKET_ID", "\"camment-dev-camments\"")
+            buildConfigField("String", "IOT_ENDPOINT", "\"a33ob3cdhetxbp.iot.eu-central-1.amazonaws.com\"")
+            buildConfigField("String", "CERT_KEYSTORE_NAME", "\"awsiot-store-dev.bks\"")
+            buildConfigField("String", "CERT_KEYSTORE_PWD", "\"?ko8z7re\$X=X=22e\"")
+            buildConfigField("String", "CERT_ID", "\"1\"")
         }
     }
 }

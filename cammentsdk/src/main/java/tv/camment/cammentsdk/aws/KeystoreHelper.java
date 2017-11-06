@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -28,14 +29,14 @@ final class KeystoreHelper extends CammentAsyncClient {
             public Object call() throws Exception {
                 Boolean keystorePresent = AWSIotKeystoreHelper
                         .isKeystorePresent(CammentSDK.getInstance().getApplicationContext().getFilesDir().getPath(),
-                                AWSConfig.CERT_KEYSTORE_NAME);
+                                BuildConfig.CERT_KEYSTORE_NAME);
 
                 if (!keystorePresent) {
                     AssetManager assetManager = CammentSDK.getInstance().getApplicationContext().getAssets();
                     try {
-                        InputStream in = assetManager.open(AWSConfig.CERT_KEYSTORE_NAME);
+                        InputStream in = assetManager.open(BuildConfig.CERT_KEYSTORE_NAME);
                         File outFile = new File(CammentSDK.getInstance().getApplicationContext().getFilesDir().getPath(),
-                                AWSConfig.CERT_KEYSTORE_NAME);
+                                BuildConfig.CERT_KEYSTORE_NAME);
                         OutputStream out = new FileOutputStream(outFile);
                         byte[] buffer = new byte[1024];
                         int read = in.read(buffer);

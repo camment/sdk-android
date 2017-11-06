@@ -1,41 +1,73 @@
 package tv.camment.cammentdemo;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.camment.clientsdk.model.Show;
+
+import java.math.BigDecimal;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.utils.DateTimeUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
 public class CammentMainActivity extends AppCompatActivity
         implements CammentAudioListener, MediaPlayer.OnPreparedListener {
 
+    private static final long TEST_TIMESTAMP = 1507713480000L;
+
     private static final String EXTRA_SHOW_UUID = "extra_show_uuid";
 
     private static final String ARGS_PLAYER_POSITION = "args_player_position";
 
     private VideoView videoView;
-    private int previousVolume;
+    private int previousVolume = -1;
     private MediaController mediaController;
     private int currentPosition;
 
+    private TextView tvShowOnHold;
+
+    private ContentLoadingProgressBar contentLoadingProgressBar;
     private MediaPlayer mediaPlayer;
+
+    private BroadcastReceiver broadcastReceiver;
+
+    private boolean playerReady;
+
+    private Show show;
+
+    private Mode mode = Mode.UNDEFINED;
+
+    private enum Mode {
+        NORMAL,
+        BLOCK,
+        SYNC,
+        UNDEFINED
+    }
 
     public static void start(Context context, String showUuid) {
         Intent intent = new Intent(context, CammentMainActivity.class);
@@ -52,12 +84,19 @@ public class CammentMainActivity extends AppCompatActivity
 
         if (!TextUtils.equals(oldIntent.getStringExtra(EXTRA_SHOW_UUID), newIntent.getStringExtra(EXTRA_SHOW_UUID))) {
             setIntent(newIntent);
+
+            if (contentLoadingProgressBar != null) {
+                contentLoadingProgressBar.show();
+            }
+
+            CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
+
             currentPosition = 0;
             if (videoView != null) {
                 videoView.stopPlayback();
                 videoView.suspend();
             }
-            prepareAndPlayVideo(true);
+            retrieveShow();
         }
     }
 
@@ -72,10 +111,13 @@ public class CammentMainActivity extends AppCompatActivity
 
         CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
 
-        videoView = (VideoView) findViewById(R.id.show_player);
+        tvShowOnHold = (TextView) findViewById(R.id.tv_on_hold);
 
-        mediaController = new MediaController(this);
-        mediaController.setAnchorView(videoView);
+        contentLoadingProgressBar = (ContentLoadingProgressBar) findViewById(R.id.cl_progressbar);
+        contentLoadingProgressBar.getIndeterminateDrawable()
+                .setColorFilter(getResources().getColor(android.R.color.holo_blue_dark),
+                        PorterDuff.Mode.SRC_IN);
+        videoView = (VideoView) findViewById(R.id.show_player);
 
         FrameLayout parentViewGroup = (FrameLayout) findViewById(R.id.fl_parent);
 
@@ -84,7 +126,7 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setParentViewGroup(parentViewGroup);
         cammentOverlay.setCammentAudioListener(this);
 
-        prepareAndPlayVideo(true);
+        retrieveShow();
     }
 
     @Override
@@ -97,48 +139,192 @@ public class CammentMainActivity extends AppCompatActivity
     protected void onPause() {
         if (videoView != null) {
             currentPosition = videoView.getCurrentPosition();
-            videoView.stopPlayback();
         }
         super.onPause();
+    }
+
+
+    @Override
+    protected void onStop() {
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+        }
+        if (videoView != null) {
+            currentPosition = videoView.getCurrentPosition();
+            videoView.stopPlayback();
+        }
+        super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (videoView != null
+                && !videoView.isPlaying()
                 && mediaController != null) {
-            prepareAndPlayVideo(false);
+            retrieveShow();
         }
     }
 
-    private void prepareAndPlayVideo(boolean start) {
+    //#KROK1
+    private void retrieveShow() {
+        show = ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
+        if (show != null) {
+//            if (TextUtils.equals(show.getUuid(), "f202de7a-b3e0-46e5-895a-aa612e261575")) {
+//                show.setStartAt(BigDecimal.valueOf(TEST_TIMESTAMP));
+//            }
+            //#KROK2
+            Log.d("SHOW", "retrieved from db");
+            checkTimestamp();
+        } else {
+            Log.d("SHOW", "retrieving from server");
+            ApiManager.getInstance().getShowApi()
+                    .getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID), getShowByUuidCallback());
+        }
+    }
+
+    //#KROK2
+    private void checkTimestamp() {
+        final long showTimestamp = show.getStartAt() != null ? show.getStartAt().longValue() : -1;
+        final long currentUTCTimestamp = DateTimeUtils.getCurrentUTCTimestamp();
+
+        if (showTimestamp == -1
+                || (showTimestamp <= currentUTCTimestamp
+                && (currentUTCTimestamp - showTimestamp) >= 60 * 60 * 1000)) { //#KROK2a & //#KROK2d
+            mode = Mode.NORMAL;
+        } else if (showTimestamp > currentUTCTimestamp) { //#KROK2b
+            mode = Mode.BLOCK;
+        } else if (showTimestamp <= currentUTCTimestamp
+                && (currentUTCTimestamp - showTimestamp) < 60 * 60 * 1000) { //#KROK2c
+            mode = Mode.SYNC;
+        }
+
+        Log.d("MODE", mode.name());
+        handleTimeTickBroadcastReceiver();
+        handleBlockingOfUI();
+        handleMediaController();
+        shouldSyncUser();
+        prepareAndPlayVideo();
+    }
+
+    private void handleTimeTickBroadcastReceiver() {
+        if (mode == Mode.BLOCK) {
+            registerTimeTickBroadcastReceiver();
+        } else {
+            unregisterTimeTickBroadcastReceiver();
+        }
+    }
+
+    private void handleBlockingOfUI() {
+        tvShowOnHold.setText(mode == Mode.BLOCK ? "Show starts at " + DateTimeUtils.getTimeOnlyStringForUI(show.getStartAt().longValue()) : "");
+        tvShowOnHold.setVisibility(mode == Mode.BLOCK ? View.VISIBLE : View.GONE);
+    }
+
+    private void handleMediaController() {
+        mediaController = new MediaController(this, mode != Mode.SYNC) {
+            public boolean dispatchKeyEvent(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    onBackPressed();
+                }
+
+                return super.dispatchKeyEvent(event);
+            }
+        };
+
+        mediaController.setAnchorView(videoView);
+
+        int topContainerId = getResources().getIdentifier("mediacontroller_progress", "id", "android");
+        SeekBar seekBarVideo = (SeekBar) mediaController.findViewById(topContainerId);
+        seekBarVideo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return mode == Mode.SYNC;
+            }
+        });
+    }
+
+
+    private void registerTimeTickBroadcastReceiver() {
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (TextUtils.equals(intent.getAction(), Intent.ACTION_TIME_TICK)) {
+                        Log.d("TIME TICK", "time tick");
+                        retrieveShow();
+                    }
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+    }
+
+    private void unregisterTimeTickBroadcastReceiver() {
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
+    }
+
+    private void shouldSyncUser() {
+        if (mode == Mode.SYNC) {
+            Log.d("SYNC", "syncing...");
+            currentPosition = (int) (DateTimeUtils.getCurrentUTCTimestamp() - show.getStartAt().longValue());
+        }
+    }
+
+
+    private void prepareAndPlayVideo() {
+        if (mode == Mode.BLOCK)
+            return;
+
         if (videoView != null
                 && mediaController != null) {
-            final Show show = ShowProvider.getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
             if (show != null) {
                 Uri uri = Uri.parse(show.getUrl());
-                videoView.setMediaController(mediaController);
+                videoView.setMediaController(mode == Mode.SYNC ? null : mediaController);
                 videoView.setVideoURI(uri);
                 videoView.setOnPreparedListener(this);
+                Log.d("SEEKTO", "seekTo: " + currentPosition);
                 videoView.seekTo(currentPosition);
-                if (start) {
-                    videoView.start();
-                }
-            } else {
-                ApiManager.getInstance().getShowApi()
-                        .getShowByUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID), getShowByUuidCallback());
+                videoView.start();
             }
         }
     }
 
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+        playerReady = true;
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        mediaPlayer.setLooping(mode != Mode.SYNC);
+
+        if (contentLoadingProgressBar != null) {
+            contentLoadingProgressBar.hide();
+        }
+
+        if (mode == Mode.SYNC) {
+            if (previousVolume > -1) {
+                setVolume(previousVolume);
+            }
+        }
+    }
+
+
     private CammentCallback<Show> getShowByUuidCallback() {
         return new CammentCallback<Show>() {
             @Override
-            public void onSuccess(Show show) {
-                if (show != null
-                        && !TextUtils.isEmpty(show.getUrl())) {
-                    ShowProvider.insertShow(show);
-                    prepareAndPlayVideo(true);
+            public void onSuccess(Show result) {
+                if (result != null
+                        && !TextUtils.isEmpty(result.getUrl())) {
+//                    if (TextUtils.equals(result.getUuid(), "f202de7a-b3e0-46e5-895a-aa612e261575")) {
+//                        result.setStartAt(BigDecimal.valueOf(TEST_TIMESTAMP));
+//                    }
+
+                    show = result;
+                    //#KROK2
+                    checkTimestamp();
                 }
             }
 
@@ -166,9 +352,9 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     public void onCammentPlaybackStarted() {
         AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        previousVolume = (int) Math.floor(am.getStreamVolume(AudioManager.STREAM_MUSIC) * 20 / 3);
+        previousVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        setVolume(previousVolume / 2);
+        setVolume((int) (previousVolume * 0.6f));
     }
 
     @Override
@@ -179,9 +365,9 @@ public class CammentMainActivity extends AppCompatActivity
     @Override
     public void onCammentRecordingStarted() {
         AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        previousVolume = (int) Math.floor(am.getStreamVolume(AudioManager.STREAM_MUSIC) * 20 / 3);
+        previousVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        setVolume(0);
+        setVolume((int) (previousVolume * 0.3f));
     }
 
     @Override
@@ -196,21 +382,23 @@ public class CammentMainActivity extends AppCompatActivity
     }
 
     private void setVolume(int amount) {
-        final int max = 100;
-        final double numerator = max - amount > 0 ? Math.log(max - amount) : 0;
-        final float volume = (float) (1 - (numerator / Math.log(max)));
+        if (mediaPlayer != null
+                && playerReady) {
+            AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+            int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
-        try {
-            mediaPlayer.setVolume(volume, volume);
-        } catch (Exception e) {
-            Log.e("mediaPlayer", "setVolume", e);
+            float volume = (float) (1 - (Math.log(maxVolume - amount) / Math.log(maxVolume)));
+
+            if (maxVolume == amount) {
+                volume = 1.0f;
+            }
+
+            try {
+                mediaPlayer.setVolume(volume, volume);
+            } catch (Exception e) {
+                Log.e("mediaPlayer", "setVolume", e);
+            }
         }
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-        mediaPlayer.setLooping(true);
     }
 
 }

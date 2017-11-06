@@ -348,7 +348,11 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         camment.setRecorded(true);
         camment.setTransferId(-1);
 
-        CammentProvider.insertCamment(camment);
+        if (TextUtils.equals(IdentityPreferences.getInstance().getIdentityId(), message.body.userCognitoIdentityId)) {
+            CammentProvider.insertCamment(camment);
+        } else {
+            AWSManager.getInstance().getS3UploadHelper().downloadCammentFile(camment, true);
+        }
     }
 
     private void handleCammentDeletedMessage(CammentMessage message) {

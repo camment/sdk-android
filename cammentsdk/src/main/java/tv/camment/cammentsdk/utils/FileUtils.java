@@ -15,7 +15,6 @@ public final class FileUtils {
     private static final String ROOT_DIR = CammentSDK.getInstance().getApplicationContext().getFilesDir().getPath();
     private static final String UPLOADS_DIR = ROOT_DIR + File.separator + "uploads" + File.separator;
 
-
     private static FileUtils instance = new FileUtils();
 
     public static FileUtils getInstance() {
@@ -72,6 +71,5 @@ public final class FileUtils {
             }
         }
     }
-
 
 }

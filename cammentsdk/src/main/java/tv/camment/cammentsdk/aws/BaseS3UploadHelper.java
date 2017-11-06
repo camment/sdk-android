@@ -17,12 +17,12 @@ import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.utils.FileUtils;
 
 abstract class BaseS3UploadHelper extends CammentAsyncClient {
 
@@ -55,7 +55,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
                 CammentProvider.setRecorded(camment, true);
                 CammentProvider.setCammentUploadTransferId(camment, transferObserver.getId());
 
-                transferObserver.setTransferListener(getTransferListener());
+                transferObserver.setTransferListener(getUploadTransferListener());
 
                 return new Object();
             }
@@ -85,7 +85,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         executorService = null;
     }
 
-    private TransferListener getTransferListener() {
+    private TransferListener getUploadTransferListener() {
         return new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
@@ -109,6 +109,57 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
                     final CCamment camment = CammentProvider.getCammentByTransferId(id);
                     AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
                 }
+            }
+        };
+    }
+
+    void downloadCammentFile(final CCamment camment, final boolean fullDownload) {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                transferObserver = transferUtility.download(AWSConfig.getBucketId(),
+                        String.format(KEY_FORMAT, camment.getUuid()),
+                        FileUtils.getInstance().getUploadCammentFile(camment.getUuid()));
+
+                transferObserver.setTransferListener(getDownloadTransferListener(camment, fullDownload));
+                return null;
+            }
+        }, downloadCammentFileCallback());
+    }
+
+    private CammentCallback<Object> downloadCammentFileCallback() {
+        return new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("onSuccess", "downloadCammentFile");
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "downloadCammentFile", exception);
+            }
+        };
+    }
+
+    private TransferListener getDownloadTransferListener(final CCamment camment, boolean fullDownload) {
+        return new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (state == TransferState.COMPLETED) {
+                    cleanup(id);
+                    Log.d("Transfer", "camment inserted " + camment.getUuid());
+                    CammentProvider.insertCamment(camment);
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                Log.e("onProgressChanged", bytesCurrent + "/" + bytesTotal);
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.e("onError", "download", ex);
             }
         };
     }

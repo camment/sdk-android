@@ -65,8 +65,8 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                     recordingStopCalled = true;
                 }
 
-                if (prevY >= screenHeight / 2) {
-                    prevY = screenHeight / 2;
+                if (prevY <= 2 * screenHeight / 3) {
+                    prevY = 2 * screenHeight / 3;
 
                     if (!handledPullDown) {
                         handledPullDown = true;
@@ -74,11 +74,11 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                             actionsListener.onPulledDown();
                         }
                     } else {
-                        par.topMargin = prevY;
+                        par.bottomMargin = prevY;
                         setLayoutParams(par);
                     }
                 } else {
-                    par.topMargin += (int) event.getRawY() - prevY;
+                    par.bottomMargin -= (int) event.getRawY() - prevY;
                     prevY = (int) event.getRawY();
                     setLayoutParams(par);
                 }
@@ -98,7 +98,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
 
                 AnimationUtils.animateDeactivateRecordingButton(this);
 
-                par.topMargin = initMargin;
+                par.bottomMargin = initMargin;
 
                 setLayoutParams(par);
                 return true;
@@ -132,8 +132,8 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                     screenHeight = CommonUtils.getScreenHeight(getContext());
 
                     prevY = (int) event.getRawY();
-                    initMargin = par.topMargin;
-                    par.bottomMargin = -2 * getHeight();
+                    initMargin = par.bottomMargin;
+                    //par.topMargin = -2 * getHeight();
 
                     setLayoutParams(par);
                 }

@@ -54,7 +54,7 @@ public final class AWSManager {
     public CognitoCachingCredentialsProvider getCognitoCachingCredentialsProvider() {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 CammentSDK.getInstance().getApplicationContext(),
-                BuildConfig.IDENTITY_POOL,
+                AWSConfig.getIdentityPool(),
                 Regions.EU_CENTRAL_1);
         credentialsProvider.setLogins(getAwsLoginsMap());
         credentialsProvider.registerIdentityChangedListener(CammentSDK.getInstance());
@@ -108,12 +108,12 @@ public final class AWSManager {
     }
 
     AWSIotMqttManager getAWSIotMqttManager() {
-        return new AWSIotMqttManager(IdentityPreferences.getInstance().getIdentityId(), BuildConfig.IOT_ENDPOINT);
+        return new AWSIotMqttManager(IdentityPreferences.getInstance().getIdentityId(), AWSConfig.getIotEndpoint());
     }
 
     private KeyStore getClientKeyStore() {
-        return AWSIotKeystoreHelper.getIotKeystore(BuildConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
-                BuildConfig.CERT_KEYSTORE_NAME, BuildConfig.CERT_KEYSTORE_PWD);
+        return AWSIotKeystoreHelper.getIotKeystore(AWSConfig.CERT_ID, FileUtils.getInstance().getRootDirectory(),
+                AWSConfig.getCertKeystoreName(), AWSConfig.getCertKeystorePwd());
     }
 
     public IoTHelper getIoTHelper() {

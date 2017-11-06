@@ -14,11 +14,13 @@ public final class DateTimeUtils {
 
     private static final SimpleDateFormat ISO_DATE_FORMAT;
     private static final SimpleDateFormat TIME_ONLY_FORMAT;
+    private static final SimpleDateFormat FULL_INFO_FORMAT;
 
     static {
         ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         ISO_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         TIME_ONLY_FORMAT = new SimpleDateFormat("HH:mm", Locale.US);
+        FULL_INFO_FORMAT = new SimpleDateFormat("EEEE, MMM d, HH:mm", Locale.US);
     }
 
     public static synchronized long getCurrentUTCTimestamp() {
@@ -44,6 +46,14 @@ public final class DateTimeUtils {
         calendar.setTimeZone(TimeZone.getDefault());
         calendar.setTimeInMillis(timestamp);
         return TIME_ONLY_FORMAT.format(calendar.getTime());
+    }
+
+    public static synchronized String showStartStringForUI(long timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getDefault());
+        calendar.setTimeInMillis(timestamp);
+
+        return "Watch on " + FULL_INFO_FORMAT.format(calendar.getTimeInMillis());
     }
 
     public static synchronized long getTimestampFromIsoDateString(String isoString) {

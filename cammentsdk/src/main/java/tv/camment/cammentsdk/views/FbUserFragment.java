@@ -26,6 +26,7 @@ import com.facebook.internal.ImageRequest;
 
 import java.util.List;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -74,14 +75,16 @@ public class FbUserFragment extends Fragment
             }
         });
 
-        tvGroups.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (onSwitchViewListener != null) {
-                    onSwitchViewListener.switchGroupContainer();
+        if (BuildConfig.SHOW_GROUP_LIST) {
+            tvGroups.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onSwitchViewListener != null) {
+                        onSwitchViewListener.switchGroupContainer();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return rootView;
     }

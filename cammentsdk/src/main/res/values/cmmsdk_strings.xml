@@ -54,4 +54,16 @@
 
     <string name="cmmsdk_invitation_sharing_options">Choose the sharing channel</string>
 
+    <string name="cmmsdk_drawer_invite_friends">Invite friends</string>
+    <string name="cmmsdk_drawer_invite_friends_msg">Invite friends to chat with short videos on top of your stream.</string>
+    <string name="cmmsdk_drawer_learn_more">Learn more</string>
+    <string name="cmmsdk_drawer_login_fb">Log in</string>
+    <string name="cmmsdk_drawer_logout_fb">Log out</string>
+    <string name="cmmsdk_drawer_logout_fb_msg">Logout from Facebook will remove you from the current chat.</string>
+    <string name="cmmsdk_drawer_people_in_chat">People joined to your Camment chat</string>
+    <string name="cmmsdk_drawer_chat_groups">%d groups joined</string>
+    <string name="cmmsdk_drawer_no_chat_groups">No groups found</string>
+    <string name="cmmsdk_drawer_anonymous">Anonymous</string>
+    <string name="cmmsdk_drawer_anonymous_msg">Camment chat requires Facebook login.</string>
+
 </resources>

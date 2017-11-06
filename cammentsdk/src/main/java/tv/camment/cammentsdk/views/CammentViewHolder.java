@@ -53,18 +53,23 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (!TextUtils.isEmpty(camment.getUserCognitoIdentityId())) {
-                    final String cognitoId = IdentityPreferences.getInstance().getIdentityId();
+                final String cognitoId = IdentityPreferences.getInstance().getIdentityId();
+                final String oldCognitoId = IdentityPreferences.getInstance().getOldIdentityId();
 
-                    if (actionListener != null) {
-                        actionListener.onCammentBottomSheetDisplayed();
-                    }
+                if (actionListener != null) {
+                    actionListener.onCammentBottomSheetDisplayed();
+                }
 
-                    if (camment.getUserCognitoIdentityId().equals(cognitoId)) {
-                        CammentBottomSheetDialog dialog = new CammentBottomSheetDialog(itemView.getContext());
-                        dialog.setCamment(camment);
-                        dialog.show();
-                    }
+                if (camment.getUserCognitoIdentityId() == null) {
+                    camment.setUserCognitoIdentityId("");
+                }
+
+                if (TextUtils.equals(camment.getUserCognitoIdentityId(), cognitoId)
+                        || TextUtils.isEmpty(camment.getUserCognitoIdentityId())
+                        || TextUtils.equals(camment.getUserCognitoIdentityId(), oldCognitoId)) { //TODO this should be removed as server should overwrite this in camment
+                    CammentBottomSheetDialog dialog = new CammentBottomSheetDialog(itemView.getContext());
+                    dialog.setCamment(camment);
+                    dialog.show();
                 }
                 return true;
             }

@@ -13,6 +13,8 @@ import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -22,6 +24,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
+import tv.camment.cammentsdk.events.FbLoginChangedEvent;
 
 
 public final class UserApi extends CammentAsyncClient {
@@ -40,17 +43,21 @@ public final class UserApi extends CammentAsyncClient {
                 UserinfoInRequest userinfoInRequest = new UserinfoInRequest();
                 Profile profile = Profile.getCurrentProfile();
 
-                FbUserInfo fbUserInfo = new FbUserInfo();
-                fbUserInfo.facebookId = profile.getId();
-                fbUserInfo.name = profile.getName();
+                if (profile != null) {
+                    FbUserInfo fbUserInfo = new FbUserInfo();
+                    fbUserInfo.facebookId = profile.getId();
+                    fbUserInfo.name = profile.getName();
 
-                Uri pictureUri = ImageRequest.getProfilePictureUri(profile.getId(), 270, 270);
+                    Uri pictureUri = ImageRequest.getProfilePictureUri(profile.getId(), 270, 270);
 
-                fbUserInfo.picture = pictureUri.toString();
+                    fbUserInfo.picture = pictureUri.toString();
 
-                userinfoInRequest.setUserinfojson(new Gson().toJson(fbUserInfo));
+                    userinfoInRequest.setUserinfojson(new Gson().toJson(fbUserInfo));
 
-                devcammentClient.userinfoPost(userinfoInRequest);
+                    devcammentClient.userinfoPost(userinfoInRequest);
+                }
+
+                EventBus.getDefault().post(new FbLoginChangedEvent());
 
                 return new Object();
             }
@@ -156,6 +163,46 @@ public final class UserApi extends CammentAsyncClient {
                 Log.e("onException", "getUserInfosForGroupUuid", exception);
             }
         };
+    }
+
+    public void refreshCognitoCredentials() {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                AWSManager.getInstance().getCognitoCachingCredentialsProvider().refresh();
+                return new Object();
+            }
+        }, new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("refreshCognitoCred", "onSuccess");
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("refreshCognitoCred", "onException", exception);
+            }
+        });
+    }
+
+    public void sendCongnitoIdChanged() {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                devcammentClient.meUuidPut();
+                return new Object();
+            }
+        }, new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("sendCongnitoIdChanged", "onSuccess");
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("sendCongnitoIdChanged", "onException", e);
+            }
+        });
     }
 
 }

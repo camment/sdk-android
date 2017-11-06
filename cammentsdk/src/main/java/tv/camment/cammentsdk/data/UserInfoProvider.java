@@ -1,9 +1,11 @@
 package tv.camment.cammentsdk.data;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Userinfo;
 
@@ -12,6 +14,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CUserInfo;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 
 
 public final class UserInfoProvider {
@@ -31,6 +34,9 @@ public final class UserInfoProvider {
         ContentValues cv;
 
         for (Userinfo userinfo : userinfos) {
+            if (TextUtils.equals(userinfo.getUserCognitoIdentityId(), IdentityPreferences.getInstance().getIdentityId())) {
+                continue;
+            }
             cv = new ContentValues();
 
             cv.put(DataContract.UserInfo.userCognitoIdentityId, userinfo.getUserCognitoIdentityId());
@@ -43,6 +49,23 @@ public final class UserInfoProvider {
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .bulkInsert(DataContract.UserInfo.CONTENT_URI, values.toArray(new ContentValues[values.size()]));
+    }
+
+    public static void insertUserInfo(Userinfo userinfo, String groupUuid) {
+        if (userinfo == null || TextUtils.isEmpty(groupUuid))
+            return;
+
+        if (TextUtils.equals(userinfo.getUserCognitoIdentityId(), IdentityPreferences.getInstance().getIdentityId())) {
+            return;
+        }
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.UserInfo.userCognitoIdentityId, userinfo.getUserCognitoIdentityId());
+        cv.put(DataContract.UserInfo.name, userinfo.getName());
+        cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
+        cv.put(DataContract.UserInfo.groupUuid, groupUuid);
+
+        CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserInfo.CONTENT_URI, cv);
     }
 
     static void deleteUserInfos() {
@@ -74,9 +97,29 @@ public final class UserInfoProvider {
         return userInfo;
     }
 
-    public static Loader<Cursor> getUserInfoLoader() {
+    public static int getConnectedUsersCountByGroupUuid(String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {groupUuid};
+
+        Cursor cursor = cr.query(DataContract.UserInfo.CONTENT_URI, USER_INFO_PROJECTION, where, selectionArgs, null);
+
+        int count = 0;
+        if (cursor != null) {
+            count = cursor.getCount();
+            cursor.close();
+        }
+
+        return count;
+    }
+
+    public static Loader<Cursor> getUserInfoLoader(String groupUuid) {
+        String where = DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {groupUuid};
+
         return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.UserInfo.CONTENT_URI,
-                null, null, null, null);
+                null, where, selectionArgs, null);
     }
 
 }

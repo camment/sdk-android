@@ -1,55 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/cmmsdk_ll_autoplay"
+    <FrameLayout
+        android:id="@+id/cmmsdk_user_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/cmmsdk_tv_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:maxLines="1"
-            android:text="Auto-play camments"
-            android:textColor="@color/cmmsdk_camment_text_grey"
-            android:textSize="16sp" />
-
-        <Switch
-            android:id="@+id/cmmsdk_switch_autoplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp" />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/cmmsdk_v_divider"
+    <FrameLayout
+        android:id="@+id/cmmsdk_group_container"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/cmmsdk_ll_autoplay"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:alpha="0.5"
-        android:background="@color/cmmsdk_camment_button_grey" />
+        android:layout_height="match_parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cmmsdk_rv_groups"
-        android:layout_width="match_parent"
-        android:overScrollMode="never"
-        android:layout_below="@+id/cmmsdk_v_divider"
-        android:layout_height="match_parent"/>
-
-</RelativeLayout>
+</LinearLayout>

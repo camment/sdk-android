@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cmmsdk_camment_lightest_grey"
+    tools:context="tv.camment.cammentsdk.views.FbUserFragment">
+
+    <ImageButton
+        android:id="@+id/cmmsdk_ib_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:alpha="0.6"
+        android:background="@drawable/cmmsdk_button_ripple"
+        android:padding="8dp"
+        android:src="@drawable/cmmsdk_ic_settings" />
+
+    <ImageView
+        android:id="@+id/cmmsdk_iv_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/cmmsdk_ib_settings"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/cmmsdk_ic_user" />
+
+    <ImageView
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_toEndOf="@+id/cmmsdk_iv_avatar"
+        android:layout_alignTop="@+id/cmmsdk_iv_avatar"
+        android:layout_marginTop="22dp"
+        android:layout_marginStart="4dp"
+        android:src="@drawable/com_facebook_button_icon_blue"/>
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_iv_avatar"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="@color/cmmsdk_camment_text_grey"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_tv_name"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="1"
+        android:padding="4dp"
+        android:text="@string/cmmsdk_drawer_no_chat_groups"
+        android:textColor="@color/cmmsdk_camment_button_grey"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/cmmsdk_tv_groups"
+        android:alpha="0.7"
+        android:background="@color/cmmsdk_camment_divider_grey" />
+
+</RelativeLayout>
+

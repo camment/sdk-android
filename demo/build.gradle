@@ -23,7 +23,7 @@ android {
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "de862235c96844f8ad503d33d826e5b9"]
 
         buildConfigField("boolean", "USE_FABRICS", "true")
-        buildConfigField("boolean", "USE_HOCKEYAPP", "true")
+        buildConfigField("boolean", "USE_HOCKEYAPP", "false")
     }
 
     signingConfigs {
@@ -51,7 +51,7 @@ android {
 
             signingConfig signingConfigs.debug
 
-            resValue "string", "camment_api_key", "tijWQGtPxA4EZjvsno1g1a6NVDKmVU333n7Eo1v0"
+            resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
 
         debugDev { //DEV
@@ -71,7 +71,7 @@ android {
 
             signingConfig signingConfigs.release
 
-            resValue "string", "camment_api_key", "tijWQGtPxA4EZjvsno1g1a6NVDKmVU333n7Eo1v0"
+            resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
 
         releaseDev { //DEV

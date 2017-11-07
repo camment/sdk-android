@@ -40,6 +40,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,6 +53,7 @@ import java.util.concurrent.Executors;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
@@ -92,6 +94,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     private SimpleExoPlayer player;
     private DefaultDataSourceFactory dataSourceFactory;
+    private CacheDataSourceFactory cacheDataSourceFactory;
     private DefaultExtractorsFactory extractorsFactory;
 
     private RecordingHandler recordingHandler;
@@ -173,6 +176,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
         dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "Camment"));
+
+        cacheDataSourceFactory = new CacheDataSourceFactory(AWSManager.getInstance().getExoPlayerCache(), dataSourceFactory);
         extractorsFactory = new DefaultExtractorsFactory();
 
         player.setPlayWhenReady(true);
@@ -304,7 +309,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
             player.addListener(exoEventListener);
 
             player.setVideoTextureView(textureView);
-            ExtractorMediaSource videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), dataSourceFactory, extractorsFactory, null, null);
+            ExtractorMediaSource videoSource = new ExtractorMediaSource(FileUtils.getInstance().getVideoUri(camment), cacheDataSourceFactory, extractorsFactory, null, null);
             player.prepare(videoSource);
 
             onboardingOverlay.hideTooltipIfNeeded(Step.PLAY);

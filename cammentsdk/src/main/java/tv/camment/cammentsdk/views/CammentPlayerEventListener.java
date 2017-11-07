@@ -63,6 +63,11 @@ final class CammentPlayerEventListener implements ExoPlayer.EventListener {
     }
 
     @Override
+    public void onRepeatModeChanged(int i) {
+
+    }
+
+    @Override
     public void onPlayerError(ExoPlaybackException error) {
         Log.e("onPlayerError", "error", error);
     }

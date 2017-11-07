@@ -14,6 +14,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.camment.clientsdk.DevcammentClient;
 import com.facebook.AccessToken;
+import com.google.android.exoplayer2.upstream.cache.Cache;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.security.KeyStore;
 import java.util.HashMap;
@@ -31,6 +34,8 @@ public final class AWSManager {
 
     private static AWSManager INSTANCE;
 
+    private final Cache cache;
+
     public static AWSManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new AWSManager();
@@ -39,7 +44,7 @@ public final class AWSManager {
     }
 
     private AWSManager() {
-
+        cache = new SimpleCache(FileUtils.getInstance().getUploadDirFile(), new LeastRecentlyUsedCacheEvictor(50 * 1000 * 1000));
     }
 
     private synchronized Map<String, String> getAwsLoginsMap() {
@@ -118,6 +123,10 @@ public final class AWSManager {
 
     public IoTHelper getIoTHelper() {
         return new IoTHelper(Executors.newSingleThreadExecutor(), getClientKeyStore());
+    }
+
+    public Cache getExoPlayerCache() {
+        return cache;
     }
 
 }

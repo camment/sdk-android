@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.aws;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,11 +13,22 @@ import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.StorageClass;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.DefaultDataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.Cache;
+import com.google.android.exoplayer2.upstream.cache.CacheUtil;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -160,6 +172,53 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
             @Override
             public void onError(int id, Exception ex) {
                 Log.e("onError", "download", ex);
+            }
+        };
+    }
+
+    void preCacheFile(final CCamment camment, final boolean fullCache) {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                final DataSpec dataSpec = new DataSpec(Uri.parse(camment.getUrl()));
+                final DataSource dataSource = new DefaultDataSourceFactory(CammentSDK.getInstance().getApplicationContext(),
+                        Util.getUserAgent(CammentSDK.getInstance().getApplicationContext(), "Camment")).createDataSource();
+                final CacheUtil.CachingCounters cachingCounters = new CacheUtil.CachingCounters();
+
+                CacheUtil.cache(dataSpec, AWSManager.getInstance().getExoPlayerCache(), dataSource, cachingCounters);
+
+                return new Object();
+            }
+        }, new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("onSuccess", "preCacheFile");
+                CammentProvider.insertCamment(camment);
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                Log.e("onException", "preCacheFile", ex);
+                CammentProvider.insertCamment(camment); //cache failed but display camment
+            }
+        });
+    }
+
+    private com.google.android.exoplayer2.upstream.TransferListener<DataSource> getCacheTransferListener() {
+        return new com.google.android.exoplayer2.upstream.TransferListener<DataSource>() {
+            @Override
+            public void onTransferStart(DataSource dataSource, DataSpec dataSpec) {
+                Log.d("exo", "onTransferStart");
+            }
+
+            @Override
+            public void onBytesTransferred(DataSource dataSource, int i) {
+                Log.d("exo", "onBytesTransferred " + i);
+            }
+
+            @Override
+            public void onTransferEnd(DataSource dataSource) {
+                Log.d("exo", "onTransferEnd");
             }
         };
     }

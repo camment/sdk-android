@@ -42,6 +42,7 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BaseIoTHelper extends CammentAsyncClient
@@ -348,10 +349,11 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         camment.setRecorded(true);
         camment.setTransferId(-1);
 
-        if (TextUtils.equals(IdentityPreferences.getInstance().getIdentityId(), message.body.userCognitoIdentityId)) {
+        if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
             CammentProvider.insertCamment(camment);
         } else {
-            AWSManager.getInstance().getS3UploadHelper().downloadCammentFile(camment, true);
+            AWSManager.getInstance().getS3UploadHelper().preCacheFile(camment, true);
+            //AWSManager.getInstance().getS3UploadHelper().downloadCammentFile(camment, true);
         }
     }
 

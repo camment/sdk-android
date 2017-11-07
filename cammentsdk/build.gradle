@@ -70,7 +70,7 @@ ext {
     awsVersion = '2.6.6'
     facebookVersion = '4.25.0'
     constraintLayoutVersion = '1.0.2'
-    exoPlayerVersion = 'r2.4.4'
+    exoPlayerVersion = 'r2.5.4'
     glideVersion = '4.0.0'
     easyPermissionsVersion = '0.4.2'
     eventBusVersion = '3.0.0'

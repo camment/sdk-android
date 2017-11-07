@@ -180,7 +180,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final DataSpec dataSpec = new DataSpec(Uri.parse(camment.getUrl()));
+                final DataSpec dataSpec = fullCache ? new DataSpec(Uri.parse(camment.getUrl())) : new DataSpec(Uri.parse(camment.getUrl()), 0, 100 * 1024, null); //download first 100kB
                 final DataSource dataSource = new DefaultDataSourceFactory(CammentSDK.getInstance().getApplicationContext(),
                         Util.getUserAgent(CammentSDK.getInstance().getApplicationContext(), "Camment")).createDataSource();
                 final CacheUtil.CachingCounters cachingCounters = new CacheUtil.CachingCounters();

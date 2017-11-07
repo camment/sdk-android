@@ -44,7 +44,7 @@ public final class AWSManager {
     }
 
     private AWSManager() {
-        cache = new SimpleCache(FileUtils.getInstance().getUploadDirFile(), new LeastRecentlyUsedCacheEvictor(50 * 1000 * 1000));
+        cache = new SimpleCache(FileUtils.getInstance().getUploadDirFile(), new LeastRecentlyUsedCacheEvictor(50 * 1000 * 1024)); //50 MB
     }
 
     private synchronized Map<String, String> getAwsLoginsMap() {

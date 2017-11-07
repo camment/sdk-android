@@ -13,9 +13,11 @@ import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.utils.FileUtils;
 
 
 public final class CammentApi extends CammentAsyncClient {
@@ -67,7 +69,13 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<CammentList>() {
             @Override
             public void onSuccess(CammentList cammentList) {
+                Log.d("onSuccess", "getUserGroupCamments");
                 if (cammentList != null) {
+                    for (Camment camment : cammentList.getItems()) {
+                        if (!FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
+                            AWSManager.getInstance().getS3UploadHelper().preCacheFile(new CCamment(camment), false);
+                        }
+                    }
                     CammentProvider.insertCamments(cammentList.getItems());
                 }
             }

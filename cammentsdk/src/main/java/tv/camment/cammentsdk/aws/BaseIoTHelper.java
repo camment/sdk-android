@@ -353,7 +353,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             CammentProvider.insertCamment(camment);
         } else {
             AWSManager.getInstance().getS3UploadHelper().preCacheFile(camment, true);
-            //AWSManager.getInstance().getS3UploadHelper().downloadCammentFile(camment, true);
         }
     }
 

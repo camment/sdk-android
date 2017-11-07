@@ -16,4 +16,8 @@ public final class S3UploadHelper extends BaseS3UploadHelper {
         super.uploadCammentFile(camment);
     }
 
+    public void preCacheFile(final CCamment camment, final boolean fullCache) {
+        super.preCacheFile(camment, fullCache);
+    }
+
 }

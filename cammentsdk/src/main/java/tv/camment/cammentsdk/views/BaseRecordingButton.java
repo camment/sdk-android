@@ -66,7 +66,7 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
                 }
 
                 if (prevY <= 2 * screenHeight / 3) {
-                    prevY = 2 * screenHeight / 3;
+                    prevY = screenHeight - (2 * screenHeight / 3);
 
                     if (!handledPullDown) {
                         handledPullDown = true;

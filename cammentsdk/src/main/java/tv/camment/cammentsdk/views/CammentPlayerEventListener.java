@@ -5,9 +5,12 @@ import android.util.Log;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -45,12 +48,14 @@ final class CammentPlayerEventListener implements ExoPlayer.EventListener {
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         switch (playbackState) {
-            case ExoPlayer.STATE_READY:
+            case Player.STATE_READY:
                 if (cammentAudioListener != null) {
+                    MixpanelHelper.getInstance().trackEvent(MixpanelHelper.CAMMENT_PLAY);
+
                     cammentAudioListener.onCammentPlaybackStarted();
                 }
                 break;
-            case ExoPlayer.STATE_ENDED:
+            case Player.STATE_ENDED:
                 if (cammentAudioListener != null) {
                     cammentAudioListener.onCammentPlaybackEnded();
                 }

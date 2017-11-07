@@ -31,6 +31,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.utils.DateTimeUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
@@ -127,6 +128,8 @@ public class CammentMainActivity extends AppCompatActivity
         cammentOverlay.setCammentAudioListener(this);
 
         retrieveShow();
+
+        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.SHOW_SCREEN);
     }
 
     @Override

@@ -5,11 +5,11 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
-    def MAJOR_VERSION = 0;
+    def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 0;
+    def MINOR_VERSION = 0
 
-    def MICRO_VERSION = 3;
+    def MICRO_VERSION = 6
 
     defaultConfig {
         applicationId "tv.camment.cammentdemo"
@@ -24,7 +24,6 @@ android {
 
         buildConfigField("boolean", "USE_FABRICS", "true")
         buildConfigField("boolean", "USE_HOCKEYAPP", "true")
-        buildConfigField("boolean", "USE_MIXPANEL", "true")
     }
 
     signingConfigs {

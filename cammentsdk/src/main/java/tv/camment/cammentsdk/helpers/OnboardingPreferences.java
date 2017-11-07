@@ -48,6 +48,7 @@ public final class OnboardingPreferences extends BasePreferences {
     public void putOnboardingStepDisplayed(Step step, boolean display) {
         switch (step) {
             case RECORD:
+                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.ONBOARDING_START);
                 putBoolean(PREFS_RECORD, display);
                 break;
             case PLAY:
@@ -63,6 +64,7 @@ public final class OnboardingPreferences extends BasePreferences {
                 putBoolean(PREFS_DELETE, display);
                 break;
             case INVITE:
+                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.ONBOARDING_END);
                 putBoolean(PREFS_INVITE, display);
                 break;
             default:

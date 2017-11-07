@@ -37,6 +37,7 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 
 abstract class BaseCammentSDK extends CammentLifecycle
@@ -71,6 +72,11 @@ abstract class BaseCammentSDK extends CammentLifecycle
             ioTHelper = AWSManager.getInstance().getIoTHelper();
 
             connectToIoT();
+
+            if (BuildConfig.USE_MIXPANEL) {
+                MixpanelHelper.getInstance().getMixpanel();
+            }
+            MixpanelHelper.getInstance().trackEvent(MixpanelHelper.APP_START);
 
             AWSManager.getInstance().getCognitoCachingCredentialsProvider().registerIdentityChangedListener(this);
         }
@@ -194,6 +200,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
         ApiManager.getInstance().retryFailedCallsIfNeeded();
 
         ApiManager.getInstance().getUserApi().getMyUserGroups();
+
+        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.FB_SIGNIN);
     }
 
     @Override

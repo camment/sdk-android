@@ -9,6 +9,7 @@ public final class GeneralPreferences extends BasePreferences {
     private static final String PREFS_FIRST_STARTUP = "general_first_startup";
     private static final String PREFS_DEEPLINK_GROUP_UUID = "general_deeplink_group_uuid";
     private static final String PREFS_DEEPLINK_SHOW_UUID = "general_deeplink_show_uuid";
+    private static final String PREFS_MIXPANEL_ALIAS = "general_mixpanel_alias";
 
     private static GeneralPreferences INSTANCE;
 
@@ -66,6 +67,14 @@ public final class GeneralPreferences extends BasePreferences {
 
     public String getDeeplinkShowUuid() {
         return getString(PREFS_DEEPLINK_SHOW_UUID, "");
+    }
+
+    public void setMixpanelAliasSet() {
+        putBoolean(PREFS_MIXPANEL_ALIAS, false);
+    }
+
+    public boolean shouldSetMixpanelAlias() {
+        return getBoolean(PREFS_MIXPANEL_ALIAS, true);
     }
 
 }

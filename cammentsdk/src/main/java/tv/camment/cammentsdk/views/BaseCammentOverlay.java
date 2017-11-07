@@ -60,6 +60,7 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
@@ -542,6 +543,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         if (cammentAudioListener != null) {
+            MixpanelHelper.getInstance().trackEvent(MixpanelHelper.CAMMENT_RECORD);
+
             cammentAudioListener.onCammentRecordingStarted();
         }
 

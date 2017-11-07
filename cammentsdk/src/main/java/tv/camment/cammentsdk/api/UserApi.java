@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -25,6 +26,7 @@ import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.events.FbLoginChangedEvent;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 
 public final class UserApi extends CammentAsyncClient {
@@ -58,6 +60,10 @@ public final class UserApi extends CammentAsyncClient {
                 }
 
                 EventBus.getDefault().post(new FbLoginChangedEvent());
+
+                if (BuildConfig.USE_MIXPANEL) {
+                    MixpanelHelper.getInstance().setIdentity();
+                }
 
                 return new Object();
             }

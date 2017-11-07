@@ -27,6 +27,7 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CUserGroup;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 
@@ -153,6 +154,8 @@ public final class InvitationApi extends CammentAsyncClient {
                     cammentDialog.setActionListener(new CammentDialog.ActionListener() {
                         @Override
                         public void onPositiveButtonClick(BaseMessage baseMessage) {
+                            MixpanelHelper.getInstance().trackEvent(MixpanelHelper.INVITE);
+
                             Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
                             if (currentActivity != null) {
                                 Intent intent = new Intent();

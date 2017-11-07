@@ -14,6 +14,7 @@ import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 final class CammentBottomSheetDialog extends BottomSheetDialog implements DialogInterface.OnShowListener {
 
@@ -47,6 +48,8 @@ final class CammentBottomSheetDialog extends BottomSheetDialog implements Dialog
                 @Override
                 public void onClick(View view) {
                     if (camment != null) {
+                        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.CAMMENT_DELETE);
+
                         ApiManager.getInstance().getCammentApi().deleteUserGroupCamment(camment);
                     }
                     dismiss();

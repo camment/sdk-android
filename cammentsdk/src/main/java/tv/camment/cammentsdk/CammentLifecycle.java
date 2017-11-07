@@ -13,6 +13,8 @@ import com.facebook.FacebookActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
+
 abstract class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
     private List<Activity> activityList = new ArrayList<>();
@@ -54,6 +56,10 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
     @Override
     public void onActivityDestroyed(Activity activity) {
         removeActivity(activity);
+
+        if (BuildConfig.USE_MIXPANEL) {
+            MixpanelHelper.getInstance().flush();
+        }
     }
 
     public synchronized Activity getCurrentActivity() {

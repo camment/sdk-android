@@ -42,6 +42,7 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
@@ -292,6 +293,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     void handleInvitationMessage(BaseMessage message) {
         if (message.type == MessageType.INVITATION
                 && message instanceof InvitationMessage) {
+            MixpanelHelper.getInstance().trackEvent(MixpanelHelper.OPEN_DEEPLINK);
             ApiManager.getInstance().getGroupApi().getUserGroupByUuid(((InvitationMessage) message).body.groupUuid, message);
         } else {
             showInvitationDialog(message);
@@ -384,10 +386,14 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     public void onPositiveButtonClick(BaseMessage baseMessage) {
         switch (baseMessage.type) {
             case INVITATION:
+                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.JOIN_GROUP);
+
                 InvitationMessage invitationMessage = (InvitationMessage) baseMessage;
                 ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
                 break;
             case MEMBERSHIP_REQUEST:
+                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.ACCEPT_JOIN_REQUEST);
+
                 MembershipRequestMessage membershipRequestMessage = (MembershipRequestMessage) baseMessage;
                 ApiManager.getInstance().getInvitationApi().replyToMembershipRequest(
                         membershipRequestMessage.body.joiningUser.userCognitoIdentityId,
@@ -405,6 +411,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     public void onNegativeButtonClick(BaseMessage baseMessage) {
         switch (baseMessage.type) {
             case MEMBERSHIP_REQUEST:
+                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.DECLINE_JOIN_REQUEST);
+
                 MembershipRequestMessage membershipRequestMessage = (MembershipRequestMessage) baseMessage;
                 ApiManager.getInstance().getInvitationApi().replyToMembershipRequest(
                         membershipRequestMessage.body.joiningUser.userCognitoIdentityId,

@@ -34,6 +34,7 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 public class CammentShowsActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -78,6 +79,8 @@ public class CammentShowsActivity extends AppCompatActivity
         getSupportLoaderManager().initLoader(1, null, this);
 
         checkForUpdates();
+
+        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.SHOWS_LIST_SCREEN);
     }
 
     private void onPasscodeClick() {

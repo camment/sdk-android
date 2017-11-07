@@ -24,6 +24,7 @@ android {
 
         buildConfigField("boolean", "USE_DEEPLINK", "true")
         buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
+        buildConfigField("boolean", "USE_MIXPANEL", "true")
     }
 
     buildTypes {
@@ -74,6 +75,7 @@ ext {
     glideVersion = '4.0.0'
     easyPermissionsVersion = '0.4.2'
     eventBusVersion = '3.0.0'
+    mixpanelVersion = '5.2.1'
 
     awsDependencies = [
             core                   : "com.amazonaws:aws-android-sdk-core:${awsVersion}",
@@ -103,6 +105,10 @@ ext {
             glide        : "com.github.bumptech.glide:glide:${glideVersion}",
             glideCompiler: "com.github.bumptech.glide:compiler:${glideVersion}",
     ]
+
+    mixpanelDependencies = [
+            mixpanel: "com.mixpanel.android:mixpanel-android:${mixpanelVersion}",
+    ]
 }
 
 dependencies {
@@ -114,15 +120,17 @@ dependencies {
 
     compile glideDependencies.glide
     annotationProcessor glideDependencies.glideCompiler
+
+    compile mixpanelDependencies.values()
 }
 
 publishing {
 
-    def RELEASE_VERSION = 1;
+    def RELEASE_VERSION = 1
 
-    def MAJOR_VERSION = 0;
+    def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 1;
+    def MINOR_VERSION = 2
 
     publications {
         maven(MavenPublication) {

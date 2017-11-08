@@ -6,6 +6,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -16,8 +18,18 @@ import android.widget.FrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
+import tv.camment.cammentsdk.helpers.OnboardingPreferences;
+import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.helpers.Step;
+import tv.camment.cammentsdk.views.CammentDialog;
 
-public final class PullableView extends FrameLayout {
+
+public final class PullableView extends FrameLayout implements CammentDialog.ActionListener {
+
+    private static final int MOVE_THRESHOLD = 20;
 
     private final int slope = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     private AnchorOffset anchorOffset;
@@ -29,6 +41,8 @@ public final class PullableView extends FrameLayout {
     private int downY;
     private boolean animationRunning;
     private boolean snapped;
+    private boolean recordingStopCalled;
+    private long lastClick;
 
 
     public PullableView(Context context) {
@@ -83,7 +97,7 @@ public final class PullableView extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        boolean consumed  = false;
+        boolean consumed = false;
 
         if (isPullable()) {
             switch (event.getAction()) {
@@ -140,9 +154,44 @@ public final class PullableView extends FrameLayout {
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    recordingStopCalled = false;
+
+                    if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+                        BaseMessage message = new BaseMessage();
+                        message.type = MessageType.ONBOARDING;
+
+                        Activity activity = CammentSDK.getInstance().getCurrentActivity();
+
+                        CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                        cammentDialog.setActionListener(this);
+                        cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+                        return true;
+                    }
+
                     onDown(event);
+
+                    if (Math.abs(SystemClock.uptimeMillis() - lastClick) >= 1000) {
+                        lastClick = SystemClock.uptimeMillis();
+
+                        if (listener != null) {
+                            listener.onPress();
+                        }
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    if (!PermissionHelper.getInstance().hasPermissions()
+                            || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+                        return true;
+                    }
+
+                    if (Math.abs(currentMoveY) > MOVE_THRESHOLD
+                            && !recordingStopCalled) {
+                        if (listener != null) {
+                            listener.onReset(true, true);
+                        }
+                        recordingStopCalled = true;
+                    }
+
                     if (checkMove(currentMoveY, direction, anchorOffset)) {
                         for (BoundView boundView : boundViews) {
                             boundView.transform(currentMoveY, anchorOffset);
@@ -150,10 +199,16 @@ public final class PullableView extends FrameLayout {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (!PermissionHelper.getInstance().hasPermissions()
+                            || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+                        return true;
+                    }
+
                     if (isOverThreshold(currentMoveY, direction, scrollThreshold)) {
                         anchor();
                     }
-                    resetAnimated();
+                    resetAnimated(event.getAction() == MotionEvent.ACTION_CANCEL, !recordingStopCalled);
                     break;
             }
             return true;
@@ -172,7 +227,7 @@ public final class PullableView extends FrameLayout {
                 || (direction.downEnabled() && moveY > scrollThreshold.getDown());
     }
 
-    private void resetAnimated() {
+    private void resetAnimated(final boolean cancelled, final boolean callRecordingStop) {
         if (!animationRunning) {
             animationRunning = true;
 
@@ -188,7 +243,6 @@ public final class PullableView extends FrameLayout {
             animatorSet.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
-
                 }
 
                 @Override
@@ -198,8 +252,9 @@ public final class PullableView extends FrameLayout {
                     }
                     animationRunning = false;
                     snapped = false;
+
                     if (listener != null) {
-                        listener.onReset();
+                        listener.onReset(cancelled, callRecordingStop);
                     }
                 }
 
@@ -217,17 +272,17 @@ public final class PullableView extends FrameLayout {
         }
     }
 
-    private void resetImmediate() {
-        if (!animationRunning) {
-            for (BoundView boundView : boundViews) {
-                boundView.transform(0, anchorOffset);
-            }
-            snapped = false;
-            if (listener != null) {
-                listener.onReset();
-            }
-        }
-    }
+//    private void resetImmediate() {
+//        if (!animationRunning) {
+//            for (BoundView boundView : boundViews) {
+//                boundView.transform(0, anchorOffset);
+//            }
+//            snapped = false;
+//            if (listener != null) {
+//                listener.onReset();
+//            }
+//        }
+//    }
 
     private void anchor() {
 //        if (!animationRunning) {
@@ -273,13 +328,38 @@ public final class PullableView extends FrameLayout {
         }
     }
 
+    @Override
+    public void onPositiveButtonClick(BaseMessage baseMessage) {
+        if (listener != null
+                && baseMessage.type == MessageType.ONBOARDING) {
+            listener.onOnboardingStart();
+        }
+    }
+
+    @Override
+    public void onNegativeButtonClick(BaseMessage baseMessage) {
+
+    }
+
+    public void show() {
+        animate().translationX(0).alpha(0.5f).start();
+    }
+
+    public void hide() {
+        animate().translationX(getWidth() * 2).alpha(0.0f).start();
+    }
+
     public interface PullListener {
 
-        void onReset();
+        void onReset(boolean cancelled, boolean callRecordingStop);
 
         void onPullStart();
 
         void onAnchor();
+
+        void onPress();
+
+        void onOnboardingStart();
 
     }
 

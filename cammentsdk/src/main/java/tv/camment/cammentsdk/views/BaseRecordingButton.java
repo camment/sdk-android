@@ -1,23 +1,12 @@
 package tv.camment.cammentsdk.views;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.SystemClock;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
-import tv.camment.cammentsdk.aws.messages.MessageType;
-import tv.camment.cammentsdk.helpers.OnboardingPreferences;
-import tv.camment.cammentsdk.helpers.PermissionHelper;
-import tv.camment.cammentsdk.helpers.Step;
-import tv.camment.cammentsdk.utils.CommonUtils;
 
 
-abstract class BaseRecordingButton extends SquareImageButton implements CammentDialog.ActionListener {
+abstract class BaseRecordingButton extends SquareImageButton {
 
     private static final int MOVE_THRESHOLD = 10;
 
@@ -26,7 +15,6 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
     private int screenHeight;
     private boolean handledPullDown;
 
-    ActionsListener actionsListener;
     private long lastClick;
     private boolean recordingStopCalled;
 
@@ -148,31 +136,6 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
 
     void hide() {
         animate().translationX(getWidth() * 2).alpha(0.0f).start();
-    }
-
-    @Override
-    public void onPositiveButtonClick(BaseMessage baseMessage) {
-        if (actionsListener != null
-                && baseMessage.type == MessageType.ONBOARDING) {
-            actionsListener.onOnboardingStart();
-        }
-    }
-
-    @Override
-    public void onNegativeButtonClick(BaseMessage baseMessage) {
-
-    }
-
-    interface ActionsListener {
-
-        void onPulledDown();
-
-        void onRecordingStart();
-
-        void onRecordingStop(boolean cancelled);
-
-        void onOnboardingStart();
-
     }
 
 }

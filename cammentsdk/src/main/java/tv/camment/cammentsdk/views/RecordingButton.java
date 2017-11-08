@@ -4,8 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 
-@SuppressWarnings("deprecation")
-public final class RecordingButton extends BaseRecordingButton {
+public final class RecordingButton extends SquareImageButton {
 
     public RecordingButton(Context context) {
         super(context);
@@ -19,21 +18,12 @@ public final class RecordingButton extends BaseRecordingButton {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setListener(ActionsListener actionsListener) {
-        this.actionsListener = actionsListener;
-    }
-
     public void show() {
-        super.show();
+        animate().translationX(0).alpha(0.5f).start();
     }
 
     public void hide() {
-        super.hide();
-    }
-
-    interface ActionsListener
-            extends BaseRecordingButton.ActionsListener {
-
+        animate().translationX(getWidth() * 2).alpha(0.0f).start();
     }
 
 }

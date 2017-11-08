@@ -47,7 +47,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -76,7 +75,6 @@ import tv.camment.cammentsdk.views.pullable.TranslateTransformation;
 abstract class BaseCammentOverlay extends RelativeLayout
         implements
         CammentsAdapter.ActionListener,
-        RecordingButton.ActionsListener,
         LoaderManager.LoaderCallbacks<Cursor>,
         OnPreviewStartedListener,
         CammentPlayerEventListener.OnResetLastCammentPlayedListener {
@@ -283,8 +281,11 @@ abstract class BaseCammentOverlay extends RelativeLayout
         pullableView.addBoundView(new BoundView(ibRecord, Collections.<Transformation>singletonList(new TranslateTransformation())));
         pullableView.setListener(new PullableView.PullListener() {
             @Override
-            public void onReset() {
-                Log.d("PULL", "onReset");
+            public void onReset(boolean cancelled, boolean callRecordingStop) {
+                Log.d("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
+                if (callRecordingStop) {
+                    onRecordingStop(cancelled);
+                }
             }
 
             @Override
@@ -295,6 +296,19 @@ abstract class BaseCammentOverlay extends RelativeLayout
             @Override
             public void onAnchor() {
                 Log.d("PULL", "onAnchor");
+                onPulledDown();
+            }
+
+            @Override
+            public void onPress() {
+                Log.d("PULL", "onPress");
+                onRecordingStart();
+            }
+
+            @Override
+            public void onOnboardingStart() {
+                Log.d("PULL", "onOnboardingStart");
+                onStartOnboarding();
             }
         });
 
@@ -303,8 +317,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
         rvCamments.setLayoutManager(layoutManager);
         rvCamments.setAdapter(adapter);
         rvCamments.setItemAnimator(null);
-
-        ibRecord.setListener(this);
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
@@ -437,6 +449,9 @@ abstract class BaseCammentOverlay extends RelativeLayout
                         if (ibRecord != null) {
                             ibRecord.show();
                         }
+                        if (pullableView != null) {
+                            pullableView.show();
+                        }
                         if (rvCamments != null) {
                             rvCamments.show();
                         }
@@ -447,6 +462,9 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
                         if (ibRecord != null) {
                             ibRecord.hide();
+                        }
+                        if (pullableView != null) {
+                            pullableView.hide();
                         }
                         if (rvCamments != null) {
                             rvCamments.hide();
@@ -460,9 +478,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         return true;
     }
 
-
-    @Override
-    public void onPulledDown() {
+    private void onPulledDown() {
         onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
 
         if (FacebookHelper.getInstance().isLoggedIn()) {
@@ -474,15 +490,14 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
     }
 
-    @Override
-    public void onRecordingStart() {
+    private void onRecordingStart() {
         if (PermissionHelper.getInstance().hasPermissions()) {
             onboardingOverlay.hideTooltipIfNeeded(Step.RECORD);
             stopCammentPlayback();
 
             if (flCamera.getChildCount() < 2) {
                 if (cameraGLView == null) {
-                    cameraGLView = new CameraGLView(getContext());
+                    cameraGLView = new CameraGLView(getContext(), flCamera);
                 }
                 cameraGLView.setPreviewStartedListener(this);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -497,8 +512,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
     }
 
-    @Override
-    public void onRecordingStop(boolean cancelled) {
+    private void onRecordingStop(boolean cancelled) {
         AnimationUtils.cancelAppearAnimation();
 
         if (recordingHandler != null) {
@@ -507,7 +521,17 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         AnimationUtils.stopRecordAnimation(vRecordIndicator);
 
-        AnimationUtils.animateDisappearCameraView(flCamera, cameraViewDisappearAnimatorListener);
+        if (cancelled) {
+            if (cameraGLView != null) {
+                cameraGLView.onPause();
+            }
+            if (flCamera != null) {
+                flCamera.setVisibility(GONE);
+                flCamera.removeView(cameraGLView);
+            }
+        } else {
+            AnimationUtils.animateDisappearCameraView(flCamera, cameraViewDisappearAnimatorListener);
+        }
     }
 
     private final Animator.AnimatorListener cameraViewDisappearAnimatorListener = new Animator.AnimatorListener() {
@@ -583,8 +607,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         recordingHandler.startRecording();
     }
 
-    @Override
-    public void onOnboardingStart() {
+    private void onStartOnboarding() {
         onboardingOverlay.displayTooltip(Step.RECORD);
     }
 

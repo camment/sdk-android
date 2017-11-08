@@ -1,0 +1,59 @@
+<resources>
+    <!--<string name="cmmsdk_permission">In order to use Camment feature you need to grant the access to video and audio recording</string>-->
+
+    <string name="cmmsdk_user_invited_to_chat">%s te invitó a un chat privado</string>
+    <string name="cmmsdk_anonymous_invited_to_chat">El usuario te invitó a un chat privado</string>
+    <string name="cmmsdk_join_conversation">¿Te gustaría unirte a la conversación?</string>
+
+    <string name="cmmsdk_join">Unirse</string>
+    <string name="cmmsdk_no">No</string>
+    <string name="cmmsdk_yes">Si</string>
+    <string name="cmmsdk_ok">OK</string>
+    <string name="cmmsdk_cancel">Cancelar</string>
+    <!--<string name="cmmsdk_done">Done</string>-->
+
+    <string name="cmmsdk_user_entered_chat_title">%s ya ingresó a su chat Camment!</string>
+    <string name="cmmsdk_user_entered_chat_desc">Te recomendamos saludar a través de un Camment?</string>
+
+    <!--<string name="cmmsdk_user_invitation_sent_title">Done! We’ll let you know when your friend(s) arrive.</string>-->
+    <!--<string name="cmmsdk_user_invitation_sent_desc">In the meanwhile, lay back and enjoy the show - or maybe you could make a welcome camment to your friend(s)</string>-->
+
+    <string name="cmmsdk_help_tap_and_hold_to_record">Toca y mantén la presión para grabar un Video (Camment)</string>
+    <string name="cmmsdk_help_swipe_left_to_hide_camments">Desliza los camments hacia ← la izquierda para ocultarlos</string>
+    <string name="cmmsdk_help_swipe_right_to_show_camments">Desliza los camments hacia → la derecha para que vuelvan a aparecer</string>
+    <string name="cmmsdk_help_tap_to_play">Bien hecho! Ahora presiona sobre el Camment para poder escucharlo</string>
+    <string name="cmmsdk_help_swipe_down_to_invite">Deslice el botón de Camment hacia ↓ abajo\npara invitar amigos a este chat</string>
+    <string name="cmmsdk_help_swipe_up_to_invite">Deslice el botón Camment hacia ↑ arriba\npara invitar amigos a este chat</string>
+    <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
+
+    <string name="cmmsdk_setup_use_camment_chat">¿Te gustaría chatear a través de videos con amigos mientras miras este programa?</string>
+    <string name="cmmsdk_setup_what_is_camment">es como si enviaras un SMS pero enviando videos de 5 segundos (Camments) que aparecerán en una ventana en la parte superior de la pantalla, a la vez que ves este programa</string>
+    <string name="cmmsdk_setup_sounds_fun">Suena divertido</string>
+    <string name="cmmsdk_setup_maybe_later">Quizás más tarde</string>
+
+    <!--<string name="cmmsdk_camment_actions_title">Choose action</string>-->
+    <string name="cmmsdk_camment_actions_delete_camment">Eliminar tu Camment</string>
+
+    <!--<string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>-->
+    <string name="cmmsdk_invitation_error">No puedes unirte a este grupo</string>
+
+    <string name="cmmsdk_user_wants_to_join_title">%s quieres unirte a tu grupo</string>
+    <string name="cmmsdk_user_wants_to_join_desc">¿Aceptas la solicitud / invitación?</string>
+
+    <string name="cmmsdk_joined_private_chat">¡Te has unido al chat privado!</string>
+
+    <string name="cmmsdk_invitation_link_title">Enviar el enlace de invitación</string>
+    <string name="cmmsdk_invitation_link_desc">Invita a tus amigos compartiendo este enlace de invitación a través del canal que prefieras</string>
+
+    <!--<string name="cmmsdk_invitation_sharing_options">Choose the sharing channel</string>-->
+
+    <string name="cmmsdk_drawer_invite_friends">Para invitar a tus amigos</string>
+    <string name="cmmsdk_drawer_invite_friends_msg">Invita a tus amigos a chatear contigo vía video comentarios que aparecera´n en la parte superior de tu transmisión.</string>
+    <string name="cmmsdk_drawer_learn_more">Para aprender más</string>
+    <string name="cmmsdk_drawer_logout_fb">Cerrar sesión</string>
+    <string name="cmmsdk_drawer_logout_fb_msg">Si sale de su cuenta de Facebook, eliminará de la discusión actual.</string>
+    <string name="cmmsdk_drawer_people_in_chat">Otras personas se unieron a su chat Camment</string>
+    <!--<string name="cmmsdk_drawer_chat_groups">%d groups joined</string>-->
+    <!--<string name="cmmsdk_drawer_no_chat_groups">No groups found</string>-->
+
+</resources>

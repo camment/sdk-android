@@ -4,11 +4,10 @@
     <string name="cmmsdk_facebook_app_id" translatable="false">272405646569362</string>
     <string name="cmmsdk_fb_login_protocol_scheme" translatable="false">fb272405646569362</string>
 
-    <string name="cmmsdk_permission">In order to use Camment feature you need to grant the access
-        to video and audio recording</string>
+    <string name="cmmsdk_permission">In order to use Camment feature you need to grant the access to video and audio recording</string>
 
     <string name="cmmsdk_user_invited_to_chat">%s invited you to a private chat</string>
-    <string name="cmmsdk_anonymous_invited_to_chat">Your friend invited you to a private chat</string>
+    <string name="cmmsdk_anonymous_invited_to_chat">User invited you to a private chat</string>
     <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
 
     <string name="cmmsdk_join">Join</string>
@@ -28,7 +27,8 @@
     <string name="cmmsdk_help_swipe_left_to_hide_camments">Swipe ← left anywhere to hide camments</string>
     <string name="cmmsdk_help_swipe_right_to_show_camments">Swipe → right to show camments</string>
     <string name="cmmsdk_help_tap_to_play">Great success! Now tap the camment to play it</string>
-    <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↑ up\nto invite friends to this chat</string>
+    <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↓ down\nto invite friends to this chat</string>
+    <string name="cmmsdk_help_swipe_up_to_invite">Pull the camment button ↑ up\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
 
     <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>
@@ -38,8 +38,6 @@
 
     <string name="cmmsdk_camment_actions_title">Choose action</string>
     <string name="cmmsdk_camment_actions_delete_camment">Delete camment</string>
-
-    <string name="cmmsdk_invite">Invite</string>
 
     <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
     <string name="cmmsdk_invitation_error">You are not allowed to join this group.</string>
@@ -57,13 +55,10 @@
     <string name="cmmsdk_drawer_invite_friends">Invite friends</string>
     <string name="cmmsdk_drawer_invite_friends_msg">Invite friends to chat with short videos on top of your stream.</string>
     <string name="cmmsdk_drawer_learn_more">Learn more</string>
-    <string name="cmmsdk_drawer_login_fb">Log in</string>
     <string name="cmmsdk_drawer_logout_fb">Log out</string>
     <string name="cmmsdk_drawer_logout_fb_msg">Logout from Facebook will remove you from the current chat.</string>
     <string name="cmmsdk_drawer_people_in_chat">People joined to your Camment chat</string>
     <string name="cmmsdk_drawer_chat_groups">%d groups joined</string>
     <string name="cmmsdk_drawer_no_chat_groups">No groups found</string>
-    <string name="cmmsdk_drawer_anonymous">Anonymous</string>
-    <string name="cmmsdk_drawer_anonymous_msg">Camment chat requires Facebook login.</string>
 
 </resources>

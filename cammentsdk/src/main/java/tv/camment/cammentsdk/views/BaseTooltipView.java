@@ -121,7 +121,7 @@ abstract class BaseTooltipView extends RelativeLayout {
                 tvTooltipText.setText(R.string.cmmsdk_help_tap_and_hold_to_delete);
                 break;
             case INVITE:
-                tvTooltipText.setText(R.string.cmmsdk_help_swipe_down_to_invite);
+                tvTooltipText.setText(R.string.cmmsdk_help_swipe_up_to_invite);
                 break;
             default:
                 break;

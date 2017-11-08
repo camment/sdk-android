@@ -10,11 +10,14 @@ import java.lang.ref.WeakReference;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import tv.camment.cammentsdk.views.SquareFrameLayout;
+
 final class CameraSurfaceRenderer implements
         GLSurfaceView.Renderer,
         SurfaceTexture.OnFrameAvailableListener {
 
     private final WeakReference<BaseCameraGLView> cameraGLViewWeakRef;
+    private final WeakReference<SquareFrameLayout> flCameraWekRef;
     private SurfaceTexture surfaceTexture;
 
     private MediaVideoEncoder videoEncoder;
@@ -29,8 +32,9 @@ final class CameraSurfaceRenderer implements
     private volatile boolean requestUpdateTex = false;
     private boolean flip = true;
 
-    CameraSurfaceRenderer(final BaseCameraGLView cameraGLView) {
+    CameraSurfaceRenderer(final BaseCameraGLView cameraGLView, final SquareFrameLayout flCamera) {
         cameraGLViewWeakRef = new WeakReference<>(cameraGLView);
+        flCameraWekRef = new WeakReference<>(flCamera);
         Matrix.setIdentityM(mvpMatrix, 0);
     }
 
@@ -70,8 +74,12 @@ final class CameraSurfaceRenderer implements
             return;
         updateViewport();
         final BaseCameraGLView cameraGLView = cameraGLViewWeakRef.get();
-        if (cameraGLView != null) {
-            cameraGLView.startPreview();
+        final SquareFrameLayout flCamera = flCameraWekRef.get();
+        if (cameraGLView != null
+                && flCamera != null) {
+            if (flCamera.getCustomScale() == 1.0f) {
+                cameraGLView.startPreview();
+            }
         }
     }
 

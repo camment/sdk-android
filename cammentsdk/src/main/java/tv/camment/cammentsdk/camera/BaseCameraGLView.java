@@ -5,7 +5,6 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.EGL14;
 import android.opengl.GLSurfaceView;
-import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 
 import tv.camment.cammentsdk.SDKConfig;
@@ -27,15 +26,9 @@ abstract class BaseCameraGLView extends GLSurfaceView
     private int videoHeight = SDKConfig.CAMMENT_SIZE;
     private int cameraRotation;
 
-    BaseCameraGLView(Context context) {
+    BaseCameraGLView(Context context, SquareFrameLayout flCamera) {
         super(context);
-        surfaceRenderer = new CameraSurfaceRenderer(this);
-        init();
-    }
-
-    BaseCameraGLView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        surfaceRenderer = new CameraSurfaceRenderer(this);
+        surfaceRenderer = new CameraSurfaceRenderer(this, flCamera);
         init();
     }
 

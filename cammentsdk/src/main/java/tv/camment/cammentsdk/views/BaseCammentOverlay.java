@@ -284,17 +284,17 @@ abstract class BaseCammentOverlay extends RelativeLayout
         pullableView.setListener(new PullableView.PullListener() {
             @Override
             public void onReset() {
-
+                Log.d("PULL", "onReset");
             }
 
             @Override
             public void onPullStart() {
-
+                Log.d("PULL", "onPullStart");
             }
 
             @Override
             public void onAnchor() {
-
+                Log.d("PULL", "onAnchor");
             }
         });
 

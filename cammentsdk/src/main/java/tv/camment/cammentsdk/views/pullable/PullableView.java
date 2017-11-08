@@ -46,6 +46,7 @@ public final class PullableView extends FrameLayout {
         init();
     }
 
+    @SuppressWarnings("unused")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public PullableView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -57,13 +58,13 @@ public final class PullableView extends FrameLayout {
         if (getContext() instanceof Activity) {
             ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         }
-        direction = Direction.DOWN; //TODO
+        direction = Direction.UP;
 
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                anchorOffset = new AnchorOffset(-v.getTop(), displayMetrics.heightPixels / 3); //TODO
-                scrollThreshold = new ScrollThreshold(anchorOffset.getUp(), anchorOffset.getDown()); //TODO
+                anchorOffset = new AnchorOffset(-displayMetrics.heightPixels / 4, 0);
+                scrollThreshold = new ScrollThreshold(anchorOffset.getUp(), anchorOffset.getDown());
             }
         });
     }

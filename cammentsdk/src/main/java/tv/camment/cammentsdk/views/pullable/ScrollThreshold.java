@@ -1,22 +1,22 @@
 package tv.camment.cammentsdk.views.pullable;
 
 
-public final class ScrollThreshold {
+final class ScrollThreshold {
 
     private final int up;
     private final int down;
 
-    public ScrollThreshold(int up, int down) {
+    ScrollThreshold(int up, int down) {
         this.up = up;
         this.down = down;
     }
 
 
-    public int getUp() {
+    int getUp() {
         return up;
     }
 
-    public int getDown() {
+    int getDown() {
         return down;
     }
 

@@ -1,22 +1,22 @@
 package tv.camment.cammentsdk.views.pullable;
 
 
-public final class AnchorOffset {
+final class AnchorOffset {
 
     private final int up;
     private final int down;
 
-    public AnchorOffset(int up, int down) {
+    AnchorOffset(int up, int down) {
         this.up = up;
         this.down = down;
     }
 
 
-    public int getUp() {
+    int getUp() {
         return up;
     }
 
-    public int getDown() {
+    int getDown() {
         return down;
     }
 

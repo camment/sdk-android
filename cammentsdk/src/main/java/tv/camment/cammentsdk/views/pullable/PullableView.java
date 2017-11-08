@@ -57,13 +57,13 @@ public final class PullableView extends FrameLayout {
         if (getContext() instanceof Activity) {
             ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         }
-        direction = Direction.BOTH; //TODO
+        direction = Direction.DOWN; //TODO
 
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                anchorOffset = new AnchorOffset(-v.getTop(), displayMetrics.heightPixels - v.getBottom()); //TODO
-                scrollThreshold = new ScrollThreshold(anchorOffset.getUp() / 2, anchorOffset.getDown() / 2); //TODO
+                anchorOffset = new AnchorOffset(-v.getTop(), displayMetrics.heightPixels / 3); //TODO
+                scrollThreshold = new ScrollThreshold(anchorOffset.getUp(), anchorOffset.getDown()); //TODO
             }
         });
     }
@@ -151,9 +151,8 @@ public final class PullableView extends FrameLayout {
                 case MotionEvent.ACTION_UP:
                     if (isOverThreshold(currentMoveY, direction, scrollThreshold)) {
                         anchor();
-                    } else {
-                        resetAnimated();
                     }
+                    resetAnimated();
                     break;
             }
             return true;
@@ -230,43 +229,46 @@ public final class PullableView extends FrameLayout {
     }
 
     private void anchor() {
-        if (!animationRunning) {
-            animationRunning = true;
-            List<Animator> animators = new ArrayList<>();
-
-            for (BoundView boundView : boundViews) {
-                boundView.getView().setClickable(false);
-                animators.addAll(boundView.getAnimators(anchorOffset, 1.0f));
-            }
-
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(animators);
-            animatorSet.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    animationRunning = false;
-                    snapped = true;
-                    if (listener != null) {
-                        listener.onAnchor();
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-            animatorSet.start();
+//        if (!animationRunning) {
+//            animationRunning = true;
+//            List<Animator> animators = new ArrayList<>();
+//
+//            for (BoundView boundView : boundViews) {
+//                boundView.getView().setClickable(false);
+//                animators.addAll(boundView.getAnimators(anchorOffset, 1.0f));
+//            }
+//
+//            AnimatorSet animatorSet = new AnimatorSet();
+//            animatorSet.playTogether(animators);
+//            animatorSet.addListener(new Animator.AnimatorListener() {
+//                @Override
+//                public void onAnimationStart(Animator animator) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animator) {
+//                    animationRunning = false;
+//                    snapped = true;
+//                    if (listener != null) {
+//                        listener.onAnchor();
+//                    }
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animator) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animator) {
+//
+//                }
+//            });
+//            animatorSet.start();
+//        }
+        if (listener != null) {
+            listener.onAnchor();
         }
     }
 

@@ -3,7 +3,7 @@ package tv.camment.cammentsdk.views.pullable;
 
 import android.animation.ObjectAnimator;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 public final class TranslateTransformation implements Transformation {
 
@@ -28,7 +28,7 @@ public final class TranslateTransformation implements Transformation {
         final float targetTranslation = startTranslationY - toProgress * (startTranslationY - (isUp ? anchorOffset.getUp() : anchorOffset.getDown()));
 
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, view.getTranslationY(), targetTranslation);
-        objectAnimator.setDuration(duration).setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(duration).setInterpolator(new AccelerateDecelerateInterpolator());
         return objectAnimator;
     }
 

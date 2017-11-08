@@ -47,6 +47,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -66,6 +68,10 @@ import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.views.pullable.BoundView;
+import tv.camment.cammentsdk.views.pullable.PullableView;
+import tv.camment.cammentsdk.views.pullable.Transformation;
+import tv.camment.cammentsdk.views.pullable.TranslateTransformation;
 
 abstract class BaseCammentOverlay extends RelativeLayout
         implements
@@ -89,6 +95,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private View vRecordIndicator;
     private CammentRecyclerView rvCamments;
     private RecordingButton ibRecord;
+    private PullableView pullableView;
     private OnboardingOverlay onboardingOverlay;
 
     private CammentsAdapter adapter;
@@ -271,6 +278,25 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         rvCamments = (CammentRecyclerView) findViewById(R.id.cmmsdk_rv_camments);
         ibRecord = (RecordingButton) findViewById(R.id.cmmsdk_ib_record);
+
+        pullableView = (PullableView) findViewById(R.id.cmmsdk_pullable_view);
+        pullableView.addBoundView(new BoundView(ibRecord, Collections.<Transformation>singletonList(new TranslateTransformation())));
+        pullableView.setListener(new PullableView.PullListener() {
+            @Override
+            public void onReset() {
+
+            }
+
+            @Override
+            public void onPullStart() {
+
+            }
+
+            @Override
+            public void onAnchor() {
+
+            }
+        });
 
         adapter = new CammentsAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

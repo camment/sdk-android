@@ -81,17 +81,30 @@
             android:id="@+id/cmmsdk_ib_record"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             android:alpha="0.5"
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/cmmsdk_camment_icon_shadow"
             app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_g_record_camment"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <tv.camment.cammentsdk.views.pullable.PullableView
+            android:id="@+id/cmmsdk_pullable_view"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:background="#20FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_g_record_camment"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <tv.camment.cammentsdk.views.OnboardingOverlay
             android:id="@+id/cmmsdk_onboarding_overlay"

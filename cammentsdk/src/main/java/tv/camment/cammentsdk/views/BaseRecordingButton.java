@@ -42,105 +42,105 @@ abstract class BaseRecordingButton extends SquareImageButton implements CammentD
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        final ConstraintLayout.LayoutParams par = (ConstraintLayout.LayoutParams) getLayoutParams();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                if (!PermissionHelper.getInstance().hasPermissions()
-                        || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
-                    return true;
-                }
-
-                if (Math.abs(prevY - event.getRawY()) > MOVE_THRESHOLD
-                        && !recordingStopCalled) {
-                    setAlpha(0.5f);
-                    setScaleX(1.0f);
-                    setScaleY(1.0f);
-
-                    if (actionsListener != null) {
-                        actionsListener.onRecordingStop(true);
-                    }
-                    recordingStopCalled = true;
-                }
-
-                if (prevY <= 2 * screenHeight / 3) {
-                    prevY = screenHeight - (2 * screenHeight / 3);
-
-                    if (!handledPullDown) {
-                        handledPullDown = true;
-                        if (actionsListener != null) {
-                            actionsListener.onPulledDown();
-                        }
-                    } else {
-                        par.bottomMargin = prevY;
-                        setLayoutParams(par);
-                    }
-                } else {
-                    par.bottomMargin -= (int) event.getRawY() - prevY;
-                    prevY = (int) event.getRawY();
-                    setLayoutParams(par);
-                }
-                return true;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                if (!PermissionHelper.getInstance().hasPermissions()
-                        || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
-                    return true;
-                }
-
-                if (actionsListener != null
-                        && !recordingStopCalled) {
-                    actionsListener
-                            .onRecordingStop(event.getAction() == MotionEvent.ACTION_CANCEL);
-                }
-
-                AnimationUtils.animateDeactivateRecordingButton(this);
-
-                par.bottomMargin = initMargin;
-
-                setLayoutParams(par);
-                return true;
-            case MotionEvent.ACTION_DOWN:
-                handledPullDown = false;
-                recordingStopCalled = false;
-
-                if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
-                    BaseMessage message = new BaseMessage();
-                    message.type = MessageType.ONBOARDING;
-
-                    Activity activity = CammentSDK.getInstance().getCurrentActivity();
-
-                    CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                    cammentDialog.setActionListener(this);
-                    cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
-                    return true;
-                }
-
-                if (Math.abs(SystemClock.uptimeMillis() - lastClick) >= 1000) {
-                    lastClick = SystemClock.uptimeMillis();
-
-                    if (actionsListener != null) {
-                        actionsListener.onRecordingStart();
-                    }
-
-                    if (PermissionHelper.getInstance().hasPermissions()) {
-                        AnimationUtils.animateActivateRecordingButton(this);
-                    }
-
-                    screenHeight = CommonUtils.getScreenHeight(getContext());
-
-                    prevY = (int) event.getRawY();
-                    initMargin = par.bottomMargin;
-                    //par.topMargin = -2 * getHeight();
-
-                    setLayoutParams(par);
-                }
-                return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        final ConstraintLayout.LayoutParams par = (ConstraintLayout.LayoutParams) getLayoutParams();
+//
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_MOVE:
+//                if (!PermissionHelper.getInstance().hasPermissions()
+//                        || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+//                    return true;
+//                }
+//
+//                if (Math.abs(prevY - event.getRawY()) > MOVE_THRESHOLD
+//                        && !recordingStopCalled) {
+//                    setAlpha(0.5f);
+//                    setScaleX(1.0f);
+//                    setScaleY(1.0f);
+//
+//                    if (actionsListener != null) {
+//                        actionsListener.onRecordingStop(true);
+//                    }
+//                    recordingStopCalled = true;
+//                }
+//
+//                if (prevY <= 2 * screenHeight / 3) {
+//                    prevY = screenHeight - (2 * screenHeight / 3);
+//
+//                    if (!handledPullDown) {
+//                        handledPullDown = true;
+//                        if (actionsListener != null) {
+//                            actionsListener.onPulledDown();
+//                        }
+//                    } else {
+//                        par.bottomMargin = prevY;
+//                        setLayoutParams(par);
+//                    }
+//                } else {
+//                    par.bottomMargin -= (int) event.getRawY() - prevY;
+//                    prevY = (int) event.getRawY();
+//                    setLayoutParams(par);
+//                }
+//                return true;
+//            case MotionEvent.ACTION_UP:
+//            case MotionEvent.ACTION_CANCEL:
+//                if (!PermissionHelper.getInstance().hasPermissions()
+//                        || !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+//                    return true;
+//                }
+//
+//                if (actionsListener != null
+//                        && !recordingStopCalled) {
+//                    actionsListener
+//                            .onRecordingStop(event.getAction() == MotionEvent.ACTION_CANCEL);
+//                }
+//
+//                AnimationUtils.animateDeactivateRecordingButton(this);
+//
+//                par.bottomMargin = initMargin;
+//
+//                setLayoutParams(par);
+//                return true;
+//            case MotionEvent.ACTION_DOWN:
+//                handledPullDown = false;
+//                recordingStopCalled = false;
+//
+//                if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+//                    BaseMessage message = new BaseMessage();
+//                    message.type = MessageType.ONBOARDING;
+//
+//                    Activity activity = CammentSDK.getInstance().getCurrentActivity();
+//
+//                    CammentDialog cammentDialog = CammentDialog.createInstance(message);
+//                    cammentDialog.setActionListener(this);
+//                    cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+//                    return true;
+//                }
+//
+//                if (Math.abs(SystemClock.uptimeMillis() - lastClick) >= 1000) {
+//                    lastClick = SystemClock.uptimeMillis();
+//
+//                    if (actionsListener != null) {
+//                        actionsListener.onRecordingStart();
+//                    }
+//
+//                    if (PermissionHelper.getInstance().hasPermissions()) {
+//                        AnimationUtils.animateActivateRecordingButton(this);
+//                    }
+//
+//                    screenHeight = CommonUtils.getScreenHeight(getContext());
+//
+//                    prevY = (int) event.getRawY();
+//                    initMargin = par.bottomMargin;
+//                    //par.topMargin = -2 * getHeight();
+//
+//                    setLayoutParams(par);
+//                }
+//                return true;
+//        }
+//        return false;
+//    }
 
     void show() {
         animate().translationX(0).alpha(0.5f).start();

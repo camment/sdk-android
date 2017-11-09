@@ -5,6 +5,7 @@ public final class GeneralPreferences extends BasePreferences {
     private static final String PREFS_NAME = "camment_general_prefs";
 
     private static final String PREFS_ACTIVE_SHOW_UUID = "general_active_show_uuid";
+    private static final String PREFS_INVITATION_TEXT = "general_invitation_text";
     private static final String PREFS_PROVIDER_PASSCODE = "general_provider_passcode";
     private static final String PREFS_FIRST_STARTUP = "general_first_startup";
     private static final String PREFS_DEEPLINK_GROUP_UUID = "general_deeplink_group_uuid";
@@ -35,6 +36,14 @@ public final class GeneralPreferences extends BasePreferences {
 
     public String getActiveShowUuid() {
         return getString(PREFS_ACTIVE_SHOW_UUID, "");
+    }
+
+    public void setInvitationText(String invitationText) {
+        putString(PREFS_INVITATION_TEXT, invitationText);
+    }
+
+    public String getInvitationText() {
+        return getString(PREFS_INVITATION_TEXT, "");
     }
 
     public void setProviderPasscode(String passcode) {

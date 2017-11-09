@@ -86,15 +86,13 @@ abstract class BaseCammentSDK extends CammentLifecycle
         return applicationContext.get();
     }
 
-    void setShowUuid(String showUuid) {
-        if (TextUtils.isEmpty(showUuid)) {
+    void setShowMetadata(ShowMetadata showMetadata) {
+        if (TextUtils.isEmpty(showMetadata.getUuid())) {
             throw new IllegalArgumentException("Show uuid can't be null!");
         }
 
-        Show show = new Show();
-        show.setUuid(showUuid);
-
-        GeneralPreferences.getInstance().setActiveShowUuid(show.getUuid());
+        GeneralPreferences.getInstance().setActiveShowUuid(showMetadata.getUuid());
+        GeneralPreferences.getInstance().setInvitationText(showMetadata.getInvitationText());
     }
 
     void setOnDeeplinkOpenShowListener(OnDeeplinkOpenShowListener onDeeplinkOpenShowListener) {

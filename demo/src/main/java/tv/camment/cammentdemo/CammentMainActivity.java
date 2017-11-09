@@ -25,9 +25,8 @@ import android.widget.VideoView;
 
 import com.camment.clientsdk.model.Show;
 
-import java.math.BigDecimal;
-
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.ShowMetadata;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;
@@ -90,7 +89,7 @@ public class CammentMainActivity extends AppCompatActivity
                 contentLoadingProgressBar.show();
             }
 
-            CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
+            CammentSDK.getInstance().setShowMetadata(new ShowMetadata(getIntent().getStringExtra(EXTRA_SHOW_UUID), null));
 
             currentPosition = 0;
             if (videoView != null) {
@@ -110,7 +109,7 @@ public class CammentMainActivity extends AppCompatActivity
             currentPosition = savedInstanceState.getInt(ARGS_PLAYER_POSITION);
         }
 
-        CammentSDK.getInstance().setShowUuid(getIntent().getStringExtra(EXTRA_SHOW_UUID));
+        CammentSDK.getInstance().setShowMetadata(new ShowMetadata(getIntent().getStringExtra(EXTRA_SHOW_UUID), null));
 
         tvShowOnHold = (TextView) findViewById(R.id.tv_on_hold);
 

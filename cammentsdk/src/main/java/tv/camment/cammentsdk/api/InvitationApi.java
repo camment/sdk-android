@@ -158,9 +158,18 @@ public final class InvitationApi extends CammentAsyncClient {
 
                             Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
                             if (currentActivity != null) {
+                                String msg;
+                                String customInvitationText = GeneralPreferences.getInstance().getInvitationText();
+
+                                if (TextUtils.isEmpty(customInvitationText)) {
+                                    msg = currentActivity.getString(R.string.cmmsdk_invitation_default_msg);
+                                } else {
+                                    msg = customInvitationText;
+                                }
+
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_SEND);
-                                intent.putExtra(Intent.EXTRA_TEXT, result.getUrl());
+                                intent.putExtra(Intent.EXTRA_TEXT, msg + " " + result.getUrl());
                                 intent.setType("text/plain");
 
                                 currentActivity.startActivity(Intent.createChooser(intent, currentActivity.getString(R.string.cmmsdk_invitation_sharing_options)));

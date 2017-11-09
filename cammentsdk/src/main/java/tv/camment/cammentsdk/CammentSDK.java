@@ -29,8 +29,8 @@ public final class CammentSDK extends BaseCammentSDK {
         return applicationContext.get();
     }
 
-    public void setShowUuid(String showUuid) {
-        super.setShowUuid(showUuid);
+    public void setShowMetadata(ShowMetadata showMetadata) {
+        super.setShowMetadata(showMetadata);
     }
 
     public void setOnDeeplinkOpenShowListener(OnDeeplinkOpenShowListener onDeeplinkOpenShowListener) {

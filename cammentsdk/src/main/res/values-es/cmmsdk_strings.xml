@@ -56,4 +56,6 @@
     <string name="cmmsdk_drawer_chat_groups">%d grupos a los que te has unido</string>
     <string name="cmmsdk_drawer_no_chat_groups">No se han encontrado ningún grupo</string>
 
+    <!--<string name="cmmsdk_invitation_default_msg">Hey, join our private chat!</string>-->
+
 </resources>

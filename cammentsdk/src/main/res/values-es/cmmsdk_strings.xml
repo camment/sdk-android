@@ -1,5 +1,5 @@
 <resources>
-    <!--<string name="cmmsdk_permission">In order to use Camment feature you need to grant the access to video and audio recording</string>-->
+    <string name="cmmsdk_permission">Para usar Camment necesitas facilitar el acceso a grabar vídeo y grabar audio</string>
 
     <string name="cmmsdk_user_invited_to_chat">%s te invitó a un chat privado</string>
     <string name="cmmsdk_anonymous_invited_to_chat">El usuario te invitó a un chat privado</string>
@@ -10,7 +10,7 @@
     <string name="cmmsdk_yes">Si</string>
     <string name="cmmsdk_ok">OK</string>
     <string name="cmmsdk_cancel">Cancelar</string>
-    <!--<string name="cmmsdk_done">Done</string>-->
+    <string name="cmmsdk_done">Hecho</string>
 
     <string name="cmmsdk_user_entered_chat_title">%s ya ingresó a su chat Camment!</string>
     <string name="cmmsdk_user_entered_chat_desc">Te recomendamos saludar a través de un Camment?</string>
@@ -31,10 +31,10 @@
     <string name="cmmsdk_setup_sounds_fun">Suena divertido</string>
     <string name="cmmsdk_setup_maybe_later">Quizás más tarde</string>
 
-    <!--<string name="cmmsdk_camment_actions_title">Choose action</string>-->
+    <string name="cmmsdk_camment_actions_title">Selecciona una opción</string>
     <string name="cmmsdk_camment_actions_delete_camment">Eliminar tu Camment</string>
 
-    <!--<string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>-->
+    <string name="cmmsdk_passcode_error">No se encontró ninguna emisión.\nPor favor: revisa tu código de acceso</string>
     <string name="cmmsdk_invitation_error">No puedes unirte a este grupo</string>
 
     <string name="cmmsdk_user_wants_to_join_title">%s quieres unirte a tu grupo</string>
@@ -45,7 +45,7 @@
     <string name="cmmsdk_invitation_link_title">Enviar el enlace de invitación</string>
     <string name="cmmsdk_invitation_link_desc">Invita a tus amigos compartiendo este enlace de invitación a través del canal que prefieras</string>
 
-    <!--<string name="cmmsdk_invitation_sharing_options">Choose the sharing channel</string>-->
+    <string name="cmmsdk_invitation_sharing_options">Elige el canal que quieres utilizar compartir la invitación</string>
 
     <string name="cmmsdk_drawer_invite_friends">Para invitar a tus amigos</string>
     <string name="cmmsdk_drawer_invite_friends_msg">Invita a tus amigos a chatear contigo vía video comentarios que aparecera´n en la parte superior de tu transmisión.</string>
@@ -53,7 +53,7 @@
     <string name="cmmsdk_drawer_logout_fb">Cerrar sesión</string>
     <string name="cmmsdk_drawer_logout_fb_msg">Si sale de su cuenta de Facebook, eliminará de la discusión actual.</string>
     <string name="cmmsdk_drawer_people_in_chat">Otras personas se unieron a su chat Camment</string>
-    <!--<string name="cmmsdk_drawer_chat_groups">%d groups joined</string>-->
-    <!--<string name="cmmsdk_drawer_no_chat_groups">No groups found</string>-->
+    <string name="cmmsdk_drawer_chat_groups">%d grupos a los que te has unido</string>
+    <string name="cmmsdk_drawer_no_chat_groups">No se han encontrado ningún grupo</string>
 
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="camment_demo_app_name">Camment</string>
+    <string name="camment_demo_app_name" translatable="false">Camment</string>
 
     <string name="camment_shows">Shows</string>
     <string name="camment_passcode">Passcode</string>

@@ -34,6 +34,8 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/holo_blue_dark"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
         android:text="@string/cmmsdk_drawer_logout_fb"
         android:textAllCaps="false"
         android:textColor="@android:color/white" />

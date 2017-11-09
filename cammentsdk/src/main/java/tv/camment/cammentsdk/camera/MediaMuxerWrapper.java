@@ -13,9 +13,8 @@ import tv.camment.cammentsdk.utils.FileUtils;
 final class MediaMuxerWrapper {
     private static final String TAG = "MediaMuxerWrapper";
 
-    private final String mCammentUuid;
+    private String mCammentUuid;
 
-    private String mOutputPath;
     private final MediaMuxer mMediaMuxer;    // API >= 18
     private int mEncoderCount, mStatredCount;
     private boolean mIsStarted;
@@ -28,7 +27,7 @@ final class MediaMuxerWrapper {
      */
     MediaMuxerWrapper(String cammentUuid) throws IOException {
         mCammentUuid = cammentUuid;
-        mOutputPath = FileUtils.getInstance().getUploadCammentPath(cammentUuid);
+        String mOutputPath = FileUtils.getInstance().getUploadCammentPath(cammentUuid);
         mMediaMuxer = new MediaMuxer(mOutputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
         mEncoderCount = mStatredCount = 0;
         mIsStarted = false;
@@ -59,6 +58,7 @@ final class MediaMuxerWrapper {
         if (mAudioEncoder != null)
             mAudioEncoder.stopRecording();
         mAudioEncoder = null;
+        mCammentUuid = null;
     }
 
     synchronized boolean isStarted() {

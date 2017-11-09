@@ -70,8 +70,8 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
                 public String call() throws Exception {
                     String cammentUuid = null;
                     if (mediaMuxer != null) {
-                        mediaMuxer.stopRecording();
                         cammentUuid = mediaMuxer.getCammentUuid();
+                        mediaMuxer.stopRecording();
                     }
                     return cammentUuid;
                 }

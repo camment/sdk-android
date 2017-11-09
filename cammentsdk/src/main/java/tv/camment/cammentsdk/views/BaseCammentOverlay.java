@@ -77,7 +77,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         CammentsAdapter.ActionListener,
         LoaderManager.LoaderCallbacks<Cursor>,
         OnPreviewStartedListener,
-        CammentPlayerEventListener.OnResetLastCammentPlayedListener {
+        CammentPlayerEventListener.OnResetLastCammentPlayedListener, PullableView.PullListener {
 
     private static final int THRESHOLD_X = 100;
     private static final int THRESHOLD_Y = 150;
@@ -279,38 +279,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         pullableView = (PullableView) findViewById(R.id.cmmsdk_pullable_view);
         pullableView.addBoundView(new BoundView(ibRecord, Collections.<Transformation>singletonList(new TranslateTransformation())));
-        pullableView.setListener(new PullableView.PullListener() {
-            @Override
-            public void onReset(boolean cancelled, boolean callRecordingStop) {
-                Log.d("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
-                if (callRecordingStop) {
-                    onRecordingStop(cancelled);
-                }
-            }
-
-            @Override
-            public void onPullStart() {
-                Log.d("PULL", "onPullStart");
-            }
-
-            @Override
-            public void onAnchor() {
-                Log.d("PULL", "onAnchor");
-                onPulledDown();
-            }
-
-            @Override
-            public void onPress() {
-                Log.d("PULL", "onPress");
-                onRecordingStart();
-            }
-
-            @Override
-            public void onOnboardingStart() {
-                Log.d("PULL", "onOnboardingStart");
-                onStartOnboarding();
-            }
-        });
+        pullableView.setListener(this);
 
         adapter = new CammentsAdapter(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -476,6 +445,37 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         return true;
+    }
+
+    @Override
+    public void onReset(boolean cancelled, boolean callRecordingStop) {
+        Log.d("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
+        if (callRecordingStop) {
+            onRecordingStop(cancelled);
+        }
+    }
+
+    @Override
+    public void onPullStart() {
+        Log.d("PULL", "onPullStart");
+    }
+
+    @Override
+    public void onAnchor() {
+        Log.d("PULL", "onAnchor");
+        onPulledDown();
+    }
+
+    @Override
+    public void onPress() {
+        Log.d("PULL", "onPress");
+        onRecordingStart();
+    }
+
+    @Override
+    public void onOnboardingStart() {
+        Log.d("PULL", "onOnboardingStart");
+        onStartOnboarding();
     }
 
     private void onPulledDown() {

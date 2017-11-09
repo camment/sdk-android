@@ -286,57 +286,7 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
         }
     }
 
-//    private void resetImmediate() {
-//        if (!animationRunning) {
-//            for (BoundView boundView : boundViews) {
-//                boundView.transform(0, anchorOffset);
-//            }
-//            snapped = false;
-//            if (listener != null) {
-//                listener.onReset();
-//            }
-//        }
-//    }
-
     private void anchor() {
-//        if (!animationRunning) {
-//            animationRunning = true;
-//            List<Animator> animators = new ArrayList<>();
-//
-//            for (BoundView boundView : boundViews) {
-//                boundView.getView().setClickable(false);
-//                animators.addAll(boundView.getAnimators(anchorOffset, 1.0f));
-//            }
-//
-//            AnimatorSet animatorSet = new AnimatorSet();
-//            animatorSet.playTogether(animators);
-//            animatorSet.addListener(new Animator.AnimatorListener() {
-//                @Override
-//                public void onAnimationStart(Animator animator) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animator animator) {
-//                    animationRunning = false;
-//                    snapped = true;
-//                    if (listener != null) {
-//                        listener.onAnchor();
-//                    }
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(Animator animator) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animator animator) {
-//
-//                }
-//            });
-//            animatorSet.start();
-//        }
         if (listener != null) {
             listener.onAnchor();
         }

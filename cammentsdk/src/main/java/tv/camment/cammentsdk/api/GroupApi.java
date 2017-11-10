@@ -15,11 +15,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.OnDeeplinkOpenShowListener;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
+import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
@@ -180,6 +182,15 @@ public final class GroupApi extends CammentAsyncClient {
 
                 if (usergroup != null
                         && TextUtils.equals(usergroup.getUserCognitoIdentityId(), IdentityPreferences.getInstance().getIdentityId())) {
+                    if (message instanceof InvitationMessage) {
+                        final String showUuid = ((InvitationMessage) message).body.showUuid;
+                        final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
+                        if (onDeeplinkOpenShowListener != null
+                                && !TextUtils.isEmpty(showUuid)) {
+                            onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
+                        }
+                    }
+
                     UserGroupProvider.setActive(usergroup.getUuid(), true);
 
                     EventBus.getDefault().post(new UserGroupChangeEvent());

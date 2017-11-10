@@ -6,13 +6,16 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.facebook.CustomTabMainActivity;
 import com.facebook.FacebookActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 abstract class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
@@ -21,6 +24,8 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
+        hideProgressBar();
+
         addActivity(activity);
     }
 
@@ -33,8 +38,16 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
     public void onActivityResumed(Activity activity) {
         CammentSDK.getInstance().connectToIoT();
 
-        if (isActivityValid(activity) && !(activity instanceof DeeplinkIgnore)) {
+        if (isActivityValid(activity)
+                && !(activity instanceof DeeplinkIgnore)
+                && !TextUtils.equals(GeneralPreferences.getInstance().getDeeplinkGroupUuid(), GeneralPreferences.getInstance().getCancelledDeeplinkUuid())) {
             CammentSDK.getInstance().handleDeeplink("camment");
+        }
+
+        if (TextUtils.equals(GeneralPreferences.getInstance().getDeeplinkGroupUuid(), GeneralPreferences.getInstance().getCancelledDeeplinkUuid())) {
+            GeneralPreferences.getInstance().setCancelledDeeplinkUuid("");
+            GeneralPreferences.getInstance().setDeeplinkGroupUuid("");
+            GeneralPreferences.getInstance().setDeeplinkShowUuid("");
         }
     }
 
@@ -78,6 +91,7 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     private synchronized boolean isActivityValid(Activity activity) {
         return !(activity instanceof FacebookActivity)
+                && !(activity instanceof CustomTabMainActivity)
                 && !(activity instanceof CammentDeeplinkActivity);
     }
 
@@ -137,7 +151,7 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
                 for (Fragment f : fragments) {
                     if (f instanceof CammentProgressDialog) {
                         ((CammentProgressDialog) f).doNotDestroyActivity();
-                        ((CammentProgressDialog) f).dismiss();
+                        ((CammentProgressDialog) f).dismissAllowingStateLoss();
                     }
                 }
             }

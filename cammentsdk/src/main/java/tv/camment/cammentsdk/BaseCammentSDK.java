@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk;
 
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +18,6 @@ import com.amazonaws.mobileconnectors.cognito.Record;
 import com.amazonaws.mobileconnectors.cognito.SyncConflict;
 import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.camment.clientsdk.model.Deeplink;
-import com.camment.clientsdk.model.Show;
 import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -34,7 +34,6 @@ import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
-import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
@@ -110,6 +109,10 @@ abstract class BaseCammentSDK extends CammentLifecycle
     }
 
     void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_CANCELED) {
+            GeneralPreferences.getInstance().setCancelledDeeplinkUuid(GeneralPreferences.getInstance().getDeeplinkGroupUuid());
+        }
+
         FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
@@ -143,7 +146,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
             return;
         }
 
-         if (!TextUtils.isEmpty(groupUuid)) {
+        if (!TextUtils.isEmpty(groupUuid)) {
             if (FacebookHelper.getInstance().isLoggedIn()
                     && ioTHelper != null) {
                 GeneralPreferences.getInstance().setDeeplinkGroupUuid("");

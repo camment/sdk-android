@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 1.0.1**
+**current version: 1.0.2**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK in an existing project. 
 
@@ -21,16 +21,19 @@ buildToolsVersion "26.0.1"
 
 **Dependencies**
 CammentSDK relies on following dependencies: 
-- Amazon AWS SDK (v2.4.5)
+- Amazon AWS SDK (v2.6.6)
 - Facebook SDK (v4.25.0)
-- Google Exoplayer (v2.4.4)
+- Google Exoplayer (v2.5.4)
 - Glide library (v4.0.0)
 - EasyPermissions library (v0.4.2)
 - Greenrobot EventBus (v3.0.0)
+- Android Support v4 (v26.0.1)
 - Android Support AppCompat-v7 (v26.0.1)
 - Android Support Design Library (v26.0.1)
 - Android Support RecyclerView (v26.0.1)
 - Android Support ConstraintLayout (v1.0.2)
+
+> CammentSDK uses own Facebook app to enable sign in into Camment service. Make sure you don't specify your own Facebook application id in manifest. In order to enable Facebook login, you have to provide release (and development) key hashes to Camment company. Steps how to create those hashes are well known and are described here: https://developers.facebook.com/docs/android/getting-started/ (Running Sample Apps section). 
 
 *Note:* If you use some of these dependencies in your application too, you can remove them from your app gradle file. In case you want to override some dependencies, you can do it using gradle, e.g.:
 ```gradle
@@ -177,14 +180,15 @@ Example of layout:
 As CammentSDK overlay intercepts all touch events, it has to know to which ```ViewGroup``` to pass the touch events in order not to disable underlying components. In the layout above ```VideoView``` is wrapped in ```FrameLayout``` to enable this.
 Then in the activity where CammentOverlay is used, call ```setParentViewGroup(ViewGroup parentViewGroup)``` method.
 
-CammentSDK also needs to know unique identifier of the currently watched show. Use ```setShowUuid(String showUuid)``` method.
+
+CammentSDK also needs to know unique identifier of the currently watched show. Use ```setShowMetadata(ShowMetadata showMetadata)``` method. The first parameter of ```ShowMetadata``` object is show uuid and the second one is custom invitation text which will be passed together with invitation deeplink (can be null or empty String, in such case default invitation text is used). 
 ```java
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.<your_layout>);
     ...
-    CammentSDK.getInstance().setShowUuid("<Any unique String identifier of your show>");
+    CammentSDK.getInstance().setShowMetadata(new ShowMetadata("<Any unique String identifier of your show>", "<Any custom invitation text>"));
         
     FrameLayout parentViewGroup = (FrameLayout) findViewById(R.id.fl_parent);
     CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.camment_overlay);
@@ -194,7 +198,7 @@ protected void onCreate(Bundle savedInstanceState) {
 ## Pass onActivityResult and onRequestPermissionsResult to CammentSDK
 CammentSDK handles permissions which it needs as well as Facebook Login. In order to complete the flow correctly, pass results of ```onActivityResult``` and ```onRequestPermissionsResult``` to CammentSDK. 
 
-```onActivityResult``` should be overriden in all activities (use your BaseActivity or similar parent activity) where CammentSDK is used as Facebook Login may be performed e.g. when invitation request is received. 
+```onActivityResult``` should be overriden in all activities (use your BaseActivity or similar parent activity) where CammentSDK is used as Facebook Login may be performed e.g. when invitation request is received and there has to be an activity ready to receive onActivityResult from Facebook SDK. 
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -8,6 +8,7 @@ public final class CCamment extends Camment {
     private long timestamp;
     private int transferId = -1;
     private boolean recorded;
+    private boolean deleted;
 
     public CCamment() {
 
@@ -23,6 +24,7 @@ public final class CCamment extends Camment {
         setTimestamp(System.currentTimeMillis());
         setTransferId(-1);
         setRecorded(true);
+        setDeleted(false);
     }
 
     @Override
@@ -65,6 +67,14 @@ public final class CCamment extends Camment {
 
     public void setRecorded(boolean recorded) {
         this.recorded = recorded;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
 }

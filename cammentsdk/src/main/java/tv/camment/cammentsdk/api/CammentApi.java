@@ -3,6 +3,7 @@ package tv.camment.cammentsdk.api;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.amazonaws.mobileconnectors.apigateway.ApiClientException;
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.Camment;
 import com.camment.clientsdk.model.CammentInRequest;
@@ -107,12 +108,17 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                CammentProvider.deleteCammentByUuid(camment.getUuid());
+                CammentProvider.setCammentDeleted(camment.getUuid());
             }
 
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "deleteUserGroupCamment", exception);
+
+                if (exception instanceof ApiClientException
+                        && ((ApiClientException) exception).getStatusCode() == 404) {
+                    CammentProvider.deleteCammentByUuid(camment.getUuid());
+                }
             }
         };
     }

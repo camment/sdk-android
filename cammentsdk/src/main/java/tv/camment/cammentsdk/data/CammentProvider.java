@@ -29,6 +29,7 @@ public final class CammentProvider {
             DataContract.Camment.userGroupUuid,
             DataContract.Camment.transferId,
             DataContract.Camment.recorded,
+            DataContract.Camment.deleted,
             DataContract.Camment.timestamp};
 
     public static void insertCamment(CCamment camment) {
@@ -52,12 +53,15 @@ public final class CammentProvider {
         cv.put(DataContract.Camment.timestamp, timestamp);
         cv.put(DataContract.Camment.transferId, camment.getTransferId());
         cv.put(DataContract.Camment.recorded, camment.isRecorded() ? 1 : 0);
+        cv.put(DataContract.Camment.deleted, camment.isDeleted() ? 1 : 0);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
     }
 
     public static void insertCamments(List<Camment> camments) {
+        deleteCamments();
+
         if (camments == null || camments.size() == 0)
             return;
 
@@ -78,6 +82,11 @@ public final class CammentProvider {
             cv.put(DataContract.Camment.transferId, -1);
             cv.put(DataContract.Camment.recorded, 1);
 
+            final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
+            int deleted = cammentByUuid == null ? 0 : (cammentByUuid.isDeleted() ? 1 : 0);
+
+            cv.put(DataContract.Camment.deleted, deleted);
+
             values.add(cv);
             i--;
         }
@@ -92,11 +101,24 @@ public final class CammentProvider {
     }
 
     public static void deleteCammentByUuid(String uuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
         String where = DataContract.Camment.uuid + "=?";
         String[] selectionArgs = {uuid};
 
-        CammentSDK.getInstance().getApplicationContext().getContentResolver()
-                .delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
+        cr.delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
+    }
+
+    public static void setCammentDeleted(String uuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {uuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.Camment.deleted, true);
+
+        cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
     }
 
     public static CCamment getCammentByUuid(String uuid) {
@@ -210,6 +232,7 @@ public final class CammentProvider {
         camment.setTimestamp(cursor.getLong(cursor.getColumnIndex(DataContract.Camment.timestamp)));
         camment.setTransferId(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.transferId)));
         camment.setRecorded(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.recorded)) == 1);
+        camment.setDeleted(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.deleted)) == 1);
 
         return camment;
     }
@@ -233,8 +256,10 @@ public final class CammentProvider {
 
         if (activeUserGroup != null
                 && !TextUtils.isEmpty(activeUserGroup.getUuid())) {
-            String selection = DataContract.Camment.recorded + "=? AND " + DataContract.Camment.userGroupUuid + "=?";
-            String[] selectionArgs = new String[]{"1", activeUserGroup.getUuid()};
+            String selection = DataContract.Camment.recorded + "=? AND "
+                    + DataContract.Camment.userGroupUuid + "=? AND "
+                    + DataContract.Camment.deleted + "=?";
+            String[] selectionArgs = new String[]{"1", activeUserGroup.getUuid(), "0"};
 
             return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,
                     null, selection, selectionArgs, DataContract.Camment.timestamp + " DESC");

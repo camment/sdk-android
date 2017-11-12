@@ -48,8 +48,8 @@ public final class CammentProvider {
         long timestamp = camment.getTimestamp() == 0
                 ? System.currentTimeMillis()
                 : cammentByUuid == null ? camment.getTimestamp() : cammentByUuid.getTimestamp();
-        cv.put(DataContract.Camment.timestamp, timestamp);
 
+        cv.put(DataContract.Camment.timestamp, timestamp);
         cv.put(DataContract.Camment.transferId, camment.getTransferId());
         cv.put(DataContract.Camment.recorded, camment.isRecorded() ? 1 : 0);
 
@@ -64,6 +64,7 @@ public final class CammentProvider {
         List<ContentValues> values = new ArrayList<>();
         ContentValues cv;
 
+        int i = camments.size() + 1;
         for (Camment camment : camments) {
             cv = new ContentValues();
 
@@ -73,11 +74,12 @@ public final class CammentProvider {
             cv.put(DataContract.Camment.thumbnail, camment.getThumbnail());
             cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
             cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
-            cv.put(DataContract.Camment.timestamp, System.currentTimeMillis());
+            cv.put(DataContract.Camment.timestamp, i);
             cv.put(DataContract.Camment.transferId, -1);
             cv.put(DataContract.Camment.recorded, 1);
 
             values.add(cv);
+            i--;
         }
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
@@ -158,6 +160,7 @@ public final class CammentProvider {
         ContentValues cv = new ContentValues();
 
         cv.put(DataContract.Camment.recorded, String.valueOf(recorded ? 1 : 0));
+        cv.put(DataContract.Camment.timestamp, System.currentTimeMillis());
 
         cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
     }
@@ -175,8 +178,17 @@ public final class CammentProvider {
     }
 
     public static int getCammentsSize() {
+        Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+        if (activeUserGroup == null
+                || TextUtils.isEmpty(activeUserGroup.getUuid())) {
+            return 0;
+        }
+
+        String selection = DataContract.Camment.recorded + "=? AND " + DataContract.Camment.userGroupUuid + "=?";
+        String[] selectionArgs = new String[]{"1", activeUserGroup.getUuid()};
+
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
-        Cursor cursor = cr.query(DataContract.Camment.CONTENT_URI, CAMMENT_PROJECTION, null, null, null);
+        Cursor cursor = cr.query(DataContract.Camment.CONTENT_URI, CAMMENT_PROJECTION, selection, selectionArgs, null);
 
         int count = 0;
         if (cursor != null) {
@@ -221,7 +233,7 @@ public final class CammentProvider {
 
         if (activeUserGroup != null
                 && !TextUtils.isEmpty(activeUserGroup.getUuid())) {
-            String selection =  DataContract.Camment.recorded + "=? AND " + DataContract.Camment.userGroupUuid + "=?";
+            String selection = DataContract.Camment.recorded + "=? AND " + DataContract.Camment.userGroupUuid + "=?";
             String[] selectionArgs = new String[]{"1", activeUserGroup.getUuid()};
 
             return new CursorLoader(CammentSDK.getInstance().getApplicationContext(), DataContract.Camment.CONTENT_URI,

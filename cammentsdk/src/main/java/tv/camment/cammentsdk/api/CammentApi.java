@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.api;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
@@ -60,7 +61,11 @@ public final class CammentApi extends CammentAsyncClient {
             public CammentList call() throws Exception {
                 final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
-                return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid());
+                if (usergroup != null
+                        && !TextUtils.isEmpty(usergroup.getUuid())) {
+                    return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid());
+                }
+                return new CammentList();
             }
         }, getUserGroupCammentsCallback());
     }
@@ -70,7 +75,8 @@ public final class CammentApi extends CammentAsyncClient {
             @Override
             public void onSuccess(CammentList cammentList) {
                 Log.d("onSuccess", "getUserGroupCamments");
-                if (cammentList != null) {
+                if (cammentList != null
+                        && cammentList.getItems() != null) {
                     for (Camment camment : cammentList.getItems()) {
                         if (!FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
                             AWSManager.getInstance().getS3UploadHelper().preCacheFile(new CCamment(camment), false);

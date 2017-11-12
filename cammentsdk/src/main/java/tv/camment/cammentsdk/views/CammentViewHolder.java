@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
@@ -143,10 +144,14 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
                 ivThumbnail.setColorFilter(filter);
             }
         } else {
-            Glide.with(CammentSDK.getInstance().getApplicationContext())
-                    .load(camment.getThumbnail())
-                    .into(ivThumbnail);
+            loadThumbnailFromServer();
         }
+    }
+
+    private void loadThumbnailFromServer() {
+        Glide.with(CammentSDK.getInstance().getApplicationContext())
+                .load(camment.getThumbnail())
+                .into(ivThumbnail);
     }
 
 }

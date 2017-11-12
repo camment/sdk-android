@@ -5,8 +5,6 @@ import android.text.TextUtils;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 
 import java.util.Arrays;

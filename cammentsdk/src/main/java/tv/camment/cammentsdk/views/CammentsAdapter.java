@@ -1,6 +1,8 @@
 package tv.camment.cammentsdk.views;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -23,6 +25,8 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
     private static final int CAMMENT = 0;
 
+    private static long hashCode;
+
     private final ActionListener actionListener;
 
     private List<CCamment> camments;
@@ -40,9 +44,13 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         }
 
         if (this.camments != null
-                && this.camments.size() == camments.size()) {
+                && this.camments.size() == camments.size()
+                && hashCode == camments.hashCode()) {
+            Log.d("CAMMENT", "will not update");
             return;
         }
+
+        hashCode = camments.hashCode();
 
         Set<CCamment> cammentSet = new HashSet<>();
         cammentSet.addAll(camments);

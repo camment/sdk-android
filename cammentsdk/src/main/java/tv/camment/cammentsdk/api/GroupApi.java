@@ -201,6 +201,8 @@ public final class GroupApi extends CammentAsyncClient {
 
                     Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
                             R.string.cmmsdk_joined_private_chat, Toast.LENGTH_LONG).show();
+
+                    CammentSDK.getInstance().hideProgressBar();
                     return;
                 }
 
@@ -210,6 +212,7 @@ public final class GroupApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getUserGroupByUuid", exception);
+                CammentSDK.getInstance().hideProgressBar();
             }
         };
     }

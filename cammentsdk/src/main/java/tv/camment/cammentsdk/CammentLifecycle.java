@@ -133,8 +133,6 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
     public synchronized void showProgressBar() {
         Activity activity = CammentSDK.getInstance().getCurrentActivity();
         if (activity instanceof AppCompatActivity) {
-            hideProgressBar();
-
             Fragment fragment = ((AppCompatActivity) activity).getSupportFragmentManager().findFragmentByTag("PROGRESS");
             if (fragment == null || !fragment.isAdded()) {
                 CammentProgressDialog progressDialog = CammentProgressDialog.createInstance();

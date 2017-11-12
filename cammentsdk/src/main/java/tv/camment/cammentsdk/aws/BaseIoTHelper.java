@@ -313,6 +313,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     void showInvitationDialog(BaseMessage message) {
+        CammentSDK.getInstance().hideProgressBar();
+
         Activity activity = CammentSDK.getInstance().getCurrentActivity();
         if (activity instanceof AppCompatActivity) {
             dismissInvitationSentIfNeeded(((AppCompatActivity) activity).getSupportFragmentManager().getFragments());

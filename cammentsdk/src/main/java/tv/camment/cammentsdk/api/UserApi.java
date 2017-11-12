@@ -90,11 +90,14 @@ public final class UserApi extends CammentAsyncClient {
                 if (handleDeeplink) {
                     CammentSDK.getInstance().handleDeeplink("camment");
                 }
+
+                CammentSDK.getInstance().hideProgressBar();
             }
 
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "updateUserInfo", exception);
+                CammentSDK.getInstance().hideProgressBar();
             }
         };
     }

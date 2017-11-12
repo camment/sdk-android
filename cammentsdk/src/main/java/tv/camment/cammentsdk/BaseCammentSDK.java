@@ -136,6 +136,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
     }
 
     public void handleDeeplink(String scheme) {
+        CammentSDK.getInstance().showProgressBar();
+
         String groupUuid = GeneralPreferences.getInstance().getDeeplinkGroupUuid();
         String showUuid = GeneralPreferences.getInstance().getDeeplinkShowUuid();
 
@@ -169,6 +171,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
         return new CammentCallback<Deeplink>() {
             @Override
             public void onSuccess(Deeplink result) {
+                CammentSDK.getInstance().hideProgressBar();
+
                 if (!TextUtils.isEmpty(result.getUrl())) {
                     String[] split = result.getUrl().split("/");
                     if (split.length > 3) {
@@ -185,7 +189,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
             @Override
             public void onException(Exception exception) {
-
+                CammentSDK.getInstance().hideProgressBar();
             }
         };
     }
@@ -228,12 +232,13 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
             @Override
             public void onCancel() {
-
+                CammentSDK.getInstance().hideProgressBar();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.e("FacebookLogin", "onError", error);
+                CammentSDK.getInstance().hideProgressBar();
             }
         };
     }

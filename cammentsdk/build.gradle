@@ -24,7 +24,7 @@ android {
 
         buildConfigField("boolean", "USE_DEEPLINK", "true")
         buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
-        buildConfigField("boolean", "USE_MIXPANEL", "true")
+        buildConfigField("boolean", "USE_MIXPANEL", "false")
     }
 
     buildTypes {

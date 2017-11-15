@@ -17,7 +17,8 @@ public final class ApiManager {
 
     private static ApiManager INSTANCE;
 
-    private final DevcammentClient devcammentClient;
+    private final DevcammentClient devcammentClientCred;
+    private final DevcammentClient devcammentClientNoCred;
     private final ExecutorService executorService;
 
     private Map<String, Callable> callableMap;
@@ -35,30 +36,35 @@ public final class ApiManager {
     }
 
     private ApiManager() {
-        devcammentClient = AWSManager.getInstance().getDevcammentClient();
+        devcammentClientCred = AWSManager.getInstance().getDevcammentClient(true);
+        devcammentClientNoCred = AWSManager.getInstance().getDevcammentClient(false);
         executorService = Executors.newSingleThreadExecutor();
         callableMap = new HashMap<>();
         retrySet = new HashSet<>();
     }
 
+    public AuthApi getAuthApi() {
+        return new AuthApi(executorService, devcammentClientNoCred);
+    }
+
     public ShowApi getShowApi() {
-        return new ShowApi(executorService, devcammentClient);
+        return new ShowApi(executorService, devcammentClientCred);
     }
 
     public UserApi getUserApi() {
-        return new UserApi(executorService, devcammentClient);
+        return new UserApi(executorService, devcammentClientCred);
     }
 
     public GroupApi getGroupApi() {
-        return new GroupApi(executorService, devcammentClient);
+        return new GroupApi(executorService, devcammentClientCred);
     }
 
     public InvitationApi getInvitationApi() {
-        return new InvitationApi(executorService, devcammentClient);
+        return new InvitationApi(executorService, devcammentClientCred);
     }
 
     public CammentApi getCammentApi() {
-        return new CammentApi(executorService, devcammentClient);
+        return new CammentApi(executorService, devcammentClientCred);
     }
 
     public synchronized void putCallable(String uuid, Callable call) {

@@ -31,6 +31,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;

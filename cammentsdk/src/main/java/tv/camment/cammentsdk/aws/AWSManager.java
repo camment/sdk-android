@@ -49,17 +49,24 @@ public final class AWSManager {
 
     private synchronized Map<String, String> getAwsLoginsMap() {
         Map<String, String> loginsMap = new HashMap<>();
-        if (AccessToken.getCurrentAccessToken() != null
-                && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken())) {
-            loginsMap.put("graph.facebook.com", AccessToken.getCurrentAccessToken().getToken());
-        }
+//        if (AccessToken.getCurrentAccessToken() != null
+//                && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken())) {
+//            loginsMap.put("graph.facebook.com", AccessToken.getCurrentAccessToken().getToken());
+//        }
+        //TODO add check if userId (e.g. email was not yet set by host app)
+        //loginsMap.put("cognito-identity.amazonaws.com", "eyJraWQiOiJldS1jZW50cmFsLTExIiwidHlwIjoiSldTIiwiYWxnIjoiUlM1MTIifQ.eyJzdWIiOiJldS1jZW50cmFsLTE6NDNjYTZhZTMtMmI0Ny00YzYxLWEzZGQtNzA3MWQ1ZTllZjE3IiwiYXVkIjoiZXUtY2VudHJhbC0xOmFhOTYwOTBjLTA0MjMtNDZkMS1hNTg0LTIwMDg2YzBlMTM0ZCIsImFtciI6WyJhdXRoZW50aWNhdGVkIiwibG9naW4uY2FtbWVudC50diIsImxvZ2luLmNhbW1lbnQudHY6ZXUtY2VudHJhbC0xOmFhOTYwOTBjLTA0MjMtNDZkMS1hNTg0LTIwMDg2YzBlMTM0ZDpwZXRyYUBjYW1tZW50LnR2Il0sImlzcyI6Imh0dHBzOi8vY29nbml0by1pZGVudGl0eS5hbWF6b25hd3MuY29tIiwiZXhwIjoxNTEwNjcwMDc0LCJpYXQiOjE1MTA2NjkxNzR9.sUR_LhKpeGC4qkgIQgDr8pwm1ZYNeVj6jIt8GvfWIjpu0XKeb3oXkjDCqSjJyra92fdJ7QDV8cNtsyxrNSExIHjJ6JQhBxUNIgCT8LbIOx6dX-zQwtjxotVUZlnqu2IK_Ow1bJhz9MWaKyp-uqAUx0hykeGzuF_CxCvtjvl0xbWFgez69875duKETNdDr1Y0JJHsIDyHyLTeVOriUXSAKgXJ0xHRxFKqy_FVhcyai3Me2mHUYsqP1DzwikDzuMUZzcGOJ8EQuNVwNu5pKAQskjpkeh1q4Vcs7v-C8-1k-skXFuXItyi97mfwa5fQz8t8CyY4DDHNdWd51ZMYVCq4Gw");
+
         return loginsMap;
+    }
+
+    public CammentAuthenticationProvider getCammentAuthenticationProvider() {
+        return new CammentAuthenticationProvider(null, AWSConfig.getIdentityPool(), Regions.EU_CENTRAL_1);
     }
 
     public CognitoCachingCredentialsProvider getCognitoCachingCredentialsProvider() {
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
                 CammentSDK.getInstance().getApplicationContext(),
-                AWSConfig.getIdentityPool(),
+                getCammentAuthenticationProvider(),
                 Regions.EU_CENTRAL_1);
         credentialsProvider.setLogins(getAwsLoginsMap());
         credentialsProvider.registerIdentityChangedListener(CammentSDK.getInstance());
@@ -73,22 +80,26 @@ public final class AWSManager {
                 getCognitoCachingCredentialsProvider());
     }
 
-    private ApiClientFactory getApiClientFactory() {
+    private ApiClientFactory getApiClientFactory(boolean useCredentialsProvider) {
         ApiClientFactory apiClientFactory = new ApiClientFactory();
-        apiClientFactory.credentialsProvider(getCognitoCachingCredentialsProvider());
+
+        if (useCredentialsProvider) {
+            apiClientFactory.credentialsProvider(getCognitoCachingCredentialsProvider());
+        }
+
         apiClientFactory.apiKey(CammentSDK.getInstance().getApiKey());
         return apiClientFactory;
     }
 
-    public DevcammentClient getDevcammentClient() {
+    public DevcammentClient getDevcammentClient(boolean useCredentialsProvider) {
         switch (BuildConfig.BUILD_TYPE) {
             case "debugDev":
             case "releaseDev":
-                return getApiClientFactory().build(DevcammentClientDev.class);
+                return getApiClientFactory(useCredentialsProvider).build(DevcammentClientDev.class);
             case "debug":
             case "release":
             default:
-                return getApiClientFactory().build(DevcammentClientProd.class);
+                return getApiClientFactory(useCredentialsProvider).build(DevcammentClientProd.class);
         }
     }
 

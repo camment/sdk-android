@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.FacebookFriendList;
+import com.camment.clientsdk.model.OpenIdToken;
 import com.camment.clientsdk.model.UsergroupList;
 import com.camment.clientsdk.model.UserinfoInRequest;
 import com.camment.clientsdk.model.UserinfoList;
@@ -17,6 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
@@ -172,26 +174,6 @@ public final class UserApi extends CammentAsyncClient {
                 Log.e("onException", "getUserInfosForGroupUuid", exception);
             }
         };
-    }
-
-    public void refreshCognitoCredentials() {
-        submitBgTask(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                AWSManager.getInstance().getCognitoCachingCredentialsProvider().refresh();
-                return new Object();
-            }
-        }, new CammentCallback<Object>() {
-            @Override
-            public void onSuccess(Object result) {
-                Log.d("refreshCognitoCred", "onSuccess");
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("refreshCognitoCred", "onException", exception);
-            }
-        });
     }
 
     public void sendCongnitoIdChanged() {

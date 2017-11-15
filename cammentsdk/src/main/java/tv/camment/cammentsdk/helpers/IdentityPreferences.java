@@ -32,6 +32,10 @@ public final class IdentityPreferences extends BasePreferences {
         return getString(namespace(ID_KEY), "");
     }
 
+    public void saveIdentityId(String identityId) {
+        putString(namespace(ID_KEY), identityId);
+    }
+
     private String namespace(String key) {
         return AWSManager.getInstance().getCognitoCachingCredentialsProvider().getIdentityPoolId() + "." + key;
     }

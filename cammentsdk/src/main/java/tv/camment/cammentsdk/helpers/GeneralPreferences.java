@@ -12,6 +12,7 @@ public final class GeneralPreferences extends BasePreferences {
     private static final String PREFS_DEEPLINK_SHOW_UUID = "general_deeplink_show_uuid";
     private static final String PREFS_MIXPANEL_ALIAS = "general_mixpanel_alias";
     private static final String PREFS_CANCELLED_DEEPLINK_UUID = "general_cancelled_deeplink_uuid";
+    private static final String PREFS_TOKEN = "general_token";
 
     private static GeneralPreferences INSTANCE;
 
@@ -93,6 +94,14 @@ public final class GeneralPreferences extends BasePreferences {
 
     public void setCancelledDeeplinkUuid(String groupUuid) {
         putString(PREFS_CANCELLED_DEEPLINK_UUID, groupUuid);
+    }
+
+    public String getToken() {
+        return getString(PREFS_TOKEN, "");
+    }
+
+    public void setToken(String token) {
+        putString(PREFS_TOKEN, token);
     }
 
 }

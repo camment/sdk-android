@@ -1,34 +1,16 @@
 package tv.camment.cammentsdk.api;
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
-import com.camment.clientsdk.model.FacebookFriendList;
 import com.camment.clientsdk.model.OpenIdToken;
-import com.camment.clientsdk.model.UsergroupList;
-import com.camment.clientsdk.model.UserinfoInRequest;
-import com.camment.clientsdk.model.UserinfoList;
-import com.facebook.AccessToken;
-import com.facebook.Profile;
-import com.facebook.internal.ImageRequest;
-import com.google.gson.Gson;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
-import tv.camment.cammentsdk.BuildConfig;
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
-import tv.camment.cammentsdk.data.UserGroupProvider;
-import tv.camment.cammentsdk.data.UserInfoProvider;
-import tv.camment.cammentsdk.events.FbLoginChangedEvent;
-import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 
 public final class AuthApi extends CammentAsyncClient {
@@ -60,11 +42,11 @@ public final class AuthApi extends CammentAsyncClient {
         });
     }
 
-    public Future<OpenIdToken> getOpenIdToken(final String login) {
-        return submitTask(new Callable<OpenIdToken>() {
+    public void getOpenIdToken(final String fbToken) {
+        submitTask(new Callable<OpenIdToken>() {
             @Override
             public OpenIdToken call() throws Exception {
-                return devcammentClient.usersGetOpenIdTokenGet(login);
+                return devcammentClient.usersGetOpenIdTokenGet(fbToken);
             }
         }, getOpenIdTokenCallback());
     }

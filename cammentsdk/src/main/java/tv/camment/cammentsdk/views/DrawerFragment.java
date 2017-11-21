@@ -14,8 +14,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.events.FbLoginChangedEvent;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.events.UserInfoChangedEvent;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 
 
 public final class DrawerFragment extends Fragment
@@ -35,7 +35,7 @@ public final class DrawerFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (FacebookHelper.getInstance().isLoggedIn()) {
+        if (AuthHelper.getInstance().isLoggedIn()) {
             displayFbSignedInUser();
             ApiManager.getInstance().getUserApi().getMyUserGroups();
         } else {
@@ -95,7 +95,7 @@ public final class DrawerFragment extends Fragment
 
     @Override
     public void switchToFbUserInfo() {
-        if (FacebookHelper.getInstance().isLoggedIn()) {
+        if (AuthHelper.getInstance().isLoggedIn()) {
             displayFbSignedInUser();
         } else {
             hideFbUserView();
@@ -125,8 +125,8 @@ public final class DrawerFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(FbLoginChangedEvent event) {
-        if (FacebookHelper.getInstance().isLoggedIn()
+    public void onMessageEvent(UserInfoChangedEvent event) { //TODO remove and use cursorloader instead
+        if (AuthHelper.getInstance().isLoggedIn()
                 && !isFbUserViewDisplayed()) {
             displayFbSignedInUser();
             ApiManager.getInstance().getUserApi().getMyUserGroups();

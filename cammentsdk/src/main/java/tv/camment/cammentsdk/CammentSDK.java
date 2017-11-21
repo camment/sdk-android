@@ -5,8 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import com.facebook.FacebookCallback;
-import com.facebook.login.LoginResult;
+import tv.camment.cammentsdk.auth.CammentAuthIdentityProvider;
 
 public final class CammentSDK extends BaseCammentSDK {
 
@@ -21,8 +20,8 @@ public final class CammentSDK extends BaseCammentSDK {
         super();
     }
 
-    public synchronized void init(Context context) {
-        super.init(context);
+    public synchronized void init(Context context, CammentAuthIdentityProvider identityProvider) {
+        super.init(context, identityProvider);
     }
 
     public Context getApplicationContext() {
@@ -52,12 +51,7 @@ public final class CammentSDK extends BaseCammentSDK {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void checkLogin() {
-        super.checkLogin();
+    public CammentAuthIdentityProvider getAppAuthIdentityProvider() {
+        return super.getAppAuthIdentityProvider();
     }
-
-    public FacebookCallback<LoginResult> getLoginResultFbCallback() {
-        return super.getLoginResultFbCallback();
-    }
-
 }

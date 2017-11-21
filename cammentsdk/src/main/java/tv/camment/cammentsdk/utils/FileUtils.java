@@ -4,7 +4,6 @@ package tv.camment.cammentsdk.utils;
 import android.net.Uri;
 
 import com.camment.clientsdk.model.Camment;
-import com.google.android.exoplayer2.upstream.cache.CacheUtil;
 
 import java.io.File;
 

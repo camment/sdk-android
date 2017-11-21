@@ -1,10 +1,8 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,17 +19,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.facebook.Profile;
-import com.facebook.internal.ImageRequest;
 
 import java.util.List;
 
 import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.auth.CammentUserInfo;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CUserGroup;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 public class FbUserFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -63,17 +59,18 @@ public class FbUserFragment extends Fragment
             }
         });
 
-        ivAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Profile profile = Profile.getCurrentProfile();
-                if (profile != null
-                        && profile.getLinkUri() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, profile.getLinkUri());
-                    startActivity(intent);
-                }
-            }
-        });
+        //TODO
+//        ivAvatar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Profile profile = Profile.getCurrentProfile();
+//                if (profile != null
+//                        && profile.getLinkUri() != null) {
+//                    Intent intent = new Intent(Intent.ACTION_VIEW, profile.getLinkUri());
+//                    startActivity(intent);
+//                }
+//            }
+//        });
 
         if (BuildConfig.SHOW_GROUP_LIST) {
             tvGroups.setOnClickListener(new View.OnClickListener() {
@@ -134,26 +131,23 @@ public class FbUserFragment extends Fragment
     }
 
     private void fillFbInfo() {
-        if (FacebookHelper.getInstance().isLoggedIn()) {
-            Profile profile = Profile.getCurrentProfile();
+        CammentUserInfo userInfo = CammentSDK.getInstance().getAppAuthIdentityProvider().getUserInfo();
 
-            if (profile != null) {
-                Uri pictureUri = ImageRequest.getProfilePictureUri(profile.getId(), 270, 270);
+        if (userInfo != null) {
 
-                Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(pictureUri).into(new BitmapImageViewTarget(ivAvatar) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        if (getContext() != null) {
-                            RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-                            circularBitmapDrawable.setCircular(true);
-                            ivAvatar.setImageDrawable(circularBitmapDrawable);
-                        }
+            Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(userInfo.getImageUrl()).into(new BitmapImageViewTarget(ivAvatar) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    if (getContext() != null) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        ivAvatar.setImageDrawable(circularBitmapDrawable);
                     }
-                });
+                }
+            });
 
-                tvName.setText(profile.getName());
-            }
+            tvName.setText(userInfo.getName());
         }
     }
 

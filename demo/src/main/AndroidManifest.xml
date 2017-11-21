@@ -6,9 +6,10 @@
         android:name=".CammentApp"
         android:allowBackup="true"
         android:icon="@mipmap/cmmsdk_ic_launcher"
-        android:label="@string/camment_demo_app_name"
+        android:label="@string/demo_app_name"
         android:supportsRtl="false"
         android:theme="@style/CammentSdkAppTheme">
+
         <meta-data
             android:name="tv.camment.cammentsdk.ApiKey"
             android:value="@string/camment_api_key" />
@@ -16,6 +17,28 @@
         <meta-data
             android:name="net.hockeyapp.android.appIdentifier"
             android:value="${HOCKEYAPP_APP_ID}" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/demo_app_name" />
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".CammentSplashActivity"

@@ -94,6 +94,11 @@ android {
 
 ext {
     supportLibVersion = rootProject.ext.supportLibVersion
+    facebookVersion = '4.25.0'
+
+    facebookDependencies = [
+            facebook: "com.facebook.android:facebook-android-sdk:${facebookVersion}",
+    ]
 
     supportDependencies = [
             appCompat        : "com.android.support:appcompat-v7:${supportLibVersion}",
@@ -105,6 +110,7 @@ ext {
 
 dependencies {
     compile supportDependencies.values()
+    compile facebookDependencies.values()
     debugCompile project(path: ':cammentsdk', configuration: 'debug')
     debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')

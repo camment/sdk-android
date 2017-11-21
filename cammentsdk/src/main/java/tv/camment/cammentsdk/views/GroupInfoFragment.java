@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.views;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,10 +32,9 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
-import tv.camment.cammentsdk.data.model.CUserGroup;
 import tv.camment.cammentsdk.data.model.CUserInfo;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 
 
 public final class GroupInfoFragment extends Fragment
@@ -156,10 +156,13 @@ public final class GroupInfoFragment extends Fragment
     }
 
     private void handleInviteUsers() {
-        if (FacebookHelper.getInstance().isLoggedIn()) {
+        if (AuthHelper.getInstance().isLoggedIn()) {
             ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         } else {
-            FacebookHelper.getInstance().logIn(getActivity(), true);
+            if (getContext() instanceof Activity) {
+                //TODO after this open sharing dialog
+                CammentSDK.getInstance().getAppAuthIdentityProvider().logIn((Activity) getContext());
+            }
         }
     }
 

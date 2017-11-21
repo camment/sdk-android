@@ -1,1 +1,1 @@
-include ':demo', ':cammentsdk'
+include ':demo', ':cammentsdk', ':cammentauth'

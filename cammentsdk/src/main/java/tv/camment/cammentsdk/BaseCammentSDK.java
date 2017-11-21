@@ -18,10 +18,6 @@ import com.amazonaws.mobileconnectors.cognito.Record;
 import com.amazonaws.mobileconnectors.cognito.SyncConflict;
 import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.camment.clientsdk.model.Deeplink;
-import com.facebook.AccessToken;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,34 +25,48 @@ import java.util.List;
 
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.auth.CammentAuthIdentityProvider;
+import tv.camment.cammentsdk.auth.CammentAuthInfo;
+import tv.camment.cammentsdk.auth.CammentAuthListener;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 
 abstract class BaseCammentSDK extends CammentLifecycle
-        implements AccessToken.AccessTokenRefreshCallback,
-        IdentityChangedListener {
+        implements IdentityChangedListener, CammentAuthListener {
 
     static CammentSDK INSTANCE;
 
     volatile WeakReference<Context> applicationContext;
 
+    private CammentAuthIdentityProvider appIdentityProvider;
+
     private IoTHelper ioTHelper;
 
     private OnDeeplinkOpenShowListener onDeeplinkOpenShowListener;
 
-    synchronized void init(Context context) {
+    synchronized void init(Context context, CammentAuthIdentityProvider identityProvider) {
         if (applicationContext == null || applicationContext.get() == null) {
             if (context == null || !(context instanceof Application)) {
                 throw new IllegalArgumentException("Can't init CammentSDK with null application context");
             }
             applicationContext = new WeakReference<>(context);
+
+            if (identityProvider == null) {
+                throw new IllegalArgumentException("Can't init CammentSDK with null AuthIdentityProvider");
+            }
+
+            if (identityProvider.getAuthType() == null) {
+                throw new IllegalArgumentException("Can't init CammentSDK with unsupported AuthType in  AuthIdentityProvider");
+            }
+
+            appIdentityProvider = identityProvider;
 
             if (TextUtils.isEmpty(getApiKey())) {
                 throw new IllegalArgumentException("Missing CammentSDK API key");
@@ -113,7 +123,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
             GeneralPreferences.getInstance().setCancelledDeeplinkUuid(GeneralPreferences.getInstance().getDeeplinkGroupUuid());
         }
 
-        FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        //FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
 
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
     }
@@ -149,7 +159,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
         }
 
         if (!TextUtils.isEmpty(groupUuid)) {
-            if (FacebookHelper.getInstance().isLoggedIn()
+            if (AuthHelper.getInstance().isLoggedIn()
                     && ioTHelper != null) {
                 GeneralPreferences.getInstance().setDeeplinkGroupUuid("");
                 GeneralPreferences.getInstance().setDeeplinkShowUuid("");
@@ -159,10 +169,11 @@ abstract class BaseCammentSDK extends CammentLifecycle
                 invitationMessage.body = new InvitationMessage.Body();
                 invitationMessage.body.groupUuid = groupUuid;
                 invitationMessage.body.showUuid = showUuid;
-                invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
+                invitationMessage.body.key = "#" + AuthHelper.getInstance().getUserId();
                 ioTHelper.handleInvitationMessage(invitationMessage);
-            } else if (!FacebookHelper.getInstance().isLoggedIn()) {
-                CammentSDK.getInstance().checkLogin();
+            } else if (!AuthHelper.getInstance().isLoggedIn()) {
+                //TODO
+                //CammentSDK.getInstance().checkLogin();
             }
         }
     }
@@ -181,7 +192,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
                         invitationMessage.body = new InvitationMessage.Body();
                         invitationMessage.body.groupUuid = split[split.length - 3];
                         invitationMessage.body.showUuid = split[split.length - 1];
-                        invitationMessage.body.key = "#" + AccessToken.getCurrentAccessToken().getUserId();
+                        invitationMessage.body.key = "#" + AuthHelper.getInstance().getUserId();
                         ioTHelper.handleInvitationMessage(invitationMessage);
                     }
                 }
@@ -194,54 +205,25 @@ abstract class BaseCammentSDK extends CammentLifecycle
         };
     }
 
-    void checkLogin() {
-        AccessToken.refreshCurrentAccessTokenAsync(this);
-    }
+//    void checkLogin() {
+//        AccessToken.refreshCurrentAccessTokenAsync(this);
+//    }
 
-    @Override
-    public void OnTokenRefreshed(AccessToken accessToken) {
-        ApiManager.getInstance().getUserApi().updateUserInfo(true);
-
-        ApiManager.getInstance().retryFailedCallsIfNeeded();
-
-        ApiManager.getInstance().getUserApi().getMyUserGroups();
-
-        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.FB_SIGNIN);
-    }
-
-    @Override
-    public void OnTokenRefreshFailed(FacebookException exception) {
-        FacebookHelper.getInstance().logIn(getCurrentActivity(), false);
-    }
-
-    FacebookCallback<LoginResult> getLoginResultFbCallback() {
-        return new FacebookCallback<LoginResult>() {
-
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                ApiManager.clearInstance();
-
-                DataManager.getInstance().handleFbPermissionsResult();
-
-                ApiManager.getInstance().getUserApi().updateUserInfo(true);
-
-                ApiManager.getInstance().retryFailedCallsIfNeeded();
-
-                ApiManager.getInstance().getUserApi().getMyUserGroups();
-            }
-
-            @Override
-            public void onCancel() {
-                CammentSDK.getInstance().hideProgressBar();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.e("FacebookLogin", "onError", error);
-                CammentSDK.getInstance().hideProgressBar();
-            }
-        };
-    }
+//    @Override
+//    public void OnTokenRefreshed(AccessToken accessToken) {
+//        ApiManager.getInstance().getUserApi().updateUserInfo(true);
+//
+//        ApiManager.getInstance().retryFailedCallsIfNeeded();
+//
+//        ApiManager.getInstance().getUserApi().getMyUserGroups();
+//
+//        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.FB_SIGNIN);
+//    }
+//
+//    @Override
+//    public void OnTokenRefreshFailed(FacebookException exception) {
+//        FacebookHelper.getInstance().logIn(getCurrentActivity(), false);
+//    }
 
     @Override
     public void identityChanged(String oldIdentityId, String newIdentityId) {
@@ -298,6 +280,34 @@ abstract class BaseCammentSDK extends CammentLifecycle
                 });
             }
         }
+    }
+
+    @Override
+    public void onLoggedIn(CammentAuthInfo authInfo) {
+        //ApiManager.clearInstance();
+
+        //DataManager.getInstance().handleFbPermissionsResult(); TODO this created group and handled deeplink if needed
+
+        //TODO what to handle introduce state machine
+        //ApiManager.getInstance().getUserApi().updateUserInfo(true);
+
+        //ApiManager.getInstance().retryFailedCallsIfNeeded();
+
+        //ApiManager.getInstance().getUserApi().getMyUserGroups();
+    }
+
+    @Override
+    public void onLoggedOut() {
+
+    }
+
+    @Override
+    public void onAuthInfoChanged(CammentAuthInfo authInfo) {
+
+    }
+
+    public CammentAuthIdentityProvider getAppAuthIdentityProvider() {
+        return appIdentityProvider;
     }
 
 }

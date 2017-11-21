@@ -35,7 +35,7 @@ import tv.camment.cammentsdk.utils.DateTimeUtils;
 import tv.camment.cammentsdk.views.CammentAudioListener;
 import tv.camment.cammentsdk.views.CammentOverlay;
 
-public class CammentMainActivity extends AppCompatActivity
+public class CammentMainActivity extends CammentBaseActivity
         implements CammentAudioListener, MediaPlayer.OnPreparedListener {
 
     private static final long TEST_TIMESTAMP = 1507713480000L;
@@ -335,13 +335,6 @@ public class CammentMainActivity extends AppCompatActivity
                 Log.e("onException", "getShows", exception);
             }
         };
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

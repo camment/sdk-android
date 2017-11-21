@@ -1,7 +1,5 @@
 package tv.camment.cammentsdk.data;
 
-import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 
@@ -27,11 +25,11 @@ public final class DataManager {
         UserInfoProvider.deleteUserInfos();
     }
 
-    public void handleFbPermissionsResult() {
-        if (FacebookHelper.getInstance().isLoggedIn()
-                && FacebookHelper.getInstance().showShareOptions()) {
-            ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
-        }
-    }
+//    public void handleFbPermissionsResult() {
+//        if (FacebookHelper.getInstance().isLoggedIn()
+//                && FacebookHelper.getInstance().showShareOptions()) {
+//            ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
+//        }
+//    }
 
 }

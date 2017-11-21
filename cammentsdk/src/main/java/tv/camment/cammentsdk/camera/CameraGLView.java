@@ -1,7 +1,6 @@
 package tv.camment.cammentsdk.camera;
 
 import android.content.Context;
-import android.util.AttributeSet;
 
 import tv.camment.cammentsdk.views.SquareFrameLayout;
 

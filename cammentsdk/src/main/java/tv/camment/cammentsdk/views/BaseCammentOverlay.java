@@ -26,8 +26,6 @@ import android.widget.RelativeLayout;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.InitializationException;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
 import com.camment.clientsdk.model.Camment;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -60,7 +58,7 @@ import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
@@ -109,8 +107,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private String lastVideoCammentUuid;
 
     private static MobileAnalyticsManager analytics;
-
-    private ProfileTracker profileTracker;
 
     private DrawerLayout drawerLayout;
 
@@ -199,15 +195,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
         } catch (InitializationException ex) {
             Log.e("CammentSDK", "Failed to initialize Amazon Mobile Analytics", ex);
         }
-
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                ApiManager.getInstance().getUserApi().updateUserInfo(false);
-            }
-        };
-
-        profileTracker.startTracking();
     }
 
     @Override
@@ -217,10 +204,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
             analytics.getSessionClient().pauseSession();
             analytics.getEventClient().submitEvents();
         }
-        if (profileTracker != null
-                && profileTracker.isTracking()) {
-            profileTracker.stopTracking();
-        }
+
         EventBus.getDefault().unregister(this);
         super.onDetachedFromWindow();
     }
@@ -232,10 +216,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
             analytics.getSessionClient().pauseSession();
             analytics.getEventClient().submitEvents();
         }
-        if (profileTracker != null
-                && profileTracker.isTracking()) {
-            profileTracker.stopTracking();
-        }
+
         return super.onSaveInstanceState();
     }
 
@@ -261,11 +242,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         if (analytics != null) {
             analytics.getSessionClient().resumeSession();
-        }
-
-        if (profileTracker != null
-                && !profileTracker.isTracking()) {
-            profileTracker.startTracking();
         }
 
         EventBus.getDefault().register(this);
@@ -483,11 +459,12 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private void onPulledDown() {
         onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
 
-        if (FacebookHelper.getInstance().isLoggedIn()) {
+        if (AuthHelper.getInstance().isLoggedIn()) {
             ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         } else {
             if (getContext() instanceof Activity) {
-                FacebookHelper.getInstance().logIn((Activity) getContext(), true);
+                //TODO after this open sharing dialog
+                CammentSDK.getInstance().getAppAuthIdentityProvider().logIn((Activity) getContext());
             }
         }
     }

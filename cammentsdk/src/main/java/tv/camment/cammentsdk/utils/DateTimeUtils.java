@@ -70,4 +70,19 @@ public final class DateTimeUtils {
         return -1;
     }
 
+    public static synchronized long getUTCTimestampFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(date);
+        return calendar.getTimeInMillis();
+    }
+
+    public static synchronized Date getUTCDateFromTimestamp(long timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.setTimeInMillis(timestamp);
+
+        return calendar.getTime();
+    }
+
 }

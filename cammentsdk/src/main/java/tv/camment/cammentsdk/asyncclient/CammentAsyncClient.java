@@ -12,7 +12,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 
 /**
@@ -93,11 +92,11 @@ public abstract class CammentAsyncClient {
         if (e != null
                 && (e instanceof NotAuthorizedException
                 || e.getCause() instanceof NotAuthorizedException)) {
+            //TODO check this
             ApiManager.getInstance().putRetryCallable(uuid);
 
             ApiManager.getInstance().removeCallable(uuid);
-
-            CammentSDK.getInstance().checkLogin();
+            //CammentSDK.getInstance().checkLogin();
             return;
         }
 

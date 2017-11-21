@@ -1,9 +1,5 @@
 package tv.camment.cammentsdk.views;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
@@ -11,12 +7,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.camment.clientsdk.model.FacebookFriend;
-import com.facebook.internal.ImageRequest;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 
 
@@ -49,17 +41,15 @@ final class FbFriendViewHolder extends RecyclerView.ViewHolder {
 
         tvName.setText(facebookFriend.getName());
 
-        Uri pictureUri = ImageRequest.getProfilePictureUri(String.valueOf(facebookFriend.getId()), 270, 270);
-
-        Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(pictureUri).into(new BitmapImageViewTarget(ivAvatar) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                RoundedBitmapDrawable circularBitmapDrawable =
-                        RoundedBitmapDrawableFactory.create(itemView.getContext().getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                ivAvatar.setImageDrawable(circularBitmapDrawable);
-            }
-        });
+//        Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(pictureUri).into(new BitmapImageViewTarget(ivAvatar) {
+//            @Override
+//            protected void setResource(Bitmap resource) {
+//                RoundedBitmapDrawable circularBitmapDrawable =
+//                        RoundedBitmapDrawableFactory.create(itemView.getContext().getResources(), resource);
+//                circularBitmapDrawable.setCircular(true);
+//                ivAvatar.setImageDrawable(circularBitmapDrawable);
+//            }
+//        });
     }
 
     private CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {

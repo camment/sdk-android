@@ -15,10 +15,8 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
-import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
 
 public class FbLogoutFragment extends Fragment {
 
@@ -73,7 +71,7 @@ public class FbLogoutFragment extends Fragment {
     }
 
     private void handleFbLogout() {
-        FacebookHelper.getInstance().logOut();
+        CammentSDK.getInstance().getAppAuthIdentityProvider().logOut();
 
         ApiManager.clearInstance();
 

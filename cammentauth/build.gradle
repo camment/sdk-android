@@ -1,0 +1,67 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    resourcePrefix 'cmmauth_'
+
+    def RELEASE_VERSION = 1
+
+    def MAJOR_VERSION = 0
+
+    def MINOR_VERSION = 1
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionName RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
+        versionCode RELEASE_VERSION * 100000000 + 10000 * MAJOR_VERSION + 100 * MINOR_VERSION
+
+        defaultPublishConfig 'release'
+        publishNonDefault true
+    }
+
+    buildTypes {
+        debug { //PROD
+            minifyEnabled false
+            useProguard false
+            debuggable true
+        }
+
+        debugDev { //DEV
+            minifyEnabled false
+            useProguard false
+            debuggable true
+        }
+
+        release { //PROD
+            minifyEnabled true
+            useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        releaseDev { //DEV
+            minifyEnabled true
+            useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    facebookVersion = '4.25.0'
+
+    facebookDependencies = [
+            facebook: "com.facebook.android:facebook-android-sdk:${facebookVersion}",
+    ]
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile facebookDependencies.values()
+}

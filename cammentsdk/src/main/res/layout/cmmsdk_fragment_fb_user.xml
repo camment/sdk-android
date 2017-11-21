@@ -30,7 +30,7 @@
         android:layout_alignTop="@+id/cmmsdk_iv_avatar"
         android:layout_marginTop="22dp"
         android:layout_marginStart="4dp"
-        android:src="@drawable/com_facebook_button_icon_blue"/>
+        android:src="@drawable/cmmsdk_fb_logo"/>
 
     <TextView
         android:id="@+id/cmmsdk_tv_name"

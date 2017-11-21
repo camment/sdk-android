@@ -9,9 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.facebook.CustomTabMainActivity;
-import com.facebook.FacebookActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,8 +87,8 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
     }
 
     private synchronized boolean isActivityValid(Activity activity) {
-        return !(activity instanceof FacebookActivity)
-                && !(activity instanceof CustomTabMainActivity)
+        return !(TextUtils.equals(activity.getClass().getName(), "com.facebook.FacebookActivity"))
+                && !(TextUtils.equals(activity.getClass().getName(), "com.facebook.CustomTabActivity"))
                 && !(activity instanceof CammentDeeplinkActivity);
     }
 

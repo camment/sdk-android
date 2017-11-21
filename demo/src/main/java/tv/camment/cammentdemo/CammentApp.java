@@ -17,7 +17,7 @@ public class CammentApp extends Application {
             Fabric.with(this, new Crashlytics());
         }
 
-        CammentSDK.getInstance().init(this);
+        CammentSDK.getInstance().init(this, new FbAuthIdentityProvider());
         CammentSDK.getInstance().setOnDeeplinkOpenShowListener(new ShowNavigator());
     }
 

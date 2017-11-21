@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,15 +28,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
-public class CammentShowsActivity extends AppCompatActivity
+public class CammentShowsActivity extends CammentBaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
         CammentShowsAdapter.ActionListener,
         CammentPasscodeDialog.ActionListener {
@@ -183,13 +180,6 @@ public class CammentShowsActivity extends AppCompatActivity
     public void onPositiveButtonClick(String passcode) {
         GeneralPreferences.getInstance().setProviderPasscode(passcode);
         ApiManager.getInstance().getShowApi().getShows(passcode);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     @SuppressWarnings("unused")

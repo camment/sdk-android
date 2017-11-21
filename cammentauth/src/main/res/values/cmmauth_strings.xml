@@ -1,0 +1,6 @@
+<resources>
+    <string name="cmmauth_app_name">CammentAuth</string>
+
+    <string name="cmmauth_facebook_app_id" translatable="false">272405646569362</string>
+    <string name="cmmauth_fb_login_protocol_scheme" translatable="false">fb272405646569362</string>
+</resources>

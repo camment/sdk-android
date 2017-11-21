@@ -40,7 +40,7 @@ import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
-import tv.camment.cammentsdk.helpers.FacebookHelper;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.utils.FileUtils;
@@ -249,9 +249,13 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         });
     }
 
+    private boolean isMessageForMe(String userFacebookId) {
+        return TextUtils.equals(AuthHelper.getInstance().getUserId(), userFacebookId);
+    }
+
     private boolean isInvitationValid(InvitationMessage m) {
         return m.body != null
-                && FacebookHelper.getInstance().isMessageForMe(m.body.userFacebookId);
+                && isMessageForMe(m.body.userFacebookId);
     }
 
     private boolean isNewUserInGroupValid(NewUserInGroupMessage m) {
@@ -262,7 +266,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && m.body != null
                 && m.body.user != null
                 && !TextUtils.isEmpty(m.body.user.facebookId)
-                && !FacebookHelper.getInstance().isMessageForMe(m.body.user.facebookId)
+                && !isMessageForMe(m.body.user.facebookId)
                 && usergroup.getUuid().equals(m.body.groupUuid);
     }
 

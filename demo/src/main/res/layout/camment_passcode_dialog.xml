@@ -15,7 +15,7 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:paddingTop="16dp"
-        android:text="@string/camment_passcode_hint"
+        android:text="@string/passcode_hint"
         android:textColor="@color/cmmsdk_camment_text_grey"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_title"
-        android:hint="@string/camment_passcode"
+        android:hint="@string/passcode"
         android:inputType="textVisiblePassword"
         android:paddingBottom="24dp"
         android:paddingEnd="16dp"

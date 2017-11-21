@@ -1,11 +1,21 @@
 package tv.camment.cammentsdk.helpers;
 
 
+import android.text.TextUtils;
+
+import java.util.Date;
+
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.auth.CammentAuthInfo;
+import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;
 import tv.camment.cammentsdk.auth.CammentUserInfo;
+import tv.camment.cammentsdk.aws.AWSManager;
 
 public final class AuthHelper {
+
+    private String token;
+    private CammentAuthInfo authInfo;
 
     private static AuthHelper INSTANCE;
 
@@ -17,7 +27,20 @@ public final class AuthHelper {
     }
 
     public boolean isLoggedIn() {
-        //TODO
+        return isHostAppLoggedIn()
+                && !TextUtils.isEmpty(token)
+                && !TextUtils.isEmpty(IdentityPreferences.getInstance().getIdentityId());
+    }
+
+    public boolean isHostAppLoggedIn() {
+        if (authInfo != null && authInfo.getAuthType() != null) {
+            switch (authInfo.getAuthType()) {
+                case FACEBOOK:
+                    CammentFbAuthInfo fbAuthInfo = (CammentFbAuthInfo) authInfo;
+                    return !TextUtils.isEmpty(fbAuthInfo.getToken())
+                            && fbAuthInfo.getExpires().after(new Date());
+            }
+        }
         return false;
     }
 
@@ -32,6 +55,22 @@ public final class AuthHelper {
             }
         }
         return userId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setAuthInfo(CammentAuthInfo authInfo) {
+        this.authInfo = authInfo;
+    }
+
+    public CammentAuthInfo getAuthInfo() {
+        return authInfo;
     }
 
 }

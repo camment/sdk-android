@@ -1,0 +1,23 @@
+<resources>
+    <string name="demo_app_name" translatable="false">Camment</string>
+
+    <string name="facebook_app_id" translatable="false">272405646569362</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb272405646569362</string>
+
+    <string name="shows">Shows</string>
+    <string name="passcode">Passcode</string>
+    <string name="passcode_hint">Enter passcode</string>
+    <string name="no_network">Please check your internet connection</string>
+
+    <string name="connecting">Connecting…</string>
+    <string name="connected">Online</string>
+    <string name="connection_lost">Connection Lost</string>
+    <string name="reconnecting">Reconnecting…</string>
+    <string name="disconnected">Offline</string>
+
+    <string name="empty_title">Welcome!</string>
+    <string name="empty_msg">To get started open an INVITATION link from your friend or enter a PASSCODE</string>
+
+    <string name="log_in">Log In</string>
+    <string name="log_out">Log Out</string>
+</resources>

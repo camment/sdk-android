@@ -2,6 +2,7 @@ package tv.camment.cammentdemo;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -9,14 +10,10 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -99,4 +96,7 @@ public class FbHelper {
         loginManager.logOut();
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }

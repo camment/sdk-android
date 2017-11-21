@@ -7,6 +7,9 @@ import com.amazonaws.auth.AWSAbstractCognitoDeveloperIdentityProvider;
 import com.amazonaws.regions.Regions;
 
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.auth.CammentAuthInfo;
+import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 
 
@@ -47,14 +50,24 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
         return identityId;
     }
 
-    private void retrieveCredentialsFromCammentServer() {
-        if (TextUtils.isEmpty(identityId)) {
-            ApiManager.getInstance().getAuthApi().getOpenIdToken("petra@camment.tv");
+    public void retrieveCredentialsFromCammentServer() {
+        if (AuthHelper.getInstance().isHostAppLoggedIn()
+                && TextUtils.isEmpty(identityId)) {
+            CammentAuthInfo authInfo = AuthHelper.getInstance().getAuthInfo();
+            if (authInfo != null) {
+                switch (authInfo.getAuthType()) {
+                    case FACEBOOK:
+                        CammentFbAuthInfo fbAuthInfo = (CammentFbAuthInfo) authInfo;
+                        ApiManager.getInstance().getAuthApi().getOpenIdToken(fbAuthInfo.getToken());
+                        break;
+                }
+            }
         }
     }
 
     public void updateCredentials(String identityId, String token) {
         update(identityId, token);
+        AuthHelper.getInstance().setToken(token);
         IdentityPreferences.getInstance().saveIdentityId(identityId);
     }
 

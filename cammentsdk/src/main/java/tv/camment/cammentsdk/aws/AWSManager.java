@@ -1,6 +1,8 @@
 package tv.camment.cammentsdk.aws;
 
 
+import android.text.TextUtils;
+
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
@@ -24,6 +26,7 @@ import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.DevcammentClientDev;
 import tv.camment.cammentsdk.api.DevcammentClientProd;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 
@@ -46,12 +49,11 @@ public final class AWSManager {
 
     private synchronized Map<String, String> getAwsLoginsMap() {
         Map<String, String> loginsMap = new HashMap<>();
-//        if (AccessToken.getCurrentAccessToken() != null
-//                && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken())) {
-//            loginsMap.put("graph.facebook.com", AccessToken.getCurrentAccessToken().getToken());
-//        }
-        //TODO add check if userId (e.g. email was not yet set by host app)
-        //loginsMap.put("cognito-identity.amazonaws.com", "eyJraWQiOiJldS1jZW50cmFsLTExIiwidHlwIjoiSldTIiwiYWxnIjoiUlM1MTIifQ.eyJzdWIiOiJldS1jZW50cmFsLTE6NDNjYTZhZTMtMmI0Ny00YzYxLWEzZGQtNzA3MWQ1ZTllZjE3IiwiYXVkIjoiZXUtY2VudHJhbC0xOmFhOTYwOTBjLTA0MjMtNDZkMS1hNTg0LTIwMDg2YzBlMTM0ZCIsImFtciI6WyJhdXRoZW50aWNhdGVkIiwibG9naW4uY2FtbWVudC50diIsImxvZ2luLmNhbW1lbnQudHY6ZXUtY2VudHJhbC0xOmFhOTYwOTBjLTA0MjMtNDZkMS1hNTg0LTIwMDg2YzBlMTM0ZDpwZXRyYUBjYW1tZW50LnR2Il0sImlzcyI6Imh0dHBzOi8vY29nbml0by1pZGVudGl0eS5hbWF6b25hd3MuY29tIiwiZXhwIjoxNTEwNjcwMDc0LCJpYXQiOjE1MTA2NjkxNzR9.sUR_LhKpeGC4qkgIQgDr8pwm1ZYNeVj6jIt8GvfWIjpu0XKeb3oXkjDCqSjJyra92fdJ7QDV8cNtsyxrNSExIHjJ6JQhBxUNIgCT8LbIOx6dX-zQwtjxotVUZlnqu2IK_Ow1bJhz9MWaKyp-uqAUx0hykeGzuF_CxCvtjvl0xbWFgez69875duKETNdDr1Y0JJHsIDyHyLTeVOriUXSAKgXJ0xHRxFKqy_FVhcyai3Me2mHUYsqP1DzwikDzuMUZzcGOJ8EQuNVwNu5pKAQskjpkeh1q4Vcs7v-C8-1k-skXFuXItyi97mfwa5fQz8t8CyY4DDHNdWd51ZMYVCq4Gw");
+
+        final String token = AuthHelper.getInstance().getToken();
+        if (!TextUtils.isEmpty(token)) {
+            loginsMap.put("cognito-identity.amazonaws.com", token);
+        }
 
         return loginsMap;
     }

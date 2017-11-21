@@ -54,7 +54,7 @@
 
         <activity
             android:name=".CammentShowsActivity"
-            android:label="@string/camment_shows"
+            android:label="@string/shows"
             android:screenOrientation="portrait" />
 
         <activity

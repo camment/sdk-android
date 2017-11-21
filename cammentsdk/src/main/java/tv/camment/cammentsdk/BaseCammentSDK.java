@@ -284,11 +284,15 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
     @Override
     public void onLoggedIn(CammentAuthInfo authInfo) {
-        //ApiManager.clearInstance();
+        ApiManager.clearInstance();
+
+        AuthHelper.getInstance().setAuthInfo(authInfo);
+
+        AWSManager.getInstance().getCammentAuthenticationProvider().retrieveCredentialsFromCammentServer();
 
         //DataManager.getInstance().handleFbPermissionsResult(); TODO this created group and handled deeplink if needed
 
-        //TODO what to handle introduce state machine
+        //TODO what to handle introduce state machine -> check pending actions
         //ApiManager.getInstance().getUserApi().updateUserInfo(true);
 
         //ApiManager.getInstance().retryFailedCallsIfNeeded();

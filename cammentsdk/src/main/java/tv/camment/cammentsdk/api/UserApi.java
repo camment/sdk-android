@@ -16,15 +16,15 @@ import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentAuthType;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;
 import tv.camment.cammentsdk.auth.CammentUserInfo;
 import tv.camment.cammentsdk.aws.AWSManager;
-import tv.camment.cammentsdk.data.AuthInfoProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
-import tv.camment.cammentsdk.data.model.CAllAuthInfo;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 
@@ -92,7 +92,7 @@ public final class UserApi extends CammentAsyncClient {
 //                if (handleDeeplink) {
 //                    CammentSDK.getInstance().handleDeeplink("camment"); //TODO deeplink
 //                }
-                AuthInfoProvider.insertUserInfo(userInfo); //TODO only after success?
+                //AuthInfoProvider.insertUserInfo(userInfo); //TODO only after success?
 
                 CammentSDK.getInstance().hideProgressBar();
             }
@@ -109,11 +109,11 @@ public final class UserApi extends CammentAsyncClient {
         submitTask(new Callable<FacebookFriendList>() {
             @Override
             public FacebookFriendList call() throws Exception {
-                CAllAuthInfo authInfo = AuthInfoProvider.getAuthInfo();
+                CammentAuthInfo authInfo = AuthHelper.getInstance().getAuthInfo();
                 if (authInfo != null
-                        && authInfo.getAuthInfo() != null
+                        && authInfo.getAuthType() != null
                         && authInfo.getAuthType() == CammentAuthType.FACEBOOK) {
-                    return devcammentClient.meFbFriendsGet(((CammentFbAuthInfo) authInfo.getAuthInfo()).getToken());
+                    return devcammentClient.meFbFriendsGet(((CammentFbAuthInfo) authInfo).getToken());
                 } else {
                     return new FacebookFriendList();
                 }

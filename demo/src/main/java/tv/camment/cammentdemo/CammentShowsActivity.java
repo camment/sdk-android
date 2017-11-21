@@ -42,6 +42,7 @@ public class CammentShowsActivity extends CammentBaseActivity
     private CammentShowsAdapter adapter;
     private LinearLayout llEmpty;
     private TextView tvConnection;
+    private Button btnLogIn;
 
     public static void startClearHistory(Context context) {
         Intent intent = new Intent(context, CammentShowsActivity.class);
@@ -55,6 +56,14 @@ public class CammentShowsActivity extends CammentBaseActivity
         setContentView(R.layout.camment_activity_camment_shows);
 
         RecyclerView rvShows = (RecyclerView) findViewById(R.id.rv_shows);
+
+        btnLogIn = (Button) findViewById(R.id.btn_login);
+        btnLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleOnLoginButtonClick();
+            }
+        });
 
         Button btnPasscode = (Button) findViewById(R.id.btn_passcode);
         btnPasscode.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +90,19 @@ public class CammentShowsActivity extends CammentBaseActivity
         MixpanelHelper.getInstance().trackEvent(MixpanelHelper.SHOWS_LIST_SCREEN);
     }
 
+    private void setLoginButtonText() {
+        btnLogIn.setText(FbHelper.getInstance().isLoggedIn() ? R.string.log_out : R.string.log_in);
+    }
+
+    private void handleOnLoginButtonClick() {
+        if (FbHelper.getInstance().isLoggedIn()) {
+            FbHelper.getInstance().logOut();
+            setLoginButtonText();
+        } else {
+            FbHelper.getInstance().logIn(this);
+        }
+    }
+
     private void onPasscodeClick() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("PasscodeDialog");
 
@@ -95,6 +117,7 @@ public class CammentShowsActivity extends CammentBaseActivity
     protected void onResume() {
         super.onResume();
         checkInternetConnection();
+        setLoginButtonText();
     }
 
     @Override
@@ -122,7 +145,7 @@ public class CammentShowsActivity extends CammentBaseActivity
                 && cm.getActiveNetworkInfo().isConnected();
 
         if (!isConnected) {
-            Toast.makeText(this, R.string.camment_no_network, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -186,23 +209,22 @@ public class CammentShowsActivity extends CammentBaseActivity
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(IoTStatusChangeEvent event) {
         Log.d("EVENT", event.getStatus().name());
-        if (event != null
-                && tvConnection != null) {
-            int textResId = R.string.camment_disconnected;
+        if (tvConnection != null) {
+            int textResId = R.string.disconnected;
 
             if (event.getStatus() != null) {
                 switch (event.getStatus()) {
                     case Connected:
-                        textResId = R.string.camment_connected;
+                        textResId = R.string.connected;
                         break;
                     case Connecting:
-                        textResId = R.string.camment_connecting;
+                        textResId = R.string.connecting;
                         break;
                     case ConnectionLost:
-                        textResId = R.string.camment_connection_lost;
+                        textResId = R.string.connection_lost;
                         break;
                     case Reconnecting:
-                        textResId = R.string.camment_reconnecting;
+                        textResId = R.string.reconnecting;
                         break;
                 }
             }

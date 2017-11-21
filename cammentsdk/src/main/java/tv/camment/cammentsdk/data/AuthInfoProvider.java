@@ -40,7 +40,7 @@ public final class AuthInfoProvider {
                     cv.put(DataContract.AuthInfo.authType, userInfo.getAuthType().getIntValue());
                     cv.put(DataContract.AuthInfo.uuid, ((CammentFbUserInfo) userInfo).getFacebookUserId());
                     cv.put(DataContract.AuthInfo.name, userInfo.getName());
-                    cv.put(DataContract.AuthInfo.email, userInfo.getEmail());
+                    //cv.put(DataContract.AuthInfo.email, userInfo.getEmail());
                     cv.put(DataContract.AuthInfo.imageUrl, userInfo.getImageUrl());
 
                     final CammentFbAuthInfo fbAuthInfo = ((CammentFbAuthInfo) authInfo);
@@ -143,7 +143,7 @@ public final class AuthInfoProvider {
                 String imageUrl = cursor.getString(cursor.getColumnIndex(DataContract.AuthInfo.imageUrl));
                 String email = cursor.getString(cursor.getColumnIndex(DataContract.AuthInfo.email));
 
-                CammentUserInfo userInfo = new CammentFbUserInfo(name, imageUrl, facebookId, email);
+                CammentUserInfo userInfo = new CammentFbUserInfo(name, imageUrl, facebookId);
 
                 return new CAllAuthInfo(authType, authInfo, userInfo);
         }

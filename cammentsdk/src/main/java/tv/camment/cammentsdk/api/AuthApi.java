@@ -7,6 +7,7 @@ import com.camment.clientsdk.model.OpenIdToken;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -42,8 +43,8 @@ public final class AuthApi extends CammentAsyncClient {
         });
     }
 
-    public void getOpenIdToken(final String fbToken) {
-        submitTask(new Callable<OpenIdToken>() {
+    public Future<OpenIdToken> getOpenIdToken(final String fbToken) {
+        return submitTask(new Callable<OpenIdToken>() {
             @Override
             public OpenIdToken call() throws Exception {
                 return devcammentClient.usersGetOpenIdTokenGet(fbToken);
@@ -59,7 +60,6 @@ public final class AuthApi extends CammentAsyncClient {
                 if (result != null) {
                     Log.d("onSuccess", "getOpenIdToken identityId: " + result.getIdentityId());
                     Log.d("onSuccess", "getOpenIdToken token: " + result.getToken());
-                    AWSManager.getInstance().getCammentAuthenticationProvider().updateCredentials(result.getIdentityId(), result.getToken());
                 }
             }
 

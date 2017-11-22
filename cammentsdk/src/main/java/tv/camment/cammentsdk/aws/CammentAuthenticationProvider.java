@@ -5,6 +5,10 @@ import android.util.Log;
 
 import com.amazonaws.auth.AWSAbstractCognitoDeveloperIdentityProvider;
 import com.amazonaws.regions.Regions;
+import com.camment.clientsdk.model.OpenIdToken;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
@@ -30,11 +34,20 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
     public String refresh() {
         Log.d("AUTH", "refresh");
 
-        //setToken(null); //TODO override existing token, what if request to server fails?
+        setToken(null);
 
-        retrieveCredentialsFromCammentServer();
+        if (!this.loginsMap.isEmpty()) {
+            OpenIdToken openIdToken = retrieveCredentialsFromCammentServer();
+            if (openIdToken != null) {
+                update(openIdToken.getIdentityId(), openIdToken.getToken());
+            } else {
+                update(null, null);
+            }
+            return openIdToken == null ? null : openIdToken.getToken();
+        }
 
-        return token;
+        this.getIdentityId();
+        return null;
     }
 
     // If the app has a valid identityId return it, otherwise get a valid
@@ -45,12 +58,24 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
 
         identityId = AWSManager.getInstance().getCognitoCachingCredentialsProvider().getCachedIdentityId();
 
-        retrieveCredentialsFromCammentServer();
+        if (identityId == null) {
+            if (!this.loginsMap.isEmpty()) {
+                OpenIdToken openIdToken = retrieveCredentialsFromCammentServer();
+                if (openIdToken != null) {
+                    update(openIdToken.getIdentityId(), openIdToken.getToken());
+                } else {
+                    update(null, null);
+                }
+                return openIdToken == null ? null : openIdToken.getIdentityId();
+            } else {
+                return super.getIdentityId();
+            }
+        }
 
         return identityId;
     }
 
-    public void retrieveCredentialsFromCammentServer() {
+    public OpenIdToken retrieveCredentialsFromCammentServer() {
         if (AuthHelper.getInstance().isHostAppLoggedIn()
                 && TextUtils.isEmpty(identityId)) {
             CammentAuthInfo authInfo = AuthHelper.getInstance().getAuthInfo();
@@ -58,17 +83,18 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                 switch (authInfo.getAuthType()) {
                     case FACEBOOK:
                         CammentFbAuthInfo fbAuthInfo = (CammentFbAuthInfo) authInfo;
-                        ApiManager.getInstance().getAuthApi().getOpenIdToken(fbAuthInfo.getToken());
+                        Future<OpenIdToken> openIdToken = ApiManager.getInstance().getAuthApi().getOpenIdToken(fbAuthInfo.getToken());
+                        try {
+                            Log.d("openIdToken", openIdToken.get().getIdentityId());
+                            return openIdToken.get();
+                        } catch (InterruptedException | ExecutionException e) {
+                            Log.e("openIdToken", "failed", e);
+                        }
                         break;
                 }
             }
         }
-    }
-
-    public void updateCredentials(String identityId, String token) {
-        update(identityId, token);
-        AuthHelper.getInstance().setToken(token);
-        IdentityPreferences.getInstance().saveIdentityId(identityId);
+        return null;
     }
 
 }

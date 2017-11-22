@@ -14,7 +14,6 @@ import tv.camment.cammentsdk.aws.AWSManager;
 
 public final class AuthHelper {
 
-    private String token;
     private CammentAuthInfo authInfo;
 
     private static AuthHelper INSTANCE;
@@ -28,7 +27,7 @@ public final class AuthHelper {
 
     public boolean isLoggedIn() {
         return isHostAppLoggedIn()
-                && !TextUtils.isEmpty(token)
+                && !TextUtils.isEmpty(AWSManager.getInstance().getCammentAuthenticationProvider().getToken())
                 && !TextUtils.isEmpty(IdentityPreferences.getInstance().getIdentityId());
     }
 
@@ -55,14 +54,6 @@ public final class AuthHelper {
             }
         }
         return userId;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public void setAuthInfo(CammentAuthInfo authInfo) {

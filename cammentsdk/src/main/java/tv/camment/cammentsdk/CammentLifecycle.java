@@ -33,7 +33,7 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityResumed(Activity activity) {
-        CammentSDK.getInstance().connectToIoT();
+        //CammentSDK.getInstance().connectToIoT();
 
         if (isActivityValid(activity)
                 && !(activity instanceof DeeplinkIgnore)

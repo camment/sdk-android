@@ -51,7 +51,7 @@ public final class UserGroupProvider {
 
         EventBus.getDefault().post(new UserGroupChangeEvent());
 
-        CammentSDK.getInstance().connectToIoT();
+        //CammentSDK.getInstance().connectToIoT();
 
         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
     }

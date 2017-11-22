@@ -87,7 +87,7 @@ public final class UserApi extends CammentAsyncClient {
             public void onSuccess(Object result) {
                 Log.d("onSuccess", "updateUserInfo");
 
-                CammentSDK.getInstance().connectToIoT();
+                //CammentSDK.getInstance().connectToIoT();
 
 //                if (handleDeeplink) {
 //                    CammentSDK.getInstance().handleDeeplink("camment"); //TODO deeplink

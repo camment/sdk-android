@@ -21,7 +21,6 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.auth.CammentAuthListener;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;
-import tv.camment.cammentsdk.auth.CammentUserInfo;
 
 public class FbHelper {
 
@@ -62,7 +61,7 @@ public class FbHelper {
                 Log.d("FacebookLogin", "onSuccess " + loginResult.toString());
 
                 if (cammentAuthListener != null) {
-                    cammentAuthListener.onLoggedIn(new CammentFbAuthInfo(AccessToken.getCurrentAccessToken().getUserId(), AccessToken.getCurrentAccessToken().getToken(), AccessToken.getCurrentAccessToken().getExpires()));
+                    cammentAuthListener.onLoggedIn(getAuthInfo());
                 }
             }
 
@@ -78,14 +77,26 @@ public class FbHelper {
         };
     }
 
-    public CammentUserInfo getUserInfo() {
+    public CammentFbUserInfo getUserInfo() {
         Profile profile = Profile.getCurrentProfile();
 
-        String facebookUserId = profile.getId();
-        String name = profile.getName();
-        String imageUrl = ImageRequest.getProfilePictureUri(facebookUserId, 270, 270).toString();
+        if (profile != null) {
+            String facebookUserId = profile.getId();
+            String name = profile.getName();
+            String imageUrl = ImageRequest.getProfilePictureUri(facebookUserId, 270, 270).toString();
 
-        return new CammentFbUserInfo(name, imageUrl, facebookUserId);
+            return new CammentFbUserInfo(name, imageUrl, facebookUserId);
+        }
+        return null;
+    }
+
+    public CammentFbAuthInfo getAuthInfo() {
+        if (isLoggedIn()) {
+            return new CammentFbAuthInfo(AccessToken.getCurrentAccessToken().getUserId(),
+                    AccessToken.getCurrentAccessToken().getToken(),
+                    AccessToken.getCurrentAccessToken().getExpires());
+        }
+        return null;
     }
 
     public synchronized void logIn(Activity activity) {
@@ -94,6 +105,10 @@ public class FbHelper {
 
     public synchronized void logOut() {
         loginManager.logOut();
+
+        if (cammentAuthListener != null) {
+            cammentAuthListener.onLoggedOut();
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

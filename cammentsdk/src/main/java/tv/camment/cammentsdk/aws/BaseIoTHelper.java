@@ -59,10 +59,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     void connect() {
-        if (TextUtils.isEmpty(IdentityPreferences.getInstance().getIdentityId())) {
-            Log.d("IOT", "connection skipped, identity id is empty");
-            return;
-        }
+        Log.d("IOT iothelper", this.toString());
 
         submitBgTask(new Callable<Object>() {
             @Override
@@ -70,6 +67,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                 }
+                Log.d("IOT mqttManager", mqttManager.toString());
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override
                     public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
@@ -180,6 +178,19 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         };
     }
 
+    void reconnect() {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                if (mqttManager == null) {
+                    mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
+                }
+                mqttManager.disconnect();
+                return new Object();
+            }
+        }, disconnectCallback(true));
+    }
+
     void disconnect() {
         submitBgTask(new Callable<Object>() {
             @Override
@@ -190,14 +201,18 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 mqttManager.disconnect();
                 return new Object();
             }
-        }, disconnectCallback());
+        }, disconnectCallback(false));
     }
 
-    private CammentCallback<Object> disconnectCallback() {
+    private CammentCallback<Object> disconnectCallback(final boolean reconnect) {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-
+                Log.e("onSuccess", "disconnect");
+                if (reconnect) {
+                    mqttManager = null;
+                    connect();
+                }
             }
 
             @Override

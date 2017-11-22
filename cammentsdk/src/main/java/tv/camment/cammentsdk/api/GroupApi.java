@@ -195,7 +195,7 @@ public final class GroupApi extends CammentAsyncClient {
 
                     EventBus.getDefault().post(new UserGroupChangeEvent());
 
-                    CammentSDK.getInstance().connectToIoT();
+                    //CammentSDK.getInstance().connectToIoT();
 
                     ApiManager.getInstance().getCammentApi().getUserGroupCamments();
 

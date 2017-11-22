@@ -2,6 +2,7 @@ package tv.camment.cammentsdk.aws;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
@@ -20,6 +21,7 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.BuildConfig;
@@ -27,6 +29,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.DevcammentClientDev;
 import tv.camment.cammentsdk.api.DevcammentClientProd;
 import tv.camment.cammentsdk.helpers.AuthHelper;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 
@@ -35,6 +38,8 @@ public final class AWSManager {
     private static AWSManager INSTANCE;
 
     private final Cache cache;
+    private CammentAuthenticationProvider cammentAuthenticationProvider;
+    private CognitoCachingCredentialsProvider credentialsProvider;
 
     public static AWSManager getInstance() {
         if (INSTANCE == null) {
@@ -47,28 +52,35 @@ public final class AWSManager {
         cache = new SimpleCache(FileUtils.getInstance().getUploadDirFile(), new LeastRecentlyUsedCacheEvictor(50 * 1000 * 1024)); //50 MB
     }
 
-    private synchronized Map<String, String> getAwsLoginsMap() {
-        Map<String, String> loginsMap = new HashMap<>();
-
-        final String token = AuthHelper.getInstance().getToken();
-        if (!TextUtils.isEmpty(token)) {
-            loginsMap.put("cognito-identity.amazonaws.com", token);
-        }
-
-        return loginsMap;
-    }
+//    private synchronized Map<String, String> getAwsLoginsMap() {
+//        Map<String, String> loginsMap = new HashMap<>();
+//
+//        final String token = AuthHelper.getInstance().getToken();
+//        if (!TextUtils.isEmpty(token)) {
+//            loginsMap.put("cognito-identity.amazonaws.com", token);
+//        }
+//
+//        return loginsMap;
+//    }
 
     public CammentAuthenticationProvider getCammentAuthenticationProvider() {
-        return new CammentAuthenticationProvider(null, AWSConfig.getIdentityPool(), Regions.EU_CENTRAL_1);
+        if (cammentAuthenticationProvider == null) {
+            cammentAuthenticationProvider = new CammentAuthenticationProvider(null,
+                    AWSConfig.getIdentityPool(),
+                    Regions.EU_CENTRAL_1);
+        }
+        return cammentAuthenticationProvider;
     }
 
     public CognitoCachingCredentialsProvider getCognitoCachingCredentialsProvider() {
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                CammentSDK.getInstance().getApplicationContext(),
-                getCammentAuthenticationProvider(),
-                Regions.EU_CENTRAL_1);
-        credentialsProvider.setLogins(getAwsLoginsMap());
-        credentialsProvider.registerIdentityChangedListener(CammentSDK.getInstance());
+        if (credentialsProvider == null) {
+            credentialsProvider = new CognitoCachingCredentialsProvider(
+                    CammentSDK.getInstance().getApplicationContext(),
+                    getCammentAuthenticationProvider(),
+                    Regions.EU_CENTRAL_1);
+            credentialsProvider.registerIdentityChangedListener(CammentSDK.getInstance());
+        }
+        //credentialsProvider.setLogins(getAwsLoginsMap());
         return credentialsProvider;
     }
 
@@ -123,7 +135,17 @@ public final class AWSManager {
     }
 
     AWSIotMqttManager getAWSIotMqttManager() {
-        return new AWSIotMqttManager(IdentityPreferences.getInstance().getIdentityId(), AWSConfig.getIotEndpoint());
+        return new AWSIotMqttManager(getIoTId(), AWSConfig.getIotEndpoint());
+    }
+
+    private String getIoTId() {
+        String iotId = GeneralPreferences.getInstance().getIotId();
+        if (TextUtils.isEmpty(iotId)) {
+            iotId = UUID.randomUUID().toString();
+            GeneralPreferences.getInstance().setIotId(iotId);
+        }
+        Log.d("IOT iotID", iotId);
+        return iotId;
     }
 
     private KeyStore getClientKeyStore() {

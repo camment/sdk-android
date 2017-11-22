@@ -13,6 +13,7 @@ public final class GeneralPreferences extends BasePreferences {
     private static final String PREFS_MIXPANEL_ALIAS = "general_mixpanel_alias";
     private static final String PREFS_CANCELLED_DEEPLINK_UUID = "general_cancelled_deeplink_uuid";
     private static final String PREFS_TOKEN = "general_token";
+    private static final String PREFS_IOT_ID = "general_iot_id";
 
     private static GeneralPreferences INSTANCE;
 
@@ -102,6 +103,14 @@ public final class GeneralPreferences extends BasePreferences {
 
     public void setToken(String token) {
         putString(PREFS_TOKEN, token);
+    }
+
+    public String getIotId() {
+        return getString(PREFS_IOT_ID, "");
+    }
+
+    public void setIotId(String iotId) {
+        putString(PREFS_IOT_ID, iotId);
     }
 
 }

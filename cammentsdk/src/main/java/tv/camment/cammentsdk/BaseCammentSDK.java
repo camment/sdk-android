@@ -19,6 +19,8 @@ import com.amazonaws.mobileconnectors.cognito.SyncConflict;
 import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.camment.clientsdk.model.Deeplink;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +30,16 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.auth.CammentAuthIdentityProvider;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentAuthListener;
+import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 
@@ -67,6 +72,12 @@ abstract class BaseCammentSDK extends CammentLifecycle
             }
 
             appIdentityProvider = identityProvider;
+            AuthHelper.getInstance().setAuthInfo(appIdentityProvider.getAuthInfo());
+
+            if (AuthHelper.getInstance().isHostAppLoggedIn()) {
+                AWSManager.getInstance().getCognitoCachingCredentialsProvider().clearCredentials();
+                ApiManager.getInstance().getAuthApi().logIn();
+            }
 
             if (TextUtils.isEmpty(getApiKey())) {
                 throw new IllegalArgumentException("Missing CammentSDK API key");
@@ -86,8 +97,6 @@ abstract class BaseCammentSDK extends CammentLifecycle
                 MixpanelHelper.getInstance().getMixpanel();
             }
             MixpanelHelper.getInstance().trackEvent(MixpanelHelper.APP_START);
-
-            AWSManager.getInstance().getCognitoCachingCredentialsProvider().registerIdentityChangedListener(this);
         }
     }
 
@@ -227,11 +236,10 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
     @Override
     public void identityChanged(String oldIdentityId, String newIdentityId) {
-        AWSManager.getInstance().getIoTHelper().connect();
+        //AWSManager.getInstance().getIoTHelper().connect();
 
         Log.d("identityChanged", "OLD identity: " + oldIdentityId);
         Log.d("identityChanged", "NEW identity: " + newIdentityId);
-
 
         if (!TextUtils.isEmpty(oldIdentityId)
                 && !TextUtils.isEmpty(newIdentityId)
@@ -288,7 +296,13 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
         AuthHelper.getInstance().setAuthInfo(authInfo);
 
-        AWSManager.getInstance().getCammentAuthenticationProvider().retrieveCredentialsFromCammentServer();
+        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clearCredentials();
+
+        ApiManager.getInstance().getAuthApi().logIn();
+
+        //AWSManager.getInstance().getCammentAuthenticationProvider().refresh();
+
+        //AWSManager.getInstance().getCammentAuthenticationProvider().retrieveCredentialsFromCammentServer();
 
         //DataManager.getInstance().handleFbPermissionsResult(); TODO this created group and handled deeplink if needed
 
@@ -302,7 +316,17 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
     @Override
     public void onLoggedOut() {
+        ApiManager.clearInstance();
 
+        AuthHelper.getInstance().setAuthInfo(null);
+
+        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clearCredentials();
+
+        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clear();
+        
+        DataManager.getInstance().clearDataForUserGroupChange(false); //TODO clear all?
+
+        //EventBus.getDefault().post(new UserGroupChangeEvent());
     }
 
     @Override

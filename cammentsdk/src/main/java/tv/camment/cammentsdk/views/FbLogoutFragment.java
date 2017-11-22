@@ -83,7 +83,7 @@ public class FbLogoutFragment extends Fragment {
 
         EventBus.getDefault().post(new UserGroupChangeEvent());
 
-        CammentSDK.getInstance().connectToIoT();
+        //CammentSDK.getInstance().connectToIoT();
 
         if (onSwitchViewListener != null) {
             onSwitchViewListener.hideUserInfoContainer();

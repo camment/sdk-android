@@ -6,10 +6,16 @@ import com.amazonaws.auth.AWSAbstractCognitoDeveloperIdentityProvider;
 import com.amazonaws.regions.Regions;
 import com.camment.clientsdk.model.OpenIdToken;
 
+import org.greenrobot.eventbus.EventBus;
+
+import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
+import tv.camment.cammentsdk.events.LoginStatusChanged;
 import tv.camment.cammentsdk.helpers.AuthHelper;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 
 
 public final class CammentAuthenticationProvider extends AWSAbstractCognitoDeveloperIdentityProvider {
@@ -36,7 +42,12 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
             OpenIdToken openIdToken = retrieveCredentialsFromCammentServer();
             if (openIdToken != null) {
                 update(openIdToken.getIdentityId(), openIdToken.getToken());
-                //AWSManager.getInstance().getIoTHelper().connect();
+
+                if (GeneralPreferences.getInstance().isFirstStartup()) {
+                    PendingActions.getInstance().addAction(PendingActions.Action.HANDLE_DEEPLINK);
+                }
+                EventBus.getDefault().post(new LoginStatusChanged());
+                PendingActions.getInstance().executePendingActionsIfNeeded();
             } else {
                 update(null, null);
             }
@@ -45,6 +56,11 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
 
         this.getIdentityId();
         return null;
+    }
+
+    @Override
+    public String getToken() {
+        return token;
     }
 
     // If the app has a valid identityId return it, otherwise get a valid

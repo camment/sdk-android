@@ -38,7 +38,7 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
         if (isActivityValid(activity)
                 && !(activity instanceof DeeplinkIgnore)
                 && !TextUtils.equals(GeneralPreferences.getInstance().getDeeplinkGroupUuid(), GeneralPreferences.getInstance().getCancelledDeeplinkUuid())) {
-            CammentSDK.getInstance().handleDeeplink("camment");
+            CammentSDK.getInstance().handleDeeplink();
         }
 
         if (TextUtils.equals(GeneralPreferences.getInstance().getDeeplinkGroupUuid(), GeneralPreferences.getInstance().getCancelledDeeplinkUuid())) {

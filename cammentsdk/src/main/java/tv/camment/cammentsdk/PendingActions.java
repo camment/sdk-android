@@ -4,6 +4,8 @@ package tv.camment.cammentsdk;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import tv.camment.cammentsdk.api.ApiManager;
+
 public final class PendingActions {
 
     private static PendingActions INSTANCE;
@@ -35,8 +37,10 @@ public final class PendingActions {
     private void processAction(Action action) {
         switch (action) {
             case SHOW_SHARING_OPTIONS:
+                ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
                 break;
-            case CHECK_DEEPLINK:
+            case HANDLE_DEEPLINK:
+                CammentSDK.getInstance().handleDeeplink();
                 break;
         }
         removeProcessedAction();
@@ -51,8 +55,9 @@ public final class PendingActions {
         executePendingActionsIfNeeded();
     }
 
-    enum Action {
+    public enum Action {
         SHOW_SHARING_OPTIONS,
-        CHECK_DEEPLINK,
+        HANDLE_DEEPLINK,
     }
+
 }

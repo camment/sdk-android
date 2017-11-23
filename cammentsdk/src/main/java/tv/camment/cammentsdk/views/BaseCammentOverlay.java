@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
@@ -462,10 +463,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (AuthHelper.getInstance().isLoggedIn()) {
             ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         } else {
-            if (getContext() instanceof Activity) {
-                //TODO after this open sharing dialog
-                CammentSDK.getInstance().getAppAuthIdentityProvider().logIn((Activity) getContext());
-            }
+            PendingActions.getInstance().addAction(PendingActions.Action.SHOW_SHARING_OPTIONS);
+            AuthHelper.getInstance().checkLogin();
         }
     }
 

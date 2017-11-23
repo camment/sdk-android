@@ -1,11 +1,14 @@
 package tv.camment.cammentsdk.helpers;
 
 
+import android.app.Activity;
 import android.text.TextUtils;
 
 import java.util.Date;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.PendingActions;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;
@@ -62,6 +65,14 @@ public final class AuthHelper {
 
     public CammentAuthInfo getAuthInfo() {
         return authInfo;
+    }
+
+    public void checkLogin() {
+        if (isHostAppLoggedIn()) {
+            ApiManager.getInstance().getAuthApi().logIn();
+        } else {
+            CammentSDK.getInstance().getAppAuthIdentityProvider().logIn(CammentSDK.getInstance().getCurrentActivity());
+        }
     }
 
 }

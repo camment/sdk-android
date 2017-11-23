@@ -15,6 +15,4 @@ public interface CammentAuthIdentityProvider {
 
     CammentAuthInfo getAuthInfo();
 
-    boolean isLoggedIn();
-
 }

@@ -83,6 +83,8 @@ public class FbLogoutFragment extends Fragment {
 
         EventBus.getDefault().post(new UserGroupChangeEvent());
 
+        AWSManager.getInstance().getIoTHelper().subscribe();
+
         if (onSwitchViewListener != null) {
             onSwitchViewListener.hideUserInfoContainer();
         }

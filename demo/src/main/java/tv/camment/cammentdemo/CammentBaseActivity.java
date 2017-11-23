@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import tv.camment.cammentauth.FbHelper;
 import tv.camment.cammentsdk.CammentSDK;
 
 abstract class CammentBaseActivity extends AppCompatActivity {

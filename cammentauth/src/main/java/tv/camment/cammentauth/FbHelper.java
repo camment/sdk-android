@@ -1,4 +1,4 @@
-package tv.camment.cammentdemo;
+package tv.camment.cammentauth;
 
 
 import android.app.Activity;
@@ -22,7 +22,7 @@ import tv.camment.cammentsdk.auth.CammentAuthListener;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;
 
-public class FbHelper {
+public final class FbHelper {
 
     private static FbHelper INSTANCE;
 
@@ -77,7 +77,7 @@ public class FbHelper {
         };
     }
 
-    public CammentFbUserInfo getUserInfo() {
+    CammentFbUserInfo getUserInfo() {
         Profile profile = Profile.getCurrentProfile();
 
         if (profile != null) {
@@ -90,7 +90,7 @@ public class FbHelper {
         return null;
     }
 
-    public CammentFbAuthInfo getAuthInfo() {
+    CammentFbAuthInfo getAuthInfo() {
         if (isLoggedIn()) {
             return new CammentFbAuthInfo(AccessToken.getCurrentAccessToken().getUserId(),
                     AccessToken.getCurrentAccessToken().getToken(),

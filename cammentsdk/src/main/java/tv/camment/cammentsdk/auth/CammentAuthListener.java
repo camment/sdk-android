@@ -7,8 +7,4 @@ public interface CammentAuthListener {
 
     void onLoggedOut();
 
-    //void onUserInfoChanged(CammentUserInfo userInfo);
-
-    void onAuthInfoChanged(CammentAuthInfo authInfo);
-
 }

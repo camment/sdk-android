@@ -294,12 +294,9 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
         DataManager.getInstance().clearDataForLogOut();
 
+        AWSManager.getInstance().getIoTHelper().subscribe();
+
         EventBus.getDefault().post(new UserGroupChangeEvent());
-    }
-
-    @Override
-    public void onAuthInfoChanged(CammentAuthInfo authInfo) {
-
     }
 
     public CammentAuthIdentityProvider getAppAuthIdentityProvider() {

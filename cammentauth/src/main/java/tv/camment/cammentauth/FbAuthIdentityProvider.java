@@ -1,4 +1,4 @@
-package tv.camment.cammentdemo;
+package tv.camment.cammentauth;
 
 import android.app.Activity;
 
@@ -33,11 +33,6 @@ public final class FbAuthIdentityProvider implements CammentAuthIdentityProvider
     @Override
     public CammentAuthInfo getAuthInfo() {
         return FbHelper.getInstance().getAuthInfo();
-    }
-
-    @Override
-    public boolean isLoggedIn() {
-        return FbHelper.getInstance().isLoggedIn();
     }
 
 }

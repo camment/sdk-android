@@ -115,6 +115,12 @@ dependencies {
     debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')
     releaseDevCompile project(path: ':cammentsdk', configuration: 'releaseDev')
+
+    debugCompile project(path: ':cammentauth', configuration: 'debug')
+    debugDevCompile project(path: ':cammentauth', configuration: 'debugDev')
+    releaseCompile project(path: ':cammentauth', configuration: 'release')
+    releaseDevCompile project(path: ':cammentauth', configuration: 'releaseDev')
+
     compile 'net.hockeyapp.android:HockeySDK:5.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;

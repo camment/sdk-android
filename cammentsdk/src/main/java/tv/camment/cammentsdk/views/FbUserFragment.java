@@ -59,7 +59,6 @@ public class FbUserFragment extends Fragment
             }
         });
 
-        //TODO
 //        ivAvatar.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

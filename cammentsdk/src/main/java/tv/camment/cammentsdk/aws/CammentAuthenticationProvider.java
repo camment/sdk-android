@@ -8,6 +8,9 @@ import com.camment.clientsdk.model.OpenIdToken;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ConcurrentModificationException;
+
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.api.ApiManager;
@@ -16,6 +19,7 @@ import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.events.LoginStatusChanged;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 
 public final class CammentAuthenticationProvider extends AWSAbstractCognitoDeveloperIdentityProvider {
@@ -41,15 +45,30 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                 && this.loginsMap.containsKey(getProviderName())) {
             OpenIdToken openIdToken = retrieveCredentialsFromCammentServer();
             if (openIdToken != null) {
-                update(openIdToken.getIdentityId(), openIdToken.getToken());
+                try {
+                    update(openIdToken.getIdentityId(), openIdToken.getToken());
 
-                if (GeneralPreferences.getInstance().isFirstStartup()) {
-                    PendingActions.getInstance().addAction(PendingActions.Action.HANDLE_DEEPLINK);
+                    if (GeneralPreferences.getInstance().isFirstStartup()) {
+                        PendingActions.getInstance().addAction(PendingActions.Action.HANDLE_DEEPLINK);
+                    }
+
+                    if (BuildConfig.USE_MIXPANEL) {
+                        MixpanelHelper.getInstance().setIdentity();
+                    }
+
+                    EventBus.getDefault().post(new LoginStatusChanged());
+                    PendingActions.getInstance().executePendingActionsIfNeeded();
+
+                    ApiManager.getInstance().retryFailedCallsIfNeeded();
+                } catch (ConcurrentModificationException e) {
+                    Log.d("onException", "refresh ConcurrentModificationException");
                 }
-                EventBus.getDefault().post(new LoginStatusChanged());
-                PendingActions.getInstance().executePendingActionsIfNeeded();
             } else {
-                update(null, null);
+                try {
+                    update(null, null);
+                } catch (ConcurrentModificationException e) {
+                    Log.d("onException", "refresh ConcurrentModificationException");
+                }
             }
             return openIdToken == null ? null : openIdToken.getToken();
         }

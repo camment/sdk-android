@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 final class DbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "cammentsdk";
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 4;
 
     DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -20,7 +20,6 @@ final class DbHelper extends SQLiteOpenHelper {
         db.execSQL(createShowTable());
         db.execSQL(createCammentTable());
         db.execSQL(createUserInfoTable());
-        db.execSQL(createAuthInfoTable());
     }
 
     @Override
@@ -30,7 +29,6 @@ final class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbUtils.dropTable(DataContract.Tables.SHOW));
         db.execSQL(DbUtils.dropTable(DataContract.Tables.USER_GROUP));
         db.execSQL(DbUtils.dropTable(DataContract.Tables.USER_INFO));
-        db.execSQL(DbUtils.dropTable(DataContract.Tables.AUTH_INFO));
         onCreate(db);
     }
 
@@ -77,19 +75,6 @@ final class DbHelper extends SQLiteOpenHelper {
                 .columnText(DataContract.UserInfo.userCognitoIdentityId)
                 .columnText(DataContract.UserInfo.picture)
                 .columnText(DataContract.UserInfo.groupUuid)
-                .build();
-    }
-
-    private String createAuthInfoTable() {
-        return DbUtils.TableBuilder.table(DataContract.Tables.AUTH_INFO)
-                .primaryKey(DataContract.AuthInfo._ID)
-                .columnInt(DataContract.AuthInfo.authType)
-                .columnTextUnique(DataContract.AuthInfo.uuid)
-                .columnText(DataContract.AuthInfo.name)
-                .columnText(DataContract.AuthInfo.email)
-                .columnText(DataContract.AuthInfo.imageUrl)
-                .columnText(DataContract.AuthInfo.token)
-                .columnInt(DataContract.AuthInfo.expires)
                 .build();
     }
 

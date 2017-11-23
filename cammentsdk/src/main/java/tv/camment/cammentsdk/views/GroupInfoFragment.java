@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -160,7 +161,8 @@ public final class GroupInfoFragment extends Fragment
             ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         } else {
             if (getContext() instanceof Activity) {
-                //TODO after this open sharing dialog
+                PendingActions.getInstance().addAction(PendingActions.Action.SHOW_SHARING_OPTIONS);
+
                 CammentSDK.getInstance().getAppAuthIdentityProvider().logIn((Activity) getContext());
             }
         }

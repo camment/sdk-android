@@ -75,15 +75,13 @@ public class FbLogoutFragment extends Fragment {
 
         ApiManager.clearInstance();
 
+        AWSManager.getInstance().getCognitoCachingCredentialsProvider().clearCredentials();
+
         AWSManager.getInstance().getCognitoCachingCredentialsProvider().clear();
 
-        //ApiManager.getInstance().getUserApi().refreshCognitoCredentials();
+        DataManager.getInstance().clearDataForLogOut();
 
-        DataManager.getInstance().clearDataForUserGroupChange(false);
-
-        EventBus.getDefault().post(new UserGroupChangeEvent());
-
-        //CammentSDK.getInstance().connectToIoT();
+        //EventBus.getDefault().post(new UserGroupChangeEvent());
 
         if (onSwitchViewListener != null) {
             onSwitchViewListener.hideUserInfoContainer();

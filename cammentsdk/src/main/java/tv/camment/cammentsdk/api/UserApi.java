@@ -37,74 +37,6 @@ public final class UserApi extends CammentAsyncClient {
         this.devcammentClient = devcammentClient;
     }
 
-    public void updateUserInfo(final CammentUserInfo userInfo) {
-        submitTask(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                if (userInfo != null
-                        && userInfo.getAuthType() != null) {
-                    switch (userInfo.getAuthType()) {
-                        case FACEBOOK:
-                            if (userInfo instanceof CammentFbUserInfo) {
-                                FbUserInfo fbUserInfo = new FbUserInfo();
-                                fbUserInfo.facebookId = ((CammentFbUserInfo) userInfo).getFacebookUserId();
-                                fbUserInfo.name = userInfo.getName();
-                                fbUserInfo.picture = userInfo.getImageUrl();
-
-                                UserinfoInRequest userinfoInRequest = new UserinfoInRequest();
-                                userinfoInRequest.setUserinfojson(new Gson().toJson(fbUserInfo));
-
-                                devcammentClient.userinfoPost(userinfoInRequest);
-                            }
-                            break;
-                    }
-
-                    //EventBus.getDefault().post(new UserInfoChangedEvent(userInfo));
-
-                    //TODO where to do this
-                    if (BuildConfig.USE_MIXPANEL) {
-                        MixpanelHelper.getInstance().setIdentity();
-                    }
-                }
-
-                return new Object();
-            }
-        }, updateUserInfoCallback(userInfo));
-    }
-
-    //keep public
-    public class FbUserInfo {
-
-        public String facebookId;
-        public String name;
-        public String picture;
-
-    }
-
-    private CammentCallback<Object> updateUserInfoCallback(final CammentUserInfo userInfo) {
-        return new CammentCallback<Object>() {
-            @Override
-            public void onSuccess(Object result) {
-                Log.d("onSuccess", "updateUserInfo");
-
-                //CammentSDK.getInstance().connectToIoT();
-
-//                if (handleDeeplink) {
-//                    CammentSDK.getInstance().handleDeeplink("camment"); //TODO deeplink
-//                }
-                //AuthInfoProvider.insertUserInfo(userInfo); //TODO only after success?
-
-                CammentSDK.getInstance().hideProgressBar();
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("onException", "updateUserInfo", exception);
-                CammentSDK.getInstance().hideProgressBar();
-            }
-        };
-    }
-
     public void getFacebookFriends(CammentCallback<FacebookFriendList> getFacebookFriendsCallback) {
         submitTask(new Callable<FacebookFriendList>() {
             @Override
@@ -119,15 +51,6 @@ public final class UserApi extends CammentAsyncClient {
                 }
             }
         }, getFacebookFriendsCallback);
-    }
-
-    public void getMyUserCognitoId(CammentCallback<String> getMyUserCognitoIdCallback) {
-        submitTask(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return AWSManager.getInstance().getCognitoCachingCredentialsProvider().getIdentityId();
-            }
-        }, getMyUserCognitoIdCallback);
     }
 
     public void getMyUserGroups() {

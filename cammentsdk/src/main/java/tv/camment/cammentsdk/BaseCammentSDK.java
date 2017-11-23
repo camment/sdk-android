@@ -82,7 +82,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
             ((Application) context).registerActivityLifecycleCallbacks(this);
 
-            DataManager.getInstance().clearDataForUserGroupChange(true);
+            DataManager.getInstance().clearDataForUserGroupChange();
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
 
@@ -210,26 +210,6 @@ abstract class BaseCammentSDK extends CammentLifecycle
         };
     }
 
-//    void checkLogin() {
-//        AccessToken.refreshCurrentAccessTokenAsync(this);
-//    }
-
-//    @Override
-//    public void OnTokenRefreshed(AccessToken accessToken) {
-//        ApiManager.getInstance().getUserApi().updateUserInfo(true);
-//
-//        ApiManager.getInstance().retryFailedCallsIfNeeded();
-//
-//        ApiManager.getInstance().getUserApi().getMyUserGroups();
-//
-//        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.FB_SIGNIN);
-//    }
-//
-//    @Override
-//    public void OnTokenRefreshFailed(FacebookException exception) {
-//        FacebookHelper.getInstance().logIn(getCurrentActivity(), false);
-//    }
-
     @Override
     public void identityChanged(String oldIdentityId, String newIdentityId) {
         //AWSManager.getInstance().getIoTHelper().connect();
@@ -296,6 +276,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
         ApiManager.getInstance().getAuthApi().logIn();
 
+        MixpanelHelper.getInstance().trackEvent(MixpanelHelper.FB_SIGNIN);
+
         //AWSManager.getInstance().getCammentAuthenticationProvider().refresh();
 
         //AWSManager.getInstance().getCammentAuthenticationProvider().retrieveCredentialsFromCammentServer();
@@ -320,7 +302,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
         AWSManager.getInstance().getCognitoCachingCredentialsProvider().clear();
 
-        DataManager.getInstance().clearDataForUserGroupChange(false); //TODO clear all?
+        DataManager.getInstance().clearDataForLogOut();
 
         //EventBus.getDefault().post(new UserGroupChangeEvent());
     }

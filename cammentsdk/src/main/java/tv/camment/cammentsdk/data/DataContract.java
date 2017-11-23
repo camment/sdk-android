@@ -33,8 +33,6 @@ final class DataContract {
         String CAMMENT_ID = "camment/*";
         String USER_INFO = "user_info";
         String USER_INFO_ID = "user_info/*";
-        String AUTH_INFO = "auth_info";
-        String AUTH_INFO_ID = "auth_info/*";
     }
 
     interface Codes {
@@ -46,8 +44,6 @@ final class DataContract {
         int CAMMENT_ID = 401;
         int USER_INFO = 500;
         int USER_INFO_ID = 501;
-        int AUTH_INFO = 600;
-        int AUTH_INFO_ID = 601;
     }
 
     private interface UserGroupColumns {
@@ -106,22 +102,6 @@ final class DataContract {
         static final String CONTENT_TYPE = buildContentTypeDir(Tables.USER_INFO);
         static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.USER_INFO);
         static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.USER_INFO_ID);
-    }
-
-    private interface AuthInfoColumns {
-        String authType = "authType";
-        String name = "name";
-        String imageUrl = "imageUrl";
-        String email = "email";
-        String uuid = "uuid";
-        String token = "token";
-        String expires = "expires";
-    }
-
-    static final class AuthInfo implements BaseColumns, AuthInfoColumns {
-        static final String CONTENT_TYPE = buildContentTypeDir(Tables.AUTH_INFO);
-        static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.AUTH_INFO);
-        static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.AUTH_INFO_ID);
     }
 
 }

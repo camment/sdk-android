@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 
 /**
  * An async client executes actions in the background and returns the result on the UI thread.
@@ -92,11 +93,11 @@ public abstract class CammentAsyncClient {
         if (e != null
                 && (e instanceof NotAuthorizedException
                 || e.getCause() instanceof NotAuthorizedException)) {
-            //TODO check this
             ApiManager.getInstance().putRetryCallable(uuid);
 
             ApiManager.getInstance().removeCallable(uuid);
-            //CammentSDK.getInstance().checkLogin();
+
+            AuthHelper.getInstance().checkLogin();
             return;
         }
 

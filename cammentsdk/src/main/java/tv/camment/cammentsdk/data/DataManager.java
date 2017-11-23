@@ -18,18 +18,19 @@ public final class DataManager {
 
     }
 
-    public void clearDataForUserGroupChange(boolean deactivateGroups) {
+    public void clearDataForUserGroupChange() {
         UserGroupProvider.setAllAsNotActive();
         FileUtils.getInstance().deleteAllFiles();
 
         UserInfoProvider.deleteUserInfos();
     }
 
-//    public void handleFbPermissionsResult() {
-//        if (FacebookHelper.getInstance().isLoggedIn()
-//                && FacebookHelper.getInstance().showShareOptions()) {
-//            ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
-//        }
-//    }
+    public void clearDataForLogOut() {
+        FileUtils.getInstance().deleteAllFiles();
+
+        CammentProvider.deleteCamments();
+        UserGroupProvider.deleteUserGroups();
+        UserInfoProvider.deleteUserInfos();
+    }
 
 }

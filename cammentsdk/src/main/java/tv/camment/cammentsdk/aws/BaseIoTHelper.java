@@ -399,7 +399,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             }
         });
 
-        DataManager.getInstance().clearDataForUserGroupChange(true);
+        DataManager.getInstance().clearDataForUserGroupChange();
 
         Usergroup usergroup = new Usergroup();
         usergroup.setUuid(message.body.groupUuid);

@@ -48,6 +48,8 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                 try {
                     update(openIdToken.getIdentityId(), openIdToken.getToken());
 
+                    AWSManager.getInstance().getIoTHelper().subscribe();
+
                     if (GeneralPreferences.getInstance().isFirstStartup()) {
                         PendingActions.getInstance().addAction(PendingActions.Action.HANDLE_DEEPLINK);
                     }
@@ -60,6 +62,8 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                     PendingActions.getInstance().executePendingActionsIfNeeded();
 
                     ApiManager.getInstance().retryFailedCallsIfNeeded();
+
+                    ApiManager.getInstance().getUserApi().getMyUserGroups();
                 } catch (ConcurrentModificationException e) {
                     Log.d("onException", "refresh ConcurrentModificationException");
                 }

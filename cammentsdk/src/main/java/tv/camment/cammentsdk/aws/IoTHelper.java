@@ -21,8 +21,8 @@ public final class IoTHelper extends BaseIoTHelper {
         super.disconnect();
     }
 
-    public void reconnect() {
-        super.reconnect();
+    public void subscribe() {
+        super.subscribe();
     }
 
     public void handleInvitationMessage(InvitationMessage message) {

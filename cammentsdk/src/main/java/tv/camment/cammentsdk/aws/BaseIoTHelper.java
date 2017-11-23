@@ -96,7 +96,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         };
     }
 
-    private void subscribe() {
+    void subscribe() {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -176,19 +176,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 }
             }
         };
-    }
-
-    void reconnect() {
-        submitBgTask(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                if (mqttManager == null) {
-                    mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
-                }
-                mqttManager.disconnect();
-                return new Object();
-            }
-        }, disconnectCallback(true));
     }
 
     void disconnect() {

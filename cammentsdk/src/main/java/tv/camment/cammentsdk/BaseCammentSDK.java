@@ -19,6 +19,8 @@ import com.amazonaws.mobileconnectors.cognito.SyncConflict;
 import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.camment.clientsdk.model.Deeplink;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ import tv.camment.cammentsdk.aws.IoTHelper;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
@@ -277,19 +280,6 @@ abstract class BaseCammentSDK extends CammentLifecycle
         ApiManager.getInstance().getAuthApi().logIn();
 
         MixpanelHelper.getInstance().trackEvent(MixpanelHelper.FB_SIGNIN);
-
-        //AWSManager.getInstance().getCammentAuthenticationProvider().refresh();
-
-        //AWSManager.getInstance().getCammentAuthenticationProvider().retrieveCredentialsFromCammentServer();
-
-        //DataManager.getInstance().handleFbPermissionsResult(); TODO this created group and handled deeplink if needed
-
-        //TODO what to handle introduce state machine -> check pending actions
-        //ApiManager.getInstance().getUserApi().updateUserInfo(true);
-
-        //ApiManager.getInstance().retryFailedCallsIfNeeded();
-
-        //ApiManager.getInstance().getUserApi().getMyUserGroups();
     }
 
     @Override
@@ -304,7 +294,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
         DataManager.getInstance().clearDataForLogOut();
 
-        //EventBus.getDefault().post(new UserGroupChangeEvent());
+        EventBus.getDefault().post(new UserGroupChangeEvent());
     }
 
     @Override

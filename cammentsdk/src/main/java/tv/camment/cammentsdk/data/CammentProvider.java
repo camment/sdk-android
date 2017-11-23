@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.camment.clientsdk.model.Camment;
 import com.camment.clientsdk.model.Usergroup;
@@ -60,8 +61,6 @@ public final class CammentProvider {
     }
 
     public static void insertCamments(List<Camment> camments) {
-        deleteCamments();
-
         if (camments == null || camments.size() == 0)
             return;
 
@@ -106,7 +105,8 @@ public final class CammentProvider {
         String where = DataContract.Camment.uuid + "=?";
         String[] selectionArgs = {uuid};
 
-        cr.delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
+        int delete = cr.delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
+        Log.d("deleteCammentByUuid", uuid + " - " + (delete > 0));
     }
 
     public static void setCammentDeleted(String uuid) {
@@ -118,7 +118,8 @@ public final class CammentProvider {
         ContentValues cv = new ContentValues();
         cv.put(DataContract.Camment.deleted, true);
 
-        cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setCammentDeleted", uuid + " - " + (update > 0));
     }
 
     public static CCamment getCammentByUuid(String uuid) {
@@ -170,7 +171,8 @@ public final class CammentProvider {
         ContentValues cv = new ContentValues();
         cv.put(DataContract.Camment.transferId, id);
 
-        cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setCUploadTransferId", camment.getUuid() + " - " + (update > 0));
     }
 
     public static void setRecorded(CCamment camment, boolean recorded) {
@@ -184,7 +186,8 @@ public final class CammentProvider {
         cv.put(DataContract.Camment.recorded, String.valueOf(recorded ? 1 : 0));
         cv.put(DataContract.Camment.timestamp, System.currentTimeMillis());
 
-        cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setRecorded", camment.getUuid() + " - " + (update > 0));
     }
 
     public static void updateCammentGroupId(CCamment camment, String groupUuid) {
@@ -196,7 +199,8 @@ public final class CammentProvider {
         ContentValues cv = new ContentValues();
         cv.put(DataContract.Camment.userGroupUuid, groupUuid);
 
-        cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("updateCammentGroupId", camment.getUuid() + " - " + (update > 0));
     }
 
     public static int getCammentsSize() {

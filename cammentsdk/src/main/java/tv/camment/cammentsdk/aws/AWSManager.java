@@ -40,6 +40,7 @@ public final class AWSManager {
     private final Cache cache;
     private CammentAuthenticationProvider cammentAuthenticationProvider;
     private CognitoCachingCredentialsProvider credentialsProvider;
+    private IoTHelper iotHelper;
 
     public static AWSManager getInstance() {
         if (INSTANCE == null) {
@@ -154,7 +155,10 @@ public final class AWSManager {
     }
 
     public IoTHelper getIoTHelper() {
-        return new IoTHelper(Executors.newSingleThreadExecutor(), getClientKeyStore());
+        if (iotHelper == null) {
+            iotHelper = new IoTHelper(Executors.newSingleThreadExecutor(), getClientKeyStore());
+        }
+        return iotHelper;
     }
 
     public Cache getExoPlayerCache() {

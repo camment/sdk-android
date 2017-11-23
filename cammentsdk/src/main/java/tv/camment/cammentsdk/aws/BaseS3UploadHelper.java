@@ -46,6 +46,8 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
     }
 
     void uploadCammentFile(final CCamment camment) {
+        Log.d("uploadCamment", "groupUuid " + camment.getUserGroupUuid());
+
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {

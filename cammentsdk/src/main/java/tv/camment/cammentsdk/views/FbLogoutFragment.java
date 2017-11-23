@@ -81,7 +81,7 @@ public class FbLogoutFragment extends Fragment {
 
         DataManager.getInstance().clearDataForLogOut();
 
-        //EventBus.getDefault().post(new UserGroupChangeEvent());
+        EventBus.getDefault().post(new UserGroupChangeEvent());
 
         if (onSwitchViewListener != null) {
             onSwitchViewListener.hideUserInfoContainer();

@@ -191,15 +191,12 @@ abstract class BaseCammentSDK extends CammentLifecycle
                 CammentSDK.getInstance().hideProgressBar();
 
                 if (!TextUtils.isEmpty(result.getUrl())) {
-                    String[] split = result.getUrl().split("/"); //TODO check this, if I'm not signed in what happens?
+                    String[] split = result.getUrl().split("/");
                     if (split.length > 3) {
-                        InvitationMessage invitationMessage = new InvitationMessage();
-                        invitationMessage.type = MessageType.INVITATION;
-                        invitationMessage.body = new InvitationMessage.Body();
-                        invitationMessage.body.groupUuid = split[split.length - 3];
-                        invitationMessage.body.showUuid = split[split.length - 1];
-                        invitationMessage.body.key = "#" + AuthHelper.getInstance().getUserId();
-                        ioTHelper.handleInvitationMessage(invitationMessage);
+                        GeneralPreferences.getInstance().setDeeplinkGroupUuid(split[split.length - 3]);
+                        GeneralPreferences.getInstance().setDeeplinkShowUuid(split[split.length - 1]);
+
+                        handleDeeplink();
                     }
                 }
             }

@@ -11,6 +11,7 @@
     <string name="cmmsdk_ok">OK</string>
     <string name="cmmsdk_cancel">Cancelar</string>
     <string name="cmmsdk_done">Hecho</string>
+    <string name="cmmsdk_login">Ingresar</string>
 
     <string name="cmmsdk_user_entered_chat_title">%s ya ingresó a su chat Camment!</string>
     <string name="cmmsdk_user_entered_chat_desc">Te recomendamos saludar a través de un Camment?</string>
@@ -57,5 +58,8 @@
     <string name="cmmsdk_drawer_no_chat_groups">No se han encontrado ningún grupo</string>
 
     <!--<string name="cmmsdk_invitation_default_msg">Hey, join our private chat!</string>-->
+
+    <string name="cmmsdk_login_fb_title">No has iniciado sesión</string>
+    <string name="cmmsdk_login_fb_msg">Quieres iniciar la sesión con tu cuenta de Facebook?</string>
 
 </resources>

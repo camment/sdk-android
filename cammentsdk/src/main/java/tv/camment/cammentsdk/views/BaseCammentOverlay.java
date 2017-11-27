@@ -464,7 +464,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
             ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
         } else {
             PendingActions.getInstance().addAction(PendingActions.Action.SHOW_SHARING_OPTIONS);
-            AuthHelper.getInstance().checkLogin();
+            AuthHelper.getInstance().checkLogin(null);
         }
     }
 

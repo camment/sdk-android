@@ -139,6 +139,9 @@ public final class CammentDialog extends DialogFragment {
             case SHARE:
                 tvTitle.setText(R.string.cmmsdk_invitation_link_title);
                 break;
+            case LOGIN_CONFIRMATION:
+                tvTitle.setText(R.string.cmmsdk_login_fb_title);
+                break;
         }
     }
 
@@ -161,6 +164,9 @@ public final class CammentDialog extends DialogFragment {
                 break;
             case SHARE:
                 tvMessage.setText(R.string.cmmsdk_invitation_link_desc);
+                break;
+            case LOGIN_CONFIRMATION:
+                tvMessage.setText(R.string.cmmsdk_login_fb_msg);
                 break;
         }
     }
@@ -187,6 +193,10 @@ public final class CammentDialog extends DialogFragment {
             case SHARE:
                 btnPositive.setText(R.string.cmmsdk_ok);
                 btnNegative.setText(R.string.cmmsdk_cancel);
+                break;
+            case LOGIN_CONFIRMATION:
+                btnPositive.setText(R.string.cmmsdk_login);
+                btnNegative.setText(R.string.cmmsdk_no);
                 break;
         }
     }

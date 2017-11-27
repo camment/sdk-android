@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 
@@ -97,7 +98,7 @@ public abstract class CammentAsyncClient {
 
             ApiManager.getInstance().removeCallable(uuid);
 
-            AuthHelper.getInstance().checkLogin();
+            AuthHelper.getInstance().checkLogin(null);
             return;
         }
 

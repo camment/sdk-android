@@ -179,9 +179,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
                 invitationMessage.body.key = "#" + AuthHelper.getInstance().getUserId();
                 ioTHelper.handleInvitationMessage(invitationMessage);
             } else if (!AuthHelper.getInstance().isLoggedIn()) {
-                PendingActions.getInstance().addAction(PendingActions.Action.HANDLE_DEEPLINK);
-
-                AuthHelper.getInstance().checkLogin();
+                AuthHelper.getInstance().checkLogin(PendingActions.Action.HANDLE_DEEPLINK);
             }
         }
     }
@@ -193,7 +191,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
                 CammentSDK.getInstance().hideProgressBar();
 
                 if (!TextUtils.isEmpty(result.getUrl())) {
-                    String[] split = result.getUrl().split("/");
+                    String[] split = result.getUrl().split("/"); //TODO check this, if I'm not signed in what happens?
                     if (split.length > 3) {
                         InvitationMessage invitationMessage = new InvitationMessage();
                         invitationMessage.type = MessageType.INVITATION;

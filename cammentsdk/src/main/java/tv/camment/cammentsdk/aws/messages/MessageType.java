@@ -30,7 +30,9 @@ public enum MessageType {
     @SerializedName("membership-accepted")
     MEMBERSHIP_ACCEPTED(7),
 
-    SHARE(8); //internal
+    SHARE(8), //internal
+
+    LOGIN_CONFIRMATION(9); //internal
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

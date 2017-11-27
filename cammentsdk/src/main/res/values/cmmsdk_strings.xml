@@ -16,6 +16,7 @@
     <string name="cmmsdk_ok">OK</string>
     <string name="cmmsdk_cancel">Cancel</string>
     <string name="cmmsdk_done">Done</string>
+    <string name="cmmsdk_login">Login</string>
 
     <string name="cmmsdk_user_entered_chat_title">%s entered your camment chat!</string>
     <string name="cmmsdk_user_entered_chat_desc">Maybe it would be polite to say hi with a camment?</string>
@@ -62,5 +63,8 @@
     <string name="cmmsdk_drawer_no_chat_groups">No groups found</string>
 
     <string name="cmmsdk_invitation_default_msg">Hey, join our private chat!</string>
+
+    <string name="cmmsdk_login_fb_title">You\'re not logged in</string>
+    <string name="cmmsdk_login_fb_msg">Login with your Facebook account?</string>
 
 </resources>

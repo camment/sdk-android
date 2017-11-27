@@ -104,7 +104,7 @@ public final class AuthHelper implements CammentDialog.ActionListener {
     public void onNegativeButtonClick(BaseMessage baseMessage) {
         GeneralPreferences.getInstance().setDeeplinkGroupUuid("");
         GeneralPreferences.getInstance().setDeeplinkShowUuid("");
-        
+
         CammentSDK.getInstance().hideProgressBar();
     }
 

@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Handler;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
@@ -89,6 +90,8 @@ public final class AuthApi extends CammentAsyncClient {
     }
 
     public void logIn() {
+        CammentSDK.getInstance().showProgressBar();
+
         CammentAuthInfo authInfo = AuthHelper.getInstance().getAuthInfo();
         if (authInfo != null) {
             switch (authInfo.getAuthType()) {
@@ -114,6 +117,7 @@ public final class AuthApi extends CammentAsyncClient {
                         @Override
                         public void onException(Exception exception) {
                             Log.e("onException1", "getOpenIdToken", exception);
+                            CammentSDK.getInstance().hideProgressBar();
                         }
                     });
                     break;

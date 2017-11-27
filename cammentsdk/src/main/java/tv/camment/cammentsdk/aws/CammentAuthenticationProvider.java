@@ -74,10 +74,15 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                     Log.d("onException", "refresh ConcurrentModificationException");
                 }
             }
+            CammentSDK.getInstance().hideProgressBar();
+
             return openIdToken == null ? null : openIdToken.getToken();
         }
 
         this.getIdentityId();
+
+        CammentSDK.getInstance().hideProgressBar();
+
         return null;
     }
 

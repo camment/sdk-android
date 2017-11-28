@@ -16,6 +16,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 
 
 public final class CammentProvider {
@@ -31,6 +32,7 @@ public final class CammentProvider {
             DataContract.Camment.transferId,
             DataContract.Camment.recorded,
             DataContract.Camment.deleted,
+            DataContract.Camment.seen,
             DataContract.Camment.timestamp};
 
     public static void insertCamment(CCamment camment) {
@@ -54,7 +56,12 @@ public final class CammentProvider {
         cv.put(DataContract.Camment.timestamp, timestamp);
         cv.put(DataContract.Camment.transferId, camment.getTransferId());
         cv.put(DataContract.Camment.recorded, camment.isRecorded() ? 1 : 0);
-        cv.put(DataContract.Camment.deleted, camment.isDeleted() ? 1 : 0);
+
+        int deleted = cammentByUuid == null ? (camment.isDeleted() ? 1 : 0) : (cammentByUuid.isDeleted() ? 1 : 0);
+        int seen = cammentByUuid == null ? (camment.isSeen() ? 1 : 0) : (cammentByUuid.isSeen() ? 1 : 0);
+
+        cv.put(DataContract.Camment.deleted, deleted);
+        cv.put(DataContract.Camment.seen, seen);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
@@ -83,8 +90,17 @@ public final class CammentProvider {
 
             final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
             int deleted = cammentByUuid == null ? 0 : (cammentByUuid.isDeleted() ? 1 : 0);
+            int seen = cammentByUuid == null ? 0 : (cammentByUuid.isSeen() ? 1 : 0);
+
+            String identityId = IdentityPreferences.getInstance().getIdentityId();
+            if (identityId != null
+                    && camment.getUserCognitoIdentityId() != null
+                    && TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
+                seen = 1;
+            }
 
             cv.put(DataContract.Camment.deleted, deleted);
+            cv.put(DataContract.Camment.seen, seen);
 
             values.add(cv);
             i--;
@@ -120,6 +136,19 @@ public final class CammentProvider {
 
         int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
         Log.d("setCammentDeleted", uuid + " - " + (update > 0));
+    }
+
+    public static void setCammentSeen(String uuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {uuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.Camment.seen, true);
+
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setCammentSeen", uuid + " - " + (update > 0));
     }
 
     public static CCamment getCammentByUuid(String uuid) {
@@ -237,6 +266,7 @@ public final class CammentProvider {
         camment.setTransferId(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.transferId)));
         camment.setRecorded(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.recorded)) == 1);
         camment.setDeleted(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.deleted)) == 1);
+        camment.setSeen(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.seen)) == 1);
 
         return camment;
     }

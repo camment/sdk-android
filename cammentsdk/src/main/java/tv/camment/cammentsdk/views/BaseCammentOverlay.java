@@ -281,7 +281,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onCammentClick(CammentViewHolder cammentViewHolder, Camment camment, TextureView textureView) {
+    public void onCammentClick(CammentViewHolder cammentViewHolder, CCamment camment, TextureView textureView) {
         rvCamments.showSmallThumbnailsForAllChildren();
 
         if (exoEventListener != null) {

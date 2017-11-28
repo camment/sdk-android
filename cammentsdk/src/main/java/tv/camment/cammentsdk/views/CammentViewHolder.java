@@ -12,12 +12,15 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.data.CammentProvider;
+import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
@@ -26,10 +29,12 @@ import tv.camment.cammentsdk.utils.FileUtils;
 final class CammentViewHolder extends RecyclerView.ViewHolder {
 
     private final CammentsAdapter.ActionListener actionListener;
-    private Camment camment;
+    private CCamment camment;
 
     private ImageView ivThumbnail;
     private TextureView textureView;
+
+    private LinearLayout llSeen;
 
     private boolean cammentClicked;
 
@@ -42,6 +47,8 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         itemView.setPivotY(0);
 
         ivThumbnail = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_thumbnail);
+
+        llSeen = (LinearLayout) itemView.findViewById(R.id.cmmsdk_ll_seen);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,12 +88,20 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
     private void handleOnItemClick() {
         if (camment != null && actionListener != null) {
             cammentClicked = true;
-            textureView = new SquareTextureView(itemView.getContext());
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-            int dp2 = CommonUtils.dpToPx(CammentSDK.getInstance().getApplicationContext(), 2);
-            params.setMargins(dp2, dp2, dp2, dp2);
-            ((SquareFrameLayout) itemView).addView(textureView, 0, params);
+
+            if (!camment.isSeen()) {
+                CammentProvider.setCammentSeen(camment.getUuid());
+            }
+            llSeen.setVisibility(View.GONE);
+
+            if (getItemViewScale() == 0.5f) {
+                textureView = new SquareTextureView(itemView.getContext());
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+                int dp2 = CommonUtils.dpToPx(CammentSDK.getInstance().getApplicationContext(), 2);
+                params.setMargins(dp2, dp2, dp2, dp2);
+                ((SquareFrameLayout) itemView).addView(textureView, 1, params);
+            }
             actionListener.onCammentClick(this, camment, textureView);
         }
     }
@@ -99,7 +114,6 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
                     setThumbnailVisibility(View.VISIBLE);
                 }
                 if (textureView != null
-                        && !cammentClicked
                         && scale == 0.5f) {
                     ((SquareFrameLayout) itemView).removeView(textureView);
                 }
@@ -125,7 +139,7 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         return 1.0f;
     }
 
-    void bindData(Camment camment) {
+    void bindData(CCamment camment) {
         if (camment == null)
             return;
 
@@ -145,6 +159,8 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         } else {
             loadThumbnailFromServer();
         }
+
+        llSeen.setVisibility(camment.isSeen() ? View.GONE : View.VISIBLE);
     }
 
     private void loadThumbnailFromServer() {

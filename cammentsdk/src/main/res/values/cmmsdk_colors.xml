@@ -2,6 +2,7 @@
 <resources>
 
     <color name="cmmsdk_camment_red">#FB0D1B</color>
+    <color name="cmmsdk_camment_red_transp">#88FB0D1B</color>
     <color name="cmmsdk_camment_red_ripple">#A1050F</color>
     <color name="cmmsdk_camment_grey">#3B3B3B</color>
     <color name="cmmsdk_camment_button_grey">#808080</color>

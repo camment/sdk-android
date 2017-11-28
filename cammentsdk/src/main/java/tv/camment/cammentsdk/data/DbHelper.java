@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 final class DbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "cammentsdk";
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 5;
 
     DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -65,6 +65,7 @@ final class DbHelper extends SQLiteOpenHelper {
                 .columnInt(DataContract.Camment.transferId)
                 .columnInt(DataContract.Camment.recorded)
                 .columnInt(DataContract.Camment.deleted)
+                .columnInt(DataContract.Camment.seen)
                 .build();
     }
 

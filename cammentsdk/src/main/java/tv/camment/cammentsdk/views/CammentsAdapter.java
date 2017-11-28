@@ -104,7 +104,7 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
     interface ActionListener {
 
-        void onCammentClick(CammentViewHolder cammentViewHolder, Camment camment, TextureView textureView);
+        void onCammentClick(CammentViewHolder cammentViewHolder, CCamment camment, TextureView textureView);
 
         void onCammentBottomSheetDisplayed();
 

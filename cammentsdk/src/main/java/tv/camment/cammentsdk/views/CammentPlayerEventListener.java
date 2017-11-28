@@ -42,7 +42,7 @@ final class CammentPlayerEventListener implements ExoPlayer.EventListener {
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
-        cammentViewHolder.setThumbnailVisibility(isLoading ? VISIBLE : GONE);
+        //cammentViewHolder.setThumbnailVisibility(isLoading ? VISIBLE : GONE);
     }
 
     @Override

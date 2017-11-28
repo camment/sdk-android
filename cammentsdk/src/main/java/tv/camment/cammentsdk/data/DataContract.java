@@ -83,6 +83,7 @@ final class DataContract {
         String transferId = "transferId";
         String recorded = "recorded";
         String deleted = "deleted";
+        String seen = "seen";
     }
 
     static final class Camment implements BaseColumns, CammentColumns {

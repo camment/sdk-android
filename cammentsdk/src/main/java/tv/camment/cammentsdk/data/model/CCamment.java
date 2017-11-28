@@ -9,6 +9,7 @@ public final class CCamment extends Camment {
     private int transferId = -1;
     private boolean recorded;
     private boolean deleted;
+    private boolean seen;
 
     public CCamment() {
 
@@ -25,6 +26,7 @@ public final class CCamment extends Camment {
         setTransferId(-1);
         setRecorded(true);
         setDeleted(false);
+        setSeen(false);
     }
 
     @Override
@@ -75,6 +77,14 @@ public final class CCamment extends Camment {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
 }

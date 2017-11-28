@@ -120,6 +120,7 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
         camment.setRecorded(false);
         camment.setTimestamp(System.currentTimeMillis());
         camment.setUserCognitoIdentityId(IdentityPreferences.getInstance().getIdentityId());
+        camment.setSeen(true);
 
         CammentProvider.insertCamment(camment);
 

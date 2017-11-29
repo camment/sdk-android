@@ -62,4 +62,6 @@
     <string name="cmmsdk_login_fb_title">No has iniciado sesión</string>
     <string name="cmmsdk_login_fb_msg">Quieres iniciar la sesión con tu cuenta de Facebook?</string>
 
+    <string name="cmmsdk_removed_from_group">You\'ve just been removed from the group!</string>
+
 </resources>

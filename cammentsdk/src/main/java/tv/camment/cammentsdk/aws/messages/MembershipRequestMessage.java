@@ -4,7 +4,7 @@ package tv.camment.cammentsdk.aws.messages;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MembershipRequestMessage extends BaseMessage {
+public final class MembershipRequestMessage extends BaseMessage {
 
     public Body body;
 

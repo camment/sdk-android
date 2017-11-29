@@ -32,7 +32,10 @@ public enum MessageType {
 
     SHARE(8), //internal
 
-    LOGIN_CONFIRMATION(9); //internal
+    LOGIN_CONFIRMATION(9), //internal
+
+    @SerializedName("user-removed")
+    USER_REMOVED(10);
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

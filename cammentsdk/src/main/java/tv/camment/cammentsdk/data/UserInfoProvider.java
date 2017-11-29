@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.camment.clientsdk.model.Userinfo;
 
@@ -71,6 +72,16 @@ public final class UserInfoProvider {
     static void deleteUserInfos() {
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .delete(DataContract.UserInfo.CONTENT_URI, null, null);
+    }
+
+    public static void deleteUserInfoByIdentityId(String identityId, String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserInfo.userCognitoIdentityId + "=? AND " + DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {identityId, groupUuid};
+
+        int delete = cr.delete(DataContract.UserInfo.CONTENT_URI, where, selectionArgs);
+        Log.d("deleteUserInfoById", identityId + " - " + (delete > 0));
     }
 
     public static List<CUserInfo> listFromCursor(Cursor cursor) {

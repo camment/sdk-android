@@ -9,9 +9,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.camment.clientsdk.DevcammentClient;
-import com.camment.clientsdk.model.AcceptInvitationRequest;
 import com.camment.clientsdk.model.Deeplink;
 import com.camment.clientsdk.model.ShowUuid;
+import com.camment.clientsdk.model.Usergroup;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -25,7 +25,9 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CUserGroup;
+import tv.camment.cammentsdk.data.model.CUserInfo;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.views.CammentDialog;
@@ -81,41 +83,6 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "sendInvitationForDeeplink", exception);
-            }
-        };
-    }
-
-    public void acceptInvitation(final String groupUuid, final String key) {
-        submitBgTask(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                AcceptInvitationRequest acceptInvitationRequest = new AcceptInvitationRequest();
-                acceptInvitationRequest.setInvitationKey(key);
-                devcammentClient.usergroupsGroupUuidInvitationsPut(groupUuid, acceptInvitationRequest);
-
-                return new Object();
-            }
-        }, acceptInvitationCallback(groupUuid));
-    }
-
-    private CammentCallback<Object> acceptInvitationCallback(final String groupUuid) {
-        return new CammentCallback<Object>() {
-            @Override
-            public void onSuccess(Object result) {
-
-            }
-
-            @Override
-            public void onException(Exception exception) {
-                Log.e("onException", "acceptInvitation", exception);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
-                                CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_invitation_error),
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
             }
         };
     }
@@ -230,15 +197,27 @@ public final class InvitationApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Object result) {
                 if (accepted) {
-                    DataManager.getInstance().clearDataForUserGroupChange();
+                    Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
 
-                    CUserGroup userGroupByUuid = UserGroupProvider.getUserGroupByUuid(groupUuid); //TODO what if not in db
+                    if (activeUserGroup == null
+                            || !TextUtils.equals(activeUserGroup.getUuid(), groupUuid)) {
 
-                    if (userGroupByUuid != null) {
-                        UserGroupProvider.insertUserGroup(userGroupByUuid);
+                        DataManager.getInstance().clearDataForUserGroupChange();
 
-                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                        CUserGroup userGroupByUuid = UserGroupProvider.getUserGroupByUuid(groupUuid); //TODO what if not in db
 
+                        if (userGroupByUuid != null) {
+                            UserGroupProvider.setActive(userGroupByUuid.getUuid(), true);
+
+                            ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                        } else {
+                            ApiManager.getInstance().getGroupApi().getUserGroupByUuidAndSetAsActive(groupUuid);
+                        }
+                    }
+
+                    String activeShowUuid = GeneralPreferences.getInstance().getActiveShowUuid();
+
+                    if (!TextUtils.equals(activeShowUuid, showUuid)) {
                         final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
                         if (onDeeplinkOpenShowListener != null
                                 && !TextUtils.isEmpty(showUuid)) {
@@ -254,4 +233,36 @@ public final class InvitationApi extends CammentAsyncClient {
             }
         };
     }
+
+    public void removeUserFromGroup(final CUserInfo userInfo) {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                devcammentClient.usergroupsGroupUuidUsersUserIdDelete(userInfo.getUserCognitoIdentityId(), userInfo.getGroupUuid());
+                return new Object();
+            }
+        }, removeUserFromGroupCallback(userInfo));
+    }
+
+    private CammentCallback<Object> removeUserFromGroupCallback(final CUserInfo userInfo) {
+        return new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("onSuccess", "removeUserFromGroup");
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "removeUserFromGroup", exception);
+
+                Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                        String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_fail_to_remove_from_group), userInfo.getName()),
+                        Toast.LENGTH_LONG)
+                        .show();
+
+                UserInfoProvider.insertUserInfo(userInfo, userInfo.getGroupUuid());
+            }
+        };
+    }
+
 }

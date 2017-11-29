@@ -47,7 +47,7 @@ public final class CCamment extends Camment {
         if (o == this)
             return true;
 
-        if (o == null || o.getClass() != getClass())a
+        if (o == null || o.getClass() != getClass())
             return false;
 
         CCamment c = (CCamment) o;

@@ -145,7 +145,7 @@ public final class GroupApi extends CammentAsyncClient {
         };
     }
 
-    public void getUserGroupByUuid(final String uuid) {
+    public void getUserGroupByUuidAndSetAsActive(final String uuid) {
         submitTask(new Callable<Usergroup>() {
             @Override
             public Usergroup call() throws Exception {
@@ -159,6 +159,9 @@ public final class GroupApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Usergroup usergroup) {
                 Log.d("onSuccess", "getUserGroupByUuid");
+                UserGroupProvider.insertUserGroup(usergroup);
+
+                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
             }
 
             @Override

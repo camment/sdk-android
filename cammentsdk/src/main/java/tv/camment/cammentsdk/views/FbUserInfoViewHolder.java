@@ -5,6 +5,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,12 +23,27 @@ final class FbUserInfoViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView ivAvatar;
     private TextView tvName;
+    private ImageButton ibRemove;
 
-    FbUserInfoViewHolder(final View itemView) {
+    private final UserInfoAdapter.ActionListener actionListener;
+
+    FbUserInfoViewHolder(final View itemView, final UserInfoAdapter.ActionListener actionListener) {
         super(itemView);
+
+        this.actionListener = actionListener;
 
         ivAvatar = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_avatar);
         tvName = (TextView) itemView.findViewById(R.id.cmmsdk_tv_name);
+        ibRemove = (ImageButton) itemView.findViewById(R.id.cmmsdk_ib_remove);
+
+        ibRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (actionListener != null) {
+                    actionListener.onUserRemoveClick(userInfo);
+                }
+            }
+        });
     }
 
     void bindData(CUserInfo userInfo) {

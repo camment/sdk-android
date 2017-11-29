@@ -34,6 +34,7 @@ import tv.camment.cammentsdk.aws.messages.MembershipAcceptedMessage;
 import tv.camment.cammentsdk.aws.messages.MembershipRequestMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
+import tv.camment.cammentsdk.aws.messages.UserRemovedMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -171,6 +172,10 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                                 baseMessage = new Gson().fromJson(message, MembershipAcceptedMessage.class);
                                 handleMessage(baseMessage, identityId);
                                 break;
+                            case USER_REMOVED:
+                                baseMessage = new Gson().fromJson(message, UserRemovedMessage.class);
+                                handleMessage(baseMessage, identityId);
+                                break;
                         }
                     }
                 }
@@ -246,6 +251,12 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         if (isMembershipAcceptedValid((MembershipAcceptedMessage) message)) {
                             handleMembershipAcceptedMessage((MembershipAcceptedMessage) message);
                         }
+                        break;
+                    case USER_REMOVED:
+                        if (isUserRemovedValid((UserRemovedMessage) message)) {
+                            handleUserRemovedMessage((UserRemovedMessage) message, identityId);
+                        }
+                        break;
                 }
             }
         });
@@ -296,6 +307,16 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && !TextUtils.isEmpty(m.body.groupUuid);
     }
 
+    private boolean isUserRemovedValid(UserRemovedMessage m) {
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+
+        return m.body != null
+                && usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && usergroup.getUuid().equals(m.body.groupUuid)
+                && !TextUtils.isEmpty(m.body.userCognitoIdentityId);
+    }
+
     void handleInvitationMessage(BaseMessage message) {
         if (message.type == MessageType.INVITATION
                 && message instanceof InvitationMessage) {
@@ -314,7 +335,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
             UserInfoProvider.insertUserInfo(userinfo, ((NewUserInGroupMessage) message).body.groupUuid);
 
-            ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(((NewUserInGroupMessage) message).body.groupUuid);
+            //ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(((NewUserInGroupMessage) message).body.groupUuid);
         }
     }
 
@@ -395,6 +416,21 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
         ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(message.body.groupUuid);
+    }
+
+    private void handleUserRemovedMessage(UserRemovedMessage message, String identityId) {
+        if (TextUtils.equals(message.body.userCognitoIdentityId, identityId)) {
+            //I've been removed from group / active user group is checked when validating message
+            Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                    R.string.cmmsdk_removed_from_group, Toast.LENGTH_LONG).show();
+
+            DataManager.getInstance().clearDataForUserGroupChange();
+
+            //EventBus.getDefault().post(new RemovedFromGroupEvent()); TODO needed?
+        } else {
+            //somebody has been removed
+            UserInfoProvider.deleteUserInfoByIdentityId(message.body.userCognitoIdentityId, message.body.groupUuid);
+        }
     }
 
     @Override

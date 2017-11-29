@@ -39,7 +39,7 @@ import tv.camment.cammentsdk.helpers.AuthHelper;
 
 
 public final class GroupInfoFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>, UserInfoAdapter.ActionListener {
 
     private RecyclerView rvGroups;
     private UserInfoAdapter adapter;
@@ -85,7 +85,7 @@ public final class GroupInfoFragment extends Fragment
     }
 
     private void setupRecyclerView() {
-        adapter = new UserInfoAdapter();
+        adapter = new UserInfoAdapter(this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvGroups.setLayoutManager(layoutManager);
@@ -186,6 +186,13 @@ public final class GroupInfoFragment extends Fragment
             getLoaderManager().destroyLoader(1);
             getLoaderManager().initLoader(1, null, this);
         }
+    }
+
+    @Override
+    public void onUserRemoveClick(CUserInfo userInfo) {
+        UserInfoProvider.deleteUserInfoByIdentityId(userInfo.getUserCognitoIdentityId(), userInfo.getGroupUuid());
+
+        ApiManager.getInstance().getInvitationApi().removeUserFromGroup(userInfo);
     }
 
 }

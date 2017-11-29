@@ -18,9 +18,12 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
 
     private static final int USER_INFO = 0;
 
+    private final ActionListener actionListener;
+
     private List<CUserInfo> userInfos;
 
-    UserInfoAdapter() {
+    UserInfoAdapter(ActionListener actionListener) {
+        this.actionListener = actionListener;
         setHasStableIds(true);
     }
 
@@ -57,7 +60,7 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case USER_INFO:
                 itemView = inflater.inflate(R.layout.cmmsdk_drawer_user_info_item, parent, false);
-                return new FbUserInfoViewHolder(itemView);
+                return new FbUserInfoViewHolder(itemView, actionListener);
         }
         throw new IllegalArgumentException("unsupported viewholder type");
     }
@@ -78,6 +81,12 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
 
     private int getUserInfoListSize() {
         return userInfos != null ? userInfos.size() : 0;
+    }
+
+    interface ActionListener {
+
+        void onUserRemoveClick(CUserInfo userInfo);
+
     }
 
 }

@@ -67,4 +67,7 @@
     <string name="cmmsdk_login_fb_title">You\'re not logged in</string>
     <string name="cmmsdk_login_fb_msg">Login with your Facebook account?</string>
 
+    <string name="cmmsdk_removed_from_group">You\'ve just been removed from the group!</string>
+    <string name="cmmsdk_fail_to_remove_from_group">Failed to remove %s from group</string>
+
 </resources>

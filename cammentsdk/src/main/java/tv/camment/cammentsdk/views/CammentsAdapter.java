@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.CCammentComparator;
 
@@ -120,7 +121,7 @@ final class CammentsAdapter extends RecyclerView.Adapter {
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         if (holder instanceof CammentViewHolder) {
-            ((CammentViewHolder) holder).setItemViewScale(0.5f);
+            ((CammentViewHolder) holder).setItemViewScale(SDKConfig.CAMMENT_SMALL);
             ((CammentViewHolder) holder).stopCammentIfPlaying();
         }
     }

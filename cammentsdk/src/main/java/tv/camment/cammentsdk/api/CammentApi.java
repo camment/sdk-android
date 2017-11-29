@@ -50,6 +50,7 @@ public final class CammentApi extends CammentAsyncClient {
                 Log.d("onSuccess", "createUserGroupCamment " + camment.getUserGroupUuid());
 
                 CammentProvider.insertCamment(new CCamment(camment));
+                CammentProvider.setCammentSent(camment.getUuid());
             }
 
             @Override

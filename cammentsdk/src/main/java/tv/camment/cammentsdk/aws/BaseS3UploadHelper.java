@@ -174,6 +174,12 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
     }
 
     void preCacheFile(final CCamment camment, final boolean fullCache) {
+        if (!TextUtils.isEmpty(camment.getUrl())
+                && !camment.getUrl().startsWith("http")) {
+            CammentProvider.insertCamment(camment); //don't cache as it's local file
+            return;
+        }
+
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {

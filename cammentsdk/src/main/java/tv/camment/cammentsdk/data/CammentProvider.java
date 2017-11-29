@@ -33,6 +33,8 @@ public final class CammentProvider {
             DataContract.Camment.recorded,
             DataContract.Camment.deleted,
             DataContract.Camment.seen,
+            DataContract.Camment.sent,
+            DataContract.Camment.received,
             DataContract.Camment.timestamp};
 
     public static void insertCamment(CCamment camment) {
@@ -58,10 +60,13 @@ public final class CammentProvider {
         cv.put(DataContract.Camment.recorded, camment.isRecorded() ? 1 : 0);
 
         int deleted = cammentByUuid == null ? (camment.isDeleted() ? 1 : 0) : (cammentByUuid.isDeleted() ? 1 : 0);
-        int seen = cammentByUuid == null ? (camment.isSeen() ? 1 : 0) : (cammentByUuid.isSeen() ? 1 : 0);
-
         cv.put(DataContract.Camment.deleted, deleted);
+
+        int seen = cammentByUuid == null ? (camment.isSeen() ? 1 : 0) : (cammentByUuid.isSeen() ? 1 : 0);
         cv.put(DataContract.Camment.seen, seen);
+
+        int sent = cammentByUuid == null ? (camment.isSent() ? 1 : 0) : (cammentByUuid.isSent() ? 1 : 0);
+        cv.put(DataContract.Camment.sent, sent);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
@@ -90,6 +95,8 @@ public final class CammentProvider {
 
             final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
             int deleted = cammentByUuid == null ? 0 : (cammentByUuid.isDeleted() ? 1 : 0);
+            cv.put(DataContract.Camment.deleted, deleted);
+
             int seen = cammentByUuid == null ? 0 : (cammentByUuid.isSeen() ? 1 : 0);
 
             String identityId = IdentityPreferences.getInstance().getIdentityId();
@@ -98,9 +105,15 @@ public final class CammentProvider {
                     && TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
                 seen = 1;
             }
-
-            cv.put(DataContract.Camment.deleted, deleted);
             cv.put(DataContract.Camment.seen, seen);
+
+            int sent = cammentByUuid == null ? 0 : (cammentByUuid.isSent() ? 1 : 0);
+            if (identityId != null
+                    && camment.getUserCognitoIdentityId() != null
+                    && !TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
+                sent = 0;
+            }
+            cv.put(DataContract.Camment.sent, sent);
 
             values.add(cv);
             i--;
@@ -149,6 +162,32 @@ public final class CammentProvider {
 
         int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
         Log.d("setCammentSeen", uuid + " - " + (update > 0));
+    }
+
+    public static void setCammentSent(String uuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {uuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.Camment.sent, true);
+
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setCammentSent", uuid + " - " + (update > 0));
+    }
+
+    public static void setCammentReceived(String uuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {uuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.Camment.received, true);
+
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setCammentReceived", uuid + " - " + (update > 0));
     }
 
     public static CCamment getCammentByUuid(String uuid) {
@@ -267,6 +306,8 @@ public final class CammentProvider {
         camment.setRecorded(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.recorded)) == 1);
         camment.setDeleted(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.deleted)) == 1);
         camment.setSeen(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.seen)) == 1);
+        camment.setSent(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.sent)) == 1);
+        camment.setReceived(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.received)) == 1);
 
         return camment;
     }

@@ -94,7 +94,7 @@ final class GLDrawer2D {
      * draw specific texture with specific texture matrix
      *
      * @param tex_id     texture ID
-     * @param tex_matrix texture matrix、if this is null, the last one use(we don't check size of this array and needs at least 16 of float)
+     * @param tex_matrix texture matrix、if this is null, the last one use(we don't cmmsdk_check size of this array and needs at least 16 of float)
      */
     void draw(final int tex_id, final float[] tex_matrix) {
         GLES20.glUseProgram(hProgram);

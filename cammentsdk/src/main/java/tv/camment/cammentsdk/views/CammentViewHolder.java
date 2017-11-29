@@ -15,10 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.camment.clientsdk.model.Camment;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
@@ -31,33 +31,39 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
     private final CammentsAdapter.ActionListener actionListener;
     private CCamment camment;
 
+    private SquareFrameLayout sflContainer;
+
     private ImageView ivThumbnail;
     private TextureView textureView;
 
-    private LinearLayout llSeen;
+    private ImageView ivCheck;
 
-    private boolean cammentClicked;
+    private LinearLayout llSeen;
 
     CammentViewHolder(final View itemView, final CammentsAdapter.ActionListener actionListener) {
         super(itemView);
 
         this.actionListener = actionListener;
 
-        itemView.setPivotX(0);
-        itemView.setPivotY(0);
+        sflContainer = (SquareFrameLayout) itemView.findViewById(R.id.cmmsdk_sfl_container);
+
+        sflContainer.setPivotX(0);
+        sflContainer.setPivotY(0);
 
         ivThumbnail = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_thumbnail);
 
+        ivCheck = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_check);
+
         llSeen = (LinearLayout) itemView.findViewById(R.id.cmmsdk_ll_seen);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
+        sflContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleOnItemClick();
             }
         });
 
-        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        sflContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 final String cognitoId = IdentityPreferences.getInstance().getIdentityId();
@@ -82,43 +88,38 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        setItemViewScale(0.5f);
+        setItemViewScale(SDKConfig.CAMMENT_SMALL);
     }
 
     private void handleOnItemClick() {
         if (camment != null && actionListener != null) {
-            cammentClicked = true;
-
             if (!camment.isSeen()) {
                 CammentProvider.setCammentSeen(camment.getUuid());
             }
             llSeen.setVisibility(View.GONE);
 
-            if (getItemViewScale() == 0.5f) {
+            if (getItemViewScale() == SDKConfig.CAMMENT_SMALL) {
                 textureView = new SquareTextureView(itemView.getContext());
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
                 int dp2 = CommonUtils.dpToPx(CammentSDK.getInstance().getApplicationContext(), 2);
                 params.setMargins(dp2, dp2, dp2, dp2);
-                ((SquareFrameLayout) itemView).addView(textureView, 1, params);
+                sflContainer.addView(textureView, 1, params);
             }
             actionListener.onCammentClick(this, camment, textureView);
         }
     }
 
     void setItemViewScale(float scale) {
-        if (itemView instanceof SquareFrameLayout) {
-            if (getItemViewScale() != scale) {
-                ((SquareFrameLayout) itemView).setCustomScale(scale);
-                if (scale == 0.5f) {
-                    setThumbnailVisibility(View.VISIBLE);
-                }
-                if (textureView != null
-                        && scale == 0.5f) {
-                    ((SquareFrameLayout) itemView).removeView(textureView);
-                }
+        if (getItemViewScale() != scale) {
+            sflContainer.setCustomScale(scale);
+            if (scale == SDKConfig.CAMMENT_SMALL) {
+                setThumbnailVisibility(View.VISIBLE);
             }
-            cammentClicked = false;
+            if (textureView != null
+                    && scale == SDKConfig.CAMMENT_SMALL) {
+                sflContainer.removeView(textureView);
+            }
         }
     }
 
@@ -128,15 +129,12 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    void setThumbnailVisibility(int visibility) {
+    private void setThumbnailVisibility(int visibility) {
         ivThumbnail.setVisibility(visibility);
     }
 
     float getItemViewScale() {
-        if (itemView instanceof SquareFrameLayout) {
-            return ((SquareFrameLayout) itemView).getCustomScale();
-        }
-        return 1.0f;
+        return sflContainer.getCustomScale();
     }
 
     void bindData(CCamment camment) {
@@ -145,7 +143,10 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
 
         this.camment = camment;
 
-        if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
+        if (camment.getThumbnail() != null
+                && camment.getThumbnail().startsWith("http")) {
+            loadThumbnailFromServer();
+        } else {
             Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(FileUtils.getInstance()
                     .getUploadCammentPath(camment.getUuid()), MediaStore.Video.Thumbnails.MINI_KIND);
             if (bitmap != null) {
@@ -156,11 +157,15 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
                 ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                 ivThumbnail.setColorFilter(filter);
             }
-        } else {
-            loadThumbnailFromServer();
         }
 
         llSeen.setVisibility(camment.isSeen() ? View.GONE : View.VISIBLE);
+
+        if (camment.isSent()) {
+            ivCheck.setImageResource(R.drawable.cmmsdk_check);
+        }
+        ivCheck.setVisibility(camment.isSent() ? View.VISIBLE : View.GONE);
+
     }
 
     private void loadThumbnailFromServer() {

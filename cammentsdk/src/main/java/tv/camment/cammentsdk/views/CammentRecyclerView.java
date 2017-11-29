@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import tv.camment.cammentsdk.SDKConfig;
+
 
 public final class CammentRecyclerView extends RecyclerView {
 
@@ -32,7 +34,7 @@ public final class CammentRecyclerView extends RecyclerView {
         for (int i = 0, count = getChildCount(); i < count; i++) {
             RecyclerView.ViewHolder holder = getChildViewHolder(getChildAt(i));
             if (holder != null && holder instanceof CammentViewHolder) {
-                ((CammentViewHolder) holder).setItemViewScale(0.5f);
+                ((CammentViewHolder) holder).setItemViewScale(SDKConfig.CAMMENT_SMALL);
             }
         }
     }

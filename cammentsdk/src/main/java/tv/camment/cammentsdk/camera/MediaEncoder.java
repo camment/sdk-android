@@ -212,7 +212,7 @@ abstract class MediaEncoder implements Runnable {
     void signalEndOfInputStream() {
         // signalEndOfInputStream is only avairable for video encoding with surface
         // and equivalent sending a empty buffer with BUFFER_FLAG_END_OF_STREAM flag.
-//		mMediaCodec.signalEndOfInputStream();	// API >= 18 //TODO check
+//		mMediaCodec.signalEndOfInputStream();	// API >= 18 //TODO cmmsdk_check
         encode(null, 0, getPTSUs());
     }
 

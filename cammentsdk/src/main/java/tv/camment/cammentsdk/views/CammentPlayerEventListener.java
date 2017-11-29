@@ -10,6 +10,7 @@ import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
 import static android.view.View.GONE;
@@ -59,7 +60,7 @@ final class CammentPlayerEventListener implements ExoPlayer.EventListener {
                 if (cammentAudioListener != null) {
                     cammentAudioListener.onCammentPlaybackEnded();
                 }
-                cammentViewHolder.setItemViewScale(0.5f);
+                cammentViewHolder.setItemViewScale(SDKConfig.CAMMENT_SMALL);
                 if (onResetLastCammentPlayedListener != null) {
                     onResetLastCammentPlayedListener.resetLastCammentPlayed();
                 }

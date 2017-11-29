@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import tv.camment.cammentsdk.SDKConfig;
+
 public final class SquareFrameLayout extends FrameLayout {
 
-    private float customScale = 0.5f;
+    private float customScale = SDKConfig.CAMMENT_SMALL;
 
     public SquareFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);

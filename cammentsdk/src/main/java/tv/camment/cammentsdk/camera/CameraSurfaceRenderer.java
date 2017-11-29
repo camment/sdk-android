@@ -42,7 +42,7 @@ final class CameraSurfaceRenderer implements
     public void onSurfaceCreated(GL10 unused, EGLConfig eglConfig) {
         final String extensions = GLES20.glGetString(GLES20.GL_EXTENSIONS);
         if (!extensions.contains("OES_EGL_image_external")) {
-            throw new RuntimeException("This system does not support OES_EGL_image_external."); //TODO check
+            throw new RuntimeException("This system does not support OES_EGL_image_external."); //TODO cmmsdk_check
         }
 
         if (hTex > 0) {

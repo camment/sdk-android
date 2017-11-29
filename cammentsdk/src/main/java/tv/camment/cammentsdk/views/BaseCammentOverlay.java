@@ -52,6 +52,7 @@ import java.util.concurrent.Executors;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.camera.CameraGLView;
@@ -289,7 +290,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         if (!camment.getUuid().equals(lastVideoCammentUuid)) {
-            cammentViewHolder.setItemViewScale(cammentViewHolder.getItemViewScale() == 0.5f ? 1.0f : 0.5f);
+            cammentViewHolder.setItemViewScale(cammentViewHolder.getItemViewScale() == SDKConfig.CAMMENT_SMALL ? SDKConfig.CAMMENT_BIG : SDKConfig.CAMMENT_SMALL);
 
             exoEventListener = new CammentPlayerEventListener(cammentAudioListener,
                     cammentViewHolder, this);

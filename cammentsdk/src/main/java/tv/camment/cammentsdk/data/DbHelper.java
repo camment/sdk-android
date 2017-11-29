@@ -66,6 +66,8 @@ final class DbHelper extends SQLiteOpenHelper {
                 .columnInt(DataContract.Camment.recorded)
                 .columnInt(DataContract.Camment.deleted)
                 .columnInt(DataContract.Camment.seen)
+                .columnInt(DataContract.Camment.sent)
+                .columnInt(DataContract.Camment.received)
                 .build();
     }
 

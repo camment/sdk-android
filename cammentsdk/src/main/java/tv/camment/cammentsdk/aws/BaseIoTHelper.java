@@ -373,7 +373,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         CCamment cammentByUuid = CammentProvider.getCammentByUuid(message.body.uuid);
         if (cammentByUuid != null
                 && cammentByUuid.isDeleted()) {
-            CammentProvider.deleteCammentByUuid(message.body.uuid);
             return;
         }
 
@@ -395,7 +394,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private void handleCammentDeletedMessage(CammentMessage message) {
-        CammentProvider.deleteCammentByUuid(message.body.uuid);
+        CammentProvider.setCammentDeleted(message.body.uuid);
     }
 
     private void handleMembershipAcceptedMessage(final MembershipAcceptedMessage message) {

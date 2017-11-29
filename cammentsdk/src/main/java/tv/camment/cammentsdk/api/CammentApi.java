@@ -122,8 +122,8 @@ public final class CammentApi extends CammentAsyncClient {
                 Log.e("onException", "deleteUserGroupCamment", exception);
 
                 if (exception instanceof ApiClientException
-                        && ((ApiClientException) exception).getStatusCode() == 404) {
-                    CammentProvider.deleteCammentByUuid(camment.getUuid());
+                        && (((ApiClientException) exception).getStatusCode() == 404 || ((ApiClientException) exception).getStatusCode() == 502)) {
+                    CammentProvider.setCammentDeleted(camment.getUuid());
                 }
             }
         };

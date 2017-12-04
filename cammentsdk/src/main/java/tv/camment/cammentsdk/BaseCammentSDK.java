@@ -85,7 +85,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
             ((Application) context).registerActivityLifecycleCallbacks(this);
 
-            DataManager.getInstance().clearDataForUserGroupChange();
+            DataManager.getInstance().clearDataForLogOut();
 
             ioTHelper = AWSManager.getInstance().getIoTHelper();
 

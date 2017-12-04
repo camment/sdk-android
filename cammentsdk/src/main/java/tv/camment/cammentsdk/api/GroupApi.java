@@ -1,5 +1,7 @@
 package tv.camment.cammentsdk.api;
 
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,12 +24,15 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
+import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.views.CammentDialog;
 
 
 public final class GroupApi extends CammentAsyncClient {
@@ -202,6 +207,14 @@ public final class GroupApi extends CammentAsyncClient {
                         if (onDeeplinkOpenShowListener != null
                                 && !TextUtils.isEmpty(showUuid)) {
                             onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
+                        }
+
+                        int connectedUsersCountByGroupUuid = UserInfoProvider.getConnectedUsersCountByGroupUuid(((NewUserInGroupMessage) message).body.groupUuid);
+                        if (connectedUsersCountByGroupUuid == 1
+                                && TextUtils.equals(((NewUserInGroupMessage) message).body.groupOwnerCognitoIdentityId, IdentityPreferences.getInstance().getIdentityId())) {
+                            message.type = MessageType.FIRST_USER_JOINED;
+                            CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                            cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString());
                         }
                     }
 

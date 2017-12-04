@@ -21,13 +21,16 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
     private final ActionListener actionListener;
 
     private List<CUserInfo> userInfos;
+    private boolean isMyGroup;
 
     UserInfoAdapter(ActionListener actionListener) {
         this.actionListener = actionListener;
         setHasStableIds(true);
     }
 
-    public void setData(List<CUserInfo> userInfos) {
+    public void setData(List<CUserInfo> userInfos, boolean isMyGroup) {
+        this.isMyGroup = isMyGroup;
+
         if (userInfos != null) {
 
             Set<CUserInfo> userInfoSet = new HashSet<>();
@@ -69,7 +72,7 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case USER_INFO:
-                ((FbUserInfoViewHolder) holder).bindData(userInfos.get(position));
+                ((FbUserInfoViewHolder) holder).bindData(userInfos.get(position), isMyGroup);
                 break;
         }
     }

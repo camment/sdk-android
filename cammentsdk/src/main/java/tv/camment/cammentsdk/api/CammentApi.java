@@ -32,24 +32,23 @@ public final class CammentApi extends CammentAsyncClient {
     }
 
     public void createUserGroupCamment(final Camment camment) {
-        submitBgTask(new Callable<Camment>() {
+        submitBgTask(new Callable<Object>() {
             @Override
-            public Camment call() throws Exception {
+            public Object call() throws Exception {
                 CammentInRequest cammentInRequest = new CammentInRequest();
                 cammentInRequest.setUuid(camment.getUuid());
-                return devcammentClient.usergroupsGroupUuidCammentsPost(camment.getUserGroupUuid(), cammentInRequest);
+                devcammentClient.usergroupsGroupUuidCammentsPost(camment.getUserGroupUuid(), cammentInRequest);
+                return new Object();
             }
-        }, createUserGroupCammentCallback());
+        }, createUserGroupCammentCallback(camment));
     }
 
-    private CammentCallback<Camment> createUserGroupCammentCallback() {
-        return new CammentCallback<Camment>() {
+    private CammentCallback<Object> createUserGroupCammentCallback(final Camment camment) {
+        return new CammentCallback<Object>() {
             @Override
-            public void onSuccess(Camment camment) {
+            public void onSuccess(Object result) {
                 Log.d("onSuccess", "createUserGroupCamment");
-                Log.d("onSuccess", "createUserGroupCamment " + camment.getUserGroupUuid());
 
-                CammentProvider.insertCamment(new CCamment(camment));
                 CammentProvider.setCammentSent(camment.getUuid());
             }
 
@@ -128,4 +127,29 @@ public final class CammentApi extends CammentAsyncClient {
             }
         };
     }
+
+    public void markCammentAsReceived(final Camment camment) {
+        submitBgTask(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                devcammentClient.cammentsCammentUuidPost(camment.getUuid());
+                return new Object();
+            }
+        }, markCammentAsReceivedCallback());
+    }
+
+    private CammentCallback<Object> markCammentAsReceivedCallback() {
+        return new CammentCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                Log.d("onSuccess", "markCammentAsReceived");
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "markCammentAsReceived", exception);
+            }
+        };
+    }
+
 }

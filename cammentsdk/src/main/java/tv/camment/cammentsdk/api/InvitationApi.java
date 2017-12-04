@@ -215,14 +215,10 @@ public final class InvitationApi extends CammentAsyncClient {
                         }
                     }
 
-                    String activeShowUuid = GeneralPreferences.getInstance().getActiveShowUuid();
-
-                    if (!TextUtils.equals(activeShowUuid, showUuid)) {
-                        final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
-                        if (onDeeplinkOpenShowListener != null
-                                && !TextUtils.isEmpty(showUuid)) {
-                            onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
-                        }
+                    final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
+                    if (onDeeplinkOpenShowListener != null
+                            && !TextUtils.isEmpty(showUuid)) {
+                        onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
                     }
                 }
             }

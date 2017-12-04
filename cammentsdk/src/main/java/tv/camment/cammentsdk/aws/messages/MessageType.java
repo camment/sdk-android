@@ -35,7 +35,16 @@ public enum MessageType {
     LOGIN_CONFIRMATION(9), //internal
 
     @SerializedName("user-removed")
-    USER_REMOVED(10);
+    USER_REMOVED(10),
+
+    @SerializedName("camment-delivered")
+    CAMMENT_DELIVERED(11),
+
+    FIRST_USER_JOINED(12), //internal
+
+    REMOVAL_CONFIRMATION(13), //internal
+
+    KICKED_OUT(14); //internal
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

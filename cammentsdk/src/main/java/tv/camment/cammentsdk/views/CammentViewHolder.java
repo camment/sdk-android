@@ -7,6 +7,7 @@ import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.TextureView;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
@@ -143,10 +145,7 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
 
         this.camment = camment;
 
-        if (camment.getThumbnail() != null
-                && camment.getThumbnail().startsWith("http")) {
-            loadThumbnailFromServer();
-        } else {
+        if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
             Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(FileUtils.getInstance()
                     .getUploadCammentPath(camment.getUuid()), MediaStore.Video.Thumbnails.MINI_KIND);
             if (bitmap != null) {
@@ -157,6 +156,8 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
                 ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
                 ivThumbnail.setColorFilter(filter);
             }
+        } else {
+            loadThumbnailFromServer();
         }
 
         llSeen.setVisibility(camment.isSeen() ? View.GONE : View.VISIBLE);
@@ -164,7 +165,10 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         if (camment.isSent()) {
             ivCheck.setImageResource(R.drawable.cmmsdk_check);
         }
-        ivCheck.setVisibility(camment.isSent() ? View.VISIBLE : View.GONE);
+        if (camment.isReceived()) {
+            ivCheck.setImageResource(R.drawable.cmmsdk_checkdouble);
+        }
+        ivCheck.setVisibility(camment.isSent() || camment.isReceived() ? View.VISIBLE : View.GONE);
 
     }
 

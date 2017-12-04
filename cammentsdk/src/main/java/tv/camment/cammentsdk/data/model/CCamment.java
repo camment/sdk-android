@@ -39,7 +39,8 @@ public final class CCamment extends Camment {
     public int hashCode() {
         return getUuid().hashCode()
                 + (TextUtils.isEmpty(getThumbnail()) ? 0 : getThumbnail().hashCode())
-                + (isSent() ? 1 : 0);
+                + (isSent() ? 1 : 0)
+                + (isReceived() ? 1 : 0);
     }
 
     @Override

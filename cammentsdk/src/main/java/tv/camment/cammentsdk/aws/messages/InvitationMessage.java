@@ -19,6 +19,7 @@ public final class InvitationMessage extends BaseMessage {
         public String key;
         public boolean confirmed;
         public String showUuid;
+        public String groupOwnerCognitoIdentityId;
         public InvitingUser invitingUser;
 
         public Body() {
@@ -32,6 +33,7 @@ public final class InvitationMessage extends BaseMessage {
             key = in.readString();
             confirmed = in.readByte() != 0;
             showUuid = in.readString();
+            groupOwnerCognitoIdentityId = in.readString();
             invitingUser = in.readParcelable(InvitingUser.class.getClassLoader());
         }
 
@@ -60,6 +62,7 @@ public final class InvitationMessage extends BaseMessage {
             parcel.writeString(key);
             parcel.writeByte((byte) (confirmed ? 1 : 0));
             parcel.writeString(showUuid);
+            parcel.writeString(groupOwnerCognitoIdentityId);
             parcel.writeParcelable(invitingUser, i);
         }
     }

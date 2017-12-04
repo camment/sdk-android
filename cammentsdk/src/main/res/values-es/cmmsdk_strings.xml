@@ -62,6 +62,13 @@
     <string name="cmmsdk_login_fb_title">No has iniciado sesión</string>
     <string name="cmmsdk_login_fb_msg">Quieres iniciar la sesión con tu cuenta de Facebook?</string>
 
-    <string name="cmmsdk_removed_from_group">You\'ve just been removed from the group!</string>
+    <string name="cmmsdk_removed_from_group_title">You left the group</string>
+    <string name="cmmsdk_removed_from_group_msg">Group owner has removed you from the current conversation</string>
+    <string name="cmmsdk_fail_to_remove_from_group">Failed to remove %s from group</string>
+    <string name="cmmsdk_remove_confirmation_title">User removal</string>
+    <string name="cmmsdk_remove_confirmation_msg">Do you want to remove %s from the group?</string>
+
+    <string name="cmmsdk_user_has_joined_title">%s has joined</string>
+    <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the discussion. You can always swipe → right to see who else is in the group and remove unwanted people</string>
 
 </resources>

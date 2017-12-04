@@ -70,6 +70,13 @@ public final class UserGroupProvider {
             cv = new ContentValues();
 
             cv.put(DataContract.UserGroup.uuid, usergroup.getGroupUuid());
+
+            final CUserGroup groupByUuid = getUserGroupByUuid(usergroup.getGroupUuid());
+
+            String identityId = groupByUuid == null ? null : groupByUuid.getUserCognitoIdentityId();
+            cv.put(DataContract.UserGroup.userCognitoIdentityId, identityId);
+
+
             cv.put(DataContract.UserGroup.timestamp, DateTimeUtils.getTimestampFromIsoDateString(usergroup.getTimestamp()));
             cv.put(DataContract.UserGroup.active, TextUtils.equals(activeUserGroupUuid, usergroup.getGroupUuid()) ? 1 : 0);
 

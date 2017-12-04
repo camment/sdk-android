@@ -59,7 +59,7 @@ public final class FileUtils {
         String filePath = UPLOADS_DIR + uuid + ".mp4";
 
         File file = new File(filePath);
-        if (file.isFile()) {
+        if (file.isFile() && file.exists()) {
             file.delete();
         }
     }
@@ -69,7 +69,7 @@ public final class FileUtils {
         File dir = new File(UPLOADS_DIR);
         if (dir.isDirectory()) {
             for (File file : dir.listFiles()) {
-                if (file.isFile()) {
+                if (file.isFile() && file.exists()) {
                     file.delete();
                 }
             }

@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.helpers;
 
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
@@ -85,7 +86,11 @@ public final class AuthHelper implements CammentDialog.ActionListener {
 
                 CammentDialog cammentDialog = CammentDialog.createInstance(message);
                 cammentDialog.setActionListener(this);
-                cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString()); //TODO what if not appcompat
+
+                Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
+                if (currentActivity instanceof AppCompatActivity) {
+                    cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString()); //TODO what if not appcompat
+                }
             } else {
                 CammentSDK.getInstance().getAppAuthIdentityProvider().logIn(CammentSDK.getInstance().getCurrentActivity());
             }

@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +32,15 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
+import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CUserInfo;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 
 
 public final class GroupInfoFragment extends Fragment
@@ -132,8 +137,11 @@ public final class GroupInfoFragment extends Fragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         handleContainersVisibility();
 
+        String identityId = IdentityPreferences.getInstance().getIdentityId();
+        Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+
         List<CUserInfo> userInfos = UserInfoProvider.listFromCursor(data);
-        adapter.setData(userInfos);
+        adapter.setData(userInfos, activeUserGroup != null && TextUtils.equals(identityId, activeUserGroup.getUserCognitoIdentityId()));
     }
 
     @Override
@@ -179,7 +187,7 @@ public final class GroupInfoFragment extends Fragment
         }
 
         if (adapter != null) {
-            adapter.setData(null);
+            adapter.setData(null, false);
         }
 
         if (getContext() instanceof AppCompatActivity) {
@@ -189,10 +197,32 @@ public final class GroupInfoFragment extends Fragment
     }
 
     @Override
-    public void onUserRemoveClick(CUserInfo userInfo) {
-        UserInfoProvider.deleteUserInfoByIdentityId(userInfo.getUserCognitoIdentityId(), userInfo.getGroupUuid());
+    public void onUserRemoveClick(final CUserInfo userInfo) {
+        UserRemovalMessage message = new UserRemovalMessage();
+        UserRemovalMessage.Body body = new UserRemovalMessage.Body();
+        body.name = userInfo.getName();
+        message.type = MessageType.REMOVAL_CONFIRMATION;
+        message.body = body;
 
-        ApiManager.getInstance().getInvitationApi().removeUserFromGroup(userInfo);
+        CammentDialog cammentDialog = CammentDialog.createInstance(message);
+        cammentDialog.setActionListener(new CammentDialog.ActionListener() {
+            @Override
+            public void onPositiveButtonClick(BaseMessage baseMessage) {
+                if (baseMessage.type == MessageType.REMOVAL_CONFIRMATION) {
+                    UserInfoProvider.deleteUserInfoByIdentityId(userInfo.getUserCognitoIdentityId(), userInfo.getGroupUuid());
+
+                    ApiManager.getInstance().getInvitationApi().removeUserFromGroup(userInfo);
+                }
+            }
+
+            @Override
+            public void onNegativeButtonClick(BaseMessage baseMessage) {
+
+            }
+        });
+
+        cammentDialog.show(getActivity().getSupportFragmentManager(), message.toString());
+
     }
 
 }

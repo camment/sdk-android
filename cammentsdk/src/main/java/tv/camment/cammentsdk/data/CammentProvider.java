@@ -68,6 +68,9 @@ public final class CammentProvider {
         int sent = cammentByUuid == null ? (camment.isSent() ? 1 : 0) : (cammentByUuid.isSent() ? 1 : 0);
         cv.put(DataContract.Camment.sent, sent);
 
+        int received = cammentByUuid == null ? (camment.isReceived() ? 1 : 0) : (cammentByUuid.isReceived() ? 1 : 0);
+        cv.put(DataContract.Camment.received, received);
+
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
     }
@@ -100,20 +103,19 @@ public final class CammentProvider {
             int seen = cammentByUuid == null ? 0 : (cammentByUuid.isSeen() ? 1 : 0);
 
             String identityId = IdentityPreferences.getInstance().getIdentityId();
-            if (identityId != null
-                    && camment.getUserCognitoIdentityId() != null
-                    && TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
+            if (TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
                 seen = 1;
             }
             cv.put(DataContract.Camment.seen, seen);
 
             int sent = cammentByUuid == null ? 0 : (cammentByUuid.isSent() ? 1 : 0);
-            if (identityId != null
-                    && camment.getUserCognitoIdentityId() != null
-                    && !TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
+            if (!TextUtils.equals(identityId, camment.getUserCognitoIdentityId())) {
                 sent = 0;
             }
             cv.put(DataContract.Camment.sent, sent);
+
+            int received = cammentByUuid == null ? 0 : (cammentByUuid.isReceived() ? 1 : 0);
+            cv.put(DataContract.Camment.received, received);
 
             values.add(cv);
             i--;

@@ -14,11 +14,16 @@ public final class NewUserInGroupMessage extends BaseMessage {
 
     public static class Body implements Parcelable {
         public String groupUuid;
-        public User user;
+        public String showUuid;
+        public String groupOwnerCognitoIdentityId;
+        public User joiningUser;
 
-        Body(Parcel in) {
+
+        protected Body(Parcel in) {
             groupUuid = in.readString();
-            user = in.readParcelable(User.class.getClassLoader());
+            showUuid = in.readString();
+            groupOwnerCognitoIdentityId = in.readString();
+            joiningUser = in.readParcelable(User.class.getClassLoader());
         }
 
         public static final Creator<Body> CREATOR = new Creator<Body>() {
@@ -41,21 +46,21 @@ public final class NewUserInGroupMessage extends BaseMessage {
         @Override
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeString(groupUuid);
-            parcel.writeParcelable(user, i);
+            parcel.writeString(showUuid);
+            parcel.writeString(groupOwnerCognitoIdentityId);
+            parcel.writeParcelable(joiningUser, i);
         }
     }
 
     public static class User implements Parcelable {
-        public String facebookId;
-        public String picture;
         public String name;
         public String userCognitoIdentityId;
+        public String picture;
 
         User(Parcel in) {
-            facebookId = in.readString();
-            picture = in.readString();
             name = in.readString();
             userCognitoIdentityId = in.readString();
+            picture = in.readString();
         }
 
         public static final Creator<User> CREATOR = new Creator<User>() {
@@ -77,10 +82,9 @@ public final class NewUserInGroupMessage extends BaseMessage {
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(facebookId);
-            parcel.writeString(picture);
             parcel.writeString(name);
             parcel.writeString(userCognitoIdentityId);
+            parcel.writeString(picture);
         }
     }
 

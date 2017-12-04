@@ -21,6 +21,7 @@ import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MembershipRequestMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
+import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
 
 
 public final class CammentDialog extends DialogFragment {
@@ -128,7 +129,7 @@ public final class CammentDialog extends DialogFragment {
                 tvTitle.setText(R.string.cmmsdk_user_invitation_sent_title);
                 break;
             case NEW_USER_IN_GROUP:
-                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_entered_chat_title), ((NewUserInGroupMessage) message).body.user.name));
+                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_entered_chat_title), ((NewUserInGroupMessage) message).body.joiningUser.name));
                 break;
             case ONBOARDING:
                 tvTitle.setText(R.string.cmmsdk_setup_use_camment_chat);
@@ -141,6 +142,15 @@ public final class CammentDialog extends DialogFragment {
                 break;
             case LOGIN_CONFIRMATION:
                 tvTitle.setText(R.string.cmmsdk_login_fb_title);
+                break;
+            case FIRST_USER_JOINED:
+                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_has_joined_title), ((NewUserInGroupMessage) message).body.joiningUser.name));
+                break;
+            case REMOVAL_CONFIRMATION:
+                tvTitle.setText(R.string.cmmsdk_remove_confirmation_title);
+                break;
+            case KICKED_OUT:
+                tvTitle.setText(R.string.cmmsdk_removed_from_group_title);
                 break;
         }
     }
@@ -168,6 +178,15 @@ public final class CammentDialog extends DialogFragment {
             case LOGIN_CONFIRMATION:
                 tvMessage.setText(R.string.cmmsdk_login_fb_msg);
                 break;
+            case FIRST_USER_JOINED:
+                tvMessage.setText(R.string.cmmsdk_user_has_joined_msg);
+                break;
+            case REMOVAL_CONFIRMATION:
+                tvMessage.setText(String.format(getString(R.string.cmmsdk_remove_confirmation_msg), ((UserRemovalMessage) message).body.name));
+                break;
+            case KICKED_OUT:
+                tvMessage.setText(R.string.cmmsdk_removed_from_group_msg);
+                break;
         }
     }
 
@@ -179,6 +198,8 @@ public final class CammentDialog extends DialogFragment {
                 break;
             case INVITATION_SENT:
             case NEW_USER_IN_GROUP:
+            case FIRST_USER_JOINED:
+            case KICKED_OUT:
                 btnPositive.setText(R.string.cmmsdk_ok);
                 btnNegative.setVisibility(View.GONE);
                 break;
@@ -187,6 +208,7 @@ public final class CammentDialog extends DialogFragment {
                 btnNegative.setText(R.string.cmmsdk_setup_maybe_later);
                 break;
             case MEMBERSHIP_REQUEST:
+            case REMOVAL_CONFIRMATION:
                 btnPositive.setText(R.string.cmmsdk_yes);
                 btnNegative.setText(R.string.cmmsdk_no);
                 break;

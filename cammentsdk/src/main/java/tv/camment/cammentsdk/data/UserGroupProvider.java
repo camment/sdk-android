@@ -92,7 +92,6 @@ public final class UserGroupProvider {
                 .delete(DataContract.UserGroup.CONTENT_URI, null, null);
     }
 
-
     public static CUserGroup getUserGroupByUuid(String groupUuid) {
         ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
 

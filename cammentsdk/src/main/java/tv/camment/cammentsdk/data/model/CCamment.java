@@ -13,7 +13,6 @@ public final class CCamment extends Camment {
     private boolean deleted;
     private boolean seen;
     private boolean sent;
-    private boolean received;
 
     public CCamment() {
 
@@ -32,7 +31,7 @@ public final class CCamment extends Camment {
         setDeleted(false);
         setSeen(false);
         setSent(false);
-        setReceived(false);
+        setDelivered(camment.getDelivered());
     }
 
     @Override
@@ -40,7 +39,7 @@ public final class CCamment extends Camment {
         return getUuid().hashCode()
                 + (TextUtils.isEmpty(getThumbnail()) ? 0 : getThumbnail().hashCode())
                 + (isSent() ? 1 : 0)
-                + (isReceived() ? 1 : 0);
+                + (getDelivered() ? 1 : 0);
     }
 
     @Override
@@ -102,14 +101,6 @@ public final class CCamment extends Camment {
 
     public void setSent(boolean sent) {
         this.sent = sent;
-    }
-
-    public boolean isReceived() {
-        return received;
-    }
-
-    public void setReceived(boolean received) {
-        this.received = received;
     }
 
 }

@@ -68,8 +68,8 @@ public final class CammentProvider {
         int sent = cammentByUuid == null ? (camment.isSent() ? 1 : 0) : (cammentByUuid.isSent() ? 1 : 0);
         cv.put(DataContract.Camment.sent, sent);
 
-        int received = cammentByUuid == null ? (camment.isReceived() ? 1 : 0) : (cammentByUuid.isReceived() ? 1 : 0);
-        cv.put(DataContract.Camment.received, received);
+        //int received = cammentByUuid == null ? (camment.getDelivered() ? 1 : 0) : (cammentByUuid.getDelivered() ? 1 : 0);
+        cv.put(DataContract.Camment.received, camment.getDelivered() );
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
@@ -114,8 +114,8 @@ public final class CammentProvider {
             }
             cv.put(DataContract.Camment.sent, sent);
 
-            int received = cammentByUuid == null ? 0 : (cammentByUuid.isReceived() ? 1 : 0);
-            cv.put(DataContract.Camment.received, received);
+            //int received = cammentByUuid == null ? 0 : (cammentByUuid.getDelivered() ? 1 : 0);
+            cv.put(DataContract.Camment.received, camment.getDelivered());
 
             values.add(cv);
             i--;
@@ -309,7 +309,7 @@ public final class CammentProvider {
         camment.setDeleted(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.deleted)) == 1);
         camment.setSeen(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.seen)) == 1);
         camment.setSent(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.sent)) == 1);
-        camment.setReceived(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.received)) == 1);
+        camment.setDelivered(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.received)) == 1);
 
         return camment;
     }

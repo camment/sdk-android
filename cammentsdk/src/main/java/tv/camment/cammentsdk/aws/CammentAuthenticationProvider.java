@@ -16,6 +16,7 @@ import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
+import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.events.LoginStatusChanged;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
@@ -38,6 +39,7 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
     @Override
     public String refresh() {
         Log.d("AUTH", "refresh");
+        CammentSDK.getInstance().showProgressBar();
 
         setToken(null);
 

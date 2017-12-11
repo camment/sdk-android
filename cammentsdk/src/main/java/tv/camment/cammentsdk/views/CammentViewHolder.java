@@ -165,10 +165,10 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         if (camment.isSent()) {
             ivCheck.setImageResource(R.drawable.cmmsdk_check);
         }
-        if (camment.isReceived()) {
+        if (camment.getDelivered()) {
             ivCheck.setImageResource(R.drawable.cmmsdk_checkdouble);
         }
-        ivCheck.setVisibility(camment.isSent() || camment.isReceived() ? View.VISIBLE : View.GONE);
+        ivCheck.setVisibility(camment.isSent() || camment.getDelivered() ? View.VISIBLE : View.GONE);
 
     }
 

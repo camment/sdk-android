@@ -6,11 +6,11 @@ android {
 
     resourcePrefix 'cmmauth_'
 
-    def RELEASE_VERSION = 1
+    def RELEASE_VERSION = 2
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 1
+    def MINOR_VERSION = 0
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion

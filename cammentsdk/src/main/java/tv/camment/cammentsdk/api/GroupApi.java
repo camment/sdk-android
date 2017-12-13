@@ -99,7 +99,7 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                UserGroupProvider.insertUserGroup(usergroup);
+                UserGroupProvider.insertUserGroup(usergroup, true);
 
                 ApiManager.getInstance().getInvitationApi().getDeeplinkToShare();
             }
@@ -116,7 +116,7 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                UserGroupProvider.insertUserGroup(usergroup);
+                UserGroupProvider.insertUserGroup(usergroup, true);
 
                 ApiManager.getInstance().getInvitationApi().sendInvitation(sendInvitationCallback);
             }
@@ -135,7 +135,7 @@ public final class GroupApi extends CammentAsyncClient {
                 Log.d("onSuccess", "createEmptyUsergroup");
                 Log.d("onSuccess", "createEmptyUsergroup " + usergroup.getUuid());
 
-                UserGroupProvider.insertUserGroup(usergroup);
+                UserGroupProvider.insertUserGroup(usergroup, true);
 
                 camment.setUserGroupUuid(usergroup.getUuid());
 
@@ -165,7 +165,7 @@ public final class GroupApi extends CammentAsyncClient {
             @Override
             public void onSuccess(Usergroup usergroup) {
                 Log.d("onSuccess", "getUserGroupByUuid");
-                UserGroupProvider.insertUserGroup(usergroup);
+                UserGroupProvider.insertUserGroup(usergroup, true);
 
                 ApiManager.getInstance().getCammentApi().getUserGroupCamments();
             }
@@ -190,10 +190,10 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                UserGroupProvider.insertUserGroup(usergroup);
-
                 if (usergroup != null
                         && TextUtils.equals(usergroup.getUserCognitoIdentityId(), IdentityPreferences.getInstance().getIdentityId())) {
+                    UserGroupProvider.insertUserGroup(usergroup, true);
+
                     if (message instanceof InvitationMessage) {
                         final String showUuid = ((InvitationMessage) message).body.showUuid;
                         final OnDeeplinkOpenShowListener onDeeplinkOpenShowListener = CammentSDK.getInstance().getOnDeeplinkOpenShowListener();
@@ -209,13 +209,18 @@ public final class GroupApi extends CammentAsyncClient {
                             onDeeplinkOpenShowListener.onOpenShowWithUuid(showUuid);
                         }
 
-                        int connectedUsersCountByGroupUuid = UserInfoProvider.getConnectedUsersCountByGroupUuid(((NewUserInGroupMessage) message).body.groupUuid);
-                        if (connectedUsersCountByGroupUuid == 1
-                                && TextUtils.equals(((NewUserInGroupMessage) message).body.groupOwnerCognitoIdentityId, IdentityPreferences.getInstance().getIdentityId())) {
-                            message.type = MessageType.FIRST_USER_JOINED;
-                            CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                            cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString());
-                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int connectedUsersCountByGroupUuid = UserInfoProvider.getConnectedUsersCountByGroupUuid(((NewUserInGroupMessage) message).body.groupUuid);
+                                if (connectedUsersCountByGroupUuid == 1
+                                        && TextUtils.equals(((NewUserInGroupMessage) message).body.groupOwnerCognitoIdentityId, IdentityPreferences.getInstance().getIdentityId())) {
+                                    message.type = MessageType.FIRST_USER_JOINED;
+                                    CammentDialog cammentDialog = CammentDialog.createInstance(message);
+                                    cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString());
+                                }
+                            }
+                        }, 1000);
                     }
 
                     UserGroupProvider.setActive(usergroup.getUuid(), true);
@@ -233,6 +238,7 @@ public final class GroupApi extends CammentAsyncClient {
                     return;
                 }
 
+                UserGroupProvider.insertUserGroup(usergroup, false);
                 AWSManager.getInstance().getIoTHelper().showInvitationDialog(message);
             }
 

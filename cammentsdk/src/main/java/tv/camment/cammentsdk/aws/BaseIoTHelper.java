@@ -1,7 +1,6 @@
 package tv.camment.cammentsdk.aws;
 
 import android.app.Activity;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -47,7 +46,6 @@ import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
-import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BaseIoTHelper extends CammentAsyncClient
@@ -454,7 +452,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         Usergroup usergroup = new Usergroup();
         usergroup.setUuid(message.body.groupUuid);
 
-        UserGroupProvider.insertUserGroup(usergroup);
+        UserGroupProvider.insertUserGroup(usergroup, true);
 
         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
         ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(message.body.groupUuid);
@@ -490,6 +488,18 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 MixpanelHelper.getInstance().trackEvent(MixpanelHelper.JOIN_GROUP);
 
                 InvitationMessage invitationMessage = (InvitationMessage) baseMessage;
+
+                Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+                if (activeUserGroup != null) {
+                    UserGroupProvider.setActive(activeUserGroup.getUuid(), false);
+                }
+
+                UserGroupProvider.setActive(invitationMessage.body.groupUuid, true);
+
+                EventBus.getDefault().post(new UserGroupChangeEvent());
+
+                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+
                 ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
                 break;
             case MEMBERSHIP_REQUEST:

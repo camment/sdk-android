@@ -32,12 +32,12 @@ public final class UserGroupProvider {
             DataContract.UserGroup.active,
             DataContract.UserGroup.userCognitoIdentityId};
 
-    public static void insertUserGroup(Usergroup usergroup) {
+    public static void insertUserGroup(Usergroup usergroup, boolean changeGroup) {
         if (usergroup == null)
             return;
 
         Usergroup activeUserGroup = getActiveUserGroup();
-        if (activeUserGroup != null) {
+        if (activeUserGroup != null && changeGroup) {
             setActive(activeUserGroup.getUuid(), false);
         }
 
@@ -49,11 +49,13 @@ public final class UserGroupProvider {
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserGroup.CONTENT_URI, cv);
 
-        EventBus.getDefault().post(new UserGroupChangeEvent());
+        if (changeGroup) {
+            EventBus.getDefault().post(new UserGroupChangeEvent());
 
-        //CammentSDK.getInstance().connectToIoT();
+            //CammentSDK.getInstance().connectToIoT();
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+            ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+        }
     }
 
     public static void insertUserGroups(List<UsergroupListItem> usergroups) {

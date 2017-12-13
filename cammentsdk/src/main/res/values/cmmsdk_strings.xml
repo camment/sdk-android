@@ -7,7 +7,7 @@
     <string name="cmmsdk_permission">In order to use Camment feature you need to grant the access to video and audio recording</string>
 
     <string name="cmmsdk_user_invited_to_chat">%s invited you to a private chat</string>
-    <string name="cmmsdk_anonymous_invited_to_chat">User invited you to a private chat</string>
+    <string name="cmmsdk_anonymous_invited_to_chat">Your friend invited you to a private chat</string>
     <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
 
     <string name="cmmsdk_join">Join</string>

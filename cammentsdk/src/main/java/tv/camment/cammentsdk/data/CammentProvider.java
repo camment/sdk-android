@@ -74,6 +74,9 @@ public final class CammentProvider {
                 && camment.getDelivered() != null) {
             received = camment.getDelivered() ? 1 : 0;
         }
+        if (cammentByUuid != null && cammentByUuid.getDelivered() != null && cammentByUuid.getDelivered()) {
+            received = 1;
+        }
         cv.put(DataContract.Camment.received, received);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()

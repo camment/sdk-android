@@ -27,6 +27,7 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
+import tv.camment.cammentsdk.aws.messages.AdMessage;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.CammentDeliveredMessage;
 import tv.camment.cammentsdk.aws.messages.CammentMessage;
@@ -181,6 +182,10 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                                 baseMessage = new Gson().fromJson(message, CammentDeliveredMessage.class);
                                 handleMessage(baseMessage, identityId);
                                 break;
+                            case AD:
+                                baseMessage = new Gson().fromJson(message, AdMessage.class);
+                                handleMessage(baseMessage, identityId);
+                                break;
                         }
                     }
                 }
@@ -267,6 +272,10 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                             handleCammentDeliveredMessage((CammentDeliveredMessage) message);
                         }
                         break;
+                    case AD:
+                        if (isAdValid((AdMessage) message)) {
+                            handleAdMessage((AdMessage) message);
+                        }
                 }
             }
         });
@@ -336,6 +345,11 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     private boolean isCammentDeliveredValid(CammentDeliveredMessage m) {
         return m.body != null
                 && !TextUtils.isEmpty(m.body.uuid);
+    }
+
+    private boolean isAdValid(AdMessage m) {
+        return m.body != null
+                && !TextUtils.isEmpty(m.body.url);
     }
 
     void handleInvitationMessage(BaseMessage message) {
@@ -479,6 +493,10 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
     private void handleCammentDeliveredMessage(CammentDeliveredMessage message) {
         CammentProvider.setCammentReceived(message.body.uuid);
+    }
+
+    private void handleAdMessage(AdMessage message) {
+        //TODO insert into DB?
     }
 
     @Override

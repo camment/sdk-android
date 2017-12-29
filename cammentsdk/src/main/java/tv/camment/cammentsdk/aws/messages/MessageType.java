@@ -44,7 +44,10 @@ public enum MessageType {
 
     REMOVAL_CONFIRMATION(13), //internal
 
-    KICKED_OUT(14); //internal
+    KICKED_OUT(14), //internal
+
+    @SerializedName("ad")
+    AD(15);
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

@@ -1,9 +1,7 @@
 package tv.camment.cammentdemo;
 
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -25,16 +23,6 @@ public final class CammentPasscodeDialog extends DialogFragment {
 
     static CammentPasscodeDialog createInstance() {
         return new CammentPasscodeDialog();
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (getDialog() == null) {
-            setShowsDialog(false);
-        }
-
-        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override

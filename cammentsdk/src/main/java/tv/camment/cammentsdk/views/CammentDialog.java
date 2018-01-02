@@ -1,8 +1,6 @@
 package tv.camment.cammentsdk.views;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -45,16 +43,6 @@ public final class CammentDialog extends DialogFragment {
         args.putParcelable(ARGS_MESSAGE, message);
         dialog.setArguments(args);
         return dialog;
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (getDialog() == null) {
-            setShowsDialog(false);
-        }
-
-        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override

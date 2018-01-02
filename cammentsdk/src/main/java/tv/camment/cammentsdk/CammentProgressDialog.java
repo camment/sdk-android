@@ -1,11 +1,13 @@
 package tv.camment.cammentsdk;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +28,16 @@ public final class CammentProgressDialog extends DialogFragment {
 
     public static CammentProgressDialog createInstance() {
         return new CammentProgressDialog();
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (getDialog() == null) {
+            setShowsDialog(false);
+        }
+
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override

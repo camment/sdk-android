@@ -58,11 +58,9 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
             BaseMessage message = new BaseMessage();
             message.type = MessageType.ONBOARDING;
 
-            Activity activity = CammentSDK.getInstance().getCurrentActivity();
-
             CammentDialog cammentDialog = CammentDialog.createInstance(message);
             cammentDialog.setActionListener(this);
-            cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+            cammentDialog.show(message.toString());
         }
     }
 

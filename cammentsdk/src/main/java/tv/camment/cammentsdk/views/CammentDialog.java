@@ -1,10 +1,12 @@
 package tv.camment.cammentsdk.views;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import java.lang.reflect.Field;
 
 import tv.camment.cammentsdk.BuildConfig;
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
@@ -99,6 +102,14 @@ public final class CammentDialog extends DialogFragment {
         return view;
     }
 
+    public void show(String tag) {
+        Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
+        if (currentActivity instanceof AppCompatActivity) { //TODO what it not appcompat
+            FragmentManager manager = ((AppCompatActivity) currentActivity).getSupportFragmentManager();
+            show(manager, tag);
+        }
+    }
+
     @Override
     public void show(FragmentManager manager, String tag) {
         try {
@@ -111,9 +122,11 @@ public final class CammentDialog extends DialogFragment {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, tag);
-        ft.commitAllowingStateLoss();
+        if (manager != null) {
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, tag);
+            ft.commitAllowingStateLoss();
+        }
     }
 
     private void setupTitle() {

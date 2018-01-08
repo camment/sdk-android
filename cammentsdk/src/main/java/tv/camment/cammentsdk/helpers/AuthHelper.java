@@ -87,10 +87,7 @@ public final class AuthHelper implements CammentDialog.ActionListener {
                 CammentDialog cammentDialog = CammentDialog.createInstance(message);
                 cammentDialog.setActionListener(this);
 
-                Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
-                if (currentActivity instanceof AppCompatActivity) {
-                    cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString()); //TODO what if not appcompat
-                }
+                cammentDialog.show(message.toString());
             } else {
                 CammentSDK.getInstance().getAppAuthIdentityProvider().logIn(CammentSDK.getInstance().getCurrentActivity());
             }

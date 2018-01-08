@@ -22,8 +22,8 @@ android {
 
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "de862235c96844f8ad503d33d826e5b9"]
 
-        buildConfigField("boolean", "USE_FABRICS", "false")
-        buildConfigField("boolean", "USE_HOCKEYAPP", "false")
+        buildConfigField("boolean", "USE_FABRICS", "true")
+        buildConfigField("boolean", "USE_HOCKEYAPP", "true")
     }
 
     signingConfigs {

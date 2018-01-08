@@ -387,7 +387,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         || message instanceof MembershipRequestMessage) {
                     cammentDialog.setActionListener(this);
                 }
-                cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+                cammentDialog.show(message.toString());
             }
         }
     }
@@ -466,7 +466,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             msg.type = MessageType.KICKED_OUT;
 
             CammentDialog cammentDialog = CammentDialog.createInstance(msg);
-            cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString());
+            cammentDialog.show(message.toString());
 
             DataManager.getInstance().clearDataForUserGroupChange();
 

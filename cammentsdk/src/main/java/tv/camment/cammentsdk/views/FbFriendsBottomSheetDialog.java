@@ -144,7 +144,7 @@ public final class FbFriendsBottomSheetDialog extends BottomSheetDialog implemen
                     Fragment fragment = getOwnerActivity().getFragmentManager().findFragmentByTag(baseMessage.toString());
                     if (fragment == null || !fragment.isAdded()) {
                         CammentDialog cammentDialog = CammentDialog.createInstance(baseMessage);
-                        cammentDialog.show(((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager(), baseMessage.toString());
+                        cammentDialog.show(baseMessage.toString());
                     }
                 }
             }

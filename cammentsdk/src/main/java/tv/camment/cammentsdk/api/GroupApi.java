@@ -217,7 +217,7 @@ public final class GroupApi extends CammentAsyncClient {
                                         && TextUtils.equals(((NewUserInGroupMessage) message).body.groupOwnerCognitoIdentityId, IdentityPreferences.getInstance().getIdentityId())) {
                                     message.type = MessageType.FIRST_USER_JOINED;
                                     CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                                    cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString());
+                                    cammentDialog.show(message.toString());
                                 }
                             }
                         }, 1000);

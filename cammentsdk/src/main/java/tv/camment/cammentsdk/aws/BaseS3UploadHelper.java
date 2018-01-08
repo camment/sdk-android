@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.aws;
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,10 +21,12 @@ import com.google.android.exoplayer2.upstream.cache.CacheUtil;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
@@ -45,12 +48,33 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         this.transferUtility = transferUtility;
     }
 
+    private int checkCammentDuration(final CCamment camment) {
+        int duration;
+
+        MediaPlayer mp = MediaPlayer.create(CammentSDK.getInstance().getApplicationContext(),
+                Uri.parse(camment.getUrl()));
+        if (mp != null) {
+            duration = mp.getDuration();
+            mp.release();
+            return duration;
+        }
+
+        Log.d("uploadCamment", "video not yet prepared, repeat");
+        duration = checkCammentDuration(camment);
+        return duration;
+    }
+
     void uploadCammentFile(final CCamment camment) {
         Log.d("uploadCamment", "groupUuid " + camment.getUserGroupUuid());
 
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                int cammentDuration = checkCammentDuration(camment);
+                if (cammentDuration < SDKConfig.CAMMENT_MIN_DURATION) {
+                    throw new IllegalArgumentException("video too short (< 1000 ms)");
+                }
+
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentType(MIME_TYPE);
                 metadata.setHeader(Headers.STORAGE_CLASS, StorageClass.StandardInfrequentAccess);
@@ -75,12 +99,12 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-
+                Log.d("onSuccess", "camment upload started");
             }
 
             @Override
             public void onException(Exception exception) {
-                Log.e("onException", "uploadCammentFile", exception);
+                Log.d("onException", "uploadCammentFile", exception);
             }
         };
     }

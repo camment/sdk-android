@@ -30,7 +30,7 @@ import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BasePullableView extends FrameLayout implements CammentDialog.ActionListener {
 
-    private static final int MOVE_THRESHOLD = 20;
+    private static final int MOVE_THRESHOLD = 50;
 
     private final int slope = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     private AnchorOffset anchorOffset;

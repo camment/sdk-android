@@ -54,4 +54,13 @@ public final class CammentSDK extends BaseCammentSDK {
     public CammentAuthIdentityProvider getAppAuthIdentityProvider() {
         return super.getAppAuthIdentityProvider();
     }
+
+    public void setCammentAudioVolumeAdjustment(CammentAudioVolume cammentAudioVolume) {
+        super.setCammentAudioVolumeAdjustment(cammentAudioVolume);
+    }
+
+    public CammentAudioVolume getCammentAudioVolumeAdjustment() {
+        return super.getCammentAudioVolumeAdjustment();
+    }
+
 }

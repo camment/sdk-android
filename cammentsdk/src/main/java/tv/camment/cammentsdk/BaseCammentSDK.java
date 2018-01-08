@@ -54,6 +54,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
     private OnDeeplinkOpenShowListener onDeeplinkOpenShowListener;
 
+    private CammentAudioVolume cammentAudioVolume = CammentAudioVolume.FULL_ADJUSTMENT;
+
     synchronized void init(Context context, CammentAuthIdentityProvider identityProvider) {
         if (applicationContext == null || applicationContext.get() == null) {
             if (context == null || !(context instanceof Application)) {
@@ -119,7 +121,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
         return onDeeplinkOpenShowListener;
     }
 
-    public void connectToIoT() {
+    private void connectToIoT() {
         if (ioTHelper != null) {
             ioTHelper.connect();
         }
@@ -294,8 +296,16 @@ abstract class BaseCammentSDK extends CammentLifecycle
         EventBus.getDefault().post(new UserGroupChangeEvent());
     }
 
-    public CammentAuthIdentityProvider getAppAuthIdentityProvider() {
+    CammentAuthIdentityProvider getAppAuthIdentityProvider() {
         return appIdentityProvider;
+    }
+
+    void setCammentAudioVolumeAdjustment(CammentAudioVolume cammentAudioVolume) {
+        this.cammentAudioVolume = cammentAudioVolume;
+    }
+
+    CammentAudioVolume getCammentAudioVolumeAdjustment() {
+        return cammentAudioVolume == null ? CammentAudioVolume.FULL_ADJUSTMENT : cammentAudioVolume;
     }
 
 }

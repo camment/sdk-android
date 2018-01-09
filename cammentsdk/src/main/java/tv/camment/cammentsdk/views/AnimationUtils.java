@@ -12,7 +12,7 @@ final class AnimationUtils {
     private static ValueAnimator animator;
 
     static void animateAppearCameraView(final SquareFrameLayout flCamera,
-                                               Animator.AnimatorListener animatorListener) {
+                                        Animator.AnimatorListener animatorListener) {
         flCamera.setPivotX(0);
         flCamera.setPivotY(0);
 
@@ -38,7 +38,7 @@ final class AnimationUtils {
     }
 
     static void animateDisappearCameraView(final SquareFrameLayout flCamera,
-                                                  Animator.AnimatorListener animatorListener) {
+                                           Animator.AnimatorListener animatorListener) {
         cancelAppearAnimation();
 
         flCamera.setPivotX(0);
@@ -57,17 +57,20 @@ final class AnimationUtils {
     }
 
     static void startRecordAnimation(final View vRecordIndicator) {
-        recordAnimator = ObjectAnimator.ofFloat(vRecordIndicator, "alpha", 0.0f, 1.0f);
-        recordAnimator.setTarget(vRecordIndicator);
-        recordAnimator.setDuration(500);
-        recordAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        recordAnimator.setRepeatCount(Animation.INFINITE);
-        recordAnimator.start();
+        if (recordAnimator == null) {
+            recordAnimator = ObjectAnimator.ofFloat(vRecordIndicator, "alpha", 0.0f, 1.0f);
+            recordAnimator.setTarget(vRecordIndicator);
+            recordAnimator.setDuration(500);
+            recordAnimator.setRepeatMode(ValueAnimator.REVERSE);
+            recordAnimator.setRepeatCount(Animation.INFINITE);
+            recordAnimator.start();
+        }
     }
 
     static void stopRecordAnimation(final View vRecordIndicator) {
         if (recordAnimator != null) {
             recordAnimator.cancel();
+            recordAnimator = null;
         }
         vRecordIndicator.setAlpha(0.0f);
     }

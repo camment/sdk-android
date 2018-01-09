@@ -68,7 +68,10 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             public Object call() throws Exception {
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
+                    mqttManager.setMaxAutoReconnectAttepts(20);
+                    mqttManager.setReconnectRetryLimits(4, 16);
                 }
+
                 Log.d("IOT mqttManager", mqttManager.toString());
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override

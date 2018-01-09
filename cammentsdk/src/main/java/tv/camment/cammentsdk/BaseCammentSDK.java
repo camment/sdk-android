@@ -121,7 +121,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
         return onDeeplinkOpenShowListener;
     }
 
-    private void connectToIoT() {
+    void connectToIoT() {
         if (ioTHelper != null) {
             ioTHelper.connect();
         }

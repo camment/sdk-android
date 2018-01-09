@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.aws;
 
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -51,17 +52,18 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
     private int checkCammentDuration(final CCamment camment) {
         int duration;
 
-        MediaPlayer mp = MediaPlayer.create(CammentSDK.getInstance().getApplicationContext(),
-                Uri.parse(camment.getUrl()));
-        if (mp != null) {
-            duration = mp.getDuration();
-            mp.release();
+        try {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(camment.getUrl());
+            String mediaDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            duration = Integer.valueOf(mediaDuration);
+            return duration;
+        } catch (Exception e) {
+            //catch NumberFormatException and others
+            Log.d("uploadCamment", "video not yet prepared, repeat");
+            duration = checkCammentDuration(camment);
             return duration;
         }
-
-        Log.d("uploadCamment", "video not yet prepared, repeat");
-        duration = checkCammentDuration(camment);
-        return duration;
     }
 
     void uploadCammentFile(final CCamment camment) {
@@ -71,6 +73,9 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
             @Override
             public Object call() throws Exception {
                 int cammentDuration = checkCammentDuration(camment);
+
+                Log.d("cammentDuration", "" + cammentDuration);
+
                 if (cammentDuration < SDKConfig.CAMMENT_MIN_DURATION) {
                     throw new IllegalArgumentException("video too short (< 1000 ms)");
                 }

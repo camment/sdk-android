@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.SeekBar;
@@ -372,9 +374,22 @@ public class CammentMainActivity extends CammentBaseActivity
 
     @Override
     public void onBackPressed() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                goBack();
+            }
+        }, 150);
+    }
+
+    private void goBack() {
         super.onBackPressed();
+
         overridePendingTransition(R.anim.camment_slide_in_left, R.anim.camment_slide_out_right);
     }
+
 
     private void setVolume(int amount) {
         if (mediaPlayer != null

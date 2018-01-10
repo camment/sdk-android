@@ -86,6 +86,8 @@ final class DataContract {
         String seen = "seen";
         String sent = "sent";
         String received = "received";
+        String startTimestamp = "startTimestamp";
+        String endTimestamp = "endTimestamp";
     }
 
     static final class Camment implements BaseColumns, CammentColumns {

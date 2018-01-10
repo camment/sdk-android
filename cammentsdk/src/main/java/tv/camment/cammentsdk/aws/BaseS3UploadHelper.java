@@ -49,30 +49,13 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         this.transferUtility = transferUtility;
     }
 
-    private int checkCammentDuration(final CCamment camment) {
-        int duration;
-
-        try {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(camment.getUrl());
-            String mediaDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            duration = Integer.valueOf(mediaDuration);
-            return duration;
-        } catch (Exception e) {
-            //catch NumberFormatException and others
-            Log.d("uploadCamment", "video not yet prepared, repeat");
-            duration = checkCammentDuration(camment);
-            return duration;
-        }
-    }
-
     void uploadCammentFile(final CCamment camment) {
         Log.d("uploadCamment", "groupUuid " + camment.getUserGroupUuid());
 
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                int cammentDuration = checkCammentDuration(camment);
+                long cammentDuration = camment.getEndTimestamp() -  camment.getStartTimestamp();
 
                 Log.d("cammentDuration", "" + cammentDuration);
 

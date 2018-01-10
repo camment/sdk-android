@@ -35,7 +35,9 @@ public final class CammentProvider {
             DataContract.Camment.seen,
             DataContract.Camment.sent,
             DataContract.Camment.received,
-            DataContract.Camment.timestamp};
+            DataContract.Camment.timestamp,
+            DataContract.Camment.startTimestamp,
+            DataContract.Camment.endTimestamp};
 
     public static void insertCamment(CCamment camment) {
         if (camment == null)
@@ -78,6 +80,12 @@ public final class CammentProvider {
             received = 1;
         }
         cv.put(DataContract.Camment.received, received);
+
+        long startTimestamp = cammentByUuid == null ? camment.getStartTimestamp() : cammentByUuid.getStartTimestamp();
+        cv.put(DataContract.Camment.startTimestamp, startTimestamp);
+
+        long endTimestamp = cammentByUuid == null ? camment.getEndTimestamp() : cammentByUuid.getEndTimestamp();
+        cv.put(DataContract.Camment.endTimestamp, endTimestamp);
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .insert(DataContract.Camment.CONTENT_URI, cv);
@@ -285,6 +293,32 @@ public final class CammentProvider {
         Log.d("updateCammentGroupId", camment.getUuid() + " - " + (update > 0));
     }
 
+    public static void setStartTimestamp(String cammentUuid, long startTimestamp) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {cammentUuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.Camment.startTimestamp, startTimestamp);
+
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setStartTimestamp", cammentUuid + " t: " + startTimestamp + " - " + (update > 0));
+    }
+
+    public static void setEndTimestamp(String cammentUuid, long endTimestamp) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.uuid + "=?";
+        String[] selectionArgs = {cammentUuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.Camment.endTimestamp, endTimestamp);
+
+        int update = cr.update(DataContract.Camment.CONTENT_URI, cv, where, selectionArgs);
+        Log.d("setEndTimestamp", cammentUuid + " t: " + endTimestamp + " - " + (update > 0));
+    }
+
     public static int getCammentsSize() {
         Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
         if (activeUserGroup == null
@@ -322,6 +356,8 @@ public final class CammentProvider {
         camment.setSeen(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.seen)) == 1);
         camment.setSent(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.sent)) == 1);
         camment.setDelivered(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.received)) == 1);
+        camment.setStartTimestamp(cursor.getLong(cursor.getColumnIndex(DataContract.Camment.startTimestamp)));
+        camment.setEndTimestamp(cursor.getLong(cursor.getColumnIndex(DataContract.Camment.endTimestamp)));
 
         return camment;
     }

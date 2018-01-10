@@ -13,6 +13,8 @@ public final class CCamment extends Camment {
     private boolean deleted;
     private boolean seen;
     private boolean sent;
+    private long startTimestamp;
+    private long endTimestamp;
 
     public CCamment() {
 
@@ -32,6 +34,8 @@ public final class CCamment extends Camment {
         setSeen(false);
         setSent(false);
         setDelivered(camment.getDelivered());
+        setStartTimestamp(0);
+        setEndTimestamp(0);
     }
 
     @Override
@@ -101,6 +105,22 @@ public final class CCamment extends Camment {
 
     public void setSent(boolean sent) {
         this.sent = sent;
+    }
+
+    public long getStartTimestamp() {
+        return startTimestamp;
+    }
+
+    public void setStartTimestamp(long startTimestamp) {
+        this.startTimestamp = startTimestamp;
+    }
+
+    public long getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(long endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
 }

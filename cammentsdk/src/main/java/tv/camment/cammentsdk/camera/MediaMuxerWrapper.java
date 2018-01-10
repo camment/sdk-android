@@ -8,6 +8,7 @@ import android.media.MediaMuxer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 final class MediaMuxerWrapper {
@@ -45,6 +46,7 @@ final class MediaMuxerWrapper {
     }
 
     void startRecording() {
+        CammentProvider.setStartTimestamp(mCammentUuid, System.currentTimeMillis());
         if (mVideoEncoder != null)
             mVideoEncoder.startRecording();
         if (mAudioEncoder != null)
@@ -52,6 +54,7 @@ final class MediaMuxerWrapper {
     }
 
     void stopRecording() {
+        CammentProvider.setEndTimestamp(mCammentUuid, System.currentTimeMillis());
         if (mVideoEncoder != null)
             mVideoEncoder.stopRecording();
         mVideoEncoder = null;

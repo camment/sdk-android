@@ -10,6 +10,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -217,7 +218,8 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
                         AnimationUtils.animateDeactivateRecordingButton((ImageButton) boundViews.get(0).getView());
                     }
 
-                    if (isOverThreshold(currentMoveY, direction, scrollThreshold)) {
+                    if (isOverThreshold(currentMoveY, direction, scrollThreshold)
+                            && event.getAction() == MotionEvent.ACTION_UP) {
                         anchor();
                     }
                     resetAnimated(event.getAction() == MotionEvent.ACTION_CANCEL, !recordingStopCalled);

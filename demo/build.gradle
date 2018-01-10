@@ -7,7 +7,7 @@ android {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 0
+    def MINOR_VERSION = 2
 
     def MICRO_VERSION = 0
 
@@ -24,7 +24,7 @@ android {
 
         buildConfigField("boolean", "USE_FABRICS", "false")
         buildConfigField("boolean", "USE_HOCKEYAPP", "false")
-        buildConfigField("boolean", "USE_SETTINGS", "false")
+        buildConfigField("boolean", "USE_SETTINGS", "true")
     }
 
     signingConfigs {

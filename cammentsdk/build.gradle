@@ -11,7 +11,7 @@ android {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 0
+    def MINOR_VERSION = 2
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -68,7 +68,7 @@ android {
 
 ext {
     supportLibVersion = rootProject.ext.supportLibVersion
-    awsVersion = '2.6.7'
+    awsVersion = '2.6.13'
     constraintLayoutVersion = '1.0.2'
     exoPlayerVersion = 'r2.5.4'
     glideVersion = '4.0.0'
@@ -124,7 +124,7 @@ publishing {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 0
+    def MINOR_VERSION = 2
 
     publications {
         maven(MavenPublication) {

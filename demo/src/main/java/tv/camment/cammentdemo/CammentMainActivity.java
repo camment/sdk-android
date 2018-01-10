@@ -395,19 +395,7 @@ public class CammentMainActivity extends CammentBaseActivity
         if (mediaPlayer != null
                 && playerReady) {
             AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-            int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
-            float volume = (float) (1 - (Math.log(maxVolume - amount) / Math.log(maxVolume)));
-
-            if (maxVolume == amount) {
-                volume = 1.0f;
-            }
-
-            try {
-                mediaPlayer.setVolume(volume, volume);
-            } catch (Exception e) {
-                Log.e("mediaPlayer", "setVolume", e);
-            }
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, amount, 0);
         }
     }
 

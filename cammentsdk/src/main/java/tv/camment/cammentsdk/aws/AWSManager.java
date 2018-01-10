@@ -53,17 +53,6 @@ public final class AWSManager {
         cache = new SimpleCache(FileUtils.getInstance().getUploadDirFile(), new LeastRecentlyUsedCacheEvictor(50 * 1000 * 1024)); //50 MB
     }
 
-//    private synchronized Map<String, String> getAwsLoginsMap() {
-//        Map<String, String> loginsMap = new HashMap<>();
-//
-//        final String token = AuthHelper.getInstance().getToken();
-//        if (!TextUtils.isEmpty(token)) {
-//            loginsMap.put("cognito-identity.amazonaws.com", token);
-//        }
-//
-//        return loginsMap;
-//    }
-
     public CammentAuthenticationProvider getCammentAuthenticationProvider() {
         if (cammentAuthenticationProvider == null) {
             cammentAuthenticationProvider = new CammentAuthenticationProvider(null,

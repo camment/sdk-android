@@ -213,7 +213,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
 
             @Override
             public void onException(Exception ex) {
-                Log.e("onException", "preCacheFile"); //cache often fails as some camments can be smaller than 100kB
+                Log.d("onException", "preCacheFile"); //cache often fails as some camments can be smaller than 100kB
                 CammentProvider.insertCamment(camment); //cache failed but display camment
             }
         });

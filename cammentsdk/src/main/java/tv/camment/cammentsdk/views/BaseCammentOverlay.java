@@ -320,6 +320,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     @Override
     public void onCammentBottomSheetDisplayed() {
         onboardingOverlay.hideTooltipIfNeeded(Step.DELETE);
+        onboardingOverlay.hideTooltipIfNeeded(Step.PLAY);
     }
 
     @Override

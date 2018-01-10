@@ -132,6 +132,8 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
     }
 
     void hideTooltipIfNeeded(Step step) {
+        OnboardingPreferences.getInstance().putOnboardingStepDisplayed(step, true);
+
         if (tooltipViewMap != null
                 && tooltipViewMap.containsKey(step)) {
             TooltipView tooltipView = tooltipViewMap.get(step);

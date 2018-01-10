@@ -145,7 +145,6 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
             if (fragments != null) {
                 for (Fragment f : fragments) {
                     if (f instanceof CammentProgressDialog) {
-                        ((CammentProgressDialog) f).doNotDestroyActivity();
                         ((CammentProgressDialog) f).dismissAllowingStateLoss();
                     }
                 }

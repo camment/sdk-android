@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,7 +23,7 @@ import java.lang.reflect.Field;
 
 public final class CammentProgressDialog extends DialogFragment {
 
-    private boolean doNotDestroyActivity = false;
+    private boolean doNotDestroyActivity = true;
     private Dialog dialog;
 
     public static CammentProgressDialog createInstance() {
@@ -44,7 +45,7 @@ public final class CammentProgressDialog extends DialogFragment {
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.cmmsdk_progressbar_dialog, null);
 
-        doNotDestroyActivity = false;
+        doNotDestroyActivity = true;
 
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.cmmsdk_progressbar);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(android.R.color.holo_blue_dark),
@@ -61,6 +62,17 @@ public final class CammentProgressDialog extends DialogFragment {
             }
 
             dialog.setContentView(view);
+            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                    if (keyEvent != null
+                            && keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                            && keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                        doNotDestroyActivity = false;
+                    }
+                    return false;
+                }
+            });
         } else {
             setShowsDialog(false);
         }
@@ -93,11 +105,8 @@ public final class CammentProgressDialog extends DialogFragment {
             if (currentActivity != null) {
                 currentActivity.finish();
             }
-            doNotDestroyActivity = false;
+            doNotDestroyActivity = true;
         }
     }
 
-    public void doNotDestroyActivity() {
-        doNotDestroyActivity = true;
-    }
 }

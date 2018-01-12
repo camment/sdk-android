@@ -28,13 +28,13 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (isActivityValid(activity)) {
+            CammentSDK.getInstance().connectToIoT();
+        }
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        //CammentSDK.getInstance().connectToIoT();
-
         if (isActivityValid(activity)
                 && !(activity instanceof DeeplinkIgnore)
                 && !TextUtils.equals(GeneralPreferences.getInstance().getDeeplinkGroupUuid(), GeneralPreferences.getInstance().getCancelledDeeplinkUuid())) {
@@ -145,7 +145,6 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
             if (fragments != null) {
                 for (Fragment f : fragments) {
                     if (f instanceof CammentProgressDialog) {
-                        ((CammentProgressDialog) f).doNotDestroyActivity();
                         ((CammentProgressDialog) f).dismissAllowingStateLoss();
                     }
                 }

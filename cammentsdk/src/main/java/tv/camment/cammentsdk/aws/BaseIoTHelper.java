@@ -69,7 +69,10 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             public Object call() throws Exception {
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
+                    mqttManager.setMaxAutoReconnectAttepts(20);
+                    mqttManager.setReconnectRetryLimits(4, 16);
                 }
+
                 Log.d("IOT mqttManager", mqttManager.toString());
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override
@@ -401,7 +404,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         || message instanceof MembershipRequestMessage) {
                     cammentDialog.setActionListener(this);
                 }
-                cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+                cammentDialog.show(message.toString());
             }
         }
     }
@@ -480,7 +483,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             msg.type = MessageType.KICKED_OUT;
 
             CammentDialog cammentDialog = CammentDialog.createInstance(msg);
-            cammentDialog.show(((AppCompatActivity) CammentSDK.getInstance().getCurrentActivity()).getSupportFragmentManager(), message.toString());
+            cammentDialog.show(message.toString());
 
             DataManager.getInstance().clearDataForUserGroupChange();
 

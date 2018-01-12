@@ -10,15 +10,12 @@
         android:label="@string/demo_app_name"
         android:supportsRtl="false"
         android:theme="@style/CammentSdkAppTheme">
-
         <meta-data
             android:name="tv.camment.cammentsdk.ApiKey"
             android:value="@string/camment_api_key" />
-
         <meta-data
             android:name="net.hockeyapp.android.appIdentifier"
             android:value="${HOCKEYAPP_APP_ID}" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
@@ -29,7 +26,6 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/demo_app_name"
             tools:replace="android:label" />
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -42,7 +38,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".CammentSplashActivity"
             android:screenOrientation="portrait"
@@ -53,17 +48,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".CammentShowsActivity"
             android:label="@string/shows"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".CammentMainActivity"
             android:launchMode="singleTask"
             android:theme="@style/CammentSdkAppTheme.FullScreen" />
+        <activity
+            android:name=".CammentSettingsActivity"
+            android:label="@string/settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/CammentSdkAppTheme.ActionBar" />
 
         <provider
             android:name="tv.camment.cammentsdk.data.DataProvider"

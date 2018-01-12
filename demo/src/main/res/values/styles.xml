@@ -7,6 +7,11 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="CammentSdkAppTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/cmmsdk_camment_silver</item>
+        <item name="colorPrimary">@color/cmmsdk_camment_grey</item>
+    </style>
+
     <style name="CammentSdkAppTheme.FullScreen" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>

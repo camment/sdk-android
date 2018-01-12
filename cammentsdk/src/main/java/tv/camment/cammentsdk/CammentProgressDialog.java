@@ -1,18 +1,19 @@
 package tv.camment.cammentsdk;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -22,7 +23,8 @@ import java.lang.reflect.Field;
 
 public final class CammentProgressDialog extends DialogFragment {
 
-    private boolean doNotDestroyActivity = false;
+    private boolean doNotDestroyActivity = true;
+    private Dialog dialog;
 
     public static CammentProgressDialog createInstance() {
         return new CammentProgressDialog();
@@ -36,28 +38,46 @@ public final class CammentProgressDialog extends DialogFragment {
         }
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null) {
-            Window window = getDialog().getWindow();
-            if (window != null) {
-                window.requestFeature(Window.FEATURE_NO_TITLE);
-                window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-        }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        dialog = new Dialog(getContext());
 
-        doNotDestroyActivity = false;
+        View view = getActivity().getLayoutInflater().inflate(R.layout.cmmsdk_progressbar_dialog, null);
 
-        View view = inflater.inflate(R.layout.cmmsdk_progressbar_dialog, container);
+        doNotDestroyActivity = true;
 
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.cmmsdk_progressbar);
         progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(android.R.color.holo_blue_dark),
                 PorterDuff.Mode.SRC_IN);
 
-        return view;
+        if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                window.requestFeature(Window.FEATURE_NO_TITLE);
+                window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+
+            dialog.setContentView(view);
+            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                    if (keyEvent != null
+                            && keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                            && keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                        doNotDestroyActivity = false;
+                    }
+                    return false;
+                }
+            });
+        } else {
+            setShowsDialog(false);
+        }
+
+        return dialog;
     }
 
     @Override
@@ -85,11 +105,8 @@ public final class CammentProgressDialog extends DialogFragment {
             if (currentActivity != null) {
                 currentActivity.finish();
             }
-            doNotDestroyActivity = false;
+            doNotDestroyActivity = true;
         }
     }
 
-    public void doNotDestroyActivity() {
-        doNotDestroyActivity = true;
-    }
 }

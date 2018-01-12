@@ -11,4 +11,13 @@
     <string name="disconnected">Desconectado</string>
     <string name="empty_title">Bienvenida/o!</string>
     <string name="empty_msg">Para iniciar la sesión - por favor - pincha el link de la INVITACIÓN recibida e introduce el CÓDIGO/CLAVE DE ACCESO</string>
+
+    <string name="settings">Settings</string>
+    <string name="camment_settings">Camment Settings</string>
+
+    <string name="adjust_camment_volume">Adjust camment volume</string>
+    <string name="full_adjustment">Full</string>
+    <string name="mild_adjustment">Mild</string>
+    <string name="no_adjustment">No</string>
+
 </resources>

@@ -56,6 +56,17 @@ public class CammentShowsActivity extends CammentBaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camment_activity_camment_shows);
 
+        if (BuildConfig.USE_SETTINGS) {
+            TextView tvCammentTitle = (TextView) findViewById(R.id.tv_camment_title);
+            tvCammentTitle.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    startActivity(new Intent(CammentShowsActivity.this, CammentSettingsActivity.class));
+                    return true;
+                }
+            });
+        }
+
         RecyclerView rvShows = (RecyclerView) findViewById(R.id.rv_shows);
 
         btnLogIn = (Button) findViewById(R.id.btn_login);

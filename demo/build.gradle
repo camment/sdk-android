@@ -7,7 +7,7 @@ android {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 0
+    def MINOR_VERSION = 2
 
     def MICRO_VERSION = 0
 
@@ -24,6 +24,7 @@ android {
 
         buildConfigField("boolean", "USE_FABRICS", "false")
         buildConfigField("boolean", "USE_HOCKEYAPP", "false")
+        buildConfigField("boolean", "USE_SETTINGS", "true")
     }
 
     signingConfigs {
@@ -111,6 +112,7 @@ ext {
 dependencies {
     compile supportDependencies.values()
     compile facebookDependencies.values()
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     debugCompile project(path: ':cammentsdk', configuration: 'debug')
     debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')

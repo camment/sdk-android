@@ -10,6 +10,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -30,7 +31,7 @@ import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BasePullableView extends FrameLayout implements CammentDialog.ActionListener {
 
-    private static final int MOVE_THRESHOLD = 20;
+    private static final int MOVE_THRESHOLD = 50;
 
     private final int slope = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     private AnchorOffset anchorOffset;
@@ -161,11 +162,9 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
                         BaseMessage message = new BaseMessage();
                         message.type = MessageType.ONBOARDING;
 
-                        Activity activity = CammentSDK.getInstance().getCurrentActivity();
-
                         CammentDialog cammentDialog = CammentDialog.createInstance(message);
                         cammentDialog.setActionListener(this);
-                        cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+                        cammentDialog.show(message.toString());
                         return true;
                     }
 
@@ -219,7 +218,8 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
                         AnimationUtils.animateDeactivateRecordingButton((ImageButton) boundViews.get(0).getView());
                     }
 
-                    if (isOverThreshold(currentMoveY, direction, scrollThreshold)) {
+                    if (isOverThreshold(currentMoveY, direction, scrollThreshold)
+                            && event.getAction() == MotionEvent.ACTION_UP) {
                         anchor();
                     }
                     resetAnimated(event.getAction() == MotionEvent.ACTION_CANCEL, !recordingStopCalled);

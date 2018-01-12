@@ -115,8 +115,6 @@ public final class InvitationApi extends CammentAsyncClient {
                     BaseMessage message = new BaseMessage();
                     message.type = MessageType.SHARE;
 
-                    Activity activity = CammentSDK.getInstance().getCurrentActivity();
-
                     CammentDialog cammentDialog = CammentDialog.createInstance(message);
                     cammentDialog.setActionListener(new CammentDialog.ActionListener() {
                         @Override
@@ -148,7 +146,7 @@ public final class InvitationApi extends CammentAsyncClient {
 
                         }
                     });
-                    cammentDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), message.toString());
+                    cammentDialog.show(message.toString());
                 }
             }
 

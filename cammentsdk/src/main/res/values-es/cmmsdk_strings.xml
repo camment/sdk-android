@@ -71,4 +71,7 @@
     <string name="cmmsdk_user_has_joined_title">%s has joined</string>
     <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the discussion. You can always swipe → right to see who else is in the group and remove unwanted people</string>
 
+    <string name="cmmsdk_ad">AD</string>
+    <string name="cmmsdk_ad_click_more">Click to learn more</string>
+
 </resources>

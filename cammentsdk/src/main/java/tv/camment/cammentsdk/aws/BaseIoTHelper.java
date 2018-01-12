@@ -42,6 +42,7 @@ import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.events.AdMessageReceivedEvent;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
@@ -499,7 +500,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private void handleAdMessage(AdMessage message) {
-        //TODO insert into DB?
+        EventBus.getDefault().post(new AdMessageReceivedEvent(message, System.currentTimeMillis()));
     }
 
     @Override

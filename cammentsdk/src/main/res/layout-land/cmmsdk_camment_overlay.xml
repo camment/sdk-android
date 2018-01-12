@@ -38,6 +38,13 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.86" />
 
+        <android.support.constraint.Guideline
+            android:id="@+id/cmmsdk_g_ad_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.70" />
+
         <tv.camment.cammentsdk.views.SquareFrameLayout
             android:id="@+id/cmmsdk_fl_camera"
             android:layout_width="0dp"
@@ -81,29 +88,29 @@
             android:id="@+id/cmmsdk_ib_record"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:layout_marginEnd="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:alpha="0.5"
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/cmmsdk_camment_icon_shadow"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_g_record_camment"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
 
         <tv.camment.cammentsdk.views.pullable.PullableView
             android:id="@+id/cmmsdk_pullable_view"
             android:layout_width="0dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginEnd="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_g_record_camment"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
 
         <tv.camment.cammentsdk.views.OnboardingOverlay
             android:id="@+id/cmmsdk_onboarding_overlay"
@@ -113,6 +120,15 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <tv.camment.cammentsdk.views.AdDetailView
+            android:id="@+id/cmmsdk_ad_detail_view"
+            android:layout_width="0dp"
+            android:layout_height="130dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toRightOf="@+id/cmmsdk_g_record_indicator"
+            app:layout_constraintRight_toLeftOf="@+id/cmmsdk_g_ad_detail"
+            app:layout_constraintTop_toBottomOf="@+id/cmmsdk_g_top" />
 
     </android.support.constraint.ConstraintLayout>
 

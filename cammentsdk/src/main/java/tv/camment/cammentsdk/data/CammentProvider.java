@@ -16,6 +16,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.data.model.ChatItem;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 
 
@@ -362,14 +363,14 @@ public final class CammentProvider {
         return camment;
     }
 
-    public static List<CCamment> listFromCursor(Cursor cursor) {
-        List<CCamment> camments = new ArrayList<>();
+    public static List<ChatItem<CCamment>> listFromCursor(Cursor cursor) {
+        List<ChatItem<CCamment>> camments = new ArrayList<>();
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 CCamment camment;
                 do {
                     camment = fromCursor(cursor);
-                    camments.add(camment);
+                    camments.add(new ChatItem<>(ChatItem.ChatItemType.CAMMENT, camment.getUuid(), camment.getTimestamp(), camment));
                 } while (cursor.moveToNext());
             }
         }

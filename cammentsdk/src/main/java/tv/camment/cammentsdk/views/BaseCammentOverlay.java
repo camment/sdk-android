@@ -55,10 +55,13 @@ import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.aws.messages.AdMessage;
 import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
+import tv.camment.cammentsdk.data.model.ChatItem;
+import tv.camment.cammentsdk.events.AdMessageReceivedEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
@@ -95,6 +98,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private RecordingButton ibRecord;
     private PullableView pullableView;
     private OnboardingOverlay onboardingOverlay;
+    private AdDetailView adDetailView;
 
     private CammentsAdapter adapter;
 
@@ -119,7 +123,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<CCamment> camments = CammentProvider.listFromCursor(data);
+        List<ChatItem<CCamment>> camments = CammentProvider.listFromCursor(data);
         adapter.setData(camments);
 
         if (camments != null) {
@@ -270,6 +274,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
 
+        adDetailView = (AdDetailView) findViewById(R.id.cmmsdk_ad_detail_view);
+
 //        drawerLayout = (DrawerLayout) findViewById(R.id.cmmsdk_drawer_layout);
 //        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
@@ -331,6 +337,24 @@ abstract class BaseCammentOverlay extends RelativeLayout
             }
             player.stop();
             this.lastVideoCammentUuid = null;
+        }
+    }
+
+    @Override
+    public void onAdClick(AdMessage adMessage) {
+        if (adDetailView != null) {
+            adDetailView.setData(adMessage);
+            adDetailView.setVisibility(VISIBLE);
+        }
+    }
+
+    @Override
+    public void onCloseAdClick(ChatItem chatItem) {
+        if (adapter != null) {
+            adapter.removeAdFromList(chatItem);
+        }
+        if (adDetailView != null) {
+            adDetailView.setVisibility(GONE);
         }
     }
 
@@ -601,6 +625,14 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(1);
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AdMessageReceivedEvent event) {
+        if (adapter != null) {
+            adapter.addAdToList(event.getAdMessage(), event.getTimestamp());
         }
     }
 

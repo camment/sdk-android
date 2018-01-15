@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
@@ -500,7 +501,9 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private void handleAdMessage(AdMessage message) {
-        EventBus.getDefault().post(new AdMessageReceivedEvent(message, System.currentTimeMillis()));
+        if (BuildConfig.SHOW_ADS) {
+            EventBus.getDefault().post(new AdMessageReceivedEvent(message, System.currentTimeMillis()));
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ android {
 
         buildConfigField("boolean", "USE_DEEPLINK", "true")
         buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
+        buildConfigField("boolean", "SHOW_ADS", "false")
         buildConfigField("boolean", "USE_MIXPANEL", "false")
     }
 

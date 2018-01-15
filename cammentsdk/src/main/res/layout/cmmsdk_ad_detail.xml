@@ -23,7 +23,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/cmmsdk_red_ripple"
+            android:background="@color/cmmsdk_camment_reddish"
             android:gravity="center"
             android:paddingEnd="4dp"
             android:paddingStart="4dp"
@@ -38,7 +38,7 @@
     <ImageButton
         android:id="@+id/cmmsdk_ib_close"
         android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:background="@null"
         android:scaleType="fitXY"
         android:src="@drawable/cmmsdk_cancel" />

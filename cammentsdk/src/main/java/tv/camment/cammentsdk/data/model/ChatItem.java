@@ -17,7 +17,7 @@ public final class ChatItem<T> {
 
     @Override
     public int hashCode() {
-        return getUuid().hashCode();
+        return getUuid().hashCode() + content.hashCode();
     }
 
     @Override

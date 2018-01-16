@@ -65,7 +65,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
 
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentType(MIME_TYPE);
-                metadata.setHeader(Headers.STORAGE_CLASS, StorageClass.StandardInfrequentAccess);
+                metadata.setStorageClass(StorageClass.StandardInfrequentAccess);
 
                 transferObserver = transferUtility.upload(AWSConfig.getBucketId(),
                         String.format(KEY_FORMAT, camment.getUuid()),

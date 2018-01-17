@@ -70,6 +70,14 @@
 # -keep public interface mypackage.MyInterface
 # -keep public class * implements mypackage.MyInterface
 
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
 # AWS
 # Class names are needed in reflection
 -keepnames class com.amazonaws.**

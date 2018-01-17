@@ -6,6 +6,10 @@ buildscript {
         maven {
             url 'https://maven.fabric.io/public'
         }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
@@ -25,6 +29,10 @@ allprojects {
         maven {
             url 'https://maven.fabric.io/public'
         }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 
@@ -32,8 +40,8 @@ ext {
     minSdkVersion                   =   19
     targetSdkVersion                =   26
     compileSdkVersion               =   targetSdkVersion
-    buildToolsVersion               =   "26.0.1"
-    supportLibVersion               =   "26.0.1"
+    buildToolsVersion               =   "26.0.2"
+    supportLibVersion               =   "26.0.2"
 }
 
 task clean(type: Delete) {

@@ -72,7 +72,7 @@ ext {
     awsVersion = '2.6.13'
     constraintLayoutVersion = '1.0.2'
     exoPlayerVersion = 'r2.5.4'
-    glideVersion = '4.0.0'
+    glideVersion = '4.3.0'
     easyPermissionsVersion = '0.4.2'
     eventBusVersion = '3.0.0'
     mixpanelVersion = '5.2.1'

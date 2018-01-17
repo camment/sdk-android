@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -269,7 +270,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvCamments.setLayoutManager(layoutManager);
         rvCamments.setAdapter(adapter);
-        rvCamments.setItemAnimator(null);
+        ((DefaultItemAnimator) rvCamments.getItemAnimator()).setSupportsChangeAnimations(false);
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);

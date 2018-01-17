@@ -125,6 +125,6 @@ dependencies {
 
     compile 'net.hockeyapp.android:HockeySDK:5.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
+        transitive = true
     }
 }

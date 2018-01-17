@@ -1,6 +1,5 @@
 package tv.camment.cammentsdk.views;
 
-import android.graphics.Bitmap;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.SDKConfig;
-import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
-import tv.camment.cammentsdk.helpers.GeneralHelpers;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
@@ -39,6 +38,8 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
     private ImageView ivCheck;
 
     private LinearLayout llSeen;
+
+    private RequestOptions requestOptions;
 
     CammentViewHolder(final View itemView, final CammentsAdapter.ActionListener actionListener) {
         super(itemView);
@@ -144,7 +145,7 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
         this.camment = camment;
 
         if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
-            loadLocalThumbnail(camment.getUuid());
+            loadLocalThumbnail();
         } else {
             loadThumbnailFromServer();
         }
@@ -161,26 +162,26 @@ final class CammentViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    private void loadLocalThumbnail(String cammentUuid) {
-        GeneralHelpers.getInstance().getBitmapRetriever().retrieveLocalThumbnail(cammentUuid, new CammentCallback<Bitmap>() {
-            @Override
-            public void onSuccess(Bitmap bitmap) {
-                if (bitmap != null) {
-                    ivThumbnail.setImageBitmap(bitmap);
-
-                    ColorMatrix matrix = new ColorMatrix();
-                    matrix.setSaturation(0);
-                    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-                    ivThumbnail.setColorFilter(filter);
-                }
-            }
-
-            @Override
-            public void onException(Exception exception) {
-
-            }
-        });
+    private RequestOptions getRequestOptions() {
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+        }
+        return requestOptions;
     }
+
+
+    private void loadLocalThumbnail() {
+        Glide.with(CammentSDK.getInstance().getApplicationContext())
+                .load(FileUtils.getInstance().getUploadCammentPath(camment.getUuid()))
+                .into(ivThumbnail);
+
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+        ivThumbnail.setColorFilter(filter);
+    }
+
 
     private void loadThumbnailFromServer() {
         Glide.with(CammentSDK.getInstance().getApplicationContext())

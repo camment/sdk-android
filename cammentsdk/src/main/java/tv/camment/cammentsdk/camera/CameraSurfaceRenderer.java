@@ -103,14 +103,16 @@ final class CameraSurfaceRenderer implements
             surfaceTexture.getTransformMatrix(stMatrix);
         }
 
-        // draw to preview screen
-        drawer2D.draw(hTex, stMatrix);
+        if (drawer2D != null) {
+            // draw to preview screen
+            drawer2D.draw(hTex, stMatrix);
 
-        flip = !flip;
-        if (flip) {
-            synchronized (this) {
-                if (videoEncoder != null) {
-                    videoEncoder.frameAvailableSoon(stMatrix, mvpMatrix);
+            flip = !flip;
+            if (flip) {
+                synchronized (this) {
+                    if (videoEncoder != null) {
+                        videoEncoder.frameAvailableSoon(stMatrix, mvpMatrix);
+                    }
                 }
             }
         }

@@ -29,7 +29,7 @@ import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
 
 public final class CammentDialog extends DialogFragment {
 
-    private static final String ARGS_MESSAGE = "args_messgae";
+    private static final String ARGS_MESSAGE = "args_message";
 
     private BaseMessage message;
 
@@ -46,14 +46,6 @@ public final class CammentDialog extends DialogFragment {
         args.putParcelable(ARGS_MESSAGE, message);
         dialog.setArguments(args);
         return dialog;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            dismiss();
-        }
     }
 
     @Nullable
@@ -251,5 +243,7 @@ public final class CammentDialog extends DialogFragment {
         void onNegativeButtonClick(BaseMessage baseMessage);
 
     }
+
+    public static final String TAG_SHARE = "tag_share";
 
 }

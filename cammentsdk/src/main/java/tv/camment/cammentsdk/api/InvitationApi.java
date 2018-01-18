@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.api;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -112,6 +113,11 @@ public final class InvitationApi extends CammentAsyncClient {
 
                 if (result != null
                         && !TextUtils.isEmpty(result.getUrl())) {
+                    CammentDialog cammentDialogByTag = CammentSDK.getInstance().getCammentDialogByTag(CammentDialog.TAG_SHARE);
+                    if (cammentDialogByTag != null) {
+                        return;
+                    }
+
                     BaseMessage message = new BaseMessage();
                     message.type = MessageType.SHARE;
 
@@ -146,7 +152,7 @@ public final class InvitationApi extends CammentAsyncClient {
 
                         }
                     });
-                    cammentDialog.show(message.toString());
+                    cammentDialog.show(CammentDialog.TAG_SHARE);
                 }
             }
 

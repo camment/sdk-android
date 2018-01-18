@@ -14,6 +14,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
@@ -111,6 +112,17 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
             activityList.remove(activity);
         }
         //printList("remove");
+    }
+
+    public synchronized CammentDialog getCammentDialogByTag(String tag) {
+        if (getCurrentActivity() instanceof AppCompatActivity) {
+            Fragment fragmentByTag = ((AppCompatActivity) getCurrentActivity()).getSupportFragmentManager().findFragmentByTag(tag);
+            if (fragmentByTag instanceof CammentDialog) {
+                return (CammentDialog) fragmentByTag;
+            }
+            return null;
+        }
+        return null;
     }
 
     private void printList(String from) {

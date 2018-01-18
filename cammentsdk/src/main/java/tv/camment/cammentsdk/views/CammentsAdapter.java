@@ -45,6 +45,8 @@ final class CammentsAdapter extends RecyclerView.Adapter {
     public void setData(List<ChatItem<CCamment>> camments) {
         if (camments == null) {
             this.camments = null;
+            this.ads = null;
+            this.items = null;
             notifyDataSetChanged();
             return;
         }

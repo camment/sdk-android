@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-  <groupId>tv.camment.cammentsdk</groupId>
-  <artifactId>cammentsdk</artifactId>
+  <groupId>tv.camment.cammentauth</groupId>
+  <artifactId>cammentauth</artifactId>
   <versioning>
     <release>2.0.0</release>
     <versions>

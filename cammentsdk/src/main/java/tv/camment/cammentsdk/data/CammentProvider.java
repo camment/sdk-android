@@ -125,7 +125,8 @@ public final class CammentProvider {
             }
             cv.put(DataContract.Camment.seen, seen);
 
-            cv.put(DataContract.Camment.sent, 1);
+            int sent = TextUtils.equals(identityId, camment.getUserCognitoIdentityId()) ? 1 : 0;
+            cv.put(DataContract.Camment.sent, sent);
 
             int received = 0;
             if (TextUtils.equals(identityId, camment.getUserCognitoIdentityId())

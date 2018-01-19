@@ -49,6 +49,7 @@ import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BaseIoTHelper extends CammentAsyncClient
@@ -64,8 +65,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     void connect() {
-        Log.d("IOT iothelper", this.toString());
-
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -75,7 +74,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                     mqttManager.setReconnectRetryLimits(4, 16);
                 }
 
-                Log.d("IOT mqttManager", mqttManager.toString());
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override
                     public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
@@ -145,7 +143,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                 try {
                     message = new String(data, "UTF-8");
-                    Log.d("AWS message", message);
+                    LogUtils.debug("AWS message", message);
                 } catch (Exception e) {
                     Log.e("IoTHelper", "invalid message format", e);
                 }

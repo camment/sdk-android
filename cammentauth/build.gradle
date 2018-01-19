@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -10,7 +11,7 @@ android {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 2
+    def MINOR_VERSION = 0
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -36,19 +37,13 @@ android {
         }
 
         release { //PROD
-            minifyEnabled true
-            useProguard true
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            useProguard false
         }
 
         releaseDev { //DEV
-            minifyEnabled true
-            useProguard true
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            useProguard false
         }
     }
 }
@@ -69,4 +64,43 @@ dependencies {
     debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
     releaseCompile project(path: ':cammentsdk', configuration: 'release')
     releaseDevCompile project(path: ':cammentsdk', configuration: 'releaseDev')
+}
+
+publishing {
+
+    def RELEASE_VERSION = 2
+
+    def MAJOR_VERSION = 0
+
+    def MINOR_VERSION = 0
+
+    publications {
+        maven(MavenPublication) {
+            groupId 'tv.camment.cammentauth'
+            artifactId 'cammentauth'
+            version RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
+            artifact "$buildDir/outputs/aar/cammentauth-release.aar"
+            //aar artifact you want to publish
+
+            //generate pom nodes for dependencies
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each { dependency ->
+                    if (dependency.name != "unspecified") {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dependency.group)
+                        dependencyNode.appendNode('artifactId', dependency.name)
+                        dependencyNode.appendNode('version', dependency.version)
+                    }
+                }
+            }
+        }
+    }
+
+    //publish to filesystem repo
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
 }

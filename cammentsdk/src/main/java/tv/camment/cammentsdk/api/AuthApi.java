@@ -21,6 +21,7 @@ import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.CognitoSyncClientManager;
 import tv.camment.cammentsdk.helpers.AuthHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 
 public final class AuthApi extends CammentAsyncClient {
@@ -42,7 +43,7 @@ public final class AuthApi extends CammentAsyncClient {
         }, new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("refreshCognitoCred", "onSuccess");
+                LogUtils.debug("refreshCognitoCred", "onSuccess");
             }
 
             @Override
@@ -75,10 +76,10 @@ public final class AuthApi extends CammentAsyncClient {
         return new CammentCallback<OpenIdToken>() {
             @Override
             public void onSuccess(OpenIdToken result) {
-                Log.d("onSuccess", "getOpenIdToken");
+                LogUtils.debug("onSuccess", "getOpenIdToken");
                 if (result != null) {
-                    Log.d("onSuccess", "getOpenIdToken identityId: " + result.getIdentityId());
-                    Log.d("onSuccess", "getOpenIdToken token: " + result.getToken());
+                    LogUtils.debug("onSuccess", "getOpenIdToken identityId: " + result.getIdentityId());
+                    LogUtils.debug("onSuccess", "getOpenIdToken token: " + result.getToken());
                 }
             }
 
@@ -105,10 +106,10 @@ public final class AuthApi extends CammentAsyncClient {
                     }, new CammentCallback<OpenIdToken>() {
                         @Override
                         public void onSuccess(OpenIdToken result) {
-                            Log.d("onSuccess1", "getOpenIdToken");
+                            LogUtils.debug("onSuccess1", "getOpenIdToken");
                             if (result != null) {
-                                Log.d("onSuccess1", "getOpenIdToken identityId: " + result.getIdentityId());
-                                Log.d("onSuccess1", "getOpenIdToken token: " + result.getToken());
+                                LogUtils.debug("onSuccess1", "getOpenIdToken identityId: " + result.getIdentityId());
+                                LogUtils.debug("onSuccess1", "getOpenIdToken token: " + result.getToken());
                                 CognitoSyncClientManager.getInstance().addLogins("login.camment.tv", result.getToken());
                                 AWSManager.getInstance().getCognitoCachingCredentialsProvider().getIdentityProvider().refresh();
                             }

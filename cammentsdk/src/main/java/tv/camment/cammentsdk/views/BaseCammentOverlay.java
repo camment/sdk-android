@@ -71,6 +71,7 @@ import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.pullable.BoundView;
 import tv.camment.cammentsdk.views.pullable.PullableView;
 import tv.camment.cammentsdk.views.pullable.Transformation;
@@ -455,7 +456,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onReset(boolean cancelled, boolean callRecordingStop) {
-        Log.d("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
+        LogUtils.debug("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
         if (callRecordingStop) {
             onRecordingStop(cancelled);
         }
@@ -463,24 +464,21 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onPullStart() {
-        Log.d("PULL", "onPullStart");
+
     }
 
     @Override
     public void onAnchor() {
-        Log.d("PULL", "onAnchor");
         onPulledDown();
     }
 
     @Override
     public void onPress() {
-        Log.d("PULL", "onPress");
         onRecordingStart();
     }
 
     @Override
     public void onOnboardingStart() {
-        Log.d("PULL", "onOnboardingStart");
         onStartOnboarding();
     }
 

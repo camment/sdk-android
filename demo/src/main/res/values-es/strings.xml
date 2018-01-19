@@ -4,13 +4,18 @@
     <string name="passcode">Código/clave de acceso</string>
     <string name="passcode_hint">Introduce to código/clave de acceso</string>
     <string name="no_network">Por favor revisa tu conexión a internet</string>
+
     <string name="connecting">Conectando…</string>
     <string name="connected">En línea</string>
     <string name="connection_lost">Se perdió la conexión</string>
     <string name="reconnecting">Conectando de nuevo…</string>
     <string name="disconnected">Desconectado</string>
+
     <string name="empty_title">Bienvenida/o!</string>
     <string name="empty_msg">Para iniciar la sesión - por favor - pincha el link de la INVITACIÓN recibida e introduce el CÓDIGO/CLAVE DE ACCESO</string>
+
+    <string name="log_in">Log In</string>
+    <string name="log_out">Log Out</string>
 
     <string name="settings">Settings</string>
     <string name="camment_settings">Camment Settings</string>

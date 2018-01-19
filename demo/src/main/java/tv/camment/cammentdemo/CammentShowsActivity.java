@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import tv.camment.cammentauth.FbHelper;
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
@@ -103,15 +104,15 @@ public class CammentShowsActivity extends CammentBaseActivity
     }
 
     private void setLoginButtonText() {
-        btnLogIn.setText(FbHelper.getInstance().isLoggedIn() ? R.string.log_out : R.string.log_in);
+        btnLogIn.setText(CammentSDK.getInstance().getAppAuthIdentityProvider().isLoggedIn() ? R.string.log_out : R.string.log_in);
     }
 
     private void handleOnLoginButtonClick() {
-        if (FbHelper.getInstance().isLoggedIn()) {
-            FbHelper.getInstance().logOut();
+        if (CammentSDK.getInstance().getAppAuthIdentityProvider().isLoggedIn()) {
+            CammentSDK.getInstance().getAppAuthIdentityProvider().logOut();
             setLoginButtonText();
         } else {
-            FbHelper.getInstance().logIn(this);
+            CammentSDK.getInstance().getAppAuthIdentityProvider().logIn(this);
         }
     }
 

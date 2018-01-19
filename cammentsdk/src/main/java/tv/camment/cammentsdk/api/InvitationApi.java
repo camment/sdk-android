@@ -30,6 +30,7 @@ import tv.camment.cammentsdk.data.model.CUserGroup;
 import tv.camment.cammentsdk.data.model.CUserInfo;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 
@@ -242,7 +243,7 @@ public final class InvitationApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "removeUserFromGroup");
+                LogUtils.debug("onSuccess", "removeUserFromGroup");
             }
 
             @Override

@@ -40,6 +40,7 @@ import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 abstract class BaseCammentSDK extends CammentLifecycle
         implements IdentityChangedListener, CammentAuthListener {
@@ -212,28 +213,22 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
     @Override
     public void identityChanged(String oldIdentityId, String newIdentityId) {
-        //AWSManager.getInstance().getIoTHelper().connect();
-
-        Log.d("identityChanged", "OLD identity: " + oldIdentityId);
-        Log.d("identityChanged", "NEW identity: " + newIdentityId);
-
         if (!TextUtils.isEmpty(oldIdentityId)
                 && !TextUtils.isEmpty(newIdentityId)
                 && !TextUtils.equals(oldIdentityId, newIdentityId)) {
-            Log.d("synchronize", "OLD identity: " + oldIdentityId);
             Dataset identitySet = AWSManager.getInstance().getCognitoSyncManager().openOrCreateDataset("identitySet");
             if (identitySet != null) {
                 identitySet.put(newIdentityId, oldIdentityId);
                 identitySet.synchronize(new Dataset.SyncCallback() {
                     @Override
                     public void onSuccess(Dataset dataset, List<Record> updatedRecords) {
-                        Log.d("synchronize", "onSuccess");
+                        LogUtils.debug("onSuccess", "synchronize");
                         ApiManager.getInstance().getUserApi().sendCongnitoIdChanged();
                     }
 
                     @Override
                     public boolean onConflict(Dataset dataset, List<SyncConflict> conflicts) {
-                        Log.d("synchronize", "onConflict");
+                        LogUtils.debug("onConflict", "synchronize");
                         List<Record> records = new ArrayList<>();
                         if (conflicts != null
                                 && conflicts.size() > 0) {
@@ -247,19 +242,19 @@ abstract class BaseCammentSDK extends CammentLifecycle
 
                     @Override
                     public boolean onDatasetDeleted(Dataset dataset, String datasetName) {
-                        Log.d("synchronize", "onDatasetDeleted");
+                        LogUtils.debug("onDatasetDeleted", "synchronize");
                         return false;
                     }
 
                     @Override
                     public boolean onDatasetsMerged(Dataset dataset, List<String> datasetNames) {
-                        Log.d("synchronize", "onDatasetMerged");
+                        LogUtils.debug("onDatasetsMerged", "synchronize");
                         return false;
                     }
 
                     @Override
                     public void onFailure(DataStorageException dse) {
-                        Log.e("synchronize", "onFailure", dse);
+                        Log.e("onFailure", "synchronize", dse);
                     }
                 });
             }

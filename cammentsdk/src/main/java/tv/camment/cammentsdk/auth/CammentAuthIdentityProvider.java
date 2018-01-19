@@ -15,4 +15,8 @@ public interface CammentAuthIdentityProvider {
 
     CammentAuthInfo getAuthInfo();
 
+    boolean isLoggedIn();
+
+    void addCammentAuthListener(CammentAuthListener cammentAuthListener);
+
 }

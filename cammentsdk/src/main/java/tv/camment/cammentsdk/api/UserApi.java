@@ -26,6 +26,7 @@ import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 
 public final class UserApi extends CammentAsyncClient {
@@ -66,7 +67,7 @@ public final class UserApi extends CammentAsyncClient {
         return new CammentCallback<UsergroupList>() {
             @Override
             public void onSuccess(UsergroupList result) {
-                Log.d("onSuccess", "getMyUserGroups");
+                LogUtils.debug("onSuccess", "getMyUserGroups");
                 if (result != null
                         && result.getItems() != null) {
                     UserGroupProvider.insertUserGroups(result.getItems());
@@ -93,7 +94,7 @@ public final class UserApi extends CammentAsyncClient {
         return new CammentCallback<UserinfoList>() {
             @Override
             public void onSuccess(UserinfoList result) {
-                Log.d("onSuccess", "getUserInfosForGroupUuid");
+                LogUtils.debug("onSuccess", "getUserInfosForGroupUuid");
                 if (result != null
                         && result.getItems() != null) {
                     UserInfoProvider.insertUserInfos(result.getItems(), groupUuid);
@@ -117,7 +118,7 @@ public final class UserApi extends CammentAsyncClient {
         }, new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("sendCongnitoIdChanged", "onSuccess");
+                LogUtils.debug("sendCongnitoIdChanged", "onSuccess");
             }
 
             @Override

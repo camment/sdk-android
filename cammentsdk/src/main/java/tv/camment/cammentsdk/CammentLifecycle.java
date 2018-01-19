@@ -14,6 +14,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 abstract class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
@@ -114,17 +115,17 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
     }
 
     private void printList(String from) {
-        Log.d("activityList", "start - " + from);
+        LogUtils.debug("activityList", "start - " + from);
 
         if (activityList == null) {
-            Log.d("activityList", "empty");
+            LogUtils.debug("activityList", "empty");
         } else {
             for (Activity activity : activityList) {
-                Log.d("activityList", activity.getClass().getSimpleName());
+                LogUtils.debug("activityList", activity.getClass().getSimpleName());
             }
         }
 
-        Log.d("activityList", "end");
+        LogUtils.debug("activityList", "end");
     }
 
     public synchronized void showProgressBar() {

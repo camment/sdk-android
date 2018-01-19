@@ -11,7 +11,7 @@ android {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 2
+    def MINOR_VERSION = 0
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -23,8 +23,8 @@ android {
         publishNonDefault true
 
         buildConfigField("boolean", "USE_DEEPLINK", "true")
-        buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
-        buildConfigField("boolean", "SHOW_ADS", "false")
+        buildConfigField("boolean", "SHOW_GROUP_LIST", "false")
+        buildConfigField("boolean", "SHOW_ADS", "true")
         buildConfigField("boolean", "USE_MIXPANEL", "false")
     }
 
@@ -124,7 +124,7 @@ publishing {
 
     def MAJOR_VERSION = 0
 
-    def MINOR_VERSION = 2
+    def MINOR_VERSION = 0
 
     publications {
         maven(MavenPublication) {

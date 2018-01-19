@@ -20,6 +20,7 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 
 public final class CammentApi extends CammentAsyncClient {
@@ -47,7 +48,7 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "createUserGroupCamment");
+                LogUtils.debug("onSuccess", "createUserGroupCamment");
 
                 CammentProvider.setCammentSent(camment.getUuid());
             }
@@ -78,7 +79,7 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<CammentList>() {
             @Override
             public void onSuccess(CammentList cammentList) {
-                Log.d("onSuccess", "getUserGroupCamments");
+                LogUtils.debug("onSuccess", "getUserGroupCamments");
                 if (cammentList != null
                         && cammentList.getItems() != null) {
                     for (Camment camment : cammentList.getItems()) {
@@ -111,7 +112,7 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "deleteUserGroupCamment");
+                LogUtils.debug("onSuccess", "deleteUserGroupCamment");
 
                 CammentProvider.setCammentDeleted(camment.getUuid());
             }
@@ -142,7 +143,7 @@ public final class CammentApi extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "markCammentAsReceived");
+                LogUtils.debug("onSuccess", "markCammentAsReceived");
             }
 
             @Override

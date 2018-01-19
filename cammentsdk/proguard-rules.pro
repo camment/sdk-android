@@ -91,6 +91,7 @@
 # The SDK has several references of Apache HTTP client
 -dontwarn com.amazonaws.http.**
 -dontwarn com.amazonaws.metrics.**
+-dontwarn com.amazonaws.services.kms.**
 
 -dontshrink
 -dontoptimize

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -89,6 +90,7 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
         switch (step) {
             case RECORD:
             case INVITE:
+            case LATER:
                 orientation = TooltipView.Orientation.RIGHT;
                 break;
             case PLAY:
@@ -104,14 +106,22 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
         switch (step) {
             case RECORD:
             case INVITE:
+            case LATER:
                 attachToView = recordingButton;
                 break;
-            case PLAY:
             case HIDE:
             case SHOW:
+                attachToView = recyclerView;
+                break;
+            case PLAY:
             case DELETE:
             default:
-                attachToView = recyclerView;
+                View childAt = ((RecyclerView) recyclerView).getChildAt(0);
+                if (childAt != null) {
+                    attachToView = childAt;
+                } else {
+                    attachToView = recyclerView;
+                }
                 break;
         }
 
@@ -145,7 +155,7 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
             return;
         }
 
-        Step nextStep = OnboardingPreferences.getInstance().getNextOnboardingStep();
+        final Step nextStep = OnboardingPreferences.getInstance().getNextOnboardingStep();
 
         if (nextStep != null) {
             switch (nextStep) {
@@ -160,7 +170,12 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
                     break;
                 case DELETE:
                     if (CammentProvider.getCammentsSize() > 0) {
-                        displayTooltip(nextStep);
+                        postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayTooltip(nextStep);
+                            }
+                        }, 500);
                     }
                     break;
             }
@@ -176,7 +191,9 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
 
     @Override
     public void onNegativeButtonClick(BaseMessage baseMessage) {
-
+        if (baseMessage.type == MessageType.ONBOARDING) {
+            displayTooltip(Step.LATER);
+        }
     }
 
     @Override

@@ -1,10 +1,13 @@
 package tv.camment.cammentsdk.views;
 
+import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,57 +53,51 @@ abstract class BaseTooltipView extends RelativeLayout {
             View.inflate(getContext(), R.layout.cmmsdk_tooltip_right, this);
         }
 
-        LayoutParams params = (LayoutParams) getLayoutParams();
-        if (orientation == Orientation.RIGHT) {
-            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-        } else {
-            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
-        }
-        int marginTop = 0;
-
-        switch (step) {
-            case RECORD:
-                marginTop = anchor.getTop() + (anchor.getHeight() / 2) - CommonUtils.dpToPx(getContext(), 20);
-                break;
-            case INVITE:
-                marginTop = anchor.getTop() + (anchor.getHeight() / 2) - CommonUtils.dpToPx(getContext(), 30);
-                break;
-            case PLAY:
-            case DELETE:
-                marginTop = anchor.getTop() + (anchor.getRight() / 4) - CommonUtils.dpToPx(getContext(), 20);
-                break;
-            case HIDE:
-            case SHOW:
-                marginTop = CommonUtils.getScreenHeight(getContext()) / 2 - CommonUtils.dpToPx(getContext(), 18);
-                break;
-        }
-
-
-        int marginRight = 0;
-        int marginLeft = 0;
-        if (orientation == Orientation.RIGHT) {
-            marginRight = CommonUtils.getScreenWidth(getContext()) - anchor.getLeft() + CommonUtils.dpToPx(getContext(), 4);
-        } else {
-            switch (step) {
-                case PLAY:
-                case DELETE:
-                    marginLeft = (anchor.getRight() / 2) + CommonUtils.dpToPx(getContext(), 4);
-                    break;
-                case HIDE:
-                case SHOW:
-                    marginLeft = CommonUtils.dpToPx(getContext(), 4);
-                    break;
-            }
-        }
-        params.setMargins(marginLeft, marginTop, marginRight, 0);
-
-        setLayoutParams(params);
-
         tvTooltipText = (TextView) findViewById(R.id.cmmsdk_tv_tooltip_text);
 
         showText();
 
-        repeatAnimation();
+        int screen_pos[] = new int[2];
+        anchor.getLocationOnScreen(screen_pos);
+
+        Rect anchor_rect = new Rect(screen_pos[0], screen_pos[1], screen_pos[0]
+                + anchor.getWidth(), screen_pos[1] + anchor.getHeight());
+
+        measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        int contentViewHeight = getMeasuredHeight();
+        int contentViewWidth = getMeasuredWidth();
+
+        int position_x = 0, position_y = 0;
+
+        if (orientation == Orientation.RIGHT) {
+            position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
+            position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
+        } else {
+            switch (step) {
+                case SHOW:
+                case HIDE:
+                    position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
+                    position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
+                    break;
+                default:
+                    position_x = anchor_rect.right;
+                    position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2 + CommonUtils.dpToPx(getContext(), 5);
+                    break;
+            }
+        }
+
+        LayoutParams params = (LayoutParams) getLayoutParams();
+        if (orientation == Orientation.RIGHT) {
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+            params.setMargins(0, position_y, position_x, 0);
+        } else {
+            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
+            params.setMargins(position_x, position_y, 0, 0);
+        }
+
+        setLayoutParams(params);
+
+        repeatAnimation(step);
     }
 
     private void showText() {
@@ -123,23 +120,56 @@ abstract class BaseTooltipView extends RelativeLayout {
             case INVITE:
                 tvTooltipText.setText(R.string.cmmsdk_help_swipe_up_to_invite);
                 break;
+            case LATER:
+                tvTooltipText.setText(R.string.cmmsdk_help_start_making_video_camments);
+                break;
             default:
                 break;
         }
     }
 
-    private void repeatAnimation() {
+    private void repeatAnimation(final Step step) {
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                animateTooltip();
-                repeatAnimation();
+                if (step == Step.LATER) {
+                    fadeOutTooltip();
+                } else {
+                    animateTooltip();
+                    repeatAnimation(step);
+                }
             }
         }, 5000);
     }
 
     private void animateTooltip() {
         AnimationUtils.animateTooltip(this);
+    }
+
+    private void fadeOutTooltip() {
+        this.animate().alpha(0.0f).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (getParent() instanceof OnboardingOverlay) {
+                    ((OnboardingOverlay) getParent()).hideTooltipIfNeeded(Step.LATER);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).start();
     }
 
 }

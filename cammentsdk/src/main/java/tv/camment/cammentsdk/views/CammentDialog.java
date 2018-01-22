@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.views;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -100,6 +101,15 @@ public final class CammentDialog extends DialogFragment {
         setupButtons();
 
         return view;
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (actionListener != null
+                && message != null
+                && message.type == MessageType.ONBOARDING) {
+            actionListener.onNegativeButtonClick(message);
+        }
     }
 
     public void show(String tag) {

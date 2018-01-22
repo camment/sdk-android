@@ -131,11 +131,21 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (camments != null) {
             if (camments.size() == 1
                     && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.PLAY)) {
-                onboardingOverlay.displayTooltip(Step.PLAY);
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onboardingOverlay.displayTooltip(Step.PLAY);
+                    }
+                }, 500);
             } else if (camments.size() > 0
                     && OnboardingPreferences.getInstance().isOnboardingStepLastRemaining(Step.DELETE)
                     && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.DELETE)) {
-                onboardingOverlay.displayTooltip(Step.DELETE);
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onboardingOverlay.displayTooltip(Step.DELETE);
+                    }
+                }, 500);
             }
         }
     }
@@ -482,6 +492,16 @@ abstract class BaseCammentOverlay extends RelativeLayout
         onStartOnboarding();
     }
 
+    @Override
+    public void onOnboardingMaybeLater() {
+        onMaybeLaterOnboarding();
+    }
+
+    @Override
+    public void onOnboardingHideMaybeLaterIfNeeded() {
+        onHideMaybeLaterIfNeededOnboarding();
+    }
+
     private void onPulledDown() {
         onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
 
@@ -612,6 +632,14 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     private void onStartOnboarding() {
         onboardingOverlay.displayTooltip(Step.RECORD);
+    }
+
+    private void onMaybeLaterOnboarding() {
+        onboardingOverlay.displayTooltip(Step.LATER);
+    }
+
+    private void onHideMaybeLaterIfNeededOnboarding() {
+        onboardingOverlay.hideTooltipIfNeeded(Step.LATER);
     }
 
     @SuppressWarnings("unused")

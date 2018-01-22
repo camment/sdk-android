@@ -26,6 +26,7 @@
     <string name="cmmsdk_help_swipe_down_to_invite">Deslice el botón de Camment hacia ↓ abajo\npara invitar amigos a este chat</string>
     <string name="cmmsdk_help_swipe_up_to_invite">Deslice el botón Camment hacia ↑ arriba\npara invitar amigos a este chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
+    <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
 
     <string name="cmmsdk_setup_use_camment_chat">¿Te gustaría chatear a través de videos con amigos mientras miras este programa?</string>
     <string name="cmmsdk_setup_what_is_camment">es como si enviaras un SMS pero enviando videos de 5 segundos (Camments) que aparecerán en una ventana en la parte superior de la pantalla, a la vez que ves este programa</string>

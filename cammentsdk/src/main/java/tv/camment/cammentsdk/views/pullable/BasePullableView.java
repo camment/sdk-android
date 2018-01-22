@@ -158,6 +158,10 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
                 case MotionEvent.ACTION_DOWN:
                     recordingStopCalled = false;
 
+                    if (listener != null) {
+                        listener.onOnboardingHideMaybeLaterIfNeeded();
+                    }
+
                     if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
                         BaseMessage message = new BaseMessage();
                         message.type = MessageType.ONBOARDING;
@@ -302,7 +306,10 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
 
     @Override
     public void onNegativeButtonClick(BaseMessage baseMessage) {
-
+        if (listener != null
+                && baseMessage.type == MessageType.ONBOARDING) {
+            listener.onOnboardingMaybeLater();
+        }
     }
 
     public void show() {
@@ -324,6 +331,10 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
         void onPress();
 
         void onOnboardingStart();
+
+        void onOnboardingMaybeLater();
+
+        void onOnboardingHideMaybeLaterIfNeeded();
 
     }
 

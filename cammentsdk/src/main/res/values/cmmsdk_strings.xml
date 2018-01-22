@@ -31,6 +31,7 @@
     <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↓ down\nto invite friends to this chat</string>
     <string name="cmmsdk_help_swipe_up_to_invite">Pull the camment button ↑ up\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
+    <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
 
     <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>
     <string name="cmmsdk_setup_what_is_camment">It\'s like SMS group messaging but with mini videos (camments) on top of the show you are now watching</string>

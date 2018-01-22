@@ -288,8 +288,21 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         adDetailView = (AdDetailView) findViewById(R.id.cmmsdk_ad_detail_view);
 
-//        drawerLayout = (DrawerLayout) findViewById(R.id.cmmsdk_drawer_layout);
-//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerLayout = (DrawerLayout) findViewById(R.id.cmmsdk_drawer_layout);
+        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                if (onboardingOverlay != null) {
+                    onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
+                }
+
+                if (!OnboardingPreferences.getInstance().wasAutoInviteTriggered()
+                        && !CammentSDK.getInstance().getAppAuthIdentityProvider().isLoggedIn()) {
+                    OnboardingPreferences.getInstance().setAutoInviteTriggered();
+                    onPulledDown();
+                }
+            }
+        });
 
         if (getContext() instanceof AppCompatActivity) {
             FragmentManager fm = ((AppCompatActivity) getContext()).getSupportFragmentManager();

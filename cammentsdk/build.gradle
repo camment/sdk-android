@@ -26,6 +26,7 @@ android {
         buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
         buildConfigField("boolean", "SHOW_ADS", "true")
         buildConfigField("boolean", "USE_MIXPANEL", "false")
+        buildConfigField("boolean", "PULL_UP_BUTTON", "false")
     }
 
     buildTypes {

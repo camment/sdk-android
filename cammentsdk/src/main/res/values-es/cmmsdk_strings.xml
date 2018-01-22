@@ -25,6 +25,7 @@
     <string name="cmmsdk_help_tap_to_play">Bien hecho! Ahora presiona sobre el Camment para poder escucharlo</string>
     <string name="cmmsdk_help_swipe_down_to_invite">Deslice el botón de Camment hacia ↓ abajo\npara invitar amigos a este chat</string>
     <string name="cmmsdk_help_swipe_up_to_invite">Deslice el botón Camment hacia ↑ arriba\npara invitar amigos a este chat</string>
+    <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
     <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
 

@@ -76,6 +76,7 @@ abstract class BaseTooltipView extends RelativeLayout {
             switch (step) {
                 case SHOW:
                 case HIDE:
+                case INVITE:
                     position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
                     position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
                     break;
@@ -118,7 +119,7 @@ abstract class BaseTooltipView extends RelativeLayout {
                 tvTooltipText.setText(R.string.cmmsdk_help_tap_and_hold_to_delete);
                 break;
             case INVITE:
-                tvTooltipText.setText(R.string.cmmsdk_help_swipe_up_to_invite);
+                tvTooltipText.setText(R.string.cmmsdk_help_sidebar_to_invite);
                 break;
             case LATER:
                 tvTooltipText.setText(R.string.cmmsdk_help_start_making_video_camments);

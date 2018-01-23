@@ -86,7 +86,7 @@ public class CammentSettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.settings_main);
 
             Preference releasePreference = findPreference(getString(R.string.key_release_version));
-            releasePreference.setSummary(BuildConfig.VERSION_NAME);
+            releasePreference.setSummary(BuildConfig.VERSION_NAME + " (" + BuildConfig.API_ENDPOINT + ", " + (BuildConfig.DEBUG ? "debug" : "release") + ")");
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_adjust_camment_volume)));
 

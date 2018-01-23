@@ -52,6 +52,8 @@ android {
 
             signingConfig signingConfigs.debug
 
+            buildConfigField("String", "API_ENDPOINT", "\"PROD\"")
+
             resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
 
@@ -61,6 +63,8 @@ android {
             debuggable true
 
             signingConfig signingConfigs.debug
+
+            buildConfigField("String", "API_ENDPOINT", "\"DEV\"")
 
             resValue "string", "camment_api_key", "iYeooUSdMZ8FOBMZeL2zb9YDLdW0uvbVlitykh7d"
         }
@@ -72,6 +76,8 @@ android {
 
             signingConfig signingConfigs.release
 
+            buildConfigField("String", "API_ENDPOINT", "\"PROD\"")
+
             resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
 
@@ -81,6 +87,8 @@ android {
                     getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             signingConfig signingConfigs.release
+
+            buildConfigField("String", "API_ENDPOINT", "\"DEV\"")
 
             resValue "string", "camment_api_key", "iYeooUSdMZ8FOBMZeL2zb9YDLdW0uvbVlitykh7d"
         }

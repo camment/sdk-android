@@ -4,10 +4,13 @@ import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -69,6 +72,7 @@ import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
+import tv.camment.cammentsdk.receiver.NetworkChangeReceiver;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
 import tv.camment.cammentsdk.utils.LogUtils;
@@ -117,6 +121,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private static MobileAnalyticsManager analytics;
 
     private DrawerLayout drawerLayout;
+
+    private NetworkChangeReceiver networkReceiver;
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -216,6 +222,19 @@ abstract class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == VISIBLE) {
+            networkReceiver = new NetworkChangeReceiver();
+            getContext().registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        } else {
+            if (networkReceiver != null) {
+                getContext().unregisterReceiver(networkReceiver);
+            }
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         stopCammentPlayback();
         if (analytics != null) {
@@ -224,6 +243,11 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         EventBus.getDefault().unregister(this);
+
+        if (networkReceiver != null) {
+            getContext().unregisterReceiver(networkReceiver);
+        }
+
         super.onDetachedFromWindow();
     }
 

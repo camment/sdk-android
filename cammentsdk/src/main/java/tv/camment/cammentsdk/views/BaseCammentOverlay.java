@@ -222,12 +222,12 @@ abstract class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
         if (visibility == VISIBLE) {
             networkReceiver = new NetworkChangeReceiver();
             getContext().registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        } else {
+        } else if (visibility == GONE) {
             if (networkReceiver != null) {
                 getContext().unregisterReceiver(networkReceiver);
             }
@@ -243,10 +243,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         EventBus.getDefault().unregister(this);
-
-        if (networkReceiver != null) {
-            getContext().unregisterReceiver(networkReceiver);
-        }
 
         super.onDetachedFromWindow();
     }

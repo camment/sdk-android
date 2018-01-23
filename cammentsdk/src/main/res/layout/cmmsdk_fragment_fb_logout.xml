@@ -10,7 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:alpha="0.6"
         android:background="@drawable/cmmsdk_button_ripple"
         android:padding="8dp"
         android:src="@drawable/cmmsdk_ic_user" />
@@ -27,15 +26,15 @@
 
     <Button
         android:id="@+id/cmmsdk_btn_logout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_below="@+id/cmmsdk_tv_logout"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/holo_blue_dark"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
         android:text="@string/cmmsdk_drawer_logout_fb"
         android:textAllCaps="false"
         android:textColor="@android:color/white" />

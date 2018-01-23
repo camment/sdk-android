@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,31 +11,43 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.camment.clientsdk.model.Usergroup;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
 import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
+import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.auth.CammentUserInfo;
 import tv.camment.cammentsdk.data.UserGroupProvider;
-import tv.camment.cammentsdk.data.model.CUserGroup;
+import tv.camment.cammentsdk.data.UserInfoProvider;
+import tv.camment.cammentsdk.data.model.CUserInfo;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
+import tv.camment.cammentsdk.helpers.AuthHelper;
 
 public class FbUserFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private ImageView ivAvatar;
     private TextView tvName;
-    private TextView tvGroups;
+    private Button btnInvite;
 
     private OnSwitchViewListener onSwitchViewListener;
 
@@ -49,7 +62,6 @@ public class FbUserFragment extends Fragment
 
         ivAvatar = (ImageView) rootView.findViewById(R.id.cmmsdk_iv_avatar);
         tvName = (TextView) rootView.findViewById(R.id.cmmsdk_tv_name);
-        tvGroups = (TextView) rootView.findViewById(R.id.cmmsdk_tv_groups);
 
         ImageButton ibSettings = (ImageButton) rootView.findViewById(R.id.cmmsdk_ib_settings);
         ibSettings.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +72,7 @@ public class FbUserFragment extends Fragment
         });
 
         if (BuildConfig.SHOW_GROUP_LIST) {
-            tvGroups.setOnClickListener(new View.OnClickListener() {
+            ivAvatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (onSwitchViewListener != null) {
@@ -69,6 +81,14 @@ public class FbUserFragment extends Fragment
                 }
             });
         }
+
+        btnInvite = (Button) rootView.findViewById(R.id.cmmsdk_btn_invite);
+        btnInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleInviteUsers();
+            }
+        });
 
         return rootView;
     }
@@ -97,19 +117,34 @@ public class FbUserFragment extends Fragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return UserGroupProvider.getUserGroupLoader();
+        Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+        if (activeUserGroup == null) {
+            return null;
+        } else {
+            return UserInfoProvider.getUserInfoLoader(activeUserGroup.getUuid());
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<CUserGroup> userGroups = UserGroupProvider.listFromCursor(data);
-        if (userGroups == null
-                || userGroups.size() == 0) {
-            tvGroups.setText(R.string.cmmsdk_drawer_no_chat_groups);
-        } else {
-            tvGroups.setText(String.format(getString(R.string.cmmsdk_drawer_chat_groups), userGroups.size()));
-        }
+        List<CUserInfo> userInfos = UserInfoProvider.listFromCursor(data);
+
+        boolean inviteBtnVisible = userInfos != null && userInfos.size() > 0;
+
+        btnInvite.setVisibility(inviteBtnVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -141,6 +176,34 @@ public class FbUserFragment extends Fragment
     private void handleOnSettingsClick() {
         if (onSwitchViewListener != null) {
             onSwitchViewListener.switchToFbUserLogout();
+        }
+    }
+
+    private void handleInviteUsers() {
+        if (AuthHelper.getInstance().isLoggedIn()) {
+            ApiManager.getInstance().getGroupApi().createEmptyUsergroupIfNeededAndGetDeeplink();
+        } else {
+            if (getContext() instanceof Activity) {
+                PendingActions.getInstance().addAction(PendingActions.Action.SHOW_SHARING_OPTIONS);
+
+                CammentSDK.getInstance().getAppAuthIdentityProvider().logIn((Activity) getContext());
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UserGroupChangeEvent event) {
+        Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+        int count = 0;
+        if (activeUserGroup != null) {
+            count = UserInfoProvider.getConnectedUsersCountByGroupUuid(activeUserGroup.getUuid());
+        }
+        btnInvite.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+
+        if (getContext() instanceof AppCompatActivity) {
+            getLoaderManager().destroyLoader(1);
+            getLoaderManager().initLoader(1, null, this);
         }
     }
 

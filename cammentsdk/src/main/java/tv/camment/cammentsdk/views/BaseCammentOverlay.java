@@ -319,12 +319,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
                 if (onboardingOverlay != null) {
                     onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
                 }
-
-                if (!OnboardingPreferences.getInstance().wasAutoInviteTriggered()
-                        && !CammentSDK.getInstance().getAppAuthIdentityProvider().isLoggedIn()) {
-                    OnboardingPreferences.getInstance().setAutoInviteTriggered();
-                    onPulledDown();
-                }
             }
         });
 

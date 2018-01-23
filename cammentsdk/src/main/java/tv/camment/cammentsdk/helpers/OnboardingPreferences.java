@@ -15,9 +15,6 @@ public final class OnboardingPreferences extends BasePreferences {
     private static final String PREFS_DELETE = "onboarding_delete";
     private static final String PREFS_INVITE = "onboarding_invite";
 
-    private static final String PREFS_AUTO_INVITE = "onboarding_auto_invite";
-
-
     private List<Step> steps;
 
     private static OnboardingPreferences INSTANCE;
@@ -104,14 +101,6 @@ public final class OnboardingPreferences extends BasePreferences {
 
     public boolean isOnboardingStepLastRemaining(Step step) {
         return steps != null && steps.size() == 1 && steps.get(0) == step;
-    }
-
-    public void setAutoInviteTriggered() {
-        putBoolean(PREFS_AUTO_INVITE, true);
-    }
-
-    public boolean wasAutoInviteTriggered() {
-        return getBoolean(PREFS_AUTO_INVITE, false);
     }
 
 }

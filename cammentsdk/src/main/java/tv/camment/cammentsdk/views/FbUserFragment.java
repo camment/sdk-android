@@ -59,18 +59,6 @@ public class FbUserFragment extends Fragment
             }
         });
 
-//        ivAvatar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Profile profile = Profile.getCurrentProfile();
-//                if (profile != null
-//                        && profile.getLinkUri() != null) {
-//                    Intent intent = new Intent(Intent.ACTION_VIEW, profile.getLinkUri());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-
         if (BuildConfig.SHOW_GROUP_LIST) {
             tvGroups.setOnClickListener(new View.OnClickListener() {
                 @Override

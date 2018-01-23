@@ -30,4 +30,8 @@
     <string name="mild_adjustment">Mild</string>
     <string name="no_adjustment">No</string>
 
+    <string name="key_release_version" translatable="false">key_release_version</string>
+    <string name="title_release_version" translatable="false">Release version</string>
+
+
 </resources>

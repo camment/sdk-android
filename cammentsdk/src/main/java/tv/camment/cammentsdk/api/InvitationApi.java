@@ -213,7 +213,7 @@ public final class InvitationApi extends CammentAsyncClient {
                 UpdateUserStateInGroupRequest updateRequest = new UpdateUserStateInGroupRequest();
                 updateRequest.setState(UserState.BLOCKED.getStringValue());
 
-                devcammentClient.usergroupsGroupUuidUsersUserIdStatePut(userUuid, groupUuid, updateRequest);
+                devcammentClient.usergroupsGroupUuidUsersUserIdPut(userUuid, groupUuid, updateRequest);
                 return new Object();
             }
         }, blockUserCallback());
@@ -240,7 +240,7 @@ public final class InvitationApi extends CammentAsyncClient {
                 UpdateUserStateInGroupRequest updateRequest = new UpdateUserStateInGroupRequest();
                 updateRequest.setState(UserState.ACTIVE.getStringValue());
 
-                devcammentClient.usergroupsGroupUuidUsersUserIdStatePut(userUuid, groupUuid, updateRequest);
+                devcammentClient.usergroupsGroupUuidUsersUserIdPut(userUuid, groupUuid, updateRequest);
                 return new Object();
             }
         }, unblockUserCallback());

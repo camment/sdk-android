@@ -171,6 +171,9 @@ public final class CammentDialog extends DialogFragment {
             case KICKED_OUT:
                 tvTitle.setText(R.string.cmmsdk_removed_from_group_title);
                 break;
+            case BLOCKED:
+                tvTitle.setText(R.string.cmmsdk_blocked_from_group_title);
+                break;
         }
     }
 
@@ -203,6 +206,9 @@ public final class CammentDialog extends DialogFragment {
             case KICKED_OUT:
                 tvMessage.setText(R.string.cmmsdk_removed_from_group_msg);
                 break;
+            case BLOCKED:
+                tvMessage.setText(R.string.cmmsdk_blocked_from_group_msg);
+                break;
         }
     }
 
@@ -216,6 +222,7 @@ public final class CammentDialog extends DialogFragment {
             case NEW_USER_IN_GROUP:
             case FIRST_USER_JOINED:
             case KICKED_OUT:
+            case BLOCKED:
                 btnPositive.setText(R.string.cmmsdk_ok);
                 btnNegative.setVisibility(View.GONE);
                 break;

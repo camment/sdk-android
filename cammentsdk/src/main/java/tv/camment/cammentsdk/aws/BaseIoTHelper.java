@@ -35,7 +35,9 @@ import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
+import tv.camment.cammentsdk.aws.messages.UserBlockedMessage;
 import tv.camment.cammentsdk.aws.messages.UserRemovedMessage;
+import tv.camment.cammentsdk.aws.messages.UserUnblockedMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -179,6 +181,14 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                                 baseMessage = new Gson().fromJson(message, AdMessage.class);
                                 handleMessage(baseMessage, identityId);
                                 break;
+                            case USER_BLOCKED:
+                                baseMessage = new Gson().fromJson(message, UserBlockedMessage.class);
+                                handleMessage(baseMessage, identityId);
+                                break;
+                            case USER_UNBLOCKED:
+                                baseMessage = new Gson().fromJson(message, UserUnblockedMessage.class);
+                                handleMessage(baseMessage, identityId);
+                                break;
                         }
                     }
                 }
@@ -259,6 +269,17 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         if (isAdValid((AdMessage) message)) {
                             handleAdMessage((AdMessage) message);
                         }
+                        break;
+                    case USER_BLOCKED:
+                        if (isUserBlockedValid((UserBlockedMessage) message)) {
+                            handleUserBlockedMessage((UserBlockedMessage) message, identityId);
+                        }
+                        break;
+                    case USER_UNBLOCKED:
+                        if (isUserUnblockedValid((UserUnblockedMessage) message)) {
+                            handleUserUnblockedMessage((UserUnblockedMessage) message, identityId);
+                        }
+                        break;
                 }
             }
         });
@@ -322,11 +343,36 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && !TextUtils.isEmpty(m.body.url);
     }
 
+    private boolean isUserBlockedValid(UserBlockedMessage m) {
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+
+        return m.body != null
+                && usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && usergroup.getUuid().equals(m.body.groupUuid)
+                && m.body.blockedUser != null
+                && !TextUtils.isEmpty(m.body.blockedUser.userCognitoIdentityId)
+                && !TextUtils.isEmpty(m.body.blockedUser.name);
+    }
+
+    private boolean isUserUnblockedValid(UserUnblockedMessage m) {
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+
+        return m.body != null
+                && usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && usergroup.getUuid().equals(m.body.groupUuid)
+                && m.body.unblockedUser != null
+                && !TextUtils.isEmpty(m.body.unblockedUser.userCognitoIdentityId)
+                && !TextUtils.isEmpty(m.body.unblockedUser.name);
+    }
+
     void handleInvitationMessage(BaseMessage message) {
         if (message.type == MessageType.INVITATION
                 && message instanceof InvitationMessage) {
             MixpanelHelper.getInstance().trackEvent(MixpanelHelper.OPEN_DEEPLINK);
-            ApiManager.getInstance().getGroupApi().getUserGroupByUuid(((InvitationMessage) message).body.groupUuid, message);
+
+            ApiManager.getInstance().getUserApi().getUserInfosForGroupUuidAndHandleBlockedUser(((InvitationMessage) message).body.groupUuid, (InvitationMessage) message);
         }
 
         if (message.type == MessageType.NEW_USER_IN_GROUP
@@ -438,6 +484,39 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     private void handleAdMessage(AdMessage message) {
         if (BuildConfig.SHOW_ADS) {
             EventBus.getDefault().post(new AdMessageReceivedEvent(message, System.currentTimeMillis()));
+        }
+    }
+
+    private void handleUserBlockedMessage(UserBlockedMessage message, String identityId) {
+        if (TextUtils.equals(message.body.blockedUser.userCognitoIdentityId, identityId)) {
+            //I've been blocked in group / active user group is checked when validating message
+            BaseMessage msg = new BaseMessage();
+            msg.type = MessageType.BLOCKED;
+
+            CammentDialog cammentDialog = CammentDialog.createInstance(msg);
+            cammentDialog.show(message.toString());
+
+            DataManager.getInstance().clearDataForUserGroupChange();
+
+            EventBus.getDefault().post(new UserGroupChangeEvent());
+        } else {
+            //somebody has been blocked
+            UserInfoProvider.setUserInGroupAsBlocked(message.body.blockedUser.userCognitoIdentityId, message.body.groupUuid);
+
+            Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                    String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_blocked), message.body.blockedUser.name),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleUserUnblockedMessage(UserUnblockedMessage message, String identityId) {
+        if (!TextUtils.equals(message.body.unblockedUser.userCognitoIdentityId, identityId)) {
+            //somebody has been unblocked
+            UserInfoProvider.setUserInGroupAsBlocked(message.body.unblockedUser.userCognitoIdentityId, message.body.groupUuid);
+
+            Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                    String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_unblocked), message.body.unblockedUser.name),
+                    Toast.LENGTH_LONG).show();
         }
     }
 

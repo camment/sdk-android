@@ -41,7 +41,15 @@ public enum MessageType {
     KICKED_OUT(14), //internal
 
     @SerializedName("ad")
-    AD(15);
+    AD(15),
+
+    @SerializedName("user-blocked")
+    USER_BLOCKED(16),
+
+    @SerializedName("user-unblocked")
+    USER_UNBLOCKED(17),
+
+    BLOCKED(18); //internal
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

@@ -276,8 +276,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
         }
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-
         if (analytics != null) {
             analytics.getSessionClient().resumeSession();
         }

@@ -1,31 +1,30 @@
 package tv.camment.cammentsdk.api;
 
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.FacebookFriendList;
 import com.camment.clientsdk.model.UsergroupList;
-import com.camment.clientsdk.model.UserinfoInRequest;
+import com.camment.clientsdk.model.Userinfo;
 import com.camment.clientsdk.model.UserinfoList;
-import com.google.gson.Gson;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentAuthType;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
-import tv.camment.cammentsdk.auth.CammentFbUserInfo;
-import tv.camment.cammentsdk.auth.CammentUserInfo;
-import tv.camment.cammentsdk.aws.AWSManager;
+import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.helpers.AuthHelper;
-import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.LogUtils;
 
 
@@ -77,6 +76,50 @@ public final class UserApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getMyUserGroups", exception);
+            }
+        };
+    }
+
+    public void getUserInfosForGroupUuidAndHandleBlockedUser(final String groupUuid, final InvitationMessage message) {
+        submitBgTask(new Callable<UserinfoList>() {
+            @Override
+            public UserinfoList call() throws Exception {
+                return devcammentClient.usergroupsGroupUuidUsersGet(groupUuid);
+            }
+        }, getUserInfosForGroupUuidAndHandleBlockedUserCallback(groupUuid, message));
+    }
+
+    private CammentCallback<UserinfoList> getUserInfosForGroupUuidAndHandleBlockedUserCallback(final String groupUuid, final InvitationMessage message) {
+        return new CammentCallback<UserinfoList>() {
+            @Override
+            public void onSuccess(UserinfoList result) {
+                LogUtils.debug("onSuccess", "getUserInfosForGroupUuidAndHandleBlockedUser");
+                if (result != null
+                        && result.getItems() != null) {
+                    UserInfoProvider.insertUserInfos(result.getItems(), groupUuid);
+
+                    String identityId = IdentityPreferences.getInstance().getIdentityId();
+
+                    boolean blocked = false;
+
+                    for (Userinfo userinfo : result.getItems()) {
+                        if (TextUtils.equals(identityId, userinfo.getUserCognitoIdentityId())) {
+                            blocked = true;
+                            break;
+                        }
+                    }
+
+                    if (blocked) {
+                        Toast.makeText(CammentSDK.getInstance().getApplicationContext(), R.string.cmmsdk_cant_join_blocked, Toast.LENGTH_LONG).show();
+                    } else {
+                        ApiManager.getInstance().getGroupApi().getUserGroupByUuid(message.body.groupUuid, message);
+                    }
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                Log.e("onException", "getUserInfosForGroupUuidAndHandleBlockedUser", exception);
             }
         };
     }

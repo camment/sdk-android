@@ -14,6 +14,7 @@ import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CUserInfo;
+import tv.camment.cammentsdk.data.model.UserState;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.LogUtils;
 
@@ -85,6 +86,32 @@ public final class UserInfoProvider {
 
         int delete = cr.delete(DataContract.UserInfo.CONTENT_URI, where, selectionArgs);
         LogUtils.debug("deleteUserInfoById", identityId + " - " + (delete > 0));
+    }
+
+    public static void setUserInGroupAsBlocked(String userUuid, String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserInfo.userCognitoIdentityId + "=? AND " + DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {userUuid, groupUuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.UserInfo.state, UserState.BLOCKED.getStringValue());
+
+        int update = cr.update(DataContract.UserInfo.CONTENT_URI, cv, where, selectionArgs);
+        LogUtils.debug("DATABASE", "setUserInGroupAsBlocked: " + userUuid + " - " + (update > 0));
+    }
+
+    public static void setUserInGroupAsUnblocked(String userUuid, String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserInfo.userCognitoIdentityId + "=? AND " + DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {userUuid, groupUuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.UserInfo.state, UserState.ACTIVE.getStringValue());
+
+        int update = cr.update(DataContract.UserInfo.CONTENT_URI, cv, where, selectionArgs);
+        LogUtils.debug("DATABASE", "setUserInGroupAsUnblocked: " + userUuid + " - " + (update > 0));
     }
 
     public static List<CUserInfo> listFromCursor(Cursor cursor) {

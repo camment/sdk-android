@@ -101,6 +101,7 @@ final class DataContract {
         String name = "name";
         String picture = "picture";
         String groupUuid = "groupUuid";
+        String state = "state";
     }
 
     static final class UserInfo implements BaseColumns, UserInfoColumns {

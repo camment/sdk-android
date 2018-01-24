@@ -25,7 +25,8 @@ public final class UserInfoProvider {
             DataContract.UserInfo.userCognitoIdentityId,
             DataContract.UserInfo.name,
             DataContract.UserInfo.groupUuid,
-            DataContract.UserInfo.picture};
+            DataContract.UserInfo.picture,
+            DataContract.UserInfo.state};
 
     public static void insertUserInfos(List<Userinfo> userinfos, String groupUuid) {
         if (userinfos == null || userinfos.size() == 0)
@@ -44,6 +45,7 @@ public final class UserInfoProvider {
             cv.put(DataContract.UserInfo.name, userinfo.getName());
             cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
             cv.put(DataContract.UserInfo.groupUuid, groupUuid);
+            cv.put(DataContract.UserInfo.state, userinfo.getState());
 
             values.add(cv);
         }
@@ -65,6 +67,7 @@ public final class UserInfoProvider {
         cv.put(DataContract.UserInfo.name, userinfo.getName());
         cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
         cv.put(DataContract.UserInfo.groupUuid, groupUuid);
+        cv.put(DataContract.UserInfo.state, userinfo.getState());
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserInfo.CONTENT_URI, cv);
     }
@@ -104,6 +107,7 @@ public final class UserInfoProvider {
         userInfo.setName(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.name)));
         userInfo.setPicture(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.picture)));
         userInfo.setGroupUuid(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.groupUuid)));
+        userInfo.setState(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.state)));
 
         return userInfo;
     }

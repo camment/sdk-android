@@ -24,12 +24,6 @@ public enum MessageType {
     @SerializedName("camment-deleted")
     CAMMENT_DELETED(5),
 
-    @SerializedName("membership-request")
-    MEMBERSHIP_REQUEST(6),
-
-    @SerializedName("membership-accepted")
-    MEMBERSHIP_ACCEPTED(7),
-
     SHARE(8), //internal
 
     LOGIN_CONFIRMATION(9), //internal

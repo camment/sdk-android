@@ -11,18 +11,19 @@ public final class CUserInfo extends Userinfo {
 
     }
 
-    public CUserInfo(Userinfo userinfo) {
-        setUserCognitoIdentityId(userinfo.getUserCognitoIdentityId());
-        setName(userinfo.getName());
-        setPicture(userinfo.getPicture());
-    }
-
     public String getGroupUuid() {
         return groupUuid;
     }
 
     public void setGroupUuid(String groupUuid) {
         this.groupUuid = groupUuid;
+    }
+
+    public UserState getUserState() {
+        if (getState() == null)
+            return UserState.UNDEFINED;
+
+        return UserState.fromString(getState());
     }
 
 }

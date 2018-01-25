@@ -7,10 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -21,16 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.BuildConfig;
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
-import tv.camment.cammentsdk.views.CammentDialog;
+import tv.camment.cammentsdk.views.dialogs.OnboardingCammentDialog;
 
 
-abstract class BasePullableView extends FrameLayout implements CammentDialog.ActionListener {
+abstract class BasePullableView extends FrameLayout {
 
     private static final int MOVE_THRESHOLD = 50;
 
@@ -85,7 +82,7 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
                     scrollThreshold = new ScrollThreshold(anchorOffset.getUp(), anchorOffset.getDown());
                 } else {
                     anchorOffset = new AnchorOffset(0, 0);
-                    scrollThreshold = new ScrollThreshold(0,0);
+                    scrollThreshold = new ScrollThreshold(0, 0);
                 }
             }
         });
@@ -172,9 +169,7 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
                         BaseMessage message = new BaseMessage();
                         message.type = MessageType.ONBOARDING;
 
-                        CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                        cammentDialog.setActionListener(this);
-                        cammentDialog.show(message.toString());
+                        OnboardingCammentDialog.createInstance(message).show();
                         return true;
                     }
 
@@ -302,22 +297,6 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
         }
     }
 
-    @Override
-    public void onPositiveButtonClick(BaseMessage baseMessage) {
-        if (listener != null
-                && baseMessage.type == MessageType.ONBOARDING) {
-            listener.onOnboardingStart();
-        }
-    }
-
-    @Override
-    public void onNegativeButtonClick(BaseMessage baseMessage) {
-        if (listener != null
-                && baseMessage.type == MessageType.ONBOARDING) {
-            listener.onOnboardingMaybeLater();
-        }
-    }
-
     public void show() {
         animate().translationX(0).alpha(0.5f).start();
     }
@@ -335,10 +314,6 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
         void onAnchor();
 
         void onPress();
-
-        void onOnboardingStart();
-
-        void onOnboardingMaybeLater();
 
         void onOnboardingHideMaybeLaterIfNeeded();
 

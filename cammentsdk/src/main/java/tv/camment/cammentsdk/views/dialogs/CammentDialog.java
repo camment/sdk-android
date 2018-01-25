@@ -1,4 +1,4 @@
-package tv.camment.cammentsdk.views;
+package tv.camment.cammentsdk.views.dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -27,7 +27,7 @@ import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
 
 
-public final class CammentDialog extends DialogFragment {
+public abstract class CammentDialog extends DialogFragment {
 
     private static final String ARGS_MESSAGE = "args_message";
 
@@ -40,12 +40,10 @@ public final class CammentDialog extends DialogFragment {
 
     private ActionListener actionListener;
 
-    public static CammentDialog createInstance(BaseMessage message) {
-        CammentDialog dialog = new CammentDialog();
+    static Bundle getBaseMessageArgs(BaseMessage message) {
         Bundle args = new Bundle();
         args.putParcelable(ARGS_MESSAGE, message);
-        dialog.setArguments(args);
-        return dialog;
+        return args;
     }
 
     @Nullable
@@ -91,8 +89,14 @@ public final class CammentDialog extends DialogFragment {
         setupMessage();
         setupButtons();
 
+        if (getActionListener() != null) {
+            setActionListener(getActionListener());
+        }
+
         return view;
     }
+
+    abstract ActionListener getActionListener();
 
     @Override
     public void onCancel(DialogInterface dialog) {
@@ -103,13 +107,22 @@ public final class CammentDialog extends DialogFragment {
         }
     }
 
-    public void show(String tag) {
+    public void show() {
+        final String tag = getDialogTag();
+
+        CammentDialog cammentDialogByTag = CammentSDK.getInstance().getCammentDialogByTag(tag);
+        if (cammentDialogByTag != null) {
+            cammentDialogByTag.dismiss();
+        }
+
         Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
         if (currentActivity instanceof AppCompatActivity) { //TODO what it not appcompat
             FragmentManager manager = ((AppCompatActivity) currentActivity).getSupportFragmentManager();
             show(manager, tag);
         }
     }
+
+    abstract String getDialogTag();
 
     @Override
     public void show(FragmentManager manager, String tag) {
@@ -138,9 +151,6 @@ public final class CammentDialog extends DialogFragment {
                 } else {
                     tvTitle.setText(String.format(getString(R.string.cmmsdk_user_invited_to_chat), ((InvitationMessage) message).body.invitingUser.name));
                 }
-                break;
-            case INVITATION_SENT:
-                tvTitle.setText(R.string.cmmsdk_user_invitation_sent_title);
                 break;
             case NEW_USER_IN_GROUP:
                 tvTitle.setText(String.format(getString(R.string.cmmsdk_user_entered_chat_title), ((NewUserInGroupMessage) message).body.joiningUser.name));
@@ -173,9 +183,6 @@ public final class CammentDialog extends DialogFragment {
         switch (message.type) {
             case INVITATION:
                 tvMessage.setText(R.string.cmmsdk_join_conversation);
-                break;
-            case INVITATION_SENT:
-                tvMessage.setText(R.string.cmmsdk_user_invitation_sent_desc);
                 break;
             case NEW_USER_IN_GROUP:
                 tvMessage.setText(R.string.cmmsdk_user_entered_chat_desc);
@@ -210,7 +217,6 @@ public final class CammentDialog extends DialogFragment {
                 btnPositive.setText(R.string.cmmsdk_join);
                 btnNegative.setText(R.string.cmmsdk_no);
                 break;
-            case INVITATION_SENT:
             case NEW_USER_IN_GROUP:
             case FIRST_USER_JOINED:
             case KICKED_OUT:
@@ -252,7 +258,5 @@ public final class CammentDialog extends DialogFragment {
         void onNegativeButtonClick(BaseMessage baseMessage);
 
     }
-
-    public static final String TAG_SHARE = "tag_share";
 
 }

@@ -1,10 +1,8 @@
 package tv.camment.cammentsdk.views;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,13 +11,14 @@ import android.widget.RelativeLayout;
 import java.util.HashMap;
 import java.util.Map;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
+import tv.camment.cammentsdk.views.dialogs.CammentDialog;
+import tv.camment.cammentsdk.views.dialogs.OnboardingCammentDialog;
 
 
 abstract class BaseOnboardingOverlay extends RelativeLayout
@@ -59,9 +58,7 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
             BaseMessage message = new BaseMessage();
             message.type = MessageType.ONBOARDING;
 
-            CammentDialog cammentDialog = CammentDialog.createInstance(message);
-            cammentDialog.setActionListener(this);
-            cammentDialog.show(message.toString());
+            OnboardingCammentDialog.createInstance(message).show();
         }
     }
 

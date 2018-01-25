@@ -1,7 +1,6 @@
 package tv.camment.cammentsdk.api;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,7 +32,7 @@ import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.LogUtils;
-import tv.camment.cammentsdk.views.CammentDialog;
+import tv.camment.cammentsdk.views.dialogs.FirstUserJoinedCammentDialog;
 
 
 public final class GroupApi extends CammentAsyncClient {
@@ -216,8 +215,7 @@ public final class GroupApi extends CammentAsyncClient {
                                 if (connectedUsersCountByGroupUuid == 1
                                         && TextUtils.equals(((NewUserInGroupMessage) message).body.groupOwnerCognitoIdentityId, IdentityPreferences.getInstance().getIdentityId())) {
                                     message.type = MessageType.FIRST_USER_JOINED;
-                                    CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                                    cammentDialog.show(message.toString());
+                                    FirstUserJoinedCammentDialog.createInstance(message).show();
                                 }
                             }
                         }, 1000);

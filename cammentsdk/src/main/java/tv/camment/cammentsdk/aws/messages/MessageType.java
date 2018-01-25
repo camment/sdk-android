@@ -11,8 +11,6 @@ public enum MessageType {
     @SerializedName("invitation")
     INVITATION(0),
 
-    INVITATION_SENT(1), //internal
-
     ONBOARDING(2), //internal
 
     @SerializedName("new-user-in-group")

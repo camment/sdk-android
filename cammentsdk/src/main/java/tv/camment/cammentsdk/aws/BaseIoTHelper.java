@@ -1,8 +1,5 @@
 package tv.camment.cammentsdk.aws;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,7 +15,6 @@ import com.google.gson.Gson;
 import org.greenrobot.eventbus.EventBus;
 
 import java.security.KeyStore;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -50,10 +46,11 @@ import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.utils.LogUtils;
-import tv.camment.cammentsdk.views.CammentDialog;
+import tv.camment.cammentsdk.views.dialogs.BlockedCammentDialog;
+import tv.camment.cammentsdk.views.dialogs.InvitationCammentDialog;
+import tv.camment.cammentsdk.views.dialogs.KickedOutCammentDialog;
 
-abstract class BaseIoTHelper extends CammentAsyncClient
-        implements CammentDialog.ActionListener {
+abstract class BaseIoTHelper extends CammentAsyncClient {
 
     private AWSIotMqttManager mqttManager;
     private final KeyStore clientKeyStore;
@@ -403,29 +400,8 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     void showInvitationDialog(BaseMessage message) {
         CammentSDK.getInstance().hideProgressBar();
 
-        Activity activity = CammentSDK.getInstance().getCurrentActivity();
-        if (activity instanceof AppCompatActivity) {
-            dismissInvitationSentIfNeeded(((AppCompatActivity) activity).getSupportFragmentManager().getFragments());
-
-            Fragment fragment = ((AppCompatActivity) activity).getSupportFragmentManager().findFragmentByTag(message.toString());
-            if (fragment == null || !fragment.isAdded()) {
-                CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                if (message instanceof InvitationMessage) {
-                    cammentDialog.setActionListener(this);
-                }
-                cammentDialog.show(message.toString());
-            }
-        }
-    }
-
-    private void dismissInvitationSentIfNeeded(List<Fragment> fragments) {
-        if (fragments != null) {
-            for (Fragment f : fragments) {
-                if (f instanceof CammentDialog
-                        && ((CammentDialog) f).getMessageType() == MessageType.INVITATION_SENT) {
-                    ((CammentDialog) f).dismiss();
-                }
-            }
+        if (message instanceof InvitationMessage) {
+            InvitationCammentDialog.createInstance(message).show();
         }
     }
 
@@ -465,8 +441,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             BaseMessage msg = new BaseMessage();
             msg.type = MessageType.KICKED_OUT;
 
-            CammentDialog cammentDialog = CammentDialog.createInstance(msg);
-            cammentDialog.show(message.toString());
+            KickedOutCammentDialog.createInstance(msg).show();
 
             DataManager.getInstance().clearDataForUserGroupChange();
 
@@ -493,8 +468,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             BaseMessage msg = new BaseMessage();
             msg.type = MessageType.BLOCKED;
 
-            CammentDialog cammentDialog = CammentDialog.createInstance(msg);
-            cammentDialog.show(message.toString());
+            BlockedCammentDialog.createInstance(msg).show();
 
             DataManager.getInstance().clearDataForUserGroupChange();
 
@@ -518,35 +492,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                     String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_unblocked), message.body.unblockedUser.name),
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public void onPositiveButtonClick(BaseMessage baseMessage) {
-        switch (baseMessage.type) {
-            case INVITATION:
-                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.JOIN_GROUP);
-
-                InvitationMessage invitationMessage = (InvitationMessage) baseMessage;
-
-                Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
-                if (activeUserGroup != null) {
-                    UserGroupProvider.setActive(activeUserGroup.getUuid(), false);
-                }
-
-                UserGroupProvider.setActive(invitationMessage.body.groupUuid, true);
-
-                EventBus.getDefault().post(new UserGroupChangeEvent());
-
-                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-
-                ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
-                break;
-        }
-    }
-
-    @Override
-    public void onNegativeButtonClick(BaseMessage baseMessage) {
-
     }
 
 }

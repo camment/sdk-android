@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -66,6 +65,7 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.ChatItem;
 import tv.camment.cammentsdk.events.AdMessageReceivedEvent;
+import tv.camment.cammentsdk.events.OnboardingEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
@@ -513,16 +513,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onOnboardingStart() {
-        onStartOnboarding();
-    }
-
-    @Override
-    public void onOnboardingMaybeLater() {
-        onMaybeLaterOnboarding();
-    }
-
-    @Override
     public void onOnboardingHideMaybeLaterIfNeeded() {
         onHideMaybeLaterIfNeededOnboarding();
     }
@@ -685,6 +675,16 @@ abstract class BaseCammentOverlay extends RelativeLayout
     public void onMessageEvent(AdMessageReceivedEvent event) {
         if (adapter != null) {
             adapter.addAdToList(event.getAdMessage(), event.getTimestamp());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OnboardingEvent event) {
+        if (event.shouldStart()) {
+            onStartOnboarding();
+        } else {
+            onMaybeLaterOnboarding();
         }
     }
 

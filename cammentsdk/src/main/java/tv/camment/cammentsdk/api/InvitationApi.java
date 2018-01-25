@@ -1,8 +1,5 @@
 package tv.camment.cammentsdk.api;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,9 +25,8 @@ import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CUserInfo;
 import tv.camment.cammentsdk.data.model.UserState;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
-import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.utils.LogUtils;
-import tv.camment.cammentsdk.views.CammentDialog;
+import tv.camment.cammentsdk.views.dialogs.ShareCammentDialog;
 
 
 public final class InvitationApi extends CammentAsyncClient {
@@ -112,46 +108,10 @@ public final class InvitationApi extends CammentAsyncClient {
 
                 if (result != null
                         && !TextUtils.isEmpty(result.getUrl())) {
-                    CammentDialog cammentDialogByTag = CammentSDK.getInstance().getCammentDialogByTag(CammentDialog.TAG_SHARE);
-                    if (cammentDialogByTag != null) {
-                        return;
-                    }
-
                     BaseMessage message = new BaseMessage();
                     message.type = MessageType.SHARE;
 
-                    CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                    cammentDialog.setActionListener(new CammentDialog.ActionListener() {
-                        @Override
-                        public void onPositiveButtonClick(BaseMessage baseMessage) {
-                            MixpanelHelper.getInstance().trackEvent(MixpanelHelper.INVITE);
-
-                            Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
-                            if (currentActivity != null) {
-                                String msg;
-                                String customInvitationText = GeneralPreferences.getInstance().getInvitationText();
-
-                                if (TextUtils.isEmpty(customInvitationText)) {
-                                    msg = currentActivity.getString(R.string.cmmsdk_invitation_default_msg);
-                                } else {
-                                    msg = customInvitationText;
-                                }
-
-                                Intent intent = new Intent();
-                                intent.setAction(Intent.ACTION_SEND);
-                                intent.putExtra(Intent.EXTRA_TEXT, msg + " " + result.getUrl());
-                                intent.setType("text/plain");
-
-                                currentActivity.startActivity(Intent.createChooser(intent, currentActivity.getString(R.string.cmmsdk_invitation_sharing_options)));
-                            }
-                        }
-
-                        @Override
-                        public void onNegativeButtonClick(BaseMessage baseMessage) {
-
-                        }
-                    });
-                    cammentDialog.show(CammentDialog.TAG_SHARE);
+                    ShareCammentDialog.createInstance(message, result).show();
                 }
             }
 

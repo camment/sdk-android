@@ -21,6 +21,7 @@ import tv.camment.cammentsdk.events.LoginStatusChanged;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 
 public final class CammentAuthenticationProvider extends AWSAbstractCognitoDeveloperIdentityProvider {
@@ -38,7 +39,6 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
     // identityId and token.
     @Override
     public String refresh() {
-        Log.d("AUTH", "refresh");
         CammentSDK.getInstance().showProgressBar();
 
         setToken(null);
@@ -67,13 +67,13 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
 
                     ApiManager.getInstance().getUserApi().getMyUserGroups();
                 } catch (ConcurrentModificationException e) {
-                    Log.d("onException", "refresh ConcurrentModificationException");
+                    LogUtils.debug("onException", "refresh ConcurrentModificationException");
                 }
             } else {
                 try {
                     update(null, null);
                 } catch (ConcurrentModificationException e) {
-                    Log.d("onException", "refresh ConcurrentModificationException");
+                    LogUtils.debug("onException1", "refresh ConcurrentModificationException");
                 }
             }
             CammentSDK.getInstance().hideProgressBar();
@@ -97,8 +97,6 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
     // identityId from your backend.
     @Override
     public String getIdentityId() {
-        Log.d("AUTH", "getIdentityId");
-
         identityId = AWSManager.getInstance().getCognitoCachingCredentialsProvider().getCachedIdentityId();
 
         if (identityId == null) {
@@ -120,8 +118,6 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
     }
 
     private OpenIdToken retrieveCredentialsFromCammentServer() {
-        Log.d("AUTH", "retrieveCredentialsFromCammentServer");
-
         CammentAuthInfo authInfo = AuthHelper.getInstance().getAuthInfo();
         if (authInfo != null) {
             switch (authInfo.getAuthType()) {
@@ -133,8 +129,8 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                         return  null;
 
                     try {
-                        Log.d("openIdToken identity", openIdToken.getIdentityId());
-                        Log.d("openIdToken token", openIdToken.getToken());
+                        LogUtils.debug("openIdToken identity", openIdToken.getIdentityId());
+                        LogUtils.debug("openIdToken token", openIdToken.getToken());
                         return openIdToken;
                     } catch (Exception e) {
                         Log.e("openIdToken", "failed", e);

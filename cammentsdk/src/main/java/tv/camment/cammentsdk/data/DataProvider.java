@@ -19,6 +19,7 @@ import static tv.camment.cammentsdk.data.DataContract.Codes;
 import static tv.camment.cammentsdk.data.DataContract.Show;
 import static tv.camment.cammentsdk.data.DataContract.Tables;
 import static tv.camment.cammentsdk.data.DataContract.UserGroup;
+import static tv.camment.cammentsdk.data.DataContract.UserInfo;
 
 
 public final class DataProvider extends ContentProvider {
@@ -67,9 +68,9 @@ public final class DataProvider extends ContentProvider {
             case Codes.CAMMENT_ID:
                 return Camment.CONTENT_TYPE_ITEM;
             case Codes.USER_INFO:
-                return Camment.CONTENT_TYPE;
+                return UserInfo.CONTENT_TYPE;
             case Codes.USER_INFO_ID:
-                return Camment.CONTENT_TYPE_ITEM;
+                return UserInfo.CONTENT_TYPE_ITEM;
             default:
                 throw new IllegalArgumentException("unknown uri " + uri);
         }

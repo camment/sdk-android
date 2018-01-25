@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.camment.clientsdk.model.Userinfo;
 
@@ -15,7 +14,9 @@ import java.util.List;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CUserInfo;
+import tv.camment.cammentsdk.data.model.UserState;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 
 public final class UserInfoProvider {
@@ -25,7 +26,8 @@ public final class UserInfoProvider {
             DataContract.UserInfo.userCognitoIdentityId,
             DataContract.UserInfo.name,
             DataContract.UserInfo.groupUuid,
-            DataContract.UserInfo.picture};
+            DataContract.UserInfo.picture,
+            DataContract.UserInfo.state};
 
     public static void insertUserInfos(List<Userinfo> userinfos, String groupUuid) {
         if (userinfos == null || userinfos.size() == 0)
@@ -44,6 +46,7 @@ public final class UserInfoProvider {
             cv.put(DataContract.UserInfo.name, userinfo.getName());
             cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
             cv.put(DataContract.UserInfo.groupUuid, groupUuid);
+            cv.put(DataContract.UserInfo.state, userinfo.getState());
 
             values.add(cv);
         }
@@ -65,6 +68,7 @@ public final class UserInfoProvider {
         cv.put(DataContract.UserInfo.name, userinfo.getName());
         cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
         cv.put(DataContract.UserInfo.groupUuid, groupUuid);
+        cv.put(DataContract.UserInfo.state, userinfo.getState());
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserInfo.CONTENT_URI, cv);
     }
@@ -81,7 +85,33 @@ public final class UserInfoProvider {
         String[] selectionArgs = {identityId, groupUuid};
 
         int delete = cr.delete(DataContract.UserInfo.CONTENT_URI, where, selectionArgs);
-        Log.d("deleteUserInfoById", identityId + " - " + (delete > 0));
+        LogUtils.debug("deleteUserInfoById", identityId + " - " + (delete > 0));
+    }
+
+    public static void setUserInGroupAsBlocked(String userUuid, String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserInfo.userCognitoIdentityId + "=? AND " + DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {userUuid, groupUuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.UserInfo.state, UserState.BLOCKED.getStringValue());
+
+        int update = cr.update(DataContract.UserInfo.CONTENT_URI, cv, where, selectionArgs);
+        LogUtils.debug("DATABASE", "setUserInGroupAsBlocked: " + userUuid + " - " + (update > 0));
+    }
+
+    public static void setUserInGroupAsUnblocked(String userUuid, String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.UserInfo.userCognitoIdentityId + "=? AND " + DataContract.UserInfo.groupUuid + "=?";
+        String[] selectionArgs = {userUuid, groupUuid};
+
+        ContentValues cv = new ContentValues();
+        cv.put(DataContract.UserInfo.state, UserState.ACTIVE.getStringValue());
+
+        int update = cr.update(DataContract.UserInfo.CONTENT_URI, cv, where, selectionArgs);
+        LogUtils.debug("DATABASE", "setUserInGroupAsUnblocked: " + userUuid + " - " + (update > 0));
     }
 
     public static List<CUserInfo> listFromCursor(Cursor cursor) {
@@ -104,6 +134,7 @@ public final class UserInfoProvider {
         userInfo.setName(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.name)));
         userInfo.setPicture(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.picture)));
         userInfo.setGroupUuid(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.groupUuid)));
+        userInfo.setState(cursor.getString(cursor.getColumnIndex(DataContract.UserInfo.state)));
 
         return userInfo;
     }

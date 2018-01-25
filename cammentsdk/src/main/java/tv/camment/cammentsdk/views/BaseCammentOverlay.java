@@ -4,10 +4,13 @@ import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -69,8 +72,10 @@ import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
 import tv.camment.cammentsdk.helpers.Step;
+import tv.camment.cammentsdk.receiver.NetworkChangeReceiver;
 import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.pullable.BoundView;
 import tv.camment.cammentsdk.views.pullable.PullableView;
 import tv.camment.cammentsdk.views.pullable.Transformation;
@@ -117,6 +122,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     private DrawerLayout drawerLayout;
 
+    private NetworkChangeReceiver networkReceiver;
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return CammentProvider.getCammentLoader();
@@ -130,11 +137,21 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (camments != null) {
             if (camments.size() == 1
                     && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.PLAY)) {
-                onboardingOverlay.displayTooltip(Step.PLAY);
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onboardingOverlay.displayTooltip(Step.PLAY);
+                    }
+                }, 500);
             } else if (camments.size() > 0
                     && OnboardingPreferences.getInstance().isOnboardingStepLastRemaining(Step.DELETE)
                     && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.DELETE)) {
-                onboardingOverlay.displayTooltip(Step.DELETE);
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        onboardingOverlay.displayTooltip(Step.DELETE);
+                    }
+                }, 500);
             }
         }
     }
@@ -205,6 +222,19 @@ abstract class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        if (visibility == VISIBLE) {
+            networkReceiver = new NetworkChangeReceiver();
+            getContext().registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        } else if (visibility == GONE) {
+            if (networkReceiver != null) {
+                getContext().unregisterReceiver(networkReceiver);
+            }
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         stopCammentPlayback();
         if (analytics != null) {
@@ -213,6 +243,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         EventBus.getDefault().unregister(this);
+
         super.onDetachedFromWindow();
     }
 
@@ -245,8 +276,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
         }
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-
         if (analytics != null) {
             analytics.getSessionClient().resumeSession();
         }
@@ -277,8 +306,15 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         adDetailView = (AdDetailView) findViewById(R.id.cmmsdk_ad_detail_view);
 
-//        drawerLayout = (DrawerLayout) findViewById(R.id.cmmsdk_drawer_layout);
-//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        drawerLayout = (DrawerLayout) findViewById(R.id.cmmsdk_drawer_layout);
+        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                if (onboardingOverlay != null) {
+                    onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
+                }
+            }
+        });
 
         if (getContext() instanceof AppCompatActivity) {
             FragmentManager fm = ((AppCompatActivity) getContext()).getSupportFragmentManager();
@@ -455,7 +491,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onReset(boolean cancelled, boolean callRecordingStop) {
-        Log.d("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
+        LogUtils.debug("PULL", "onReset cancelled: " + cancelled + " callRecordingStop: " + callRecordingStop);
         if (callRecordingStop) {
             onRecordingStop(cancelled);
         }
@@ -463,25 +499,32 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public void onPullStart() {
-        Log.d("PULL", "onPullStart");
+
     }
 
     @Override
     public void onAnchor() {
-        Log.d("PULL", "onAnchor");
         onPulledDown();
     }
 
     @Override
     public void onPress() {
-        Log.d("PULL", "onPress");
         onRecordingStart();
     }
 
     @Override
     public void onOnboardingStart() {
-        Log.d("PULL", "onOnboardingStart");
         onStartOnboarding();
+    }
+
+    @Override
+    public void onOnboardingMaybeLater() {
+        onMaybeLaterOnboarding();
+    }
+
+    @Override
+    public void onOnboardingHideMaybeLaterIfNeeded() {
+        onHideMaybeLaterIfNeededOnboarding();
     }
 
     private void onPulledDown() {
@@ -614,6 +657,14 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     private void onStartOnboarding() {
         onboardingOverlay.displayTooltip(Step.RECORD);
+    }
+
+    private void onMaybeLaterOnboarding() {
+        onboardingOverlay.displayTooltip(Step.LATER);
+    }
+
+    private void onHideMaybeLaterIfNeededOnboarding() {
+        onboardingOverlay.hideTooltipIfNeeded(Step.LATER);
     }
 
     @SuppressWarnings("unused")

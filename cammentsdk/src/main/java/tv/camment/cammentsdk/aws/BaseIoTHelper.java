@@ -33,11 +33,11 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.CammentDeliveredMessage;
 import tv.camment.cammentsdk.aws.messages.CammentMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
-import tv.camment.cammentsdk.aws.messages.MembershipAcceptedMessage;
-import tv.camment.cammentsdk.aws.messages.MembershipRequestMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
+import tv.camment.cammentsdk.aws.messages.UserBlockedMessage;
 import tv.camment.cammentsdk.aws.messages.UserRemovedMessage;
+import tv.camment.cammentsdk.aws.messages.UserUnblockedMessage;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
@@ -49,6 +49,7 @@ import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 abstract class BaseIoTHelper extends CammentAsyncClient
@@ -64,8 +65,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     void connect() {
-        Log.d("IOT iothelper", this.toString());
-
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
@@ -75,7 +74,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                     mqttManager.setReconnectRetryLimits(4, 16);
                 }
 
-                Log.d("IOT mqttManager", mqttManager.toString());
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                     @Override
                     public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
@@ -145,7 +143,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                 try {
                     message = new String(data, "UTF-8");
-                    Log.d("AWS message", message);
+                    LogUtils.debug("AWS message", message);
                 } catch (Exception e) {
                     Log.e("IoTHelper", "invalid message format", e);
                 }
@@ -171,14 +169,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                                 baseMessage = new Gson().fromJson(message, CammentMessage.class);
                                 handleMessage(baseMessage, identityId);
                                 break;
-                            case MEMBERSHIP_REQUEST:
-                                baseMessage = new Gson().fromJson(message, MembershipRequestMessage.class);
-                                handleMessage(baseMessage, identityId);
-                                break;
-                            case MEMBERSHIP_ACCEPTED:
-                                baseMessage = new Gson().fromJson(message, MembershipAcceptedMessage.class);
-                                handleMessage(baseMessage, identityId);
-                                break;
                             case USER_REMOVED:
                                 baseMessage = new Gson().fromJson(message, UserRemovedMessage.class);
                                 handleMessage(baseMessage, identityId);
@@ -189,6 +179,14 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                                 break;
                             case AD:
                                 baseMessage = new Gson().fromJson(message, AdMessage.class);
+                                handleMessage(baseMessage, identityId);
+                                break;
+                            case USER_BLOCKED:
+                                baseMessage = new Gson().fromJson(message, UserBlockedMessage.class);
+                                handleMessage(baseMessage, identityId);
+                                break;
+                            case USER_UNBLOCKED:
+                                baseMessage = new Gson().fromJson(message, UserUnblockedMessage.class);
                                 handleMessage(baseMessage, identityId);
                                 break;
                         }
@@ -257,16 +255,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                             handleCammentDeletedMessage((CammentMessage) message);
                         }
                         break;
-                    case MEMBERSHIP_REQUEST:
-                        if (isMembershipRequestValid((MembershipRequestMessage) message, identityId)) {
-                            handleInvitationMessage(message);
-                        }
-                        break;
-                    case MEMBERSHIP_ACCEPTED:
-                        if (isMembershipAcceptedValid((MembershipAcceptedMessage) message)) {
-                            handleMembershipAcceptedMessage((MembershipAcceptedMessage) message);
-                        }
-                        break;
                     case USER_REMOVED:
                         if (isUserRemovedValid((UserRemovedMessage) message)) {
                             handleUserRemovedMessage((UserRemovedMessage) message, identityId);
@@ -281,6 +269,17 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                         if (isAdValid((AdMessage) message)) {
                             handleAdMessage((AdMessage) message);
                         }
+                        break;
+                    case USER_BLOCKED:
+                        if (isUserBlockedValid((UserBlockedMessage) message)) {
+                            handleUserBlockedMessage((UserBlockedMessage) message, identityId);
+                        }
+                        break;
+                    case USER_UNBLOCKED:
+                        if (isUserUnblockedValid((UserUnblockedMessage) message)) {
+                            handleUserUnblockedMessage((UserUnblockedMessage) message, identityId);
+                        }
+                        break;
                 }
             }
         });
@@ -296,7 +295,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private boolean isNewUserInGroupValid(NewUserInGroupMessage m) {
-        return  m.body != null
+        return m.body != null
                 && m.body.joiningUser != null
                 && !TextUtils.isEmpty(m.body.joiningUser.name)
                 && !TextUtils.isEmpty(m.body.groupUuid)
@@ -324,19 +323,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && usergroup.getUuid().equals(m.body.userGroupUuid);
     }
 
-    private boolean isMembershipRequestValid(MembershipRequestMessage m, String identityId) {
-        return m.body != null
-                && m.body.joiningUser != null
-                && !TextUtils.isEmpty(m.body.joiningUser.name)
-                && !TextUtils.isEmpty(m.body.joiningUser.userCognitoIdentityId)
-                && !TextUtils.equals(m.body.joiningUser.userCognitoIdentityId, identityId);
-    }
-
-    private boolean isMembershipAcceptedValid(MembershipAcceptedMessage m) {
-        return m.body != null
-                && !TextUtils.isEmpty(m.body.groupUuid);
-    }
-
     private boolean isUserRemovedValid(UserRemovedMessage m) {
         Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
@@ -357,15 +343,37 @@ abstract class BaseIoTHelper extends CammentAsyncClient
                 && !TextUtils.isEmpty(m.body.url);
     }
 
+    private boolean isUserBlockedValid(UserBlockedMessage m) {
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+
+        return m.body != null
+                && usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && usergroup.getUuid().equals(m.body.groupUuid)
+                && m.body.blockedUser != null
+                && !TextUtils.isEmpty(m.body.blockedUser.userCognitoIdentityId)
+                && !TextUtils.isEmpty(m.body.blockedUser.name);
+    }
+
+    private boolean isUserUnblockedValid(UserUnblockedMessage m) {
+        Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+
+        return m.body != null
+                && usergroup != null
+                && !TextUtils.isEmpty(usergroup.getUuid())
+                && usergroup.getUuid().equals(m.body.groupUuid)
+                && m.body.unblockedUser != null
+                && !TextUtils.isEmpty(m.body.unblockedUser.userCognitoIdentityId)
+                && !TextUtils.isEmpty(m.body.unblockedUser.name);
+    }
+
     void handleInvitationMessage(BaseMessage message) {
         if (message.type == MessageType.INVITATION
                 && message instanceof InvitationMessage) {
             MixpanelHelper.getInstance().trackEvent(MixpanelHelper.OPEN_DEEPLINK);
-            ApiManager.getInstance().getGroupApi().getUserGroupByUuid(((InvitationMessage) message).body.groupUuid, message);
+
+            ApiManager.getInstance().getUserApi().getUserInfosForGroupUuidAndHandleBlockedUser(((InvitationMessage) message).body.groupUuid, (InvitationMessage) message);
         }
-//        } else {
-//            showInvitationDialog(message);
-//        }
 
         if (message.type == MessageType.NEW_USER_IN_GROUP
                 && message instanceof NewUserInGroupMessage) {
@@ -385,9 +393,9 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                 if (activeUsegroup != null
                         && TextUtils.equals(((NewUserInGroupMessage) message).body.groupUuid, activeUsegroup.getUuid()))
-                Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
-                        String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_has_joined_title),
-                                ((NewUserInGroupMessage) message).body.joiningUser.name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                            String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_has_joined_title),
+                                    ((NewUserInGroupMessage) message).body.joiningUser.name), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -402,8 +410,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
             Fragment fragment = ((AppCompatActivity) activity).getSupportFragmentManager().findFragmentByTag(message.toString());
             if (fragment == null || !fragment.isAdded()) {
                 CammentDialog cammentDialog = CammentDialog.createInstance(message);
-                if (message instanceof InvitationMessage
-                        || message instanceof MembershipRequestMessage) {
+                if (message instanceof InvitationMessage) {
                     cammentDialog.setActionListener(this);
                 }
                 cammentDialog.show(message.toString());
@@ -423,8 +430,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
     }
 
     private void handleNewCammentMessage(CammentMessage message) {
-        //FileUtils.getInstance().deleteCammentFile(message.body.name);
-
         CCamment cammentByUuid = CammentProvider.getCammentByUuid(message.body.uuid);
         if (cammentByUuid != null
                 && cammentByUuid.isDeleted()) {
@@ -441,11 +446,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         camment.setRecorded(true);
         camment.setTransferId(-1);
 
-//        if (FileUtils.getInstance().isLocalVideoAvailable(camment.getUuid())) {
-//            CammentProvider.insertCamment(camment);
-//        } else {
         AWSManager.getInstance().getS3UploadHelper().preCacheFile(camment, true);
-        //}
 
         String identityId = IdentityPreferences.getInstance().getIdentityId();
         if (!TextUtils.equals(identityId, message.body.userCognitoIdentityId)) {
@@ -455,26 +456,6 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
     private void handleCammentDeletedMessage(CammentMessage message) {
         CammentProvider.setCammentDeleted(message.body.uuid);
-    }
-
-    private void handleMembershipAcceptedMessage(final MembershipAcceptedMessage message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
-                        R.string.cmmsdk_joined_private_chat, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        DataManager.getInstance().clearDataForUserGroupChange();
-
-        Usergroup usergroup = new Usergroup();
-        usergroup.setUuid(message.body.groupUuid);
-
-        UserGroupProvider.insertUserGroup(usergroup, true);
-
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
-        ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(message.body.groupUuid);
     }
 
     private void handleUserRemovedMessage(UserRemovedMessage message, String identityId) {
@@ -506,6 +487,39 @@ abstract class BaseIoTHelper extends CammentAsyncClient
         }
     }
 
+    private void handleUserBlockedMessage(UserBlockedMessage message, String identityId) {
+        if (TextUtils.equals(message.body.blockedUser.userCognitoIdentityId, identityId)) {
+            //I've been blocked in group / active user group is checked when validating message
+            BaseMessage msg = new BaseMessage();
+            msg.type = MessageType.BLOCKED;
+
+            CammentDialog cammentDialog = CammentDialog.createInstance(msg);
+            cammentDialog.show(message.toString());
+
+            DataManager.getInstance().clearDataForUserGroupChange();
+
+            EventBus.getDefault().post(new UserGroupChangeEvent());
+        } else {
+            //somebody has been blocked
+            UserInfoProvider.setUserInGroupAsBlocked(message.body.blockedUser.userCognitoIdentityId, message.body.groupUuid);
+
+            Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                    String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_blocked), message.body.blockedUser.name),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleUserUnblockedMessage(UserUnblockedMessage message, String identityId) {
+        if (!TextUtils.equals(message.body.unblockedUser.userCognitoIdentityId, identityId)) {
+            //somebody has been unblocked
+            UserInfoProvider.setUserInGroupAsBlocked(message.body.unblockedUser.userCognitoIdentityId, message.body.groupUuid);
+
+            Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                    String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_unblocked), message.body.unblockedUser.name),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onPositiveButtonClick(BaseMessage baseMessage) {
         switch (baseMessage.type) {
@@ -527,36 +541,12 @@ abstract class BaseIoTHelper extends CammentAsyncClient
 
                 ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
                 break;
-            case MEMBERSHIP_REQUEST:
-                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.ACCEPT_JOIN_REQUEST);
-
-                MembershipRequestMessage membershipRequestMessage = (MembershipRequestMessage) baseMessage;
-                ApiManager.getInstance().getInvitationApi().replyToMembershipRequest(
-                        membershipRequestMessage.body.joiningUser.userCognitoIdentityId,
-                        membershipRequestMessage.body.groupUuid,
-                        membershipRequestMessage.body.showUuid,
-                        true
-                );
-
-                ApiManager.getInstance().getUserApi().getUserInfosForGroupUuid(membershipRequestMessage.body.groupUuid);
-                break;
         }
     }
 
     @Override
     public void onNegativeButtonClick(BaseMessage baseMessage) {
-        switch (baseMessage.type) {
-            case MEMBERSHIP_REQUEST:
-                MixpanelHelper.getInstance().trackEvent(MixpanelHelper.DECLINE_JOIN_REQUEST);
 
-                MembershipRequestMessage membershipRequestMessage = (MembershipRequestMessage) baseMessage;
-                ApiManager.getInstance().getInvitationApi().replyToMembershipRequest(
-                        membershipRequestMessage.body.joiningUser.userCognitoIdentityId,
-                        membershipRequestMessage.body.groupUuid,
-                        membershipRequestMessage.body.showUuid,
-                        false
-                );
-                break;
-        }
     }
+
 }

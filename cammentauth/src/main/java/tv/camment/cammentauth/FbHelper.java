@@ -16,13 +16,15 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.auth.CammentAuthListener;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;
 
-public final class FbHelper {
+public final class FbHelper extends BaseAuthHelper {
 
     private static FbHelper INSTANCE;
 
@@ -31,7 +33,6 @@ public final class FbHelper {
 
     private final LoginManager loginManager;
     private final CallbackManager callbackManager;
-    private final CammentAuthListener cammentAuthListener;
 
     public static FbHelper getInstance() {
         if (INSTANCE == null) {
@@ -41,13 +42,13 @@ public final class FbHelper {
     }
 
     private FbHelper() {
-        cammentAuthListener = CammentSDK.getInstance();
+        super();
         callbackManager = CallbackManager.Factory.create();
         loginManager = LoginManager.getInstance();
         loginManager.registerCallback(callbackManager, getLoginResultFbCallback());
     }
 
-    public boolean isLoggedIn() {
+    boolean isLoggedIn() {
         return AccessToken.getCurrentAccessToken() != null
                 && !TextUtils.isEmpty(AccessToken.getCurrentAccessToken().getToken())
                 && !AccessToken.getCurrentAccessToken().isExpired();
@@ -60,8 +61,12 @@ public final class FbHelper {
             public void onSuccess(LoginResult loginResult) {
                 Log.d("FacebookLogin", "onSuccess " + loginResult.toString());
 
-                if (cammentAuthListener != null) {
-                    cammentAuthListener.onLoggedIn(getAuthInfo());
+                if (cammentAuthListeners != null) {
+                    for (CammentAuthListener cammentAuthListener : cammentAuthListeners) {
+                        if (cammentAuthListener != null) {
+                            cammentAuthListener.onLoggedIn(getAuthInfo());
+                        }
+                    }
                 }
             }
 
@@ -99,19 +104,24 @@ public final class FbHelper {
         return null;
     }
 
-    public synchronized void logIn(Activity activity) {
+    synchronized void logIn(Activity activity) {
         loginManager.logInWithReadPermissions(activity, Arrays.asList(permissions));
     }
 
-    public synchronized void logOut() {
+    synchronized void logOut() {
         loginManager.logOut();
 
-        if (cammentAuthListener != null) {
-            cammentAuthListener.onLoggedOut();
+        if (cammentAuthListeners != null) {
+            for (CammentAuthListener cammentAuthListener : cammentAuthListeners) {
+                if (cammentAuthListener != null) {
+                    cammentAuthListener.onLoggedOut();
+                }
+            }
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
 }

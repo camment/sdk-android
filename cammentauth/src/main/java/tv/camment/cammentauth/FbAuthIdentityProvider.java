@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import tv.camment.cammentsdk.auth.CammentAuthIdentityProvider;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
+import tv.camment.cammentsdk.auth.CammentAuthListener;
 import tv.camment.cammentsdk.auth.CammentAuthType;
 import tv.camment.cammentsdk.auth.CammentUserInfo;
 
@@ -35,4 +36,13 @@ public final class FbAuthIdentityProvider implements CammentAuthIdentityProvider
         return FbHelper.getInstance().getAuthInfo();
     }
 
+    @Override
+    public boolean isLoggedIn() {
+        return FbHelper.getInstance().isLoggedIn();
+    }
+
+    @Override
+    public void addCammentAuthListener(CammentAuthListener cammentAuthListener) {
+        FbHelper.getInstance().addCammentAuthListener(cammentAuthListener);
+    }
 }

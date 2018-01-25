@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.views;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -21,7 +22,6 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
-import tv.camment.cammentsdk.aws.messages.MembershipRequestMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
@@ -94,6 +94,15 @@ public final class CammentDialog extends DialogFragment {
         return view;
     }
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (actionListener != null
+                && message != null
+                && message.type == MessageType.ONBOARDING) {
+            actionListener.onNegativeButtonClick(message);
+        }
+    }
+
     public void show(String tag) {
         Activity currentActivity = CammentSDK.getInstance().getCurrentActivity();
         if (currentActivity instanceof AppCompatActivity) { //TODO what it not appcompat
@@ -139,9 +148,6 @@ public final class CammentDialog extends DialogFragment {
             case ONBOARDING:
                 tvTitle.setText(R.string.cmmsdk_setup_use_camment_chat);
                 break;
-            case MEMBERSHIP_REQUEST:
-                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_wants_to_join_title), ((MembershipRequestMessage) message).body.joiningUser.name));
-                break;
             case SHARE:
                 tvTitle.setText(R.string.cmmsdk_invitation_link_title);
                 break;
@@ -156,6 +162,9 @@ public final class CammentDialog extends DialogFragment {
                 break;
             case KICKED_OUT:
                 tvTitle.setText(R.string.cmmsdk_removed_from_group_title);
+                break;
+            case BLOCKED:
+                tvTitle.setText(R.string.cmmsdk_blocked_from_group_title);
                 break;
         }
     }
@@ -174,9 +183,6 @@ public final class CammentDialog extends DialogFragment {
             case ONBOARDING:
                 tvMessage.setText(R.string.cmmsdk_setup_what_is_camment);
                 break;
-            case MEMBERSHIP_REQUEST:
-                tvMessage.setText(R.string.cmmsdk_user_wants_to_join_desc);
-                break;
             case SHARE:
                 tvMessage.setText(R.string.cmmsdk_invitation_link_desc);
                 break;
@@ -192,6 +198,9 @@ public final class CammentDialog extends DialogFragment {
             case KICKED_OUT:
                 tvMessage.setText(R.string.cmmsdk_removed_from_group_msg);
                 break;
+            case BLOCKED:
+                tvMessage.setText(R.string.cmmsdk_blocked_from_group_msg);
+                break;
         }
     }
 
@@ -205,6 +214,7 @@ public final class CammentDialog extends DialogFragment {
             case NEW_USER_IN_GROUP:
             case FIRST_USER_JOINED:
             case KICKED_OUT:
+            case BLOCKED:
                 btnPositive.setText(R.string.cmmsdk_ok);
                 btnNegative.setVisibility(View.GONE);
                 break;
@@ -212,7 +222,6 @@ public final class CammentDialog extends DialogFragment {
                 btnPositive.setText(R.string.cmmsdk_setup_sounds_fun);
                 btnNegative.setText(R.string.cmmsdk_setup_maybe_later);
                 break;
-            case MEMBERSHIP_REQUEST:
             case REMOVAL_CONFIRMATION:
                 btnPositive.setText(R.string.cmmsdk_yes);
                 btnNegative.setText(R.string.cmmsdk_no);

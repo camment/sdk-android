@@ -24,12 +24,6 @@ public enum MessageType {
     @SerializedName("camment-deleted")
     CAMMENT_DELETED(5),
 
-    @SerializedName("membership-request")
-    MEMBERSHIP_REQUEST(6),
-
-    @SerializedName("membership-accepted")
-    MEMBERSHIP_ACCEPTED(7),
-
     SHARE(8), //internal
 
     LOGIN_CONFIRMATION(9), //internal
@@ -47,7 +41,15 @@ public enum MessageType {
     KICKED_OUT(14), //internal
 
     @SerializedName("ad")
-    AD(15);
+    AD(15),
+
+    @SerializedName("user-blocked")
+    USER_BLOCKED(16),
+
+    @SerializedName("user-unblocked")
+    USER_UNBLOCKED(17),
+
+    BLOCKED(18); //internal
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

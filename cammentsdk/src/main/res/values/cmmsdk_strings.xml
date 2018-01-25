@@ -30,7 +30,9 @@
     <string name="cmmsdk_help_tap_to_play">Great success! Now tap the camment to play it</string>
     <string name="cmmsdk_help_swipe_down_to_invite">Pull the camment button ↓ down\nto invite friends to this chat</string>
     <string name="cmmsdk_help_swipe_up_to_invite">Pull the camment button ↑ up\nto invite friends to this chat</string>
+    <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
+    <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
 
     <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>
     <string name="cmmsdk_setup_what_is_camment">It\'s like SMS group messaging but with mini videos (camments) on top of the show you are now watching</string>
@@ -42,9 +44,6 @@
 
     <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
     <string name="cmmsdk_invitation_error">You are not allowed to join this group.</string>
-
-    <string name="cmmsdk_user_wants_to_join_title">%s wants to join your group</string>
-    <string name="cmmsdk_user_wants_to_join_desc">Do you accept the join request?</string>
 
     <string name="cmmsdk_joined_private_chat">You have joined the private chat!</string>
 
@@ -69,9 +68,25 @@
 
     <string name="cmmsdk_removed_from_group_title">You left the group</string>
     <string name="cmmsdk_removed_from_group_msg">Group owner has removed you from the current conversation</string>
+
     <string name="cmmsdk_fail_to_remove_from_group">Failed to remove %s from group</string>
-    <string name="cmmsdk_remove_confirmation_title">User removal</string>
+
+    <string name="cmmsdk_remove_confirmation_title">Remove user</string>
     <string name="cmmsdk_remove_confirmation_msg">Do you want to remove %s from the group?</string>
+
+    <string name="cmmsdk_block_confirmation_title">Block user</string>
+    <string name="cmmsdk_block_confirmation_msg">Do you want to block %s from the group?</string>
+
+    <string name="cmmsdk_unblock_confirmation_title">Unblock user</string>
+    <string name="cmmsdk_unblock_confirmation_msg">Do you want to unblock %s from the group?</string>
+
+    <string name="cmmsdk_blocked_from_group_title">You are blocked</string>
+    <string name="cmmsdk_blocked_from_group_msg">Group owner has blocked you from the current conversation</string>
+
+    <string name="cmmsdk_user_blocked">%s has been blocked</string>
+    <string name="cmmsdk_user_unblocked">%s has been unblocked</string>
+
+    <string name="cmmsdk_cant_join_blocked">Can\'t join. You\'ve been blocked by group owner from the conversation.</string>
 
     <string name="cmmsdk_user_has_joined_title">%s has joined</string>
     <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the discussion. You can always swipe → right to see who else is in the group and remove unwanted people</string>

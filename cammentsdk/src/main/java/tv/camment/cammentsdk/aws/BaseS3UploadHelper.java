@@ -34,6 +34,7 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.utils.FileUtils;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 abstract class BaseS3UploadHelper extends CammentAsyncClient {
 
@@ -50,14 +51,14 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
     }
 
     void uploadCammentFile(final CCamment camment) {
-        Log.d("uploadCamment", "groupUuid " + camment.getUserGroupUuid());
+        LogUtils.debug("uploadCamment", "groupUuid " + camment.getUserGroupUuid());
 
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 long cammentDuration = camment.getEndTimestamp() -  camment.getStartTimestamp();
 
-                Log.d("cammentDuration", "" + cammentDuration);
+                LogUtils.debug("cammentDuration", "" + cammentDuration);
 
                 if (cammentDuration < SDKConfig.CAMMENT_MIN_DURATION) {
                     throw new IllegalArgumentException("video too short (< 1000 ms)");
@@ -87,12 +88,12 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object object) {
-                Log.d("onSuccess", "camment upload started");
+                LogUtils.debug("onSuccess", "camment upload started");
             }
 
             @Override
             public void onException(Exception exception) {
-                Log.d("onException", "uploadCammentFile", exception);
+                LogUtils.debug("onException", "uploadCammentFile", exception);
             }
         };
     }
@@ -152,7 +153,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         return new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "downloadCammentFile");
+                LogUtils.debug("onSuccess", "downloadCammentFile");
             }
 
             @Override
@@ -168,7 +169,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
                     cleanup(id);
-                    Log.d("Transfer", "camment inserted " + camment.getUuid());
+                    LogUtils.debug("Transfer", "camment inserted " + camment.getUuid());
                     CammentProvider.insertCamment(camment);
                 }
             }
@@ -207,13 +208,13 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         }, new CammentCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
-                Log.d("onSuccess", "preCacheFile");
+                LogUtils.debug("onSuccess", "preCacheFile");
                 CammentProvider.insertCamment(camment);
             }
 
             @Override
             public void onException(Exception ex) {
-                Log.d("onException", "preCacheFile"); //cache often fails as some camments can be smaller than 100kB
+                LogUtils.debug("onException", "preCacheFile"); //cache often fails as some camments can be smaller than 100kB
                 CammentProvider.insertCamment(camment); //cache failed but display camment
             }
         });
@@ -223,17 +224,17 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         return new com.google.android.exoplayer2.upstream.TransferListener<DataSource>() {
             @Override
             public void onTransferStart(DataSource dataSource, DataSpec dataSpec) {
-                Log.d("exo", "onTransferStart");
+                LogUtils.debug("exo", "onTransferStart");
             }
 
             @Override
             public void onBytesTransferred(DataSource dataSource, int i) {
-                Log.d("exo", "onBytesTransferred " + i);
+                LogUtils.debug("exo", "onBytesTransferred " + i);
             }
 
             @Override
             public void onTransferEnd(DataSource dataSource) {
-                Log.d("exo", "onTransferEnd");
+                LogUtils.debug("exo", "onTransferEnd");
             }
         };
     }

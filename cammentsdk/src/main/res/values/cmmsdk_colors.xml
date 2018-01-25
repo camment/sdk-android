@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="cmmsdk_camment_red">#FB0D1B</color>
+    <color name="cmmsdk_camment_red">#d0011a</color>
     <color name="cmmsdk_camment_reddish">#fe3824</color>
     <color name="cmmsdk_camment_red_transp">#88FB0D1B</color>
-    <color name="cmmsdk_camment_red_ripple">#A1050F</color>
+    <color name="cmmsdk_camment_red_ripple">#830111</color>
     <color name="cmmsdk_camment_grey">#3B3B3B</color>
     <color name="cmmsdk_camment_button_grey">#808080</color>
     <color name="cmmsdk_camment_silver">#bdc3c7</color>

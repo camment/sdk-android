@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
@@ -79,8 +80,13 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                anchorOffset = new AnchorOffset(-displayMetrics.heightPixels / 4, 0);
-                scrollThreshold = new ScrollThreshold(anchorOffset.getUp(), anchorOffset.getDown());
+                if (BuildConfig.PULL_UP_BUTTON) {
+                    anchorOffset = new AnchorOffset(-displayMetrics.heightPixels / 4, 0);
+                    scrollThreshold = new ScrollThreshold(anchorOffset.getUp(), anchorOffset.getDown());
+                } else {
+                    anchorOffset = new AnchorOffset(0, 0);
+                    scrollThreshold = new ScrollThreshold(0,0);
+                }
             }
         });
     }
@@ -157,6 +163,10 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     recordingStopCalled = false;
+
+                    if (listener != null) {
+                        listener.onOnboardingHideMaybeLaterIfNeeded();
+                    }
 
                     if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
                         BaseMessage message = new BaseMessage();
@@ -287,7 +297,7 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
     }
 
     private void anchor() {
-        if (listener != null) {
+        if (listener != null && BuildConfig.PULL_UP_BUTTON) {
             listener.onAnchor();
         }
     }
@@ -302,7 +312,10 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
 
     @Override
     public void onNegativeButtonClick(BaseMessage baseMessage) {
-
+        if (listener != null
+                && baseMessage.type == MessageType.ONBOARDING) {
+            listener.onOnboardingMaybeLater();
+        }
     }
 
     public void show() {
@@ -324,6 +337,10 @@ abstract class BasePullableView extends FrameLayout implements CammentDialog.Act
         void onPress();
 
         void onOnboardingStart();
+
+        void onOnboardingMaybeLater();
+
+        void onOnboardingHideMaybeLaterIfNeeded();
 
     }
 

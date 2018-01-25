@@ -32,6 +32,7 @@ import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.CammentDialog;
 
 
@@ -132,8 +133,7 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                Log.d("onSuccess", "createEmptyUsergroup");
-                Log.d("onSuccess", "createEmptyUsergroup " + usergroup.getUuid());
+                LogUtils.debug("onSuccess", "createEmptyUsergroup " + usergroup.getUuid());
 
                 UserGroupProvider.insertUserGroup(usergroup, true);
 
@@ -164,7 +164,7 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                Log.d("onSuccess", "getUserGroupByUuid");
+                LogUtils.debug("onSuccess", "getUserGroupByUuid");
                 UserGroupProvider.insertUserGroup(usergroup, true);
 
                 ApiManager.getInstance().getCammentApi().getUserGroupCamments();
@@ -226,8 +226,6 @@ public final class GroupApi extends CammentAsyncClient {
                     UserGroupProvider.setActive(usergroup.getUuid(), true);
 
                     EventBus.getDefault().post(new UserGroupChangeEvent());
-
-                    //CammentSDK.getInstance().connectToIoT();
 
                     ApiManager.getInstance().getCammentApi().getUserGroupCamments();
 

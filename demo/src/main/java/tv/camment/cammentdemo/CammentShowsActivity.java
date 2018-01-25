@@ -3,7 +3,6 @@ package tv.camment.cammentdemo;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,12 +27,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import tv.camment.cammentauth.FbHelper;
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
+import tv.camment.cammentsdk.utils.NetworkUtils;
 
 public class CammentShowsActivity extends CammentBaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -103,15 +103,15 @@ public class CammentShowsActivity extends CammentBaseActivity
     }
 
     private void setLoginButtonText() {
-        btnLogIn.setText(FbHelper.getInstance().isLoggedIn() ? R.string.log_out : R.string.log_in);
+        btnLogIn.setText(CammentSDK.getInstance().getAppAuthIdentityProvider().isLoggedIn() ? R.string.log_out : R.string.log_in);
     }
 
     private void handleOnLoginButtonClick() {
-        if (FbHelper.getInstance().isLoggedIn()) {
-            FbHelper.getInstance().logOut();
+        if (CammentSDK.getInstance().getAppAuthIdentityProvider().isLoggedIn()) {
+            CammentSDK.getInstance().getAppAuthIdentityProvider().logOut();
             setLoginButtonText();
         } else {
-            FbHelper.getInstance().logIn(this);
+            CammentSDK.getInstance().getAppAuthIdentityProvider().logIn(this);
         }
     }
 
@@ -128,7 +128,6 @@ public class CammentShowsActivity extends CammentBaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        checkInternetConnection();
         setLoginButtonText();
     }
 
@@ -148,17 +147,6 @@ public class CammentShowsActivity extends CammentBaseActivity
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    private void checkInternetConnection() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        boolean isConnected = cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isAvailable()
-                && cm.getActiveNetworkInfo().isConnected();
-
-        if (!isConnected) {
-            Toast.makeText(this, R.string.no_network, Toast.LENGTH_LONG).show();
-        }
     }
 
     private void checkForUpdates() {

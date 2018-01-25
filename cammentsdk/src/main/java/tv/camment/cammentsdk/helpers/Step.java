@@ -8,6 +8,7 @@ public enum Step {
     HIDE,
     SHOW,
     DELETE,
-    INVITE
+    INVITE,
+    LATER
 
 }

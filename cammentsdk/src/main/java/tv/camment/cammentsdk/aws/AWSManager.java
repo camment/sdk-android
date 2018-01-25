@@ -2,7 +2,6 @@ package tv.camment.cammentsdk.aws;
 
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
@@ -19,8 +18,6 @@ import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvicto
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.security.KeyStore;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
@@ -28,9 +25,7 @@ import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.api.DevcammentClientDev;
 import tv.camment.cammentsdk.api.DevcammentClientProd;
-import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
-import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.FileUtils;
 
 public final class AWSManager {
@@ -134,7 +129,6 @@ public final class AWSManager {
             iotId = UUID.randomUUID().toString();
             GeneralPreferences.getInstance().setIotId(iotId);
         }
-        Log.d("IOT iotID", iotId);
         return iotId;
     }
 

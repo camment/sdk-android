@@ -76,11 +76,6 @@ public final class OnboardingPreferences extends BasePreferences {
         }
     }
 
-    public boolean wasAtLeastOneStepShown() {
-        return steps != null
-                && steps.size() != Step.values().length;
-    }
-
     public boolean wasOnboardingStepShown(Step step) {
         switch (step) {
             case RECORD:
@@ -96,7 +91,7 @@ public final class OnboardingPreferences extends BasePreferences {
             case INVITE:
                 return getBoolean(PREFS_INVITE, false);
             default:
-                return false;
+                return true;
         }
     }
 
@@ -107,4 +102,5 @@ public final class OnboardingPreferences extends BasePreferences {
     public boolean isOnboardingStepLastRemaining(Step step) {
         return steps != null && steps.size() == 1 && steps.get(0) == step;
     }
+
 }

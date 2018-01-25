@@ -7,14 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
-import tv.camment.cammentsdk.views.CammentDialog;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 abstract class CammentLifecycle implements Application.ActivityLifecycleCallbacks {
 
@@ -114,29 +113,18 @@ abstract class CammentLifecycle implements Application.ActivityLifecycleCallback
         //printList("remove");
     }
 
-    public synchronized CammentDialog getCammentDialogByTag(String tag) {
-        if (getCurrentActivity() instanceof AppCompatActivity) {
-            Fragment fragmentByTag = ((AppCompatActivity) getCurrentActivity()).getSupportFragmentManager().findFragmentByTag(tag);
-            if (fragmentByTag instanceof CammentDialog) {
-                return (CammentDialog) fragmentByTag;
-            }
-            return null;
-        }
-        return null;
-    }
-
     private void printList(String from) {
-        Log.d("activityList", "start - " + from);
+        LogUtils.debug("activityList", "start - " + from);
 
         if (activityList == null) {
-            Log.d("activityList", "empty");
+            LogUtils.debug("activityList", "empty");
         } else {
             for (Activity activity : activityList) {
-                Log.d("activityList", activity.getClass().getSimpleName());
+                LogUtils.debug("activityList", activity.getClass().getSimpleName());
             }
         }
 
-        Log.d("activityList", "end");
+        LogUtils.debug("activityList", "end");
     }
 
     public synchronized void showProgressBar() {

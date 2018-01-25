@@ -23,6 +23,7 @@ import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
+import tv.camment.cammentsdk.data.model.UserState;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.LogUtils;
@@ -103,14 +104,20 @@ public final class UserApi extends CammentAsyncClient {
                     boolean blocked = false;
 
                     for (Userinfo userinfo : result.getItems()) {
-                        if (TextUtils.equals(identityId, userinfo.getUserCognitoIdentityId())) {
+                        if (TextUtils.equals(identityId, userinfo.getUserCognitoIdentityId())
+                                && TextUtils.equals(userinfo.getState(), UserState.BLOCKED.getStringValue())) {
                             blocked = true;
                             break;
                         }
                     }
 
                     if (blocked) {
-                        Toast.makeText(CammentSDK.getInstance().getApplicationContext(), R.string.cmmsdk_cant_join_blocked, Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(CammentSDK.getInstance().getApplicationContext(), R.string.cmmsdk_cant_join_blocked, Toast.LENGTH_LONG).show();
+                            }
+                        });
                     } else {
                         ApiManager.getInstance().getGroupApi().getUserGroupByUuid(message.body.groupUuid, message);
                     }

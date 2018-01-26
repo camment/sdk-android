@@ -15,6 +15,8 @@ public final class OnboardingPreferences extends BasePreferences {
     private static final String PREFS_DELETE = "onboarding_delete";
     private static final String PREFS_INVITE = "onboarding_invite";
 
+    private static final String PREFS_FIRST_ONBOARDING = "prefs_onboarding_first";
+
     private List<Step> steps;
 
     private static OnboardingPreferences INSTANCE;
@@ -101,6 +103,14 @@ public final class OnboardingPreferences extends BasePreferences {
 
     public boolean isOnboardingStepLastRemaining(Step step) {
         return steps != null && steps.size() == 1 && steps.get(0) == step;
+    }
+
+    public boolean wasOnboardingFirstTimeShown() {
+        return getBoolean(PREFS_FIRST_ONBOARDING, false);
+    }
+
+    public void setOnboardingFirstTimeShown() {
+        putBoolean(PREFS_FIRST_ONBOARDING, true);
     }
 
 }

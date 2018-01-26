@@ -54,7 +54,10 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
         tooltipViewMap = new HashMap<>();
         OnboardingPreferences.getInstance().initSteps();
 
-        if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)) {
+        if (!OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.RECORD)
+                && !OnboardingPreferences.getInstance().wasOnboardingFirstTimeShown()) {
+            OnboardingPreferences.getInstance().setOnboardingFirstTimeShown();
+
             BaseMessage message = new BaseMessage();
             message.type = MessageType.ONBOARDING;
 

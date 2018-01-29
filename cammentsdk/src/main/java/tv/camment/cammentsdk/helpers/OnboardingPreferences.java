@@ -17,6 +17,10 @@ public final class OnboardingPreferences extends BasePreferences {
 
     private static final String PREFS_FIRST_ONBOARDING = "prefs_onboarding_first";
 
+    private static final String PREFS_TUTORIAL_SKIPPED = "prefs_tutorial_skipped";
+
+    private static final String PREFS_LAST_COMPLETED = "prefs_last_completed";
+
     private List<Step> steps;
 
     private static OnboardingPreferences INSTANCE;
@@ -41,7 +45,9 @@ public final class OnboardingPreferences extends BasePreferences {
         steps = new ArrayList<>();
 
         for (Step step : Step.values()) {
-            if (!wasOnboardingStepShown(step)) {
+            if (!wasOnboardingStepShown(step)
+                    && step != Step.LATER
+                    && step != Step.TUTORIAL) {
                 steps.add(step);
             }
         }
@@ -111,6 +117,22 @@ public final class OnboardingPreferences extends BasePreferences {
 
     public void setOnboardingFirstTimeShown() {
         putBoolean(PREFS_FIRST_ONBOARDING, true);
+    }
+
+    public boolean wasTutorialSkipped() {
+        return getBoolean(PREFS_TUTORIAL_SKIPPED, false);
+    }
+
+    public void setTutorialSkipped(boolean skipped) {
+        putBoolean(PREFS_TUTORIAL_SKIPPED, skipped);
+    }
+
+    public Step getLastCompletedStep() {
+        return Step.fromInt(getInt(PREFS_LAST_COMPLETED, -1));
+    }
+
+    public void setLastCompletedStep(Step step) {
+        putInt(PREFS_LAST_COMPLETED, step.getIntValue());
     }
 
 }

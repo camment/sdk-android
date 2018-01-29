@@ -11,18 +11,12 @@
         android:id="@+id/cmmsdk_tv_tooltip_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/cmmsdk_tooltip_bubble"
         android:padding="8dp"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
-
-    <View
-        android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="-4dp"
-        android:layout_toEndOf="@+id/cmmsdk_tv_tooltip_text"
-        android:background="@drawable/cmmsdk_tooltip_arrow"
-        android:rotation="45" />
 
 </RelativeLayout>

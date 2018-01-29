@@ -65,7 +65,6 @@ abstract class BaseTooltipView extends RelativeLayout {
 
         measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         int contentViewHeight = getMeasuredHeight();
-        int contentViewWidth = getMeasuredWidth();
 
         int position_x = 0, position_y = 0;
 
@@ -78,6 +77,10 @@ abstract class BaseTooltipView extends RelativeLayout {
                 case HIDE:
                 case INVITE:
                     position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
+                    position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
+                    break;
+                case TUTORIAL:
+                    position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 16);
                     position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
                     break;
                 default:
@@ -123,6 +126,9 @@ abstract class BaseTooltipView extends RelativeLayout {
                 break;
             case LATER:
                 tvTooltipText.setText(R.string.cmmsdk_help_start_making_video_camments);
+                break;
+            case TUTORIAL:
+                tvTooltipText.setText(R.string.cmmsdk_help_continue_tutorial);
                 break;
             default:
                 break;

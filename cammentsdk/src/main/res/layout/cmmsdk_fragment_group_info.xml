@@ -43,7 +43,7 @@
             android:layout_height="32dp"
             android:layout_below="@+id/cmmsdk_tv_learn_more"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
@@ -53,6 +53,23 @@
             android:text="@string/cmmsdk_drawer_invite_friends"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/cmmsdk_btn_continue_tutorial"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@+id/cmmsdk_btn_invite"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/cmmsdk_grey_ripple"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/cmmsdk_continue_tutorial"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

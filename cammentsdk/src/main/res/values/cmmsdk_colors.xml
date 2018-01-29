@@ -12,5 +12,6 @@
     <color name="cmmsdk_camment_divider_grey">#4A4A4A</color>
     <color name="cmmsdk_camment_text_grey">#303030</color>
     <color name="cmmsdk_camment_ripple">#33E1F5FE</color>
+    <color name="cmmsdk_button_grey_dark">#7F7F7F</color>
 
 </resources>

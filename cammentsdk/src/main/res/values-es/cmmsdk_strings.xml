@@ -28,6 +28,10 @@
     <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
     <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
+    <string name="cmmsdk_help_skip_tutorial">Skip tutorial</string>
+    <string name="cmmsdk_help_continue_tutorial">Continue tutorial later</string>
+
+    <string name="cmmsdk_continue_tutorial">Continue tutorial</string>
 
     <string name="cmmsdk_setup_use_camment_chat">¿Te gustaría chatear a través de videos con amigos mientras miras este programa?</string>
     <string name="cmmsdk_setup_what_is_camment">es como si enviaras un SMS pero enviando videos de 5 segundos (Camments) que aparecerán en una ventana en la parte superior de la pantalla, a la vez que ves este programa</string>

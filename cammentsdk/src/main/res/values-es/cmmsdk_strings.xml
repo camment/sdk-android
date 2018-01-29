@@ -29,7 +29,7 @@
     <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
     <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
     <string name="cmmsdk_help_skip_tutorial">Skip tutorial</string>
-    <string name="cmmsdk_help_continue_tutorial">Continue tutorial later</string>
+    <string name="cmmsdk_help_continue_tutorial">Continue tutorial later from sidebar</string>
 
     <string name="cmmsdk_continue_tutorial">Continue tutorial</string>
 

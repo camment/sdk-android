@@ -37,15 +37,6 @@ final class FbUserInfoViewHolder extends RecyclerView.ViewHolder {
         ivAvatar = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_avatar);
         tvName = (TextView) itemView.findViewById(R.id.cmmsdk_tv_name);
         ibRemove = (ImageButton) itemView.findViewById(R.id.cmmsdk_ib_remove);
-
-        ibRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (actionListener != null) {
-                    actionListener.onUserRemoveClick(userInfo);
-                }
-            }
-        });
     }
 
     void bindData(CUserInfo userInfo, boolean isMyGroup) {
@@ -66,7 +57,20 @@ final class FbUserInfoViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        ibRemove.setVisibility(isMyGroup ? View.VISIBLE : View.GONE);
+        ibRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleUserRemoveClick();
+            }
+        });
+
+        ibRemove.setVisibility(isMyGroup ? View.GONE : View.GONE);
+    }
+
+    private void handleUserRemoveClick() {
+        if (actionListener != null) {
+            actionListener.onUserRemoveClick(userInfo);
+        }
     }
 
 }

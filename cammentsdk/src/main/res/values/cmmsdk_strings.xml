@@ -98,4 +98,7 @@
     <string name="cmmsdk_ad">AD</string>
     <string name="cmmsdk_ad_click_more">Click to learn more</string>
 
+    <string name="cmmsdk_block">Block</string>
+    <string name="cmmsdk_unblock">Unblock</string>
+
 </resources>

@@ -165,7 +165,7 @@ abstract class BaseTooltipView extends RelativeLayout {
             @Override
             public void run() {
                 if (step == Step.LATER || step == Step.TUTORIAL) {
-                    fadeOutTooltip();
+                    fadeOutTooltip(step);
                 } else {
                     animateTooltip();
                     repeatAnimation(step);
@@ -178,7 +178,7 @@ abstract class BaseTooltipView extends RelativeLayout {
         AnimationUtils.animateTooltip(this);
     }
 
-    private void fadeOutTooltip() {
+    private void fadeOutTooltip(final Step step) {
         this.animate().alpha(0.0f).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -188,8 +188,7 @@ abstract class BaseTooltipView extends RelativeLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (getParent() instanceof OnboardingOverlay) {
-                    ((OnboardingOverlay) getParent()).hideTooltipIfNeeded(Step.LATER);
-                    ((OnboardingOverlay) getParent()).hideTooltipIfNeeded(Step.TUTORIAL);
+                    ((OnboardingOverlay) getParent()).hideTooltipIfNeeded(step);
                 }
             }
 

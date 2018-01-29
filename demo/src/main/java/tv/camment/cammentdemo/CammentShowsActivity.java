@@ -165,7 +165,7 @@ public class CammentShowsActivity extends CammentBaseActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            ApiManager.getInstance().getShowApi().getShows(GeneralPreferences.getInstance().getProviderPasscode());
+            ApiManager.getInstance().getShowApi().getShows("hidden");
         }
     }
 

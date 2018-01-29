@@ -25,6 +25,8 @@ android {
         buildConfigField("boolean", "USE_FABRICS", "false")
         buildConfigField("boolean", "USE_HOCKEYAPP", "false")
         buildConfigField("boolean", "USE_SETTINGS", "true")
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -115,9 +117,30 @@ ext {
     ]
 }
 
-
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '26.0.2'
+            }
+        }
+    }
+}
 
 dependencies {
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile('com.android.support.test:rules:1.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile('com.android.support.test:runner:1.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    })
+
     compile supportDependencies.values()
     compile facebookDependencies.values()
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -135,4 +158,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'junit:junit:4.12'
 }

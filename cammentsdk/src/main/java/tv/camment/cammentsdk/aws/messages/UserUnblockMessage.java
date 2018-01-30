@@ -4,28 +4,28 @@ package tv.camment.cammentsdk.aws.messages;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public final class CammentDeliveredMessage extends BaseMessage {
+public final class UserUnblockMessage extends BaseMessage {
 
     public Body body;
 
-    public CammentDeliveredMessage() {
+    public UserUnblockMessage() { //internal
         super();
     }
 
-    private CammentDeliveredMessage(Parcel in) {
+    private UserUnblockMessage(Parcel in) {
         super(in);
         body = in.readParcelable(Body.class.getClassLoader());
     }
 
-    public static final Creator<CammentDeliveredMessage> CREATOR = new Creator<CammentDeliveredMessage>() {
+    public static final Creator<UserUnblockMessage> CREATOR = new Creator<UserUnblockMessage>() {
         @Override
-        public CammentDeliveredMessage createFromParcel(Parcel in) {
-            return new CammentDeliveredMessage(in);
+        public UserUnblockMessage createFromParcel(Parcel in) {
+            return new UserUnblockMessage(in);
         }
 
         @Override
-        public CammentDeliveredMessage[] newArray(int size) {
-            return new CammentDeliveredMessage[size];
+        public UserUnblockMessage[] newArray(int size) {
+            return new UserUnblockMessage[size];
         }
     };
 
@@ -41,15 +41,19 @@ public final class CammentDeliveredMessage extends BaseMessage {
     }
 
     public static class Body implements Parcelable {
-        public String uuid;
+        public String name;
+
+        public Body() {
+
+        }
 
         Body(Parcel in) {
-            uuid = in.readString();
+            name = in.readString();
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(uuid);
+            dest.writeString(name);
         }
 
         @Override

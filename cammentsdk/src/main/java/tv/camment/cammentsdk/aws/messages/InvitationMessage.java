@@ -12,6 +12,34 @@ public final class InvitationMessage extends BaseMessage {
         super();
     }
 
+    private InvitationMessage(Parcel in) {
+        super(in);
+        body = in.readParcelable(Body.class.getClassLoader());
+    }
+
+    public static final Creator<InvitationMessage> CREATOR = new Creator<InvitationMessage>() {
+        @Override
+        public InvitationMessage createFromParcel(Parcel in) {
+            return new InvitationMessage(in);
+        }
+
+        @Override
+        public InvitationMessage[] newArray(int size) {
+            return new InvitationMessage[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        super.writeToParcel(dest, i);
+        dest.writeParcelable(body, i);
+    }
+
     public static class Body implements Parcelable {
         public String timestamp;
         public String groupUuid;
@@ -104,34 +132,6 @@ public final class InvitationMessage extends BaseMessage {
             parcel.writeString(name);
             parcel.writeString(userCognitoIdentityId);
         }
-    }
-
-    private InvitationMessage(Parcel in) {
-        super(in);
-        body = in.readParcelable(Body.class.getClassLoader());
-    }
-
-    public static final Creator<InvitationMessage> CREATOR = new Creator<InvitationMessage>() {
-        @Override
-        public InvitationMessage createFromParcel(Parcel in) {
-            return new InvitationMessage(in);
-        }
-
-        @Override
-        public InvitationMessage[] newArray(int size) {
-            return new InvitationMessage[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int i) {
-        super.writeToParcel(dest, i);
-        dest.writeParcelable(body, i);
     }
 
 }

@@ -12,6 +12,34 @@ public final class CammentMessage extends BaseMessage {
         super();
     }
 
+    private CammentMessage(Parcel in) {
+        super(in);
+        body = in.readParcelable(Body.class.getClassLoader());
+    }
+
+    public static final Creator<CammentMessage> CREATOR = new Creator<CammentMessage>() {
+        @Override
+        public CammentMessage createFromParcel(Parcel in) {
+            return new CammentMessage(in);
+        }
+
+        @Override
+        public CammentMessage[] newArray(int size) {
+            return new CammentMessage[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        super.writeToParcel(dest, i);
+        dest.writeParcelable(body, i);
+    }
+
     public static class Body implements Parcelable {
         public String uuid;
         public String thumbnail;
@@ -55,34 +83,6 @@ public final class CammentMessage extends BaseMessage {
             parcel.writeString(userCognitoIdentityId);
             parcel.writeString(timestamp);
         }
-    }
-
-    private CammentMessage(Parcel in) {
-        super(in);
-        body = in.readParcelable(Body.class.getClassLoader());
-    }
-
-    public static final Creator<CammentMessage> CREATOR = new Creator<CammentMessage>() {
-        @Override
-        public CammentMessage createFromParcel(Parcel in) {
-            return new CammentMessage(in);
-        }
-
-        @Override
-        public CammentMessage[] newArray(int size) {
-            return new CammentMessage[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int i) {
-        super.writeToParcel(dest, i);
-        dest.writeParcelable(body, i);
     }
 
 }

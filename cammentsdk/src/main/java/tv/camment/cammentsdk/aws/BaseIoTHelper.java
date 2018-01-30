@@ -48,7 +48,6 @@ import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.utils.LogUtils;
 import tv.camment.cammentsdk.views.dialogs.BlockedCammentDialog;
 import tv.camment.cammentsdk.views.dialogs.InvitationCammentDialog;
-import tv.camment.cammentsdk.views.dialogs.KickedOutCammentDialog;
 
 abstract class BaseIoTHelper extends CammentAsyncClient {
 
@@ -308,7 +307,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
                 && m.body != null
                 && !TextUtils.isEmpty(m.body.url)
                 && !TextUtils.isEmpty(m.body.thumbnail)
-                && usergroup.getUuid().equals(m.body.userGroupUuid);
+                && TextUtils.equals(usergroup.getUuid(), m.body.userGroupUuid);
     }
 
     private boolean isCammentDeletedValid(CammentMessage m) {
@@ -317,7 +316,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
         return usergroup != null
                 && !TextUtils.isEmpty(usergroup.getUuid())
                 && m.body != null
-                && usergroup.getUuid().equals(m.body.userGroupUuid);
+                && TextUtils.equals(usergroup.getUuid(), m.body.userGroupUuid);
     }
 
     private boolean isUserRemovedValid(UserRemovedMessage m) {
@@ -326,8 +325,9 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
         return m.body != null
                 && usergroup != null
                 && !TextUtils.isEmpty(usergroup.getUuid())
-                && usergroup.getUuid().equals(m.body.groupUuid)
-                && !TextUtils.isEmpty(m.body.userCognitoIdentityId);
+                && TextUtils.equals(usergroup.getUuid(), m.body.groupUuid)
+                && m.body.removedUser != null
+                && !TextUtils.isEmpty(m.body.removedUser.userCognitoIdentityId);
     }
 
     private boolean isCammentDeliveredValid(CammentDeliveredMessage m) {
@@ -346,7 +346,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
         return m.body != null
                 && usergroup != null
                 && !TextUtils.isEmpty(usergroup.getUuid())
-                && usergroup.getUuid().equals(m.body.groupUuid)
+                && TextUtils.equals(usergroup.getUuid(), m.body.groupUuid)
                 && m.body.blockedUser != null
                 && !TextUtils.isEmpty(m.body.blockedUser.userCognitoIdentityId)
                 && !TextUtils.isEmpty(m.body.blockedUser.name);
@@ -358,7 +358,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
         return m.body != null
                 && usergroup != null
                 && !TextUtils.isEmpty(usergroup.getUuid())
-                && usergroup.getUuid().equals(m.body.groupUuid)
+                && TextUtils.equals(usergroup.getUuid(), m.body.groupUuid)
                 && m.body.unblockedUser != null
                 && !TextUtils.isEmpty(m.body.unblockedUser.userCognitoIdentityId)
                 && !TextUtils.isEmpty(m.body.unblockedUser.name);
@@ -435,20 +435,18 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
     }
 
     private void handleUserRemovedMessage(UserRemovedMessage message, String identityId) {
-        if (TextUtils.equals(message.body.userCognitoIdentityId, identityId)) {
-            //I've been removed from group / active user group is checked when validating message
+        if (!TextUtils.equals(message.body.removedUser.userCognitoIdentityId, identityId)) {
+            //somebody has left the group / active user group is checked during message validation
+            String name = message.body.removedUser.name;
+            if (TextUtils.isEmpty(name)) {
+                name = CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_somebody);
+            }
 
-            BaseMessage msg = new BaseMessage();
-            msg.type = MessageType.KICKED_OUT;
+            Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                    String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_left_group), name),
+                    Toast.LENGTH_LONG).show();
 
-            KickedOutCammentDialog.createInstance(msg).show();
-
-            DataManager.getInstance().clearDataForUserGroupChange();
-
-            EventBus.getDefault().post(new UserGroupChangeEvent());
-        } else {
-            //somebody has been removed
-            UserInfoProvider.deleteUserInfoByIdentityId(message.body.userCognitoIdentityId, message.body.groupUuid);
+            UserInfoProvider.deleteUserInfoByIdentityId(message.body.removedUser.userCognitoIdentityId, message.body.groupUuid);
         }
     }
 
@@ -486,7 +484,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
     private void handleUserUnblockedMessage(UserUnblockedMessage message, String identityId) {
         if (!TextUtils.equals(message.body.unblockedUser.userCognitoIdentityId, identityId)) {
             //somebody has been unblocked
-            UserInfoProvider.setUserInGroupAsBlocked(message.body.unblockedUser.userCognitoIdentityId, message.body.groupUuid);
+            UserInfoProvider.setUserInGroupAsUnblocked(message.body.unblockedUser.userCognitoIdentityId, message.body.groupUuid);
 
             Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
                     String.format(CammentSDK.getInstance().getApplicationContext().getString(R.string.cmmsdk_user_unblocked), message.body.unblockedUser.name),

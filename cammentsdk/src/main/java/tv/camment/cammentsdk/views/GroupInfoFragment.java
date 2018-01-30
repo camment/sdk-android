@@ -32,8 +32,10 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
-import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
+import tv.camment.cammentsdk.aws.messages.UserBlockMessage;
+import tv.camment.cammentsdk.aws.messages.UserUnblockMessage;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CUserInfo;
@@ -43,7 +45,9 @@ import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
-import tv.camment.cammentsdk.views.dialogs.RemovalConfirmationCammentDialog;
+import tv.camment.cammentsdk.views.dialogs.LeaveDialog;
+import tv.camment.cammentsdk.views.dialogs.UserBlockDialog;
+import tv.camment.cammentsdk.views.dialogs.UserUnblockDialog;
 
 
 public final class GroupInfoFragment extends Fragment
@@ -55,6 +59,7 @@ public final class GroupInfoFragment extends Fragment
     private RelativeLayout rlInvite;
     private RelativeLayout rlGroupInfo;
     private Button btnContinueTutorial;
+    private Button btnLeave;
 
     public static GroupInfoFragment newInstance() {
         return new GroupInfoFragment();
@@ -87,6 +92,14 @@ public final class GroupInfoFragment extends Fragment
             @Override
             public void onClick(View view) {
                 handleInviteUsers();
+            }
+        });
+
+        btnLeave = (Button) layout.findViewById(R.id.cmmsdk_btn_leave);
+        btnLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleLeaveGroup();
             }
         });
 
@@ -157,6 +170,9 @@ public final class GroupInfoFragment extends Fragment
 
         List<CUserInfo> userInfos = UserInfoProvider.listFromCursor(data);
         adapter.setData(userInfos, activeUserGroup != null && TextUtils.equals(identityId, activeUserGroup.getUserCognitoIdentityId()));
+
+        boolean isMyGroup = activeUserGroup != null && TextUtils.equals(identityId, activeUserGroup.getUserCognitoIdentityId());
+        btnLeave.setVisibility(isMyGroup ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -191,6 +207,13 @@ public final class GroupInfoFragment extends Fragment
         }
     }
 
+    private void handleLeaveGroup() {
+        BaseMessage message = new BaseMessage();
+        message.type = MessageType.LEAVE_CONFIRMATION;
+
+        LeaveDialog.createInstance(message).show();
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UserGroupChangeEvent event) {
@@ -220,14 +243,40 @@ public final class GroupInfoFragment extends Fragment
     }
 
     @Override
-    public void onUserRemoveClick(final CUserInfo userInfo) {
-        UserRemovalMessage message = new UserRemovalMessage();
-        UserRemovalMessage.Body body = new UserRemovalMessage.Body();
+    public void onUserBlockClick(final CUserInfo userInfo) {
+        if (userInfo.getUserState() != null) {
+            switch (userInfo.getUserState()) {
+                case ACTIVE:
+                    displayBlockConfirmationDialog(userInfo);
+                    break;
+                case BLOCKED:
+                    displayUnblockConfirmationDialog(userInfo);
+                    break;
+                case UNDEFINED:
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void displayBlockConfirmationDialog(final CUserInfo userInfo) {
+        UserBlockMessage message = new UserBlockMessage();
+        message.type = MessageType.BLOCK_CONFIRMATION;
+        UserBlockMessage.Body body = new UserBlockMessage.Body();
         body.name = userInfo.getName();
-        message.type = MessageType.REMOVAL_CONFIRMATION;
         message.body = body;
 
-        RemovalConfirmationCammentDialog.createInstance(message, userInfo).show();
+        UserBlockDialog.createInstance(message, userInfo).show();
+    }
+
+    private void displayUnblockConfirmationDialog(final CUserInfo userInfo) {
+        UserUnblockMessage message = new UserUnblockMessage();
+        message.type = MessageType.UNBLOCK_CONFIRMATION;
+        UserUnblockMessage.Body body = new UserUnblockMessage.Body();
+        body.name = userInfo.getName();
+        message.body = body;
+
+        UserUnblockDialog.createInstance(message, userInfo).show();
     }
 
 }

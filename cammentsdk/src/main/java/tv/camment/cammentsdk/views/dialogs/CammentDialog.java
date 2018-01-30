@@ -24,7 +24,8 @@ import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
-import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
+import tv.camment.cammentsdk.aws.messages.UserBlockMessage;
+import tv.camment.cammentsdk.aws.messages.UserUnblockMessage;
 
 
 public abstract class CammentDialog extends DialogFragment {
@@ -167,11 +168,14 @@ public abstract class CammentDialog extends DialogFragment {
             case FIRST_USER_JOINED:
                 tvTitle.setText(String.format(getString(R.string.cmmsdk_user_has_joined_title), ((NewUserInGroupMessage) message).body.joiningUser.name));
                 break;
-            case REMOVAL_CONFIRMATION:
-                tvTitle.setText(R.string.cmmsdk_remove_confirmation_title);
+            case LEAVE_CONFIRMATION:
+                tvTitle.setText(R.string.cmmsdk_leave_confirmation_title);
                 break;
-            case KICKED_OUT:
-                tvTitle.setText(R.string.cmmsdk_removed_from_group_title);
+            case BLOCK_CONFIRMATION:
+                tvTitle.setText(R.string.cmmsdk_block_confirmation_title);
+                break;
+            case UNBLOCK_CONFIRMATION:
+                tvTitle.setText(R.string.cmmsdk_unblock_confirmation_title);
                 break;
             case BLOCKED:
                 tvTitle.setText(R.string.cmmsdk_blocked_from_group_title);
@@ -199,11 +203,22 @@ public abstract class CammentDialog extends DialogFragment {
             case FIRST_USER_JOINED:
                 tvMessage.setText(R.string.cmmsdk_user_has_joined_msg);
                 break;
-            case REMOVAL_CONFIRMATION:
-                tvMessage.setText(String.format(getString(R.string.cmmsdk_remove_confirmation_msg), ((UserRemovalMessage) message).body.name));
+            case LEAVE_CONFIRMATION:
+                tvMessage.setText(R.string.cmmsdk_leave_confirmation_msg);
                 break;
-            case KICKED_OUT:
-                tvMessage.setText(R.string.cmmsdk_removed_from_group_msg);
+            case BLOCK_CONFIRMATION:
+                String blockName = getString(R.string.cmmsdk_user);
+                if (message instanceof UserBlockMessage) {
+                    blockName = ((UserBlockMessage) message).body.name;
+                }
+                tvMessage.setText(String.format(getString(R.string.cmmsdk_block_confirmation_msg), blockName));
+                break;
+            case UNBLOCK_CONFIRMATION:
+                String unblockName = getString(R.string.cmmsdk_user);
+                if (message instanceof UserUnblockMessage) {
+                    unblockName = ((UserUnblockMessage) message).body.name;
+                }
+                tvMessage.setText(String.format(getString(R.string.cmmsdk_unblock_confirmation_msg), unblockName));
                 break;
             case BLOCKED:
                 tvMessage.setText(R.string.cmmsdk_blocked_from_group_msg);
@@ -219,7 +234,6 @@ public abstract class CammentDialog extends DialogFragment {
                 break;
             case NEW_USER_IN_GROUP:
             case FIRST_USER_JOINED:
-            case KICKED_OUT:
             case BLOCKED:
                 btnPositive.setText(R.string.cmmsdk_ok);
                 btnNegative.setVisibility(View.GONE);
@@ -228,7 +242,9 @@ public abstract class CammentDialog extends DialogFragment {
                 btnPositive.setText(R.string.cmmsdk_setup_sounds_fun);
                 btnNegative.setText(R.string.cmmsdk_setup_maybe_later);
                 break;
-            case REMOVAL_CONFIRMATION:
+            case LEAVE_CONFIRMATION:
+            case BLOCK_CONFIRMATION:
+            case UNBLOCK_CONFIRMATION:
                 btnPositive.setText(R.string.cmmsdk_yes);
                 btnNegative.setText(R.string.cmmsdk_no);
                 break;

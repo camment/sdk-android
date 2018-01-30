@@ -78,11 +78,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/cmmsdk_btn_leave"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/cmmsdk_red_ripple"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:visibility="gone"
+            android:text="Leave Group"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
         <TextView
             android:id="@+id/cmmsdk_tv_people_in_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:layout_below="@+id/cmmsdk_btn_leave"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:text="@string/cmmsdk_drawer_people_in_chat"

@@ -34,10 +34,6 @@ public enum MessageType {
 
     FIRST_USER_JOINED(12), //internal
 
-    REMOVAL_CONFIRMATION(13), //internal
-
-    KICKED_OUT(14), //internal
-
     @SerializedName("ad")
     AD(15),
 
@@ -47,7 +43,13 @@ public enum MessageType {
     @SerializedName("user-unblocked")
     USER_UNBLOCKED(17),
 
-    BLOCKED(18); //internal
+    BLOCKED(18), //internal
+
+    LEAVE_CONFIRMATION(19), //internal
+
+    BLOCK_CONFIRMATION(20), //internal
+
+    UNBLOCK_CONFIRMATION(21); //internal
 
     private static Map<Integer, MessageType> map = new HashMap<>();
 

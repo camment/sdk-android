@@ -12,6 +12,34 @@ public final class NewUserInGroupMessage extends BaseMessage {
         super();
     }
 
+    private NewUserInGroupMessage(Parcel in) {
+        super(in);
+        body = in.readParcelable(Body.class.getClassLoader());
+    }
+
+    public static final Creator<NewUserInGroupMessage> CREATOR = new Creator<NewUserInGroupMessage>() {
+        @Override
+        public NewUserInGroupMessage createFromParcel(Parcel in) {
+            return new NewUserInGroupMessage(in);
+        }
+
+        @Override
+        public NewUserInGroupMessage[] newArray(int size) {
+            return new NewUserInGroupMessage[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        super.writeToParcel(dest, i);
+        dest.writeParcelable(body, i);
+    }
+
     public static class Body implements Parcelable {
         public String groupUuid;
         public String showUuid;
@@ -86,34 +114,6 @@ public final class NewUserInGroupMessage extends BaseMessage {
             parcel.writeString(userCognitoIdentityId);
             parcel.writeString(picture);
         }
-    }
-
-    private NewUserInGroupMessage(Parcel in) {
-        super(in);
-        body = in.readParcelable(Body.class.getClassLoader());
-    }
-
-    public static final Creator<NewUserInGroupMessage> CREATOR = new Creator<NewUserInGroupMessage>() {
-        @Override
-        public NewUserInGroupMessage createFromParcel(Parcel in) {
-            return new NewUserInGroupMessage(in);
-        }
-
-        @Override
-        public NewUserInGroupMessage[] newArray(int size) {
-            return new NewUserInGroupMessage[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int i) {
-        super.writeToParcel(dest, i);
-        dest.writeParcelable(body, i);
     }
 
 }

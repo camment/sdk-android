@@ -4,12 +4,40 @@ package tv.camment.cammentsdk.aws.messages;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public final class UserRemovalMessage extends BaseMessage {
+public final class UserBlockMessage extends BaseMessage {
 
     public Body body;
 
-    public UserRemovalMessage() { //internal
+    public UserBlockMessage() { //internal
         super();
+    }
+
+    private UserBlockMessage(Parcel in) {
+        super(in);
+        body = in.readParcelable(Body.class.getClassLoader());
+    }
+
+    public static final Creator<UserBlockMessage> CREATOR = new Creator<UserBlockMessage>() {
+        @Override
+        public UserBlockMessage createFromParcel(Parcel in) {
+            return new UserBlockMessage(in);
+        }
+
+        @Override
+        public UserBlockMessage[] newArray(int size) {
+            return new UserBlockMessage[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        super.writeToParcel(dest, i);
+        dest.writeParcelable(body, i);
     }
 
     public static class Body implements Parcelable {

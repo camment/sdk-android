@@ -33,6 +33,10 @@
     <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this chat</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
     <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
+    <string name="cmmsdk_help_skip_tutorial">Skip tutorial</string>
+    <string name="cmmsdk_help_continue_tutorial">Continue tutorial later from sidebar</string>
+
+    <string name="cmmsdk_continue_tutorial">Continue tutorial</string>
 
     <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>
     <string name="cmmsdk_setup_what_is_camment">It\'s like SMS group messaging but with mini videos (camments) on top of the show you are now watching</string>
@@ -93,5 +97,8 @@
 
     <string name="cmmsdk_ad">AD</string>
     <string name="cmmsdk_ad_click_more">Click to learn more</string>
+
+    <string name="cmmsdk_block">Block</string>
+    <string name="cmmsdk_unblock">Unblock</string>
 
 </resources>

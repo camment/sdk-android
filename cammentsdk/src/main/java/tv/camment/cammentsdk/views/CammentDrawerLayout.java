@@ -1,15 +1,10 @@
 package tv.camment.cammentsdk.views;
 
 import android.content.Context;
-import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
-
-import tv.camment.cammentsdk.R;
 
 
-public final class CammentDrawerLayout extends DrawerLayout {
+public final class CammentDrawerLayout extends BaseCammentDrawerLayout {
 
     public CammentDrawerLayout(Context context) {
         super(context);
@@ -23,15 +18,4 @@ public final class CammentDrawerLayout extends DrawerLayout {
         super(context, attrs, defStyle);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-
-        View mDrawerListView = findViewById(R.id.drawer);
-
-        return !(event.getX() > 30 && event.getAction() == MotionEvent.ACTION_DOWN)
-                || isDrawerOpen(mDrawerListView)
-                || isDrawerVisible(mDrawerListView);
-
-    }
 }

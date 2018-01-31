@@ -1,4 +1,4 @@
-package tv.camment.cammentdemo;
+package tv.camment.cammentdemo.test;
 
 
 import android.Manifest;
@@ -22,6 +22,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import tv.camment.cammentdemo.CammentShowsActivity;
+import tv.camment.cammentdemo.R;
+import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.Step;
 
@@ -36,6 +40,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @LargeTest
 public class RecordTest {
+
+    // ./gradlew clean :demo:assembleDevApiDebug :demo:assembleDevApiDebugAndroidTest
 
     @Rule
     public ActivityTestRule<CammentShowsActivity> mActivityRule =
@@ -58,7 +64,9 @@ public class RecordTest {
 
     @Test
     public void test_0_record() {
-        onView(isRoot()).perform(waitFor(2000));
+        ApiManager.getInstance().getShowApi().getShows("hidden");
+
+        onView(isRoot()).perform(waitFor(5000));
         onView(withId(R.id.rv_shows)).perform(RecyclerViewActions.actionOnItemAtPosition(0, clickChildViewWithId(R.id.constraint_layout)));
         onView(isRoot()).perform(waitFor(10000));
         for (int i = 0; i < 10; i++) {

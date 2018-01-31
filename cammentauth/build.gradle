@@ -24,28 +24,34 @@ android {
     }
 
     buildTypes {
-        debug { //PROD
+        debug {
             minifyEnabled false
             useProguard false
             debuggable true
         }
 
-        debugDev { //DEV
-            minifyEnabled false
-            useProguard false
-            debuggable true
-        }
-
-        release { //PROD
-            minifyEnabled false
-            useProguard false
-        }
-
-        releaseDev { //DEV
+        release {
             minifyEnabled false
             useProguard false
         }
     }
+
+    productFlavors {
+        devApi {
+
+        }
+
+        prodApi {
+
+        }
+    }
+}
+
+configurations {
+    devApiDebugCompile
+    prodApiDebugCompile
+    devApiReleaseCompile
+    prodApiReleaseCompile
 }
 
 ext {
@@ -60,10 +66,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile facebookDependencies.values()
 
-    debugCompile project(path: ':cammentsdk', configuration: 'debug')
-    debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
-    releaseCompile project(path: ':cammentsdk', configuration: 'release')
-    releaseDevCompile project(path: ':cammentsdk', configuration: 'releaseDev')
+    devApiDebugCompile project(path: ':cammentsdk', configuration: 'devApiDebug')
+    prodApiDebugCompile project(path: ':cammentsdk', configuration: 'prodApiDebug')
+    devApiReleaseCompile project(path: ':cammentsdk', configuration: 'devApiRelease')
+    prodApiReleaseCompile project(path: ':cammentsdk', configuration: 'prodApiRelease')
 }
 
 publishing {

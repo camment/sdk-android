@@ -37,9 +37,12 @@ import tv.camment.cammentsdk.aws.messages.UserRemovalMessage;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CUserInfo;
+import tv.camment.cammentsdk.events.TutorialContinueEvent;
+import tv.camment.cammentsdk.events.TutorialSkippedEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.views.dialogs.RemovalConfirmationCammentDialog;
 
 
@@ -51,6 +54,7 @@ public final class GroupInfoFragment extends Fragment
 
     private RelativeLayout rlInvite;
     private RelativeLayout rlGroupInfo;
+    private Button btnContinueTutorial;
 
     public static GroupInfoFragment newInstance() {
         return new GroupInfoFragment();
@@ -83,6 +87,17 @@ public final class GroupInfoFragment extends Fragment
             @Override
             public void onClick(View view) {
                 handleInviteUsers();
+            }
+        });
+
+        btnContinueTutorial = (Button) layout.findViewById(R.id.cmmsdk_btn_continue_tutorial);
+        btnContinueTutorial.setVisibility(OnboardingPreferences.getInstance().wasTutorialSkipped() ? View.VISIBLE : View.GONE);
+        btnContinueTutorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnboardingPreferences.getInstance().setTutorialSkipped(false);
+                EventBus.getDefault().post(new TutorialContinueEvent());
+                btnContinueTutorial.setVisibility(View.GONE);
             }
         });
 
@@ -193,6 +208,14 @@ public final class GroupInfoFragment extends Fragment
         if (getContext() instanceof AppCompatActivity) {
             getLoaderManager().destroyLoader(1);
             getLoaderManager().initLoader(1, null, this);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(TutorialSkippedEvent event) {
+        if (btnContinueTutorial != null) {
+            btnContinueTutorial.setVisibility(View.VISIBLE);
         }
     }
 

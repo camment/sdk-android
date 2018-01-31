@@ -14,7 +14,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.events.LoginStatusChanged;
+import tv.camment.cammentsdk.events.LoginStatusChangedEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 
 
@@ -125,7 +125,7 @@ public final class DrawerFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LoginStatusChanged event) {
+    public void onMessageEvent(LoginStatusChangedEvent event) {
         if (AuthHelper.getInstance().isLoggedIn()
                 && !isFbUserViewDisplayed()) {
             displayFbSignedInUser();

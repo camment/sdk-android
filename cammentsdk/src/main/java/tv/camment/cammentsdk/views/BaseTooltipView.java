@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,16 +40,24 @@ abstract class BaseTooltipView extends RelativeLayout {
 
     enum Orientation {
         LEFT,
-        RIGHT
+        RIGHT,
+        BOTTOM
     }
 
     void init(View anchor, Orientation orientation, Step step) {
         this.step = step;
 
-        if (orientation == Orientation.LEFT) {
-            View.inflate(getContext(), R.layout.cmmsdk_tooltip_left, this);
-        } else {
-            View.inflate(getContext(), R.layout.cmmsdk_tooltip_right, this);
+        switch (orientation) {
+            case BOTTOM:
+                View.inflate(getContext(), R.layout.cmmsdk_tooltip_bottom, this);
+                break;
+            case RIGHT:
+                View.inflate(getContext(), R.layout.cmmsdk_tooltip_right, this);
+                break;
+            case LEFT:
+            default:
+                View.inflate(getContext(), R.layout.cmmsdk_tooltip_left, this);
+                break;
         }
 
         tvTooltipText = (TextView) findViewById(R.id.cmmsdk_tv_tooltip_text);
@@ -65,11 +72,13 @@ abstract class BaseTooltipView extends RelativeLayout {
 
         measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         int contentViewHeight = getMeasuredHeight();
-        int contentViewWidth = getMeasuredWidth();
 
-        int position_x = 0, position_y = 0;
+        int position_x, position_y;
 
-        if (orientation == Orientation.RIGHT) {
+        if (orientation == Orientation.BOTTOM) {
+            position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.right;
+            position_y = anchor_rect.top - contentViewHeight - CommonUtils.dpToPx(getContext(), 8);
+        } else if (orientation == Orientation.RIGHT) {
             position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
             position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
         } else {
@@ -80,6 +89,10 @@ abstract class BaseTooltipView extends RelativeLayout {
                     position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
                     position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
                     break;
+                case TUTORIAL:
+                    position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 16);
+                    position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
+                    break;
                 default:
                     position_x = anchor_rect.right;
                     position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2 + CommonUtils.dpToPx(getContext(), 5);
@@ -88,12 +101,27 @@ abstract class BaseTooltipView extends RelativeLayout {
         }
 
         LayoutParams params = (LayoutParams) getLayoutParams();
-        if (orientation == Orientation.RIGHT) {
+
+        if (orientation == Orientation.BOTTOM) {
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+            params.setMargins(0, position_y, position_x, 0);
+        } else if (orientation == Orientation.RIGHT) {
             params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
             params.setMargins(0, position_y, position_x, 0);
         } else {
             params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
             params.setMargins(position_x, position_y, 0, 0);
+        }
+
+        if (orientation == Orientation.BOTTOM) {
+            View vArrow = findViewById(R.id.cmmsdk_v_arrow);
+
+            int aWidth = vArrow.getMeasuredWidth();
+
+            int marginRight = (anchor_rect.right - anchor_rect.left) / 2 - aWidth;
+
+            LayoutParams layoutParams = (LayoutParams) vArrow.getLayoutParams();
+            layoutParams.setMargins(0, CommonUtils.dpToPx(getContext(), -5), marginRight, 0);
         }
 
         setLayoutParams(params);
@@ -124,6 +152,9 @@ abstract class BaseTooltipView extends RelativeLayout {
             case LATER:
                 tvTooltipText.setText(R.string.cmmsdk_help_start_making_video_camments);
                 break;
+            case TUTORIAL:
+                tvTooltipText.setText(R.string.cmmsdk_help_continue_tutorial);
+                break;
             default:
                 break;
         }
@@ -133,8 +164,8 @@ abstract class BaseTooltipView extends RelativeLayout {
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (step == Step.LATER) {
-                    fadeOutTooltip();
+                if (step == Step.LATER || step == Step.TUTORIAL) {
+                    fadeOutTooltip(step);
                 } else {
                     animateTooltip();
                     repeatAnimation(step);
@@ -147,7 +178,7 @@ abstract class BaseTooltipView extends RelativeLayout {
         AnimationUtils.animateTooltip(this);
     }
 
-    private void fadeOutTooltip() {
+    private void fadeOutTooltip(final Step step) {
         this.animate().alpha(0.0f).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -157,7 +188,7 @@ abstract class BaseTooltipView extends RelativeLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (getParent() instanceof OnboardingOverlay) {
-                    ((OnboardingOverlay) getParent()).hideTooltipIfNeeded(Step.LATER);
+                    ((OnboardingOverlay) getParent()).hideTooltipIfNeeded(step);
                 }
             }
 

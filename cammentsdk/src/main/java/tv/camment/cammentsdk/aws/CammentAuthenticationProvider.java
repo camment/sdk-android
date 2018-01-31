@@ -16,8 +16,7 @@ import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
-import tv.camment.cammentsdk.data.UserGroupProvider;
-import tv.camment.cammentsdk.events.LoginStatusChanged;
+import tv.camment.cammentsdk.events.LoginStatusChangedEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
@@ -60,7 +59,7 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                         MixpanelHelper.getInstance().setIdentity();
                     }
 
-                    EventBus.getDefault().post(new LoginStatusChanged());
+                    EventBus.getDefault().post(new LoginStatusChangedEvent());
                     PendingActions.getInstance().executePendingActionsIfNeeded();
 
                     ApiManager.getInstance().retryFailedCallsIfNeeded();

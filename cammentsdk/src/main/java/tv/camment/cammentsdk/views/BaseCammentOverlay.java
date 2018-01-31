@@ -312,6 +312,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
             public void onDrawerOpened(View drawerView) {
                 if (onboardingOverlay != null) {
                     onboardingOverlay.hideTooltipIfNeeded(Step.INVITE);
+                    onboardingOverlay.hideTooltipIfNeeded(Step.TUTORIAL);
                 }
             }
         });

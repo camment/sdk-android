@@ -47,52 +47,34 @@ android {
     }
 
     buildTypes {
-        debug { //PROD
+        debug {
             minifyEnabled false
             useProguard false
             debuggable true
 
             signingConfig signingConfigs.debug
-
-            buildConfigField("String", "API_ENDPOINT", "\"PROD\"")
-
-            resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
 
-        debugDev { //DEV
-            minifyEnabled false
-            useProguard false
-            debuggable true
-
-            signingConfig signingConfigs.debug
-
-            buildConfigField("String", "API_ENDPOINT", "\"DEV\"")
-
-            resValue "string", "camment_api_key", "iYeooUSdMZ8FOBMZeL2zb9YDLdW0uvbVlitykh7d"
-        }
-
-        release { //PROD
+        release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             signingConfig signingConfigs.release
-
-            buildConfigField("String", "API_ENDPOINT", "\"PROD\"")
-
-            resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
+    }
 
-        releaseDev { //DEV
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            signingConfig signingConfigs.release
-
+    productFlavors {
+        devApi {
             buildConfigField("String", "API_ENDPOINT", "\"DEV\"")
 
             resValue "string", "camment_api_key", "iYeooUSdMZ8FOBMZeL2zb9YDLdW0uvbVlitykh7d"
+        }
+
+        prodApi {
+            buildConfigField("String", "API_ENDPOINT", "\"PROD\"")
+
+            resValue "string", "camment_api_key", "tJMh7QTCAd1rqh5rjUMRO1Z65AprCP843n6vLvdF"
         }
     }
 
@@ -101,6 +83,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+}
+
+configurations {
+    devApiDebugCompile
+    prodApiDebugCompile
+    devApiReleaseCompile
+    prodApiReleaseCompile
 }
 
 ext {
@@ -144,20 +133,19 @@ dependencies {
     compile supportDependencies.values()
     compile facebookDependencies.values()
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    debugCompile project(path: ':cammentsdk', configuration: 'debug')
-    debugDevCompile project(path: ':cammentsdk', configuration: 'debugDev')
-    releaseCompile project(path: ':cammentsdk', configuration: 'release')
-    releaseDevCompile project(path: ':cammentsdk', configuration: 'releaseDev')
-
-    debugCompile project(path: ':cammentauth', configuration: 'debug')
-    debugDevCompile project(path: ':cammentauth', configuration: 'debugDev')
-    releaseCompile project(path: ':cammentauth', configuration: 'release')
-    releaseDevCompile project(path: ':cammentauth', configuration: 'releaseDev')
 
     compile 'net.hockeyapp.android:HockeySDK:5.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
-    androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'junit:junit:4.12'
+
+    devApiDebugCompile project(path: ':cammentsdk', configuration: 'devApiDebug')
+    prodApiDebugCompile project(path: ':cammentsdk', configuration: 'prodApiDebug')
+    devApiReleaseCompile project(path: ':cammentsdk', configuration: 'devApiRelease')
+    prodApiReleaseCompile project(path: ':cammentsdk', configuration: 'prodApiRelease')
+
+    devApiDebugCompile project(path: ':cammentauth', configuration: 'devApiDebug')
+    prodApiDebugCompile project(path: ':cammentauth', configuration: 'prodApiDebug')
+    devApiReleaseCompile project(path: ':cammentauth', configuration: 'devApiRelease')
+    prodApiReleaseCompile project(path: ':cammentauth', configuration: 'prodApiRelease')
 }

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,7 +15,6 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.data.model.CUserInfo;
-import tv.camment.cammentsdk.helpers.IdentityPreferences;
 
 
 final class FbUserInfoViewHolder extends RecyclerView.ViewHolder {
@@ -64,7 +62,7 @@ final class FbUserInfoViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        ibRemove.setVisibility(isMyGroup ? View.GONE : View.GONE);
+        ibRemove.setVisibility(isMyGroup ? View.VISIBLE : View.GONE);
     }
 
     private void handleUserRemoveClick() {

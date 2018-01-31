@@ -88,12 +88,10 @@ public final class AWSManager {
     }
 
     public DevcammentClient getDevcammentClient(boolean useCredentialsProvider) {
-        switch (BuildConfig.BUILD_TYPE) {
-            case "debugDev":
-            case "releaseDev":
+        switch (BuildConfig.FLAVOR) {
+            case "devApi":
                 return getApiClientFactory(useCredentialsProvider).build(DevcammentClientDev.class);
-            case "debug":
-            case "release":
+            case "prodApi":
             default:
                 return getApiClientFactory(useCredentialsProvider).build(DevcammentClientProd.class);
         }

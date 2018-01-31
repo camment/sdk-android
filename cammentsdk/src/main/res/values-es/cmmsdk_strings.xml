@@ -100,5 +100,6 @@
 
     <string name="cmmsdk_block">Block</string>
     <string name="cmmsdk_unblock">Unblock</string>
+    <string name="cmmsdk_blocked_users">Blocked Users</string>
 
 </resources>

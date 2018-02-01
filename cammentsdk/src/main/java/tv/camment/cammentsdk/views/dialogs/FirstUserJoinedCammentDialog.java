@@ -3,8 +3,6 @@ package tv.camment.cammentsdk.views.dialogs;
 
 import android.os.Bundle;
 
-import com.camment.clientsdk.model.Deeplink;
-
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 
 public final class FirstUserJoinedCammentDialog extends CammentDialog {

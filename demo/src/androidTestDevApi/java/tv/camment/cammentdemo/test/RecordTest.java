@@ -10,7 +10,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -25,16 +24,13 @@ import org.junit.runners.MethodSorters;
 import tv.camment.cammentdemo.CammentShowsActivity;
 import tv.camment.cammentdemo.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
 import tv.camment.cammentsdk.helpers.Step;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -47,8 +43,10 @@ public class RecordTest {
     public ActivityTestRule<CammentShowsActivity> mActivityRule =
             new ActivityTestRule<>(CammentShowsActivity.class);
 
-    @Rule public GrantPermissionRule cameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
-    @Rule public GrantPermissionRule micPermissionRule = GrantPermissionRule.grant(Manifest.permission.RECORD_AUDIO);
+    @Rule
+    public GrantPermissionRule cameraPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    @Rule
+    public GrantPermissionRule micPermissionRule = GrantPermissionRule.grant(Manifest.permission.RECORD_AUDIO);
 
     @Before
     public void beforeTest() {
@@ -77,7 +75,7 @@ public class RecordTest {
 
     private void recordVideo() {
         onView(isRoot()).perform(waitFor(1000));
-        onView(withId(R.id.camment_overlay)).perform(touchDownAndUp(20,20, 3000));
+        onView(withId(R.id.camment_overlay)).perform(touchDownAndUp(20, 20, 3000));
     }
 
     private static ViewAction touchDownAndUp(final float x, final float y, final long millis) {
@@ -101,8 +99,8 @@ public class RecordTest {
                 v.getLocationOnScreen(location);
 
                 // Offset coordinates by view position
-                float[] coordinates = new float[] { x + location[0], y + location[1] };
-                float[] precision = new float[] { 1f, 1f };
+                float[] coordinates = new float[]{x + location[0], y + location[1]};
+                float[] precision = new float[]{1f, 1f};
 
                 // Send down event, pause, and send up
                 MotionEvent down = MotionEvents.sendDown(uiController, coordinates, precision).down;

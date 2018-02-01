@@ -112,7 +112,7 @@ public class CammentSettingsActivity extends AppCompatPreferenceActivity {
                 }
 
                 prefEditor.putString(getString(R.string.key_adjust_camment_volume), volumeValue);
-                prefEditor.commit();
+                prefEditor.apply();
 
                 ListPreference audioListPreference = (ListPreference) super.findPreference(getString(R.string.key_adjust_camment_volume));
                 int index = audioListPreference.findIndexOfValue(volumeValue);

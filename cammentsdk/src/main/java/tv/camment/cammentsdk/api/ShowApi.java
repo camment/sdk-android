@@ -1,5 +1,6 @@
 package tv.camment.cammentsdk.api;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.camment.clientsdk.DevcammentClient;
@@ -13,6 +14,8 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.data.ShowProvider;
+import tv.camment.cammentsdk.helpers.GeneralPreferences;
+import tv.camment.cammentsdk.utils.LogUtils;
 
 
 public final class ShowApi extends CammentAsyncClient {
@@ -27,22 +30,26 @@ public final class ShowApi extends CammentAsyncClient {
     public void getShows(final String passcode) {
         CammentSDK.getInstance().showProgressBar();
 
-        submitTask(new Callable<ShowList>() {
+        submitBgTask(new Callable<ShowList>() {
             @Override
             public ShowList call() throws Exception {
                 return devcammentClient.showsGet(passcode);
             }
-        }, getShowsCallback());
+        }, getShowsCallback(passcode));
     }
 
-    private CammentCallback<ShowList> getShowsCallback() {
+    private CammentCallback<ShowList> getShowsCallback(final String passcode) {
         return new CammentCallback<ShowList>() {
             @Override
             public void onSuccess(ShowList result) {
+                LogUtils.debug("onSuccess", "getShows");
                 CammentSDK.getInstance().hideProgressBar();
 
+                final String currentPasscode = GeneralPreferences.getInstance().getProviderPasscode();
+
                 if (result != null
-                        && result.getItems() != null) {
+                        && result.getItems() != null
+                        && TextUtils.equals(passcode, currentPasscode)) {
                     ShowProvider.deleteShows();
                     ShowProvider.insertShows(result.getItems());
                 }

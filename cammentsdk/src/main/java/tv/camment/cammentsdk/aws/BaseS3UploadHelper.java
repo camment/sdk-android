@@ -1,7 +1,5 @@
 package tv.camment.cammentsdk.aws;
 
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,7 +9,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.StorageClass;
@@ -22,7 +19,6 @@ import com.google.android.exoplayer2.upstream.cache.CacheUtil;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
@@ -56,7 +52,7 @@ abstract class BaseS3UploadHelper extends CammentAsyncClient {
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                long cammentDuration = camment.getEndTimestamp() -  camment.getStartTimestamp();
+                long cammentDuration = camment.getEndTimestamp() - camment.getStartTimestamp();
 
                 LogUtils.debug("cammentDuration", "" + cammentDuration);
 

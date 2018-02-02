@@ -15,7 +15,7 @@
         android:src="@drawable/cmmsdk_ic_user" />
 
     <TextView
-        android:id="@+id/cmmsdk_tv_logout"
+        android:id="@+id/cmmsdk_tv_logout_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cmmsdk_ib_user"
@@ -26,23 +26,41 @@
 
     <Button
         android:id="@+id/cmmsdk_btn_logout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:layout_below="@+id/cmmsdk_tv_logout"
+        android:layout_below="@+id/cmmsdk_tv_logout_msg"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/holo_blue_dark"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/cmmsdk_button_ripple"
+        android:gravity="center"
+        android:padding="8dp"
         android:text="@string/cmmsdk_drawer_logout_fb"
         android:textAllCaps="false"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/cmmsdk_btn_leave"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_below="@+id/cmmsdk_btn_logout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/cmmsdk_red_ripple"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:text="@string/cmmsdk_leave_group"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:visibility="visible" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/cmmsdk_btn_logout"
+        android:layout_below="@+id/cmmsdk_btn_leave"
         android:alpha="0.7"
         android:background="@color/cmmsdk_camment_divider_grey" />
 

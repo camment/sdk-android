@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/cmmsdk_camment_lightest_grey"
     tools:context="tv.camment.cammentsdk.views.FbUserFragment">
 
@@ -37,6 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cmmsdk_iv_avatar"
         android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:gravity="center"
@@ -53,11 +55,11 @@
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:visibility="gone"
         android:background="@drawable/cmmsdk_red_ripple"
         android:text="@string/cmmsdk_drawer_invite_friends"
         android:textAllCaps="false"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

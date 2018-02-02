@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.camment.clientsdk.model.Usergroup;
@@ -32,7 +33,6 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.PendingActions;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
-import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.UserBlockMessage;
 import tv.camment.cammentsdk.aws.messages.UserUnblockMessage;
@@ -45,7 +45,6 @@ import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.helpers.OnboardingPreferences;
-import tv.camment.cammentsdk.views.dialogs.LeaveDialog;
 import tv.camment.cammentsdk.views.dialogs.UserBlockDialog;
 import tv.camment.cammentsdk.views.dialogs.UserUnblockDialog;
 
@@ -56,10 +55,9 @@ public final class GroupInfoFragment extends Fragment
     private RecyclerView rvGroups;
     private UserInfoAdapter adapter;
 
-    private RelativeLayout rlInvite;
+    private ScrollView svInvite;
     private RelativeLayout rlGroupInfo;
     private Button btnContinueTutorial;
-    private Button btnLeave;
 
     public static GroupInfoFragment newInstance() {
         return new GroupInfoFragment();
@@ -74,7 +72,7 @@ public final class GroupInfoFragment extends Fragment
 
         setupRecyclerView();
 
-        rlInvite = (RelativeLayout) layout.findViewById(R.id.cmmsdk_rl_invite);
+        svInvite = (ScrollView) layout.findViewById(R.id.cmmsdk_sv_invite);
         rlGroupInfo = (RelativeLayout) layout.findViewById(R.id.cmmsdk_rl_group_info);
 
         handleContainersVisibility();
@@ -92,14 +90,6 @@ public final class GroupInfoFragment extends Fragment
             @Override
             public void onClick(View view) {
                 handleInviteUsers();
-            }
-        });
-
-        btnLeave = (Button) layout.findViewById(R.id.cmmsdk_btn_leave);
-        btnLeave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleLeaveGroup();
             }
         });
 
@@ -170,9 +160,6 @@ public final class GroupInfoFragment extends Fragment
 
         List<CUserInfo> userInfos = UserInfoProvider.listFromCursor(data);
         adapter.setData(userInfos, activeUserGroup != null && TextUtils.equals(identityId, activeUserGroup.getUserCognitoIdentityId()));
-
-        boolean isMyGroup = activeUserGroup != null && TextUtils.equals(identityId, activeUserGroup.getUserCognitoIdentityId());
-        btnLeave.setVisibility(isMyGroup ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -186,7 +173,7 @@ public final class GroupInfoFragment extends Fragment
         if (activeUserGroup != null) {
             count = UserInfoProvider.getConnectedUsersCountByGroupUuid(activeUserGroup.getUuid());
         }
-        rlInvite.setVisibility(activeUserGroup == null || count < 1 ? View.VISIBLE : View.GONE);
+        svInvite.setVisibility(activeUserGroup == null || count < 1 ? View.VISIBLE : View.GONE);
         rlGroupInfo.setVisibility(activeUserGroup == null || count < 1 ? View.GONE : View.VISIBLE);
     }
 
@@ -205,13 +192,6 @@ public final class GroupInfoFragment extends Fragment
                 CammentSDK.getInstance().getAppAuthIdentityProvider().logIn((Activity) getContext());
             }
         }
-    }
-
-    private void handleLeaveGroup() {
-        BaseMessage message = new BaseMessage();
-        message.type = MessageType.LEAVE_CONFIRMATION;
-
-        LeaveDialog.createInstance(message).show();
     }
 
     @SuppressWarnings("unused")

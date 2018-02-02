@@ -126,12 +126,13 @@ public final class UserApi extends CammentAsyncClient {
                     }
 
                     if (blocked) {
-                        runOnUiThread(new Runnable() {
+                        runOnUiThreadDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                CammentSDK.getInstance().hideProgressBar();
                                 Toast.makeText(CammentSDK.getInstance().getApplicationContext(), R.string.cmmsdk_cant_join_blocked, Toast.LENGTH_LONG).show();
                             }
-                        });
+                        }, 1000);
                     } else {
                         ApiManager.getInstance().getGroupApi().getUserGroupByUuid(message.body.groupUuid, message);
                     }

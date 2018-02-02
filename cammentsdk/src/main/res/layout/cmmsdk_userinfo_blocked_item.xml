@@ -19,9 +19,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
+        android:alpha="0.6"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@+id/cmmsdk_iv_avatar"
-        android:layout_toStartOf="@+id/cmmsdk_tv_unblock"
+        android:layout_toStartOf="@+id/cmmsdk_ib_block"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
@@ -30,28 +31,23 @@
         android:textColor="@color/cmmsdk_camment_text_grey"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/cmmsdk_tv_unblock"
+    <ImageButton
+        android:id="@+id/cmmsdk_ib_block"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/cmmsdk_button_ripple"
-        android:lines="1"
-        android:padding="8dp"
-        android:text="@string/cmmsdk_unblock"
-        android:textAllCaps="true"
-        android:textColor="@color/cmmsdk_camment_red"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:padding="4dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:src="@drawable/cmmsdk_block"/>
 
     <View
         android:id="@+id/cmmsdk_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/cmmsdk_tv_name"
-        android:alpha="0.7"
+        android:alpha="0.2"
         android:background="@color/cmmsdk_camment_divider_grey" />
 
 </RelativeLayout>

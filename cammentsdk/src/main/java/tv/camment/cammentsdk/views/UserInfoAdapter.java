@@ -22,13 +22,11 @@ import tv.camment.cammentsdk.data.model.UserState;
 final class UserInfoAdapter extends RecyclerView.Adapter {
 
     private static final int ACTIVE_USER = 0;
-    private static final int BLOCKED_SECTION = 1;
-    private static final int BLOCKED_USER = 2;
+    private static final int BLOCKED_USER = 1;
 
     private final ActionListener actionListener;
 
     private List<CUserInfo> userInfos;
-    private int sectionPosition = -1;
     private boolean isMyGroup;
 
     UserInfoAdapter(ActionListener actionListener) {
@@ -39,8 +37,6 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
     public void setData(List<CUserInfo> userInfos, boolean isMyGroup) {
         this.isMyGroup = isMyGroup;
 
-        sectionPosition = -1;
-
         if (userInfos != null) {
 
             Set<CUserInfo> userInfoSet = new HashSet<>();
@@ -50,15 +46,7 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
 
             this.userInfos.addAll(userInfoSet);
 
-            Collections.sort(this.userInfos, new CUserInfoChainedComparator(new CUserInfoNameComparator(), new CUserInfoStateComparator()));
-
-            for (int i = 0; i < this.userInfos.size(); i++) {
-                if (this.userInfos.get(i).getUserState() == UserState.BLOCKED) {
-                    sectionPosition = i;
-                    break;
-                }
-            }
-
+            Collections.sort(this.userInfos, new CUserInfoChainedComparator(new CUserInfoStateComparator(), new CUserInfoNameComparator()));
         } else {
             this.userInfos = new ArrayList<>();
         }
@@ -68,21 +56,12 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
 
     @Override
     public long getItemId(int position) {
-        if (position == sectionPosition) {
-            return 12345;
-        }
-        if (sectionPosition > -1 && position > sectionPosition) {
-            return userInfos.get(position - 1).getUserCognitoIdentityId().hashCode();
-        }
         return userInfos.get(position).getUserCognitoIdentityId().hashCode();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == sectionPosition) {
-            return BLOCKED_SECTION;
-        }
-        if (sectionPosition > -1 && position > sectionPosition) {
+        if (userInfos.get(position).getUserState() == UserState.BLOCKED) {
             return BLOCKED_USER;
         }
         return ACTIVE_USER;
@@ -93,9 +72,6 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView;
         switch (viewType) {
-            case BLOCKED_SECTION:
-                itemView = inflater.inflate(R.layout.cmmsdk_userinfo_blocked_section, parent, false);
-                return new EmptyViewHolder(itemView);
             case BLOCKED_USER:
                 itemView = inflater.inflate(R.layout.cmmsdk_userinfo_blocked_item, parent, false);
                 return new UserInfoBlockedViewHolder(itemView, actionListener);
@@ -113,14 +89,14 @@ final class UserInfoAdapter extends RecyclerView.Adapter {
                 ((UserInfoActiveViewHolder) holder).bindData(userInfos.get(position), isMyGroup);
                 break;
             case BLOCKED_USER:
-                ((UserInfoBlockedViewHolder) holder).bindData(userInfos.get(position - 1), isMyGroup);
+                ((UserInfoBlockedViewHolder) holder).bindData(userInfos.get(position), isMyGroup);
                 break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return getUserInfoListSize() + (sectionPosition > -1 ? 1 : 0);
+        return getUserInfoListSize();
     }
 
     private int getUserInfoListSize() {

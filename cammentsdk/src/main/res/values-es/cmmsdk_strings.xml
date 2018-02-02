@@ -70,7 +70,7 @@
 
     <string name="cmmsdk_fail_to_remove_from_group">Failed to remove %s from group</string>
 
-    <string name="cmmsdk_user_left_group">%s left the current conversation</string>
+    <string name="cmmsdk_user_left_group">%s left the conversation</string>
 
     <string name="cmmsdk_somebody">Somebody</string>
     <string name="cmmsdk_user">User</string>
@@ -101,5 +101,6 @@
     <string name="cmmsdk_block">Block</string>
     <string name="cmmsdk_unblock">Unblock</string>
     <string name="cmmsdk_blocked_users">Blocked Users</string>
+    <string name="cmmsdk_leave_group">Leave group</string>
 
 </resources>

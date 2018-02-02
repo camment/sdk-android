@@ -25,6 +25,9 @@ public enum UserState {
     }
 
     public static UserState fromString(String value) {
+        if (value == null)
+            return UNDEFINED;
+
         if (map.containsKey(value)) {
             return map.get(value);
         } else {

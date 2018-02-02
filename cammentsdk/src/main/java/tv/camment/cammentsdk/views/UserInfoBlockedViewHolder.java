@@ -7,6 +7,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ final class UserInfoBlockedViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView ivAvatar;
     private TextView tvName;
-    private TextView tvUnblock;
+    private ImageButton ibUnblock;
 
     private final UserInfoAdapter.ActionListener actionListener;
 
@@ -35,7 +36,7 @@ final class UserInfoBlockedViewHolder extends RecyclerView.ViewHolder {
 
         ivAvatar = (ImageView) itemView.findViewById(R.id.cmmsdk_iv_avatar);
         tvName = (TextView) itemView.findViewById(R.id.cmmsdk_tv_name);
-        tvUnblock = (TextView) itemView.findViewById(R.id.cmmsdk_tv_unblock);
+        ibUnblock = (ImageButton) itemView.findViewById(R.id.cmmsdk_ib_block);
     }
 
     void bindData(CUserInfo userInfo, boolean isMyGroup) {
@@ -45,7 +46,6 @@ final class UserInfoBlockedViewHolder extends RecyclerView.ViewHolder {
         this.userInfo = userInfo;
 
         tvName.setText(userInfo.getName());
-        tvName.setAlpha(0.6f);
 
         Glide.with(CammentSDK.getInstance().getApplicationContext()).asBitmap().load(userInfo.getPicture()).into(new BitmapImageViewTarget(ivAvatar) {
             @Override
@@ -62,7 +62,7 @@ final class UserInfoBlockedViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        tvUnblock.setOnClickListener(new View.OnClickListener() {
+        ibUnblock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleUserUnblockClick();

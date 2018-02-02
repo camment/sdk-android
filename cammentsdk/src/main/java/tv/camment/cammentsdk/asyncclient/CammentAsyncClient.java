@@ -125,4 +125,12 @@ public abstract class CammentAsyncClient {
         }
     }
 
+    protected final void runOnUiThreadDelayed(@NonNull Runnable runnable, long delay) {
+        if (Thread.currentThread() != UI_THREAD) {
+            UI_HANDLER.postDelayed(runnable, delay);
+        } else {
+            runnable.run();
+        }
+    }
+
 }

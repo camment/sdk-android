@@ -125,7 +125,7 @@ public final class CammentAuthenticationProvider extends AWSAbstractCognitoDevel
                     OpenIdToken openIdToken = ApiManager.getInstance().getAuthApi().getOpenIdTokenSync(fbAuthInfo.getToken());
 
                     if (openIdToken == null)
-                        return  null;
+                        return null;
 
                     try {
                         LogUtils.debug("openIdToken identity", openIdToken.getIdentityId());

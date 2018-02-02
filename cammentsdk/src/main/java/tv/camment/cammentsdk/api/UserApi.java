@@ -55,19 +55,27 @@ public final class UserApi extends CammentAsyncClient {
     }
 
     public void getMyUserGroups() {
-        submitBgTask(new Callable<UsergroupList>() {
-            @Override
-            public UsergroupList call() throws Exception {
-                return devcammentClient.meGroupsGet();
-            }
-        }, getMyUserGroupsCallback());
+        String indentityId = IdentityPreferences.getInstance().getIdentityId();
+
+        int apiHashCode = indentityId.hashCode();
+
+        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_MY_USER_GROUPS, apiHashCode)) {
+            submitBgTask(new Callable<UsergroupList>() {
+                @Override
+                public UsergroupList call() throws Exception {
+                    return devcammentClient.meGroupsGet();
+                }
+            }, getMyUserGroupsCallback(apiHashCode));
+        }
     }
 
-    private CammentCallback<UsergroupList> getMyUserGroupsCallback() {
+    private CammentCallback<UsergroupList> getMyUserGroupsCallback(final int apiHashCode) {
         return new CammentCallback<UsergroupList>() {
             @Override
             public void onSuccess(UsergroupList result) {
                 LogUtils.debug("onSuccess", "getMyUserGroups");
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_MY_USER_GROUPS, apiHashCode);
+
                 if (result != null
                         && result.getItems() != null) {
                     UserGroupProvider.insertUserGroups(result.getItems());
@@ -77,17 +85,21 @@ public final class UserApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getMyUserGroups", exception);
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_MY_USER_GROUPS, apiHashCode);
+
             }
         };
     }
 
     public void getUserInfosForGroupUuidAndHandleBlockedUser(final String groupUuid, final InvitationMessage message) {
-        submitBgTask(new Callable<UserinfoList>() {
-            @Override
-            public UserinfoList call() throws Exception {
-                return devcammentClient.usergroupsGroupUuidUsersGet(groupUuid);
-            }
-        }, getUserInfosForGroupUuidAndHandleBlockedUserCallback(groupUuid, message));
+        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode())) {
+            submitBgTask(new Callable<UserinfoList>() {
+                @Override
+                public UserinfoList call() throws Exception {
+                    return devcammentClient.usergroupsGroupUuidUsersGet(groupUuid);
+                }
+            }, getUserInfosForGroupUuidAndHandleBlockedUserCallback(groupUuid, message));
+        }
     }
 
     private CammentCallback<UserinfoList> getUserInfosForGroupUuidAndHandleBlockedUserCallback(final String groupUuid, final InvitationMessage message) {
@@ -95,6 +107,8 @@ public final class UserApi extends CammentAsyncClient {
             @Override
             public void onSuccess(UserinfoList result) {
                 LogUtils.debug("onSuccess", "getUserInfosForGroupUuidAndHandleBlockedUser");
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
+
                 if (result != null
                         && result.getItems() != null) {
                     UserInfoProvider.insertUserInfos(result.getItems(), groupUuid);
@@ -127,17 +141,20 @@ public final class UserApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getUserInfosForGroupUuidAndHandleBlockedUser", exception);
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
             }
         };
     }
 
     public void getUserInfosForGroupUuid(final String groupUuid) {
-        submitBgTask(new Callable<UserinfoList>() {
-            @Override
-            public UserinfoList call() throws Exception {
-                return devcammentClient.usergroupsGroupUuidUsersGet(groupUuid);
-            }
-        }, getUserInfosForGroupUuidCallback(groupUuid));
+        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode())) {
+            submitBgTask(new Callable<UserinfoList>() {
+                @Override
+                public UserinfoList call() throws Exception {
+                    return devcammentClient.usergroupsGroupUuidUsersGet(groupUuid);
+                }
+            }, getUserInfosForGroupUuidCallback(groupUuid));
+        }
     }
 
     private CammentCallback<UserinfoList> getUserInfosForGroupUuidCallback(final String groupUuid) {
@@ -145,6 +162,8 @@ public final class UserApi extends CammentAsyncClient {
             @Override
             public void onSuccess(UserinfoList result) {
                 LogUtils.debug("onSuccess", "getUserInfosForGroupUuid");
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
+
                 if (result != null
                         && result.getItems() != null) {
                     UserInfoProvider.insertUserInfos(result.getItems(), groupUuid);
@@ -154,6 +173,7 @@ public final class UserApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getUserInfosForGroupUuid", exception);
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
             }
         };
     }

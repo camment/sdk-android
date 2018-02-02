@@ -30,42 +30,37 @@ android {
     }
 
     buildTypes {
-        debug { //PROD
+        debug {
             minifyEnabled false
             useProguard false
             debuggable true
-
-            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
         }
 
-        debugDev { //DEV
-            minifyEnabled false
-            useProguard false
-            debuggable true
-
-            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
-        }
-
-        release { //PROD
+        release {
             minifyEnabled true
             useProguard true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
-        }
-
-        releaseDev { //DEV
-            minifyEnabled true
-            useProguard true
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            consumerProguardFiles getDefaultProguardFile('proguard-android.txt'), getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
         }
     }
+
+    productFlavors {
+        devApi {
+            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
+        }
+
+        prodApi {
+            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
+        }
+    }
+}
+
+configurations {
+    devApiDebugCompile
+    prodApiDebugCompile
+    devApiReleaseCompile
+    prodApiReleaseCompile
 }
 
 ext {

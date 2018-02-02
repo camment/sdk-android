@@ -86,7 +86,7 @@ public class CammentSettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.settings_main);
 
             Preference releasePreference = findPreference(getString(R.string.key_release_version));
-            releasePreference.setSummary(BuildConfig.VERSION_NAME + " (" + BuildConfig.API_ENDPOINT + ", " + (BuildConfig.DEBUG ? "debug" : "release") + ")");
+            releasePreference.setSummary(BuildConfig.VERSION_NAME + " (" + BuildConfig.API_ENDPOINT + ", " + BuildConfig.BUILD_TYPE + ")");
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_adjust_camment_volume)));
 
@@ -112,7 +112,7 @@ public class CammentSettingsActivity extends AppCompatPreferenceActivity {
                 }
 
                 prefEditor.putString(getString(R.string.key_adjust_camment_volume), volumeValue);
-                prefEditor.commit();
+                prefEditor.apply();
 
                 ListPreference audioListPreference = (ListPreference) super.findPreference(getString(R.string.key_adjust_camment_volume));
                 int index = audioListPreference.findIndexOfValue(volumeValue);

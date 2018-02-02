@@ -18,7 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;

@@ -3,15 +3,12 @@ package tv.camment.cammentsdk.api;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.apigateway.ApiClientException;
-import com.amazonaws.mobileconnectors.apigateway.ApiRequest;
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.OpenIdToken;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.logging.Handler;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;

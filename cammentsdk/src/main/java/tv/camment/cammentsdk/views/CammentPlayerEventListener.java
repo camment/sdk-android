@@ -13,9 +13,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 
 final class CammentPlayerEventListener implements ExoPlayer.EventListener {
 

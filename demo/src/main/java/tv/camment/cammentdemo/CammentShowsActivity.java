@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.camment.clientsdk.model.Show;
 
@@ -33,7 +32,6 @@ import tv.camment.cammentsdk.data.ShowProvider;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
-import tv.camment.cammentsdk.utils.NetworkUtils;
 
 public class CammentShowsActivity extends CammentBaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,

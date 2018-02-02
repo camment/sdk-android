@@ -16,10 +16,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
-import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.auth.CammentAuthListener;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.auth.CammentFbUserInfo;

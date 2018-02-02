@@ -61,25 +61,30 @@ public final class CammentApi extends CammentAsyncClient {
     }
 
     public void getUserGroupCamments() {
-        submitTask(new Callable<CammentList>() {
-            @Override
-            public CammentList call() throws Exception {
-                final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+        final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
-                if (usergroup != null
-                        && !TextUtils.isEmpty(usergroup.getUuid())) {
+        if (usergroup == null
+                || TextUtils.isEmpty(usergroup.getUuid())) {
+            return;
+        }
+
+        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_CAMMENTS, usergroup.getUuid().hashCode())) {
+            submitTask(new Callable<CammentList>() {
+                @Override
+                public CammentList call() throws Exception {
                     return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid());
                 }
-                return new CammentList();
-            }
-        }, getUserGroupCammentsCallback());
+            }, getUserGroupCammentsCallback(usergroup.getUuid()));
+        }
     }
 
-    private CammentCallback<CammentList> getUserGroupCammentsCallback() {
+    private CammentCallback<CammentList> getUserGroupCammentsCallback(final String groupUuid) {
         return new CammentCallback<CammentList>() {
             @Override
             public void onSuccess(CammentList cammentList) {
                 LogUtils.debug("onSuccess", "getUserGroupCamments");
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode());
+
                 if (cammentList != null
                         && cammentList.getItems() != null) {
                     for (Camment camment : cammentList.getItems()) {
@@ -94,6 +99,7 @@ public final class CammentApi extends CammentAsyncClient {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException", "getUserGroupCamments", exception);
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode());
             }
         };
     }

@@ -20,13 +20,16 @@ import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
 import tv.camment.cammentsdk.auth.CammentAuthType;
 import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
+import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
+import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.UserState;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.LogUtils;
+import tv.camment.cammentsdk.views.dialogs.BlockedCammentDialog;
 
 
 public final class UserApi extends CammentAsyncClient {
@@ -126,13 +129,17 @@ public final class UserApi extends CammentAsyncClient {
                     }
 
                     if (blocked) {
-                        runOnUiThreadDelayed(new Runnable() {
+                        runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 CammentSDK.getInstance().hideProgressBar();
-                                Toast.makeText(CammentSDK.getInstance().getApplicationContext(), R.string.cmmsdk_cant_join_blocked, Toast.LENGTH_LONG).show();
+
+                                BaseMessage msg = new BaseMessage();
+                                msg.type = MessageType.BLOCKED;
+
+                                BlockedCammentDialog.createInstance(msg).show();
                             }
-                        }, 1000);
+                        });
                     } else {
                         ApiManager.getInstance().getGroupApi().getUserGroupByUuid(message.body.groupUuid, message);
                     }

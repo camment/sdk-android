@@ -142,6 +142,7 @@ public class CammentMainActivity extends CammentBaseActivity
     protected void onPause() {
         if (videoView != null) {
             currentPosition = videoView.getCurrentPosition();
+            getIntent().putExtra(ARGS_PLAYER_POSITION, currentPosition);
         }
         super.onPause();
     }
@@ -151,6 +152,7 @@ public class CammentMainActivity extends CammentBaseActivity
     protected void onStop() {
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
         }
         if (videoView != null) {
             currentPosition = videoView.getCurrentPosition();
@@ -288,7 +290,11 @@ public class CammentMainActivity extends CammentBaseActivity
                 videoView.setMediaController(mode == Mode.SYNC ? null : mediaController);
                 videoView.setVideoURI(uri);
                 videoView.setOnPreparedListener(this);
-                Log.d("SEEKTO", "seekTo: " + currentPosition);
+
+                if (currentPosition == 0) {
+                    currentPosition = getIntent().getIntExtra(ARGS_PLAYER_POSITION, 0);
+                }
+
                 videoView.seekTo(currentPosition);
                 videoView.start();
             }

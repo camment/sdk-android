@@ -229,7 +229,12 @@ abstract class BaseCammentOverlay extends RelativeLayout
             getContext().registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         } else if (visibility == GONE) {
             if (networkReceiver != null) {
-                getContext().unregisterReceiver(networkReceiver);
+                try {
+                    getContext().unregisterReceiver(networkReceiver);
+                } catch (IllegalArgumentException e) {
+                    LogUtils.debug("onException", "networkChangeReceiver", e);
+                }
+                networkReceiver = null;
             }
         }
     }

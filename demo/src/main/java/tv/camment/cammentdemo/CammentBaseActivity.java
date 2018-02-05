@@ -37,6 +37,7 @@ abstract class CammentBaseActivity extends AppCompatActivity {
     protected void onPause() {
         if (networkReceiver != null) {
             this.unregisterReceiver(networkReceiver);
+            networkReceiver = null;
         }
         super.onPause();
     }

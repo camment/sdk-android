@@ -21,6 +21,8 @@ public final class OnboardingPreferences extends BasePreferences {
 
     private static final String PREFS_LAST_COMPLETED = "prefs_last_completed";
 
+    private static final String PREFS_LATER_DISPLAYED = "prefs_later_displayed";
+
     private List<Step> steps;
 
     private static OnboardingPreferences INSTANCE;
@@ -133,6 +135,14 @@ public final class OnboardingPreferences extends BasePreferences {
 
     public void setLastCompletedStep(Step step) {
         putInt(PREFS_LAST_COMPLETED, step.getIntValue());
+    }
+
+    public boolean wasLaterDisplayed() {
+        return getBoolean(PREFS_LATER_DISPLAYED, false);
+    }
+
+    public void setLaterDisplayed() {
+        putBoolean(PREFS_LATER_DISPLAYED, true);
     }
 
 }

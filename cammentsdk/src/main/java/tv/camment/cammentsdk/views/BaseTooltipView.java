@@ -41,13 +41,17 @@ abstract class BaseTooltipView extends RelativeLayout {
     enum Orientation {
         LEFT,
         RIGHT,
-        BOTTOM
+        BOTTOM,
+        TOP
     }
 
     void init(View anchor, Orientation orientation, Step step) {
         this.step = step;
 
         switch (orientation) {
+            case TOP:
+                View.inflate(getContext(), R.layout.cmmsdk_tooltip_top, this);
+                break;
             case BOTTOM:
                 View.inflate(getContext(), R.layout.cmmsdk_tooltip_bottom, this);
                 break;
@@ -78,6 +82,9 @@ abstract class BaseTooltipView extends RelativeLayout {
         if (orientation == Orientation.BOTTOM) {
             position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.right;
             position_y = anchor_rect.top - contentViewHeight - CommonUtils.dpToPx(getContext(), 8);
+        } else if (orientation == Orientation.TOP) {
+            position_x = anchor_rect.left;
+            position_y = anchor_rect.bottom + CommonUtils.dpToPx(getContext(), 8);
         } else if (orientation == Orientation.RIGHT) {
             position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
             position_y = (anchor_rect.top + anchor_rect.bottom) / 2 - contentViewHeight / 2;
@@ -102,15 +109,18 @@ abstract class BaseTooltipView extends RelativeLayout {
 
         LayoutParams params = (LayoutParams) getLayoutParams();
 
-        if (orientation == Orientation.BOTTOM) {
-            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-            params.setMargins(0, position_y, position_x, 0);
-        } else if (orientation == Orientation.RIGHT) {
-            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-            params.setMargins(0, position_y, position_x, 0);
-        } else {
-            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
-            params.setMargins(position_x, position_y, 0, 0);
+        switch (orientation) {
+            case BOTTOM:
+            case RIGHT:
+                params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+                params.setMargins(0, position_y, position_x, 0);
+                break;
+            case TOP:
+            case LEFT:
+            default:
+                params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
+                params.setMargins(position_x, position_y, 0, 0);
+                break;
         }
 
         if (orientation == Orientation.BOTTOM) {
@@ -122,6 +132,16 @@ abstract class BaseTooltipView extends RelativeLayout {
 
             LayoutParams layoutParams = (LayoutParams) vArrow.getLayoutParams();
             layoutParams.setMargins(0, CommonUtils.dpToPx(getContext(), -5), marginRight, 0);
+        } else if (orientation == Orientation.TOP) {
+            View vArrow = findViewById(R.id.cmmsdk_v_arrow);
+            int aWidth = vArrow.getMeasuredWidth();
+
+            int marginLeft = (anchor_rect.right - anchor_rect.left) / 2 - aWidth;
+            LayoutParams layoutParams = (LayoutParams) vArrow.getLayoutParams();
+            layoutParams.setMargins(marginLeft, 0, 0, 0);
+
+            LayoutParams lp = (LayoutParams) tvTooltipText.getLayoutParams();
+            lp.setMargins(0, CommonUtils.dpToPx(getContext(), -5), 0, 0);
         }
 
         setLayoutParams(params);

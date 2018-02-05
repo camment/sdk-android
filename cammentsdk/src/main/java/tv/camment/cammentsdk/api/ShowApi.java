@@ -45,11 +45,8 @@ public final class ShowApi extends CammentAsyncClient {
                 LogUtils.debug("onSuccess", "getShows");
                 CammentSDK.getInstance().hideProgressBar();
 
-                final String currentPasscode = GeneralPreferences.getInstance().getProviderPasscode();
-
                 if (result != null
-                        && result.getItems() != null
-                        && TextUtils.equals(passcode, currentPasscode)) {
+                        && result.getItems() != null) {
                     ShowProvider.deleteShows();
                     ShowProvider.insertShows(result.getItems());
                 }

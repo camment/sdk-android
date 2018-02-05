@@ -120,9 +120,11 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
                 orientation = BaseTooltipView.Orientation.BOTTOM;
                 break;
             case PLAY:
+            case DELETE:
+                orientation = BaseTooltipView.Orientation.TOP;
+                break;
             case HIDE:
             case SHOW:
-            case DELETE:
             case INVITE:
             default:
                 orientation = TooltipView.Orientation.LEFT;

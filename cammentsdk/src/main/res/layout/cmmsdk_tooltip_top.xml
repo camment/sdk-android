@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:alpha="0.7"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="4dp">
+
+    <View
+        android:id="@+id/cmmsdk_v_arrow"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_alignStart="@+id/cmmsdk_tv_tooltip_text"
+        android:background="@drawable/cmmsdk_tooltip_arrow"
+        android:rotation="45" />
+
+    <TextView
+        android:id="@+id/cmmsdk_tv_tooltip_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_v_arrow"
+        android:layout_marginTop="-5dp"
+        android:background="@drawable/cmmsdk_tooltip_bubble"
+        android:padding="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+</RelativeLayout>

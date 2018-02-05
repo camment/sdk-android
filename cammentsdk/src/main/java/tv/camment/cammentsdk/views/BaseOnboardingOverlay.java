@@ -3,8 +3,13 @@ package tv.camment.cammentsdk.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -30,6 +35,10 @@ import tv.camment.cammentsdk.views.dialogs.OnboardingCammentDialog;
 
 abstract class BaseOnboardingOverlay extends RelativeLayout
         implements CammentDialog.ActionListener {
+
+    private static final String EXTRA_SUPER_STATE = "extra_super_state";
+    private static final String EXTRA_STEP = "extra_step";
+    private static final String EXTRA_SKIP_TUTORIAL = "extra_skip_tutorial";
 
     private Map<Step, TooltipView> tooltipViewMap;
     private View recordingButton;
@@ -70,6 +79,74 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
         EventBus.getDefault().unregister(this);
 
         super.onDetachedFromWindow();
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_SUPER_STATE, super.onSaveInstanceState());
+
+        int childCount = getChildCount();
+        if (childCount > 0) {
+            Step tooltipStep = null;
+            boolean skipTutorialDisplayed = false;
+
+            View childAt;
+            for (int i = 0; i < childCount; i++) {
+                childAt = getChildAt(i);
+
+                if (childAt instanceof SkipTutorialView) {
+                    skipTutorialDisplayed = true;
+                } else if (childAt instanceof TooltipView) {
+                    tooltipStep = ((TooltipView) childAt).getStep();
+                }
+            }
+
+            if (tooltipStep != null) {
+                bundle.putInt(EXTRA_STEP, tooltipStep.getIntValue());
+            }
+
+            if (skipTutorialDisplayed) {
+                bundle.putBoolean(EXTRA_SKIP_TUTORIAL, skipTutorialDisplayed);
+            }
+        }
+
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable(EXTRA_SUPER_STATE);
+
+            Step step = null;
+            int stepInt = bundle.getInt(EXTRA_STEP, -1);
+            if (stepInt > -1) {
+                step = Step.fromInt(stepInt);
+            }
+
+            if (step != null) {
+                OnboardingPreferences.getInstance().putOnboardingStepDisplayed(step, false);
+                OnboardingPreferences.getInstance().initSteps();
+
+                final Step finalStep = step;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        displayTooltip(finalStep);
+                    }
+                }, 1000);
+            }
+
+            boolean skipTutorial = bundle.getBoolean(EXTRA_SKIP_TUTORIAL, false);
+
+            if (skipTutorial) {
+                displaySkipTutorial();
+            }
+        }
+        super.onRestoreInstanceState(state);
     }
 
     private void init() {
@@ -233,6 +310,10 @@ abstract class BaseOnboardingOverlay extends RelativeLayout
     }
 
     private void displaySkipTutorial() {
+        if (skipTutorialView != null) {
+            return;
+        }
+
         skipTutorialView = new SkipTutorialView(getContext());
         addView(skipTutorialView);
         skipTutorialView.init();

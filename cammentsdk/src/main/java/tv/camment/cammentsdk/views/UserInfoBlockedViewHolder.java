@@ -68,6 +68,8 @@ final class UserInfoBlockedViewHolder extends RecyclerView.ViewHolder {
                 handleUserUnblockClick();
             }
         });
+
+        ibUnblock.setVisibility(isMyGroup ? View.VISIBLE : View.GONE);
     }
 
     private void handleUserUnblockClick() {

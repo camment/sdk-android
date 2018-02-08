@@ -46,7 +46,7 @@ public final class UserInfoProvider {
             cv.put(DataContract.UserInfo.name, userinfo.getName());
             cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
             cv.put(DataContract.UserInfo.groupUuid, groupUuid);
-            cv.put(DataContract.UserInfo.state, userinfo.getState());
+            cv.put(DataContract.UserInfo.state, TextUtils.isEmpty(userinfo.getState()) ? UserState.ACTIVE.getStringValue() : userinfo.getState());
 
             values.add(cv);
         }
@@ -68,7 +68,7 @@ public final class UserInfoProvider {
         cv.put(DataContract.UserInfo.name, userinfo.getName());
         cv.put(DataContract.UserInfo.picture, userinfo.getPicture());
         cv.put(DataContract.UserInfo.groupUuid, groupUuid);
-        cv.put(DataContract.UserInfo.state, userinfo.getState());
+        cv.put(DataContract.UserInfo.state, TextUtils.isEmpty(userinfo.getState()) ? UserState.ACTIVE.getStringValue() : userinfo.getState());
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver().insert(DataContract.UserInfo.CONTENT_URI, cv);
     }

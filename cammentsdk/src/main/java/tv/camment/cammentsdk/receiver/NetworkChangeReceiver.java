@@ -20,7 +20,7 @@ public final class NetworkChangeReceiver extends BroadcastReceiver {
             Log.d("INTERNET", "SDK " + isConnected);
 
             if (isConnected) {
-                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                ApiManager.getInstance().getUserApi().checkUserAfterConnectionRestoredAndGetData();
             }
         }
     }

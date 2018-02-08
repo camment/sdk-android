@@ -2,19 +2,20 @@ package tv.camment.cammentsdk.api;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.camment.clientsdk.DevcammentClient;
 import com.camment.clientsdk.model.FacebookFriendList;
+import com.camment.clientsdk.model.Usergroup;
 import com.camment.clientsdk.model.UsergroupList;
 import com.camment.clientsdk.model.Userinfo;
 import com.camment.clientsdk.model.UserinfoList;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import tv.camment.cammentsdk.CammentSDK;
-import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
@@ -23,9 +24,11 @@ import tv.camment.cammentsdk.auth.CammentFbAuthInfo;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
+import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.UserState;
+import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
 import tv.camment.cammentsdk.utils.LogUtils;
@@ -148,7 +151,80 @@ public final class UserApi extends CammentAsyncClient {
 
             @Override
             public void onException(Exception exception) {
-                Log.e("onException", "getUserInfosForGroupUuidAndHandleBlockedUser", exception);
+                LogUtils.debug("onException", "getUserInfosForGroupUuidAndHandleBlockedUser", exception);
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
+            }
+        };
+    }
+
+    public void checkUserAfterConnectionRestoredAndGetData() {
+        final Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+        if (activeUserGroup == null || TextUtils.isEmpty(activeUserGroup.getUuid())) {
+            return;
+        }
+
+        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_USER_INFOS, activeUserGroup.getUuid().hashCode())) {
+            submitBgTask(new Callable<UserinfoList>() {
+                @Override
+                public UserinfoList call() throws Exception {
+                    return devcammentClient.usergroupsGroupUuidUsersGet(activeUserGroup.getUuid());
+                }
+            }, checkUserAfterConnectionRestoredAndGetDataCallback(activeUserGroup.getUuid()));
+        }
+    }
+
+    private CammentCallback<UserinfoList>  checkUserAfterConnectionRestoredAndGetDataCallback(final String groupUuid) {
+        return new CammentCallback<UserinfoList>() {
+            @Override
+            public void onSuccess(UserinfoList result) {
+                LogUtils.debug("onSuccess", "checkUserAfterConnectionRestoredAndGetData");
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
+
+                if (result != null
+                        && result.getItems() != null) {
+                    UserInfoProvider.insertUserInfos(result.getItems(), groupUuid);
+
+                    String identityId = IdentityPreferences.getInstance().getIdentityId();
+
+                    boolean blocked = false;
+
+                    for (Userinfo userinfo : result.getItems()) {
+                        if (TextUtils.equals(identityId, userinfo.getUserCognitoIdentityId())
+                                && TextUtils.equals(userinfo.getState(), UserState.BLOCKED.getStringValue())) {
+                            blocked = true;
+                            break;
+                        }
+                    }
+
+                    if (blocked) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                CammentSDK.getInstance().hideProgressBar();
+
+                                BaseMessage msg = new BaseMessage();
+                                msg.type = MessageType.BLOCKED;
+
+                                BlockedCammentDialog.createInstance(msg).show();
+
+                                Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+                                if (activeUserGroup != null
+                                        && TextUtils.equals(activeUserGroup.getUuid(), groupUuid)) {
+                                    DataManager.getInstance().clearDataForUserGroupChange();
+
+                                    EventBus.getDefault().post(new UserGroupChangeEvent());
+                                }
+                            }
+                        });
+                    } else {
+                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                    }
+                }
+            }
+
+            @Override
+            public void onException(Exception exception) {
+                LogUtils.debug("onException", "checkUserAfterConnectionRestoredAndGetData", exception);
                 ApiCallManager.getInstance().removeCall(ApiCallType.GET_USER_INFOS, groupUuid.hashCode());
             }
         };

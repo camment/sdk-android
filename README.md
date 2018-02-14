@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 2.0.0**
+**current version: 2.1.0**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
@@ -119,13 +119,11 @@ In order to expose FacebookSDK functionality to CammentSDK you have to implement
 
 Generally, CammentSDK handles own login/logout (if not logged in, login is called by trying to invite somebody; logout can be called from the side-panel). 
 
-*Optional/Recommended:*
-If you want to connect your existing Facebook login/logout code, e.g. on some other screen with CammentSDK login, call ```void logIn(Activity activity)``` / ```void logOut()``` explicitly to notify CammentSDK. This way CammentSDK login will be performed immediately.
+If you have already Facebook login/logout functionality on some of your existing activities, call ```void notifyLogoutSuccessful()``` explicitly to notify CammentSDK. This way CammentSDK can cleanup data and refresh its UI properly.
 ```java
-CammentSDK.getInstance().getAppAuthIdentityProvider().logIn(this); // call when Facebook login was successful
-//and
-CammentSDK.getInstance().getAppAuthIdentityProvider().logOut(); // call when Facebook logout was successful
+CammentSDK.getInstance().getAppAuthIdentityProvider().notifyLogoutSuccessful(); // call when Facebook logout was successful
 ```
+
 If you want to be notified about Facebook login/logout performed by CammentSDK, register listener ```CammentAuthListener```:
 ```java
 CammentSDK.getInstance().getAppAuthIdentityProvider().addCammentAuthListener(new CammentAuthListener() {
@@ -293,9 +291,7 @@ CammentSDK handles permissions which it needs as well as Facebook Login. In orde
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    
-    FbHelper.getInstance().onActivityResult(requestCode, resultCode, data); // important when using Facebook SDK
-    
+    ...
     CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
 }
 ```
@@ -304,7 +300,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 @Override
 public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    
+    ...
     CammentSDK.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
 }
 ```

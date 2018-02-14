@@ -45,4 +45,10 @@ public final class FbAuthIdentityProvider implements CammentAuthIdentityProvider
     public void addCammentAuthListener(CammentAuthListener cammentAuthListener) {
         FbHelper.getInstance().addCammentAuthListener(cammentAuthListener);
     }
+
+    @Override
+    public void notifyLogoutSuccessful() {
+        FbHelper.getInstance().notifyFbLogoutSuccessful();
+    }
+
 }

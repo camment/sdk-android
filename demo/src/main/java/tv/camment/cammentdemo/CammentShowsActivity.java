@@ -108,6 +108,7 @@ public class CammentShowsActivity extends CammentBaseActivity
     private void handleOnLoginButtonClick() {
         if (FbManager.getInstance().isLoggedIn()) {
             FbManager.getInstance().logOut();
+            CammentSDK.getInstance().getAppAuthIdentityProvider().notifyLogoutSuccessful();
             setLoginButtonText();
         } else {
             FbManager.getInstance().logIn(this);

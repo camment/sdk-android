@@ -108,6 +108,10 @@ public final class FbHelper extends BaseAuthHelper {
     synchronized void logOut() {
         loginManager.logOut();
 
+        notifyFbLogoutSuccessful();
+    }
+
+    void notifyFbLogoutSuccessful() {
         if (cammentAuthListeners != null) {
             for (CammentAuthListener cammentAuthListener : cammentAuthListeners) {
                 if (cammentAuthListener != null) {

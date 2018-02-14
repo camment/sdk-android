@@ -19,4 +19,6 @@ public interface CammentAuthIdentityProvider {
 
     void addCammentAuthListener(CammentAuthListener cammentAuthListener);
 
+    void notifyLogoutSuccessful();
+
 }

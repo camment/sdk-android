@@ -37,6 +37,8 @@ public final class AuthHelper {
     }
 
     public boolean isHostAppLoggedIn() {
+        authInfo = CammentSDK.getInstance().getAppAuthIdentityProvider().getAuthInfo();
+
         if (authInfo != null && authInfo.getAuthType() != null) {
             switch (authInfo.getAuthType()) {
                 case FACEBOOK:

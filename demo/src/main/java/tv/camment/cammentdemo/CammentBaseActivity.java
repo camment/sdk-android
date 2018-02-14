@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import tv.camment.cammentauth.FbHelper;
 import tv.camment.cammentdemo.receiver.NetworkChangeReceiver;
+import tv.camment.cammentdemo.utils.FbManager;
 import tv.camment.cammentsdk.CammentSDK;
 
 abstract class CammentBaseActivity extends AppCompatActivity {
@@ -19,6 +20,8 @@ abstract class CammentBaseActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        FbManager.getInstance().onActivityResult(requestCode, resultCode, data);
 
         FbHelper.getInstance().onActivityResult(requestCode, resultCode, data);
 

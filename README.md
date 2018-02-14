@@ -114,9 +114,6 @@ Don't forget to add following into the ```AndroidManifest.xml``` (more into at h
 </application>
 ```
 ## CammentAuthIdentityProvider
-In order to expose FacebookSDK functionality to CammentSDK you have to implement interface ```CammentAuthIdentityProvider```. 
-> As currently only Facebook Login is supported, you will use instance of ```FbAuthIdentityProvider``` which uses helper class ```FbHelper```. We don't recommend using own implementation at this stage and therefore more information about how to implement ```CammentAuthIdentityProvider``` is currently not needed.
-
 Generally, CammentSDK handles own login/logout (if not logged in, login is called by trying to invite somebody; logout can be called from the side-panel). 
 
 If you have already Facebook login/logout functionality on some of your existing activities, call ```void notifyLogoutSuccessful()``` explicitly to notify CammentSDK. This way CammentSDK can cleanup data and refresh its UI properly.

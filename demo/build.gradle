@@ -24,7 +24,7 @@ android {
 
         buildConfigField("boolean", "USE_FABRICS", "false")
         buildConfigField("boolean", "USE_HOCKEYAPP", "false")
-        buildConfigField("boolean", "USE_SETTINGS", "true")
+        buildConfigField("boolean", "USE_SETTINGS", "false")
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -121,7 +121,7 @@ public final class FbHelper extends BaseAuthHelper {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 

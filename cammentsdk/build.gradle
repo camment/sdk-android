@@ -9,7 +9,7 @@ android {
 
     def RELEASE_VERSION = 2
 
-    def MAJOR_VERSION = 0
+    def MAJOR_VERSION = 1
 
     def MINOR_VERSION = 0
 
@@ -23,7 +23,7 @@ android {
         publishNonDefault true
 
         buildConfigField("boolean", "USE_DEEPLINK", "true")
-        buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
+        buildConfigField("boolean", "SHOW_GROUP_LIST", "false")
         buildConfigField("boolean", "SHOW_ADS", "true")
         buildConfigField("boolean", "USE_MIXPANEL", "false")
         buildConfigField("boolean", "PULL_UP_BUTTON", "false")
@@ -118,7 +118,7 @@ publishing {
 
     def RELEASE_VERSION = 2
 
-    def MAJOR_VERSION = 0
+    def MAJOR_VERSION = 1
 
     def MINOR_VERSION = 0
 
@@ -127,7 +127,7 @@ publishing {
             groupId 'tv.camment.cammentsdk'
             artifactId 'cammentsdk'
             version RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
-            artifact "$buildDir/outputs/aar/cammentsdk-release.aar"
+            artifact "$buildDir/outputs/aar/cammentsdk-prodApi-release.aar"
             //aar artifact you want to publish
 
             //generate pom nodes for dependencies

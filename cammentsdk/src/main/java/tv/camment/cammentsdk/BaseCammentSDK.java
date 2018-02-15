@@ -133,7 +133,7 @@ abstract class BaseCammentSDK extends CammentLifecycle
             GeneralPreferences.getInstance().setCancelledDeeplinkUuid(GeneralPreferences.getInstance().getDeeplinkGroupUuid());
         }
 
-        //FacebookHelper.getInstance().getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        getAppAuthIdentityProvider().onActivityResult(requestCode, resultCode, data);
 
         PermissionHelper.getInstance().onActivityResult(requestCode, resultCode, data);
     }

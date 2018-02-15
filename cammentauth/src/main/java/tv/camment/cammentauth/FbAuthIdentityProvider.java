@@ -1,6 +1,7 @@
 package tv.camment.cammentauth;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import tv.camment.cammentsdk.auth.CammentAuthIdentityProvider;
 import tv.camment.cammentsdk.auth.CammentAuthInfo;
@@ -49,6 +50,11 @@ public final class FbAuthIdentityProvider implements CammentAuthIdentityProvider
     @Override
     public void notifyLogoutSuccessful() {
         FbHelper.getInstance().notifyFbLogoutSuccessful();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        FbHelper.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
 }

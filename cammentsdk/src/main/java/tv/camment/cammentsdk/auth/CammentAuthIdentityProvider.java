@@ -2,6 +2,7 @@ package tv.camment.cammentsdk.auth;
 
 
 import android.app.Activity;
+import android.content.Intent;
 
 public interface CammentAuthIdentityProvider {
 
@@ -20,5 +21,7 @@ public interface CammentAuthIdentityProvider {
     void addCammentAuthListener(CammentAuthListener cammentAuthListener);
 
     void notifyLogoutSuccessful();
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 
 }

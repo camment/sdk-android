@@ -23,8 +23,6 @@ abstract class CammentBaseActivity extends AppCompatActivity {
 
         FbManager.getInstance().onActivityResult(requestCode, resultCode, data);
 
-        FbHelper.getInstance().onActivityResult(requestCode, resultCode, data);
-
         CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 

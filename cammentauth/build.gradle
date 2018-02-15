@@ -9,7 +9,7 @@ android {
 
     def RELEASE_VERSION = 2
 
-    def MAJOR_VERSION = 0
+    def MAJOR_VERSION = 1
 
     def MINOR_VERSION = 0
 
@@ -76,7 +76,7 @@ publishing {
 
     def RELEASE_VERSION = 2
 
-    def MAJOR_VERSION = 0
+    def MAJOR_VERSION = 1
 
     def MINOR_VERSION = 0
 
@@ -85,7 +85,7 @@ publishing {
             groupId 'tv.camment.cammentauth'
             artifactId 'cammentauth'
             version RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
-            artifact "$buildDir/outputs/aar/cammentauth-release.aar"
+            artifact "$buildDir/outputs/aar/cammentauth-prodApi-release.aar"
             //aar artifact you want to publish
 
             //generate pom nodes for dependencies

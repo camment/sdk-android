@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.InitializationException;
 import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManager;
@@ -65,6 +66,7 @@ import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.ChatItem;
 import tv.camment.cammentsdk.events.AdMessageReceivedEvent;
+import tv.camment.cammentsdk.events.MediaCodecFailureEvent;
 import tv.camment.cammentsdk.events.OnboardingEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
@@ -692,6 +694,13 @@ abstract class BaseCammentOverlay extends RelativeLayout
         } else {
             onMaybeLaterOnboarding();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MediaCodecFailureEvent event) {
+        Toast.makeText(getContext(), R.string.cmmsdk_video_codec_issue, Toast.LENGTH_LONG).show();
+        onRecordingStop(true);
     }
 
 }

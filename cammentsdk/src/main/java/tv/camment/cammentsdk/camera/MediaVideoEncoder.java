@@ -6,10 +6,15 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.opengl.EGLContext;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
+
+import tv.camment.cammentsdk.events.MediaCodecFailureEvent;
 
 final class MediaVideoEncoder extends MediaEncoder {
     private static final String TAG = "MediaVideoEncoder";
@@ -64,19 +69,79 @@ final class MediaVideoEncoder extends MediaEncoder {
         format.setInteger(MediaFormat.KEY_FRAME_RATE, DEFAULT_FRAME_RATE);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, DEFAULT_IFRAME_INTERVAL);
 
-        mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
-        mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        try {
+            mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
+            mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        } catch (Exception e) {
+            Log.e("MediaCodec", "Failed to create and configure encoder by type, will try to select by name.", e);
+            mMediaCodec = createAndConfigureMediaCodecByName(format);
+        }
         // get Surface for encoder input
         // this method only can call between #configure and #start
-        mSurface = mMediaCodec.createInputSurface();    // API >= 18
-        mMediaCodec.start();
-        if (mListener != null) {
-            try {
-                mListener.onPrepared(this);
-            } catch (final Exception e) {
-                Log.e(TAG, "prepare:", e);
+        if (mMediaCodec == null) {
+            Log.e("MediaCodec", "Failed to create and configure encoder. Device SW/HW is not sufficient for video decoding and encoding.");
+            if (mListener != null) {
+                try {
+                    mListener.onStopped(this);
+                    EventBus.getDefault().post(new MediaCodecFailureEvent());
+                } catch (final Exception e) {
+                    Log.e(TAG, "stopped:", e);
+                }
             }
         }
+
+        if (mMediaCodec != null) {
+            mSurface = mMediaCodec.createInputSurface();    // API >= 18
+            mMediaCodec.start();
+            if (mListener != null) {
+                try {
+                    mListener.onPrepared(this);
+                } catch (final Exception e) {
+                    Log.e(TAG, "prepare:", e);
+                }
+            }
+        }
+    }
+
+    private MediaCodec createAndConfigureMediaCodecByName(MediaFormat format) {
+        int codecCount = MediaCodecList.getCodecCount();
+
+        MediaCodecInfo mediaCodecInfo;
+        for (int i = 0; i < codecCount; i++) {
+            mediaCodecInfo = MediaCodecList.getCodecInfoAt(i);
+            if (mediaCodecInfo != null && mediaCodecInfo.isEncoder()) {
+                final String[] supportedTypes = mediaCodecInfo.getSupportedTypes();
+                if (supportedTypes != null) {
+                    for (String supportedType : supportedTypes) {
+                        if (TextUtils.equals(supportedType, MIME_TYPE)) {
+                            final MediaCodecInfo.CodecCapabilities videoCap = mediaCodecInfo.getCapabilitiesForType(MIME_TYPE);
+                            if (videoCap != null) {
+                                final int colorFormat = selectColorFormat(mediaCodecInfo, MIME_TYPE);
+                                if (colorFormat > 0) {
+                                    try {
+                                        mMediaCodec = MediaCodec.createByCodecName(mediaCodecInfo.getName());
+                                    } catch (Exception e) {
+                                        Log.e("MediaCodec", "Failed to create encoder by name " + mediaCodecInfo.getName(), e);
+                                        continue;
+                                    }
+                                    try {
+                                        mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+                                    } catch (Exception e) {
+                                        Log.e("MediaCodec", "Failed to configure encoder by name " + mediaCodecInfo.getName(), e);
+                                        mMediaCodec.release();
+                                        mMediaCodec = null;
+                                        continue;
+                                    }
+                                    return mMediaCodec;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     void setEglContext(final EGLContext shared_context, final int tex_id) {
@@ -182,7 +247,9 @@ final class MediaVideoEncoder extends MediaEncoder {
 
     @Override
     protected void signalEndOfInputStream() {
-        mMediaCodec.signalEndOfInputStream();    // API >= 18
+        if (mMediaCodec != null) {
+            mMediaCodec.signalEndOfInputStream();    // API >= 18
+        }
         mIsEOS = true;
     }
 

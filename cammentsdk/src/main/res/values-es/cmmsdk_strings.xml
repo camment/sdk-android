@@ -103,4 +103,6 @@
     <string name="cmmsdk_blocked_users">Blocked Users</string>
     <string name="cmmsdk_leave_group">Leave group</string>
 
+    <string name="cmmsdk_video_codec_issue">Can\'t record a camment due to the device limitations.</string>
+
 </resources>

@@ -1,5 +1,5 @@
 package tv.camment.cammentsdk.events;
 
 
-public class LoginStatusChangedEvent {
+public final class LoginStatusChangedEvent {
 }

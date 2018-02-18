@@ -1,7 +1,7 @@
 package tv.camment.cammentsdk.events;
 
 
-public class OnboardingEvent {
+public final class OnboardingEvent {
 
     private final boolean start;
 

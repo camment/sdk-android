@@ -1,5 +1,5 @@
 package tv.camment.cammentsdk.events;
 
 
-public class TutorialContinueEvent {
+public final class TutorialContinueEvent {
 }

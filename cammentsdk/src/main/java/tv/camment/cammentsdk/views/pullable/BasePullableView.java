@@ -298,11 +298,11 @@ abstract class BasePullableView extends FrameLayout {
     }
 
     public void show() {
-        animate().translationX(0).alpha(0.5f).start();
+        animate().alpha(0.5f).start();
     }
 
     public void hide() {
-        animate().translationX(getWidth() * 2).alpha(0.0f).start();
+        animate().alpha(0.0f).start();
     }
 
     interface BasePullListener {

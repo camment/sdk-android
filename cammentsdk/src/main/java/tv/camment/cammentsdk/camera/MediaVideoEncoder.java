@@ -73,13 +73,13 @@ final class MediaVideoEncoder extends MediaEncoder {
             mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
             mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         } catch (Exception e) {
-            Log.e("MediaCodec", "Failed to create and configure encoder by type, will try to select by name.", e);
+            Log.d("MediaCodec", "Failed to create and configure encoder by type, will try to select by name.", e);
             mMediaCodec = createAndConfigureMediaCodecByName(format);
         }
         // get Surface for encoder input
         // this method only can call between #configure and #start
         if (mMediaCodec == null) {
-            Log.e("MediaCodec", "Failed to create and configure encoder. Device SW/HW is not sufficient for video decoding and encoding.");
+            Log.e("MediaCodec", "Failed to create and configure VIDEO encoder. Device SW/HW is not sufficient for video decoding and encoding.");
             if (mListener != null) {
                 try {
                     mListener.onStopped(this);
@@ -121,13 +121,13 @@ final class MediaVideoEncoder extends MediaEncoder {
                                     try {
                                         mMediaCodec = MediaCodec.createByCodecName(mediaCodecInfo.getName());
                                     } catch (Exception e) {
-                                        Log.e("MediaCodec", "Failed to create encoder by name " + mediaCodecInfo.getName(), e);
+                                        Log.d("MediaCodec", "Failed to create encoder by name " + mediaCodecInfo.getName(), e);
                                         continue;
                                     }
                                     try {
                                         mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
                                     } catch (Exception e) {
-                                        Log.e("MediaCodec", "Failed to configure encoder by name " + mediaCodecInfo.getName(), e);
+                                        Log.d("MediaCodec", "Failed to configure encoder by name " + mediaCodecInfo.getName(), e);
                                         mMediaCodec.release();
                                         mMediaCodec = null;
                                         continue;

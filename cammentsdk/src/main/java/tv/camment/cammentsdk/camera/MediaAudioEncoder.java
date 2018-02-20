@@ -8,13 +8,17 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.media.MediaRecorder;
+import android.text.TextUtils;
 import android.util.Log;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import tv.camment.cammentsdk.CammentAudioVolume;
 import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.events.MediaCodecFailureEvent;
 
 final class MediaAudioEncoder extends MediaEncoder {
     private static final String TAG = "MediaAudioEncoder";
@@ -48,17 +52,74 @@ final class MediaAudioEncoder extends MediaEncoder {
         audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
 
-        mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
-        mMediaCodec.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-        mMediaCodec.start();
+        try {
+            mMediaCodec = MediaCodec.createEncoderByType(MIME_TYPE);
+            mMediaCodec.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        } catch (Exception e) {
+            Log.d("MediaCodec", "Failed to create and configure encoder by type, will try to select by name.", e);
+            mMediaCodec = createAndConfigureMediaCodecByName(audioFormat);
+        }
 
-        if (mListener != null) {
-            try {
-                mListener.onPrepared(this);
-            } catch (final Exception e) {
-                Log.e(TAG, "prepare:", e);
+        if (mMediaCodec == null) {
+            Log.e("MediaCodec", "Failed to create and configure AUDIO encoder. Device SW/HW is not sufficient for video decoding and encoding.");
+            if (mListener != null) {
+                try {
+                    mListener.onStopped(this);
+                    EventBus.getDefault().post(new MediaCodecFailureEvent());
+                } catch (final Exception e) {
+                    Log.e(TAG, "stopped:", e);
+                }
             }
         }
+
+        if (mMediaCodec != null) {
+            mMediaCodec.start();
+            if (mListener != null) {
+                try {
+                    mListener.onPrepared(this);
+                } catch (final Exception e) {
+                    Log.e(TAG, "prepare:", e);
+                }
+            }
+        }
+    }
+
+    private MediaCodec createAndConfigureMediaCodecByName(MediaFormat format) {
+        int codecCount = MediaCodecList.getCodecCount();
+
+        MediaCodecInfo mediaCodecInfo;
+        for (int i = 0; i < codecCount; i++) {
+            mediaCodecInfo = MediaCodecList.getCodecInfoAt(i);
+            if (mediaCodecInfo != null && mediaCodecInfo.isEncoder()) {
+                final String[] supportedTypes = mediaCodecInfo.getSupportedTypes();
+                if (supportedTypes != null) {
+                    for (String supportedType : supportedTypes) {
+                        if (TextUtils.equals(supportedType, MIME_TYPE)) {
+                            final MediaCodecInfo.CodecCapabilities audioCap = mediaCodecInfo.getCapabilitiesForType(MIME_TYPE);
+                            if (audioCap != null) {
+                                try {
+                                    mMediaCodec = MediaCodec.createByCodecName(mediaCodecInfo.getName());
+                                } catch (Exception e) {
+                                    Log.d("MediaCodec", "Failed to create encoder by name " + mediaCodecInfo.getName(), e);
+                                    continue;
+                                }
+                                try {
+                                    mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+                                } catch (Exception e) {
+                                    Log.d("MediaCodec", "Failed to configure encoder by name " + mediaCodecInfo.getName(), e);
+                                    mMediaCodec.release();
+                                    mMediaCodec = null;
+                                    continue;
+                                }
+                                return mMediaCodec;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

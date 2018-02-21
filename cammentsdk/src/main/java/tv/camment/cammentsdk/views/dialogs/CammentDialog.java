@@ -17,11 +17,9 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
-import tv.camment.cammentsdk.BuildConfig;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
-import tv.camment.cammentsdk.aws.messages.InvitationMessage;
 import tv.camment.cammentsdk.aws.messages.MessageType;
 import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.aws.messages.UserBlockMessage;
@@ -147,14 +145,7 @@ public abstract class CammentDialog extends DialogFragment {
     private void setupTitle() {
         switch (message.type) {
             case INVITATION:
-                if (BuildConfig.USE_DEEPLINK) {
-                    tvTitle.setText(R.string.cmmsdk_anonymous_invited_to_chat);
-                } else {
-                    tvTitle.setText(String.format(getString(R.string.cmmsdk_user_invited_to_chat), ((InvitationMessage) message).body.invitingUser.name));
-                }
-                break;
-            case NEW_USER_IN_GROUP:
-                tvTitle.setText(String.format(getString(R.string.cmmsdk_user_entered_chat_title), ((NewUserInGroupMessage) message).body.joiningUser.name));
+                tvTitle.setText(R.string.cmmsdk_anonymous_invited_to_chat);
                 break;
             case ONBOARDING:
                 tvTitle.setText(R.string.cmmsdk_setup_use_camment_chat);
@@ -187,9 +178,6 @@ public abstract class CammentDialog extends DialogFragment {
         switch (message.type) {
             case INVITATION:
                 tvMessage.setText(R.string.cmmsdk_join_conversation);
-                break;
-            case NEW_USER_IN_GROUP:
-                tvMessage.setText(R.string.cmmsdk_user_entered_chat_desc);
                 break;
             case ONBOARDING:
                 tvMessage.setText(R.string.cmmsdk_setup_what_is_camment);
@@ -232,7 +220,6 @@ public abstract class CammentDialog extends DialogFragment {
                 btnPositive.setText(R.string.cmmsdk_join);
                 btnNegative.setText(R.string.cmmsdk_no);
                 break;
-            case NEW_USER_IN_GROUP:
             case FIRST_USER_JOINED:
             case BLOCKED:
                 btnPositive.setText(R.string.cmmsdk_ok);

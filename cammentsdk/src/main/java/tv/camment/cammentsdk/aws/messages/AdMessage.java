@@ -43,11 +43,13 @@ public final class AdMessage extends BaseMessage {
         public String title;
         public String file;
         public String url;
+        public String thumbnail;
 
         protected Body(Parcel in) {
             title = in.readString();
             file = in.readString();
             url = in.readString();
+            thumbnail = in.readString();
         }
 
         public static final Creator<Body> CREATOR = new Creator<Body>() {
@@ -72,6 +74,7 @@ public final class AdMessage extends BaseMessage {
             parcel.writeString(title);
             parcel.writeString(file);
             parcel.writeString(url);
+            parcel.writeString(thumbnail);
         }
     }
 

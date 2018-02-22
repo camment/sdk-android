@@ -70,7 +70,7 @@ final class AdViewHolder extends RecyclerView.ViewHolder {
         this.adItem = adItem;
 
         Glide.with(CammentSDK.getInstance().getApplicationContext())
-                .load(((AdMessage) adItem.getContent()).body.file)
+                .load(((AdMessage) adItem.getContent()).body.thumbnail)
                 .into(ivThumbnail);
     }
 

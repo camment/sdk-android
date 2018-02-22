@@ -179,6 +179,8 @@ public abstract class CammentMediaCodecRenderer extends BaseRenderer {
                 this.codecNeedsMonoChannelCountWorkaround = codecNeedsMonoChannelCountWorkaround(codecName, this.format);
 
                 try {
+                    Log.d("CMediaCodec", "CODECNAME " + codecName + " " + this);
+
                     long codecInitializingTimestamp = SystemClock.elapsedRealtime();
                     TraceUtil.beginSection("createCodec:" + codecName);
                     this.codec = MediaCodec.createByCodecName(codecName);
@@ -195,6 +197,7 @@ public abstract class CammentMediaCodecRenderer extends BaseRenderer {
                     this.outputBuffers = this.codec.getOutputBuffers();
                 } catch (Exception var9) {
                     if (this.codecInfos != null && this.codecInfos.size() > lastCodecInfoIndex + 1) {
+                        Log.d("CMediaCodec", "trying another one" + this);
                         this.codecInfo = null;
                         if (this.codec != null) {
                             this.codec.release();
@@ -202,6 +205,7 @@ public abstract class CammentMediaCodecRenderer extends BaseRenderer {
                         this.codec = null;
                         return;
                     } else {
+                        Log.d("CMediaCodec", "throwDecoderInitError");
                         this.throwDecoderInitError(new MediaCodecRenderer.DecoderInitializationException(this.format, var9, drmSessionRequiresSecureDecoder, codecName));
                     }
                 }
@@ -228,7 +232,7 @@ public abstract class CammentMediaCodecRenderer extends BaseRenderer {
             this.lastCodecInfoIndex++;
         }
 
-        Log.d("CMediaCodec", "getMediaCodecInfo " + (codec == null ? "null" : codec.getName()));
+        Log.d("CMediaCodec", "getMediaCodecInfo " + (this.codecInfo == null ? "null" : this.codecInfo.name) + " " + this);
 
         return this.codecInfo;
     }

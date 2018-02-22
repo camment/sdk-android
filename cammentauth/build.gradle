@@ -11,7 +11,7 @@ android {
 
     def MAJOR_VERSION = 1
 
-    def MINOR_VERSION = 2
+    def MINOR_VERSION = 3
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -78,7 +78,7 @@ publishing {
 
     def MAJOR_VERSION = 1
 
-    def MINOR_VERSION = 2
+    def MINOR_VERSION = 3
 
     publications {
         maven(MavenPublication) {

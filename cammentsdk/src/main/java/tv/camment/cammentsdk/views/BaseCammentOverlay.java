@@ -32,6 +32,7 @@ import com.amazonaws.mobileconnectors.amazonmobileanalytics.MobileAnalyticsManag
 import com.camment.clientsdk.model.Camment;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -61,6 +62,7 @@ import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.aws.messages.AdMessage;
 import tv.camment.cammentsdk.camera.CameraGLView;
+import tv.camment.cammentsdk.camera.CammentDefaultRenderersFactory;
 import tv.camment.cammentsdk.camera.RecordingHandler;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
@@ -200,8 +202,9 @@ abstract class BaseCammentOverlay extends RelativeLayout
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
+        RenderersFactory renderersFactory = new CammentDefaultRenderersFactory(context);
 
-        player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+        player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector);
 
         dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "Camment"));
 

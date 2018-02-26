@@ -14,8 +14,8 @@
     <string name="empty_title">Bienvenida/o!</string>
     <string name="empty_msg">Para iniciar la sesión - por favor - pincha el link de la INVITACIÓN recibida e introduce el CÓDIGO/CLAVE DE ACCESO</string>
 
-    <string name="log_in">Log In</string>
-    <string name="log_out">Log Out</string>
+    <string name="log_in">Iniciar la sesión</string>
+    <string name="log_out">Cerrar la sesión</string>
 
     <string name="settings">Settings</string>
     <string name="camment_settings">Camment Settings</string>

@@ -6,7 +6,6 @@
 
     <string name="cmmsdk_permission">In order to use Camment feature you need to grant the access to video and audio recording</string>
 
-    <string name="cmmsdk_user_invited_to_chat">%s invited you to a private chat</string>
     <string name="cmmsdk_anonymous_invited_to_chat">Your friend invited you to a private chat</string>
     <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
 
@@ -22,7 +21,7 @@
     <string name="cmmsdk_help_swipe_left_to_hide_camments">Swipe ← left anywhere to hide camments</string>
     <string name="cmmsdk_help_swipe_right_to_show_camments">Swipe → right to show camments</string>
     <string name="cmmsdk_help_tap_to_play">Great success! Now tap the camment to play it</string>
-    <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this chat</string>
+    <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this group</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
     <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
     <string name="cmmsdk_help_skip_tutorial">Skip tutorial</string>
@@ -40,7 +39,7 @@
 
     <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
 
-    <string name="cmmsdk_joined_private_chat">You have joined the private chat!</string>
+    <string name="cmmsdk_joined_private_chat">You have joined the private group!</string>
 
     <string name="cmmsdk_invitation_link_title">Send the invitation link</string>
     <string name="cmmsdk_invitation_link_desc">Invite users by sharing the invitation link via channel of your choice</string>
@@ -51,8 +50,8 @@
     <string name="cmmsdk_drawer_invite_friends_msg">Invite friends to chat with short videos on top of your stream.</string>
     <string name="cmmsdk_drawer_learn_more">Learn more</string>
     <string name="cmmsdk_drawer_logout_fb">Log out</string>
-    <string name="cmmsdk_drawer_logout_fb_msg">Logout from Facebook will remove you from the current chat.</string>
-    <string name="cmmsdk_drawer_people_in_chat">People joined to your Camment chat</string>
+    <string name="cmmsdk_drawer_logout_fb_msg">Logout from Facebook will remove you from the current group.</string>
+    <string name="cmmsdk_drawer_people_in_chat">People joined to your Camment group</string>
     <string name="cmmsdk_drawer_chat_groups">%d groups joined</string>
     <string name="cmmsdk_drawer_no_chat_groups">No groups found</string>
 
@@ -61,13 +60,13 @@
     <string name="cmmsdk_login_fb_title">You\'re not logged in</string>
     <string name="cmmsdk_login_fb_msg">Login with your Facebook account?</string>
 
-    <string name="cmmsdk_user_left_group">%s left the conversation</string>
+    <string name="cmmsdk_user_left_group">%s has left the group</string>
 
     <string name="cmmsdk_somebody">Somebody</string>
     <string name="cmmsdk_user">User</string>
 
-    <string name="cmmsdk_leave_confirmation_title">Leave current conversation</string>
-    <string name="cmmsdk_leave_confirmation_msg">Do you really want to leave current conversation?</string>
+    <string name="cmmsdk_leave_confirmation_title">Leave group</string>
+    <string name="cmmsdk_leave_confirmation_msg">Do you really want to leave current group?</string>
 
     <string name="cmmsdk_block_confirmation_title">Block user</string>
     <string name="cmmsdk_block_confirmation_msg">Do you really want to block %s?</string>
@@ -76,20 +75,17 @@
     <string name="cmmsdk_unblock_confirmation_msg">Do you really want to unblock %s?</string>
 
     <string name="cmmsdk_blocked_from_group_title">You are blocked</string>
-    <string name="cmmsdk_blocked_from_group_msg">Group owner has blocked you from the current conversation</string>
+    <string name="cmmsdk_blocked_from_group_msg">Group owner has blocked you from the current group</string>
 
     <string name="cmmsdk_user_blocked">%s has been blocked</string>
     <string name="cmmsdk_user_unblocked">%s has been unblocked</string>
 
     <string name="cmmsdk_user_has_joined_title">%s has joined</string>
-    <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the discussion. You can always swipe → right to see who else is in the group and remove unwanted people</string>
+    <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the group. You can always swipe → right to see who else is in the group and remove unwanted people</string>
 
     <string name="cmmsdk_ad">AD</string>
     <string name="cmmsdk_ad_click_more">Click to learn more</string>
 
-    <string name="cmmsdk_block">Block</string>
-    <string name="cmmsdk_unblock">Unblock</string>
-    <string name="cmmsdk_blocked_users">Blocked Users</string>
     <string name="cmmsdk_leave_group">Leave group</string>
 
     <string name="cmmsdk_video_codec_issue">Can\'t record a camment due to the device limitations.</string>

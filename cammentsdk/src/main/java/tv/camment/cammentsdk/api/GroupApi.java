@@ -84,7 +84,12 @@ public final class GroupApi extends CammentAsyncClient {
 
             CammentProvider.updateCammentGroupId(camment, usergroup.getUuid());
 
-            AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+            runOnUiThreadDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    AWSManager.getInstance().getS3UploadHelper().uploadCammentFile(camment);
+                }
+            }, 250);
         } else {
             submitBgTask(new Callable<Usergroup>() {
                 @Override

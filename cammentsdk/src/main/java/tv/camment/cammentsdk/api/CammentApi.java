@@ -72,7 +72,7 @@ public final class CammentApi extends CammentAsyncClient {
             submitTask(new Callable<CammentList>() {
                 @Override
                 public CammentList call() throws Exception {
-                    return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid());
+                    return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid(), null, "100");
                 }
             }, getUserGroupCammentsCallback(usergroup.getUuid()));
         }

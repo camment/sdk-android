@@ -16,16 +16,16 @@
     <string name="cmmsdk_help_swipe_left_to_hide_camments">Desliza los camments hacia ← la izquierda para ocultarlos</string>
     <string name="cmmsdk_help_swipe_right_to_show_camments">Desliza los camments hacia → la derecha para que vuelvan a aparecer</string>
     <string name="cmmsdk_help_tap_to_play">Bien hecho! Ahora presiona sobre el Camment para poder escucharlo</string>
-    <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this chat</string>
+    <string name="cmmsdk_help_sidebar_to_invite">Desplaza la barra lateral hacia la → derecha para invitar a tus amigos a unirse a este grupo</string>
     <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
-    <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
-    <string name="cmmsdk_help_skip_tutorial">Skip tutorial</string>
-    <string name="cmmsdk_help_continue_tutorial">Continue tutorial later from sidebar</string>
+    <string name="cmmsdk_help_start_making_video_camments">Empieza a grabar tus Camments\nhaciendo click aquí</string>
+    <string name="cmmsdk_help_skip_tutorial">Saltarse el tutorial</string>
+    <string name="cmmsdk_help_continue_tutorial">Continúa con tu tutorial más tarde desde la barra lateral</string>
 
-    <string name="cmmsdk_continue_tutorial">Continue tutorial</string>
+    <string name="cmmsdk_continue_tutorial">Continúa con tu tutorial</string>
 
     <string name="cmmsdk_setup_use_camment_chat">¿Te gustaría chatear a través de videos con amigos mientras miras este programa?</string>
-    <string name="cmmsdk_setup_what_is_camment">es como si enviaras un SMS pero enviando videos de 5 segundos (Camments) que aparecerán en una ventana en la parte superior de la pantalla, a la vez que ves este programa</string>
+    <string name="cmmsdk_setup_what_is_camment">Es como si enviaras un SMS pero enviando videos de 5 segundos (Camments) que aparecerán en una ventana en la parte superior de la pantalla, a la vez que ves este programa</string>
     <string name="cmmsdk_setup_sounds_fun">Suena divertido</string>
     <string name="cmmsdk_setup_maybe_later">Quizás más tarde</string>
 
@@ -33,7 +33,6 @@
     <string name="cmmsdk_camment_actions_delete_camment">Eliminar tu Camment</string>
 
     <string name="cmmsdk_passcode_error">No se encontró ninguna emisión.\nPor favor: revisa tu código de acceso</string>
-    <string name="cmmsdk_invitation_error">No puedes unirte a este grupo</string>
 
     <string name="cmmsdk_joined_private_chat">¡Te has unido al chat privado!</string>
 
@@ -51,40 +50,39 @@
     <string name="cmmsdk_drawer_chat_groups">%d grupos a los que te has unido</string>
     <string name="cmmsdk_drawer_no_chat_groups">No se han encontrado ningún grupo</string>
 
+    <string name="cmmsdk_invitation_default_msg">¡Hola, únete a nuestra conversación privada!</string>
+
     <string name="cmmsdk_login_fb_title">No has iniciado sesión</string>
     <string name="cmmsdk_login_fb_msg">Quieres iniciar la sesión con tu cuenta de Facebook?</string>
 
-    <string name="cmmsdk_user_left_group">%s left the conversation</string>
+    <string name="cmmsdk_user_left_group">%s ha abandonado el grupo</string>
 
-    <string name="cmmsdk_somebody">Somebody</string>
-    <string name="cmmsdk_user">User</string>
+    <string name="cmmsdk_somebody">Alguien</string>
+    <string name="cmmsdk_user">Usuario</string>
 
-    <string name="cmmsdk_leave_confirmation_title">Leave current conversation</string>
-    <string name="cmmsdk_leave_confirmation_msg">Do you really want to leave current conversation?</string>
+    <string name="cmmsdk_leave_confirmation_title">Abandona el grupo</string>
+    <string name="cmmsdk_leave_confirmation_msg">¿De verdad quieres dejar el grupo actual?</string>
 
-    <string name="cmmsdk_block_confirmation_title">Block user</string>
-    <string name="cmmsdk_block_confirmation_msg">Do you really want to block %s?</string>
+    <string name="cmmsdk_block_confirmation_title">Bloquear al usuario</string>
+    <string name="cmmsdk_block_confirmation_msg">¿Realmente quieres bloquear %s del grupo?</string>
 
-    <string name="cmmsdk_unblock_confirmation_title">Unblock user</string>
-    <string name="cmmsdk_unblock_confirmation_msg">Do you really want to unblock %s?</string>
+    <string name="cmmsdk_unblock_confirmation_title">UDesbloquear usuario</string>
+    <string name="cmmsdk_unblock_confirmation_msg">¿Realmente quieres desbloquear %s del grupo?</string>
 
-    <string name="cmmsdk_blocked_from_group_title">You are blocked</string>
-    <string name="cmmsdk_blocked_from_group_msg">Group owner has blocked you from the current conversation</string>
+    <string name="cmmsdk_blocked_from_group_title">Has sido bloqueado</string>
+    <string name="cmmsdk_blocked_from_group_msg">El administrador del grupo te ha bloqueado de este grupo</string>
 
-    <string name="cmmsdk_user_blocked">%s has been blocked</string>
-    <string name="cmmsdk_user_unblocked">%s has been unblocked</string>
+    <string name="cmmsdk_user_blocked">%s ha sido bloqueado</string>
+    <string name="cmmsdk_user_unblocked">%s ha sido desbloqueado</string>
 
-    <string name="cmmsdk_user_has_joined_title">%s has joined</string>
-    <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the discussion. You can always swipe → right to see who else is in the group and remove unwanted people</string>
+    <string name="cmmsdk_user_has_joined_title">%s se ha unido</string>
+    <string name="cmmsdk_user_has_joined_msg">Tus amigos se están uniendo a la conversación. Siempre puedes deslizar hacia la → derecha para ver quién más está activo en el grupo y bloquear a las personas no deseadas.</string>
 
     <string name="cmmsdk_ad">AD</string>
-    <string name="cmmsdk_ad_click_more">Click to learn more</string>
+    <string name="cmmsdk_ad_click_more">Haz click para saber y/o aprender mas</string>
 
-    <string name="cmmsdk_block">Block</string>
-    <string name="cmmsdk_unblock">Unblock</string>
-    <string name="cmmsdk_blocked_users">Blocked Users</string>
-    <string name="cmmsdk_leave_group">Leave group</string>
+    <string name="cmmsdk_leave_group">Abandona el grupo</string>
 
-    <string name="cmmsdk_video_codec_issue">Can\'t record a camment due to the device limitations.</string>
+    <string name="cmmsdk_video_codec_issue">No se puede grabar un Camment debido a las limitaciones de tú dispositivo.</string>
 
 </resources>

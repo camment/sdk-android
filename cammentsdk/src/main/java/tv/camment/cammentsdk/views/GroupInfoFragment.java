@@ -55,7 +55,7 @@ public final class GroupInfoFragment extends Fragment
     private RecyclerView rvGroups;
     private UserInfoAdapter adapter;
 
-    private ScrollView svInvite;
+    private RelativeLayout rlInvite;
     private RelativeLayout rlGroupInfo;
     private Button btnContinueTutorial;
 
@@ -72,7 +72,7 @@ public final class GroupInfoFragment extends Fragment
 
         setupRecyclerView();
 
-        svInvite = (ScrollView) layout.findViewById(R.id.cmmsdk_sv_invite);
+        rlInvite = (RelativeLayout) layout.findViewById(R.id.cmmsdk_rl_invite );
         rlGroupInfo = (RelativeLayout) layout.findViewById(R.id.cmmsdk_rl_group_info);
 
         handleContainersVisibility();
@@ -173,7 +173,7 @@ public final class GroupInfoFragment extends Fragment
         if (activeUserGroup != null) {
             count = UserInfoProvider.getConnectedUsersCountByGroupUuid(activeUserGroup.getUuid());
         }
-        svInvite.setVisibility(activeUserGroup == null || count < 1 ? View.VISIBLE : View.GONE);
+        rlInvite.setVisibility(activeUserGroup == null || count < 1 ? View.VISIBLE : View.GONE);
         rlGroupInfo.setVisibility(activeUserGroup == null || count < 1 ? View.GONE : View.VISIBLE);
     }
 

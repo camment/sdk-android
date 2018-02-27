@@ -33,6 +33,7 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
 
     CammentListOnScrollListener(LinearLayoutManager layoutManager) {
         this.layoutManager = layoutManager;
+        loadMoreItems(true);
     }
 
     @Override
@@ -47,17 +48,12 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
             if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0
                     && totalItemCount >= SDKConfig.CAMMENT_PAGE_SIZE) {
-                loadMoreItems();
+                loadMoreItems(false);
             }
-        }
-
-        if (firstVisibleItemPosition <= 0
-                && totalItemCount <= SDKConfig.CAMMENT_PAGE_SIZE) {
-            loadMoreItems();
         }
     }
 
-    private void loadMoreItems() {
+    public void loadMoreItems(boolean dropTable) {
         final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup == null
@@ -67,15 +63,19 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
 
         isLoading = true;
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments(lastKey, getUserGroupCammentsCallback(usergroup.getUuid()));
+        ApiManager.getInstance().getCammentApi().getUserGroupCamments(lastKey, getUserGroupCammentsCallback(usergroup.getUuid(), dropTable));
     }
 
-    private CammentCallback<CammentList> getUserGroupCammentsCallback(final String groupUuid) {
+    private CammentCallback<CammentList> getUserGroupCammentsCallback(final String groupUuid, final boolean dropTable) {
         return new CammentCallback<CammentList>() {
             @Override
             public void onSuccess(CammentList cammentList) {
-                LogUtils.debug("onSuccess", "getUserGroupCamments " + cammentList.getLastKey());
+                LogUtils.debug("onSuccess1", "getUserGroupCamments " + cammentList.getLastKey());
                 ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode()); //TODO add hash for lastKey at least
+
+                if (dropTable) {
+                    CammentProvider.deleteCamments();
+                }
 
                 isLoading = false;
 
@@ -96,7 +96,7 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
 
             @Override
             public void onException(Exception exception) {
-                Log.e("onException", "getUserGroupCamments", exception);
+                Log.e("onException1", "getUserGroupCamments", exception);
                 ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode());
 
                 isLoading = false;

@@ -111,7 +111,7 @@ public final class CammentProvider {
 
             final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
             long timestamp = cammentByUuid == null ? -System.currentTimeMillis() : cammentByUuid.getTimestamp();
-            cv.put(DataContract.Camment.timestamp, timestamp);
+            cv.put(DataContract.Camment.timestamp, -System.currentTimeMillis());
 
             cv.put(DataContract.Camment.transferId, -1);
             cv.put(DataContract.Camment.recorded, 1);
@@ -144,7 +144,7 @@ public final class CammentProvider {
                 .bulkInsert(DataContract.Camment.CONTENT_URI, values.toArray(new ContentValues[values.size()]));
     }
 
-    static void deleteCamments() {
+    public static void deleteCamments() {
         int delete = CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .delete(DataContract.Camment.CONTENT_URI, null, null);
         LogUtils.debug("deleteCamments", "rows: " + delete);

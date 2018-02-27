@@ -1,6 +1,7 @@
 package tv.camment.cammentsdk.views;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -58,6 +59,16 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         }
 
         hashCode = camments.hashCode();
+
+        int beforeCount = this.camments == null ? 0 : this.camments.size();
+        int afterCount = camments.size();
+
+        if (beforeCount > afterCount
+                && beforeCount - afterCount == 1
+                && (beforeCount % SDKConfig.CAMMENT_PAGE_SIZE) == 0
+                && actionListener != null) {
+            actionListener.onLoadMoreIfPossible();
+        }
 
         Set<ChatItem<CCamment>> cammentSet = new HashSet<>();
         cammentSet.addAll(camments);
@@ -170,6 +181,9 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         void onAdClick(AdMessage adMessage);
 
         void onCloseAdClick(ChatItem chatItem);
+
+        void onLoadMoreIfPossible();
+
     }
 
     @Override

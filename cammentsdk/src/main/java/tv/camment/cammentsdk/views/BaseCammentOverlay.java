@@ -110,6 +110,9 @@ abstract class BaseCammentOverlay extends RelativeLayout
     private OnboardingOverlay onboardingOverlay;
     private AdDetailView adDetailView;
 
+    private LinearLayoutManager layoutManager;
+    private CammentListOnScrollListener cammentListOnScrollListener;
+
     private CammentsAdapter adapter;
 
     private SimpleExoPlayer player;
@@ -306,11 +309,13 @@ abstract class BaseCammentOverlay extends RelativeLayout
         pullableView.setListener(this);
 
         adapter = new CammentsAdapter(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvCamments.setLayoutManager(layoutManager);
         rvCamments.setAdapter(adapter);
         ((DefaultItemAnimator) rvCamments.getItemAnimator()).setSupportsChangeAnimations(false);
-        rvCamments.addOnScrollListener(new CammentListOnScrollListener(layoutManager));
+        rvCamments.clearOnScrollListeners();
+        cammentListOnScrollListener = new CammentListOnScrollListener(layoutManager);
+        rvCamments.addOnScrollListener(cammentListOnScrollListener);
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);
@@ -404,6 +409,13 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
         if (adDetailView != null) {
             adDetailView.setVisibility(GONE);
+        }
+    }
+
+    @Override
+    public void onLoadMoreIfPossible() {
+        if (cammentListOnScrollListener != null) {
+            cammentListOnScrollListener.loadMoreItems(false);
         }
     }
 
@@ -674,6 +686,12 @@ abstract class BaseCammentOverlay extends RelativeLayout
     public void onMessageEvent(UserGroupChangeEvent event) {
         if (adapter != null) {
             adapter.setData(null);
+        }
+
+        if (rvCamments != null) {
+            rvCamments.clearOnScrollListeners();
+            cammentListOnScrollListener = new CammentListOnScrollListener(layoutManager);
+            rvCamments.addOnScrollListener(cammentListOnScrollListener);
         }
 
         if (getContext() instanceof AppCompatActivity) {

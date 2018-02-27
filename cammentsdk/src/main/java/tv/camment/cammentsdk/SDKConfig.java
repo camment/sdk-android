@@ -9,6 +9,8 @@ public final class SDKConfig {
 
     public static final float CAMMENT_MIN_DURATION = 1000;
 
+    public static final int CAMMENT_PAGE_SIZE = 15;
+
     static final String API_KEY_DUMMY = "Your Camment API key";
 
 }

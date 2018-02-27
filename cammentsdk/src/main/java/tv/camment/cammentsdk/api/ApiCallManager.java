@@ -5,13 +5,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-final class ApiCallManager {
+public final class ApiCallManager {
 
     private static ApiCallManager INSTANCE;
 
     private Map<ApiCallType, Set<Integer>> apiCallMap;
 
-    static ApiCallManager getInstance() {
+    public static ApiCallManager getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ApiCallManager();
         }
@@ -61,7 +61,7 @@ final class ApiCallManager {
         apiCallMap.put(apiCallType, hashSet);
     }
 
-    void removeCall(ApiCallType apiCallType, int apiCallHash) {
+    public void removeCall(ApiCallType apiCallType, int apiCallHash) {
         if (apiCallMap == null)
             return;
 

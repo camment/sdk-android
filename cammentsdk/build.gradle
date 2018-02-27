@@ -22,8 +22,8 @@ android {
         defaultPublishConfig 'release'
         publishNonDefault true
 
-        buildConfigField("boolean", "SHOW_GROUP_LIST", "false")
-        buildConfigField("boolean", "SHOW_ADS", "true")
+        buildConfigField("boolean", "SHOW_GROUP_LIST", "true")
+        buildConfigField("boolean", "SHOW_ADS", "false")
         buildConfigField("boolean", "USE_MIXPANEL", "false")
         buildConfigField("boolean", "PULL_UP_BUTTON", "false")
     }

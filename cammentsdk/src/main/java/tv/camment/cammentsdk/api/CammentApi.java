@@ -13,6 +13,7 @@ import com.camment.clientsdk.model.Usergroup;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import tv.camment.cammentsdk.SDKConfig;
 import tv.camment.cammentsdk.asyncclient.CammentAsyncClient;
 import tv.camment.cammentsdk.asyncclient.CammentCallback;
 import tv.camment.cammentsdk.aws.AWSManager;
@@ -72,7 +73,7 @@ public final class CammentApi extends CammentAsyncClient {
             submitTask(new Callable<CammentList>() {
                 @Override
                 public CammentList call() throws Exception {
-                    return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid(), null, "100");
+                    return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid(), null, String.valueOf(SDKConfig.CAMMENT_PAGE_SIZE));
                 }
             }, getUserGroupCammentsCallback(usergroup.getUuid()));
         }
@@ -102,6 +103,24 @@ public final class CammentApi extends CammentAsyncClient {
                 ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode());
             }
         };
+    }
+
+    public void getUserGroupCamments(final String lastKey, CammentCallback<CammentList> userGroupCammentsCallback) {
+        final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
+
+        if (usergroup == null
+                || TextUtils.isEmpty(usergroup.getUuid())) {
+            return;
+        }
+
+        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_CAMMENTS, usergroup.getUuid().hashCode())) {
+            submitTask(new Callable<CammentList>() {
+                @Override
+                public CammentList call() throws Exception {
+                    return devcammentClient.usergroupsGroupUuidCammentsGet(usergroup.getUuid(), lastKey, String.valueOf(15));
+                }
+            }, userGroupCammentsCallback);
+        }
     }
 
     public void deleteUserGroupCamment(final Camment camment) {

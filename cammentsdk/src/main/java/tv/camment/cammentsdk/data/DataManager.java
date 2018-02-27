@@ -22,6 +22,7 @@ public final class DataManager {
         UserGroupProvider.setAllAsNotActive();
         FileUtils.getInstance().deleteAllFiles();
 
+        CammentProvider.deleteCamments();
         UserInfoProvider.deleteUserInfos();
     }
 

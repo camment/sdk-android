@@ -310,6 +310,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         rvCamments.setLayoutManager(layoutManager);
         rvCamments.setAdapter(adapter);
         ((DefaultItemAnimator) rvCamments.getItemAnimator()).setSupportsChangeAnimations(false);
+        rvCamments.addOnScrollListener(new CammentListOnScrollListener(layoutManager));
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
         onboardingOverlay.setAnchorViews(ibRecord, rvCamments);

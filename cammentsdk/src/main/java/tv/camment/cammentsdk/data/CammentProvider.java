@@ -99,7 +99,6 @@ public final class CammentProvider {
         List<ContentValues> values = new ArrayList<>();
         ContentValues cv;
 
-        int i = camments.size() + 1;
         for (Camment camment : camments) {
             cv = new ContentValues();
 
@@ -109,11 +108,14 @@ public final class CammentProvider {
             cv.put(DataContract.Camment.thumbnail, camment.getThumbnail());
             cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
             cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
-            cv.put(DataContract.Camment.timestamp, i);
+
+            final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
+            long timestamp = cammentByUuid == null ? -System.currentTimeMillis() : cammentByUuid.getTimestamp();
+            cv.put(DataContract.Camment.timestamp, timestamp);
+
             cv.put(DataContract.Camment.transferId, -1);
             cv.put(DataContract.Camment.recorded, 1);
 
-            final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
             int deleted = cammentByUuid == null ? 0 : (cammentByUuid.isDeleted() ? 1 : 0);
             cv.put(DataContract.Camment.deleted, deleted);
 
@@ -136,7 +138,6 @@ public final class CammentProvider {
             cv.put(DataContract.Camment.received, received);
 
             values.add(cv);
-            i--;
         }
 
         CammentSDK.getInstance().getApplicationContext().getContentResolver()
@@ -144,8 +145,9 @@ public final class CammentProvider {
     }
 
     static void deleteCamments() {
-        CammentSDK.getInstance().getApplicationContext().getContentResolver()
+        int delete = CammentSDK.getInstance().getApplicationContext().getContentResolver()
                 .delete(DataContract.Camment.CONTENT_URI, null, null);
+        LogUtils.debug("deleteCamments", "rows: " + delete);
     }
 
     public static void deleteCammentByUuid(String uuid) {

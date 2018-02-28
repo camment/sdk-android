@@ -3,15 +3,19 @@ package tv.camment.cammentsdk.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
@@ -81,7 +85,24 @@ abstract class BaseAdDetailView extends RelativeLayout {
 
         Glide.with(CammentSDK.getInstance().getApplicationContext())
                 .load(adMessage.body.file)
-                .into(ivAdImage);
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable drawable, Transition<? super Drawable> transition) {
+                        int drawableIntrinsicWidth = drawable.getIntrinsicWidth();
+                        int drawableIntrinsicHeight = drawable.getIntrinsicHeight();
+                        float drawableRatio = drawableIntrinsicWidth/drawableIntrinsicHeight;
+
+                        ivAdImage.setImageDrawable(drawable);
+
+                        int width = ivAdImage.getWidth();
+                        int height = (int) ((1 / drawableRatio) * width);
+
+                        ViewGroup.LayoutParams layoutParams = ivAdImage.getLayoutParams();
+                        layoutParams.height = height;
+
+                        ivAdImage.setLayoutParams(layoutParams);
+                    }
+                });
     }
 
     private void handleAdClose() {

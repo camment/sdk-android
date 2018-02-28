@@ -28,6 +28,7 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
     private static final int CAMMENT = 0;
     private static final int AD = 1;
+    private static final int LOADING = 2;
 
     private static long hashCode;
 
@@ -37,6 +38,7 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
     private List<ChatItem<CCamment>> camments;
     private List<ChatItem<AdMessage>> ads;
+    private boolean isLoading;
 
     CammentsAdapter(ActionListener actionListener) {
         this.actionListener = actionListener;
@@ -122,19 +124,32 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    void setLoading(boolean isLoading) {
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
+    }
+
     @Override
     public long getItemId(int position) {
-        return items.get(position).getUuid().hashCode();
+        if (items != null && position < items.size()) {
+            return items.get(position).getUuid().hashCode();
+        } else {
+            return 1111L;
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        switch (items.get(position).getType()) {
-            case AD:
-                return AD;
-            case CAMMENT:
-            default:
-                return CAMMENT;
+        if (items != null && position < items.size()) {
+            switch (items.get(position).getType()) {
+                case AD:
+                    return AD;
+                case CAMMENT:
+                default:
+                    return CAMMENT;
+            }
+        } else {
+            return LOADING;
         }
     }
 
@@ -146,6 +161,9 @@ final class CammentsAdapter extends RecyclerView.Adapter {
             case AD:
                 itemView = inflater.inflate(R.layout.cmmsdk_ad_item, parent, false);
                 return new AdViewHolder(itemView, actionListener);
+            case LOADING:
+                itemView = inflater.inflate(R.layout.cmmsdk_loading_item, parent, false);
+                return new LoadingViewHolder(itemView);
             case CAMMENT:
             default:
                 itemView = inflater.inflate(R.layout.cmmsdk_camment_item, parent, false);
@@ -167,7 +185,7 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return items != null ? items.size() : 0;
+        return (items != null ? items.size() : 0) + (isLoading ? 1 : 0);
     }
 
     interface ActionListener {

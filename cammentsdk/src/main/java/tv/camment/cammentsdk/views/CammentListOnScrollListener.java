@@ -25,14 +25,16 @@ import tv.camment.cammentsdk.utils.LogUtils;
 final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
 
     private final LinearLayoutManager layoutManager;
+    private OnCammentLoadingMoreListener onCammentLoadingMoreListener;
 
     private boolean isLoading;
     private boolean isLastPage;
 
     private String lastKey;
 
-    CammentListOnScrollListener(LinearLayoutManager layoutManager) {
+    CammentListOnScrollListener(LinearLayoutManager layoutManager, OnCammentLoadingMoreListener onCammentLoadingMoreListener) {
         this.layoutManager = layoutManager;
+        this.onCammentLoadingMoreListener = onCammentLoadingMoreListener;
         loadMoreItems(true);
     }
 
@@ -53,7 +55,7 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
         }
     }
 
-    public void loadMoreItems(boolean dropTable) {
+    void loadMoreItems(boolean dropTable) {
         final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup == null
@@ -62,6 +64,11 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
         }
 
         isLoading = true;
+
+        if (lastKey != null
+                && onCammentLoadingMoreListener != null) {
+            onCammentLoadingMoreListener.onCammentLoadingMoreStarted();
+        }
 
         ApiManager.getInstance().getCammentApi().getUserGroupCamments(lastKey, getUserGroupCammentsCallback(usergroup.getUuid(), dropTable));
     }
@@ -75,6 +82,10 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
 
                 if (dropTable) {
                     CammentProvider.deleteCamments();
+                }
+
+                if (onCammentLoadingMoreListener != null) {
+                    onCammentLoadingMoreListener.onCammentLoadingMoreFinished();
                 }
 
                 isLoading = false;
@@ -99,9 +110,21 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
                 Log.e("onException1", "getUserGroupCamments", exception);
                 ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode());
 
+                if (onCammentLoadingMoreListener != null) {
+                    onCammentLoadingMoreListener.onCammentLoadingMoreFinished();
+                }
+
                 isLoading = false;
             }
         };
+    }
+
+    interface OnCammentLoadingMoreListener {
+
+        void onCammentLoadingMoreStarted();
+
+        void onCammentLoadingMoreFinished();
+
     }
 
 }

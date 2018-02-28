@@ -90,7 +90,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         CammentsAdapter.ActionListener,
         LoaderManager.LoaderCallbacks<Cursor>,
         OnPreviewStartedListener,
-        CammentPlayerEventListener.OnResetLastCammentPlayedListener, PullableView.PullListener {
+        CammentPlayerEventListener.OnResetLastCammentPlayedListener, PullableView.PullListener, CammentListOnScrollListener.OnCammentLoadingMoreListener {
 
     private static final int THRESHOLD_X = 100;
     private static final int THRESHOLD_Y = 150;
@@ -166,6 +166,20 @@ abstract class BaseCammentOverlay extends RelativeLayout
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onCammentLoadingMoreStarted() {
+        if (adapter != null) {
+            adapter.setLoading(true);
+        }
+    }
+
+    @Override
+    public void onCammentLoadingMoreFinished() {
+        if (adapter != null) {
+            adapter.setLoading(false);
+        }
     }
 
     private enum Mode {
@@ -314,7 +328,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
         rvCamments.setAdapter(adapter);
         ((DefaultItemAnimator) rvCamments.getItemAnimator()).setSupportsChangeAnimations(false);
         rvCamments.clearOnScrollListeners();
-        cammentListOnScrollListener = new CammentListOnScrollListener(layoutManager);
+        cammentListOnScrollListener = new CammentListOnScrollListener(layoutManager, this);
         rvCamments.addOnScrollListener(cammentListOnScrollListener);
 
         onboardingOverlay = (OnboardingOverlay) findViewById(R.id.cmmsdk_onboarding_overlay);
@@ -690,7 +704,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         if (rvCamments != null) {
             rvCamments.clearOnScrollListeners();
-            cammentListOnScrollListener = new CammentListOnScrollListener(layoutManager);
+            cammentListOnScrollListener = new CammentListOnScrollListener(layoutManager, this);
             rvCamments.addOnScrollListener(cammentListOnScrollListener);
         }
 

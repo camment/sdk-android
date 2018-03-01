@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,13 +21,14 @@ import com.bumptech.glide.request.transition.Transition;
 import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.aws.messages.AdMessage;
+import tv.camment.cammentsdk.data.model.ChatItem;
 
 abstract class BaseAdDetailView extends RelativeLayout {
 
-    private AdMessage adMessage;
+    private ChatItem<AdMessage> adMessage;
 
     private ImageView ivAdImage;
-    private ImageButton ibClose;
+    private float drawableRatio;
 
     BaseAdDetailView(Context context) {
         super(context);
@@ -58,7 +60,7 @@ abstract class BaseAdDetailView extends RelativeLayout {
     protected void onFinishInflate() {
         ivAdImage = (ImageView) findViewById(R.id.cmmsdk_iv_ad);
 
-        ibClose = (ImageButton) findViewById(R.id.cmmsdk_ib_close);
+        ImageButton ibClose = (ImageButton) findViewById(R.id.cmmsdk_ib_close);
         ibClose.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,32 +79,21 @@ abstract class BaseAdDetailView extends RelativeLayout {
     }
 
 
-    void setData(AdMessage adMessage) {
-        if (adMessage == null)
+    void setData(ChatItem<AdMessage> adMessage) {
+        if (adMessage == null || adMessage.getContent() == null)
             return;
 
         this.adMessage = adMessage;
 
+        setVisibility(VISIBLE);
+
         Glide.with(CammentSDK.getInstance().getApplicationContext())
-                .load(adMessage.body.file)
-                .into(new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(Drawable drawable, Transition<? super Drawable> transition) {
-                        int drawableIntrinsicWidth = drawable.getIntrinsicWidth();
-                        int drawableIntrinsicHeight = drawable.getIntrinsicHeight();
-                        float drawableRatio = drawableIntrinsicWidth/drawableIntrinsicHeight;
+                .load(adMessage.getContent().body.file)
+                .into(ivAdImage);
+    }
 
-                        ivAdImage.setImageDrawable(drawable);
-
-                        int width = ivAdImage.getWidth();
-                        int height = (int) ((1 / drawableRatio) * width);
-
-                        ViewGroup.LayoutParams layoutParams = ivAdImage.getLayoutParams();
-                        layoutParams.height = height;
-
-                        ivAdImage.setLayoutParams(layoutParams);
-                    }
-                });
+    ChatItem<AdMessage> getData() {
+        return adMessage;
     }
 
     private void handleAdClose() {
@@ -113,7 +104,7 @@ abstract class BaseAdDetailView extends RelativeLayout {
         setVisibility(GONE);
 
         if (adMessage != null) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(adMessage.body.url));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(adMessage.getContent().body.url));
             getContext().startActivity(intent);
         }
     }

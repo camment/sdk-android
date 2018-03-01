@@ -16,7 +16,7 @@ import tv.camment.cammentsdk.data.model.ChatItem;
 final class AdViewHolder extends RecyclerView.ViewHolder {
 
     private final CammentsAdapter.ActionListener actionListener;
-    private ChatItem adItem;
+    private ChatItem<AdMessage> adItem;
 
     private SquareFrameLayout sflContainer;
 
@@ -52,7 +52,7 @@ final class AdViewHolder extends RecyclerView.ViewHolder {
     private void handleOnItemClick() {
         if (actionListener != null
                 && adItem != null) {
-            actionListener.onAdClick((AdMessage) adItem.getContent());
+            actionListener.onAdClick(adItem);
         }
     }
 
@@ -63,14 +63,14 @@ final class AdViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    void bindData(ChatItem adItem) {
+    void bindData(ChatItem<AdMessage> adItem) {
         if (adItem == null)
             return;
 
         this.adItem = adItem;
 
         Glide.with(CammentSDK.getInstance().getApplicationContext())
-                .load(((AdMessage) adItem.getContent()).body.thumbnail)
+                .load(adItem.getContent().body.thumbnail)
                 .into(ivThumbnail);
     }
 

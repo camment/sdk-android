@@ -22,6 +22,7 @@ public final class DataManager {
         UserGroupProvider.setAllAsNotActive();
         FileUtils.getInstance().deleteAllFiles();
 
+        AdvertisementProvider.deleteAds();
         UserInfoProvider.deleteUserInfos();
     }
 
@@ -31,6 +32,7 @@ public final class DataManager {
         CammentProvider.deleteCamments();
         UserGroupProvider.deleteUserGroups();
         UserInfoProvider.deleteUserInfos();
+        AdvertisementProvider.deleteAds();
     }
 
 }

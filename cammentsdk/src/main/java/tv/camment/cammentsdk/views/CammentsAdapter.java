@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.SDKConfig;
@@ -79,34 +78,31 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    void addAdToList(AdMessage adMessage, long timestamp) {
-        if (ads == null) {
-            ads = new ArrayList<>();
+    void setAdsData(List<ChatItem<AdMessage>> adsList) {
+        if (adsList == null || adsList.size() == 0) {
+            this.ads = new ArrayList<>();
+            items = new ArrayList<>();
+            items.addAll(this.camments);
+            notifyDataSetChanged();
+            return;
         }
 
-        ChatItem<AdMessage> ad = new ChatItem<>(ChatItem.ChatItemType.AD, UUID.randomUUID().toString(), timestamp, adMessage);
-        ads.add(ad);
+        Set<ChatItem<AdMessage>> adSet = new HashSet<>();
+        adSet.addAll(adsList);
+
+        this.ads = new ArrayList<>();
+
+        this.ads.addAll(adSet);
+        Collections.sort(this.ads, new ChatItemComparator());
 
         //start allItems
-        if (items == null) {
-            items = new ArrayList<>();
+        items = new ArrayList<>();
+        items.addAll(this.ads);
+        if (camments != null) {
+            items.addAll(camments);
         }
-        items.add(ad);
         Collections.sort(this.items, new ChatItemComparator());
         //end allItems
-
-        notifyDataSetChanged();
-    }
-
-
-    void removeAdFromList(ChatItem chatItem) {
-        if (ads != null) {
-            ads.remove(chatItem);
-        }
-
-        if (items != null) {
-            items.remove(chatItem);
-        }
 
         notifyDataSetChanged();
     }
@@ -167,9 +163,9 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
         void stopCammentIfPlaying(Camment camment);
 
-        void onAdClick(AdMessage adMessage);
+        void onAdClick(ChatItem<AdMessage> adMessage);
 
-        void onCloseAdClick(ChatItem chatItem);
+        void onCloseAdClick(ChatItem<AdMessage> chatItem);
     }
 
     @Override

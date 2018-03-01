@@ -45,6 +45,10 @@ public final class AdMessage extends BaseMessage {
         public String url;
         public String thumbnail;
 
+        public Body() {
+
+        }
+
         protected Body(Parcel in) {
             title = in.readString();
             file = in.readString();

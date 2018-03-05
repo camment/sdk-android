@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 final class DbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "cammentsdk";
-    private static final int DB_VERSION = 7;
+    private static final int DB_VERSION = 8;
 
     DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -20,6 +20,7 @@ final class DbHelper extends SQLiteOpenHelper {
         db.execSQL(createShowTable());
         db.execSQL(createCammentTable());
         db.execSQL(createUserInfoTable());
+        db.execSQL(createAdvertisementTable());
     }
 
     @Override
@@ -29,6 +30,7 @@ final class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbUtils.dropTable(DataContract.Tables.SHOW));
         db.execSQL(DbUtils.dropTable(DataContract.Tables.USER_GROUP));
         db.execSQL(DbUtils.dropTable(DataContract.Tables.USER_INFO));
+        db.execSQL(DbUtils.dropTable(DataContract.Tables.ADVERTISEMENT));
         onCreate(db);
     }
 
@@ -81,6 +83,19 @@ final class DbHelper extends SQLiteOpenHelper {
                 .columnText(DataContract.UserInfo.picture)
                 .columnText(DataContract.UserInfo.groupUuid)
                 .columnText(DataContract.UserInfo.state)
+                .build();
+    }
+
+    private String createAdvertisementTable() {
+        return DbUtils.TableBuilder.table(DataContract.Tables.ADVERTISEMENT)
+                .primaryKey(DataContract.Advertisement._ID)
+                .columnTextUnique(DataContract.Advertisement.uuid)
+                .columnInt(DataContract.Advertisement.timestamp)
+                .columnText(DataContract.Advertisement.title)
+                .columnText(DataContract.Advertisement.file)
+                .columnText(DataContract.Advertisement.url)
+                .columnText(DataContract.Advertisement.thumbnail)
+                .columnText(DataContract.Advertisement.groupUuid)
                 .build();
     }
 

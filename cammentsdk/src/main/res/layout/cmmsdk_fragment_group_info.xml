@@ -6,80 +6,73 @@
     android:paddingBottom="8dp"
     android:paddingTop="8dp">
 
-    <ScrollView
-        android:id="@+id/cmmsdk_sv_invite"
+    <RelativeLayout
+        android:id="@+id/cmmsdk_rl_invite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
 
-        <RelativeLayout
-            android:id="@+id/cmmsdk_rl_invite"
+        <TextView
+            android:id="@+id/cmmsdk_tv_invite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
             android:gravity="center"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp">
+            android:text="@string/cmmsdk_drawer_invite_friends_msg"
+            android:textColor="@color/cmmsdk_camment_text_grey" />
 
-            <TextView
-                android:id="@+id/cmmsdk_tv_invite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="@string/cmmsdk_drawer_invite_friends_msg"
-                android:textColor="@color/cmmsdk_camment_text_grey" />
+        <TextView
+            android:id="@+id/cmmsdk_tv_learn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cmmsdk_tv_invite"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/cmmsdk_button_ripple"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/cmmsdk_drawer_learn_more"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/cmmsdk_tv_learn_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/cmmsdk_tv_invite"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/cmmsdk_button_ripple"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="@string/cmmsdk_drawer_learn_more"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="10sp" />
+        <Button
+            android:id="@+id/cmmsdk_btn_invite"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@+id/cmmsdk_tv_learn_more"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/cmmsdk_red_ripple"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/cmmsdk_drawer_invite_friends"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
 
-            <Button
-                android:id="@+id/cmmsdk_btn_invite"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_below="@+id/cmmsdk_tv_learn_more"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/cmmsdk_red_ripple"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/cmmsdk_drawer_invite_friends"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/cmmsdk_btn_continue_tutorial"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@+id/cmmsdk_btn_invite"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/cmmsdk_grey_ripple"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/cmmsdk_continue_tutorial"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/cmmsdk_btn_continue_tutorial"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_below="@+id/cmmsdk_btn_invite"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:background="@drawable/cmmsdk_grey_ripple"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/cmmsdk_continue_tutorial"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-    </ScrollView>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/cmmsdk_rl_group_info"

@@ -34,12 +34,12 @@ import tv.camment.cammentsdk.aws.messages.NewUserInGroupMessage;
 import tv.camment.cammentsdk.aws.messages.UserBlockedMessage;
 import tv.camment.cammentsdk.aws.messages.UserRemovedMessage;
 import tv.camment.cammentsdk.aws.messages.UserUnblockedMessage;
+import tv.camment.cammentsdk.data.AdvertisementProvider;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.DataManager;
 import tv.camment.cammentsdk.data.UserGroupProvider;
 import tv.camment.cammentsdk.data.UserInfoProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
-import tv.camment.cammentsdk.events.AdMessageReceivedEvent;
 import tv.camment.cammentsdk.events.IoTStatusChangeEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
 import tv.camment.cammentsdk.helpers.AuthHelper;
@@ -456,7 +456,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
 
     private void handleAdMessage(AdMessage message) {
         if (BuildConfig.SHOW_ADS) {
-            EventBus.getDefault().post(new AdMessageReceivedEvent(message, System.currentTimeMillis()));
+            AdvertisementProvider.insertAd(message);
         }
     }
 

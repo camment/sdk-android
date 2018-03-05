@@ -33,6 +33,8 @@ final class DataContract {
         String CAMMENT_ID = "camment/*";
         String USER_INFO = "user_info";
         String USER_INFO_ID = "user_info/*";
+        String ADVERTISEMENT = "advertisement";
+        String ADVERTISEMENT_ID = "advertisement/*";
     }
 
     interface Codes {
@@ -44,6 +46,8 @@ final class DataContract {
         int CAMMENT_ID = 401;
         int USER_INFO = 500;
         int USER_INFO_ID = 501;
+        int ADVERTISEMENT = 600;
+        int ADVERTISEMENT_ID = 601;
     }
 
     private interface UserGroupColumns {
@@ -108,6 +112,22 @@ final class DataContract {
         static final String CONTENT_TYPE = buildContentTypeDir(Tables.USER_INFO);
         static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.USER_INFO);
         static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.USER_INFO_ID);
+    }
+
+    private interface AdvertisementColumns {
+        String uuid = "uuid";
+        String timestamp = "timestamp";
+        String title = "title";
+        String file = "file";
+        String url = "url";
+        String thumbnail = "thumbnail";
+        String groupUuid = "groupUuid";
+    }
+
+    static final class Advertisement implements BaseColumns, AdvertisementColumns {
+        static final String CONTENT_TYPE = buildContentTypeDir(Tables.ADVERTISEMENT);
+        static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, Tables.ADVERTISEMENT);
+        static final String CONTENT_TYPE_ITEM = buildContentTypeItem(Tables.ADVERTISEMENT_ID);
     }
 
 }

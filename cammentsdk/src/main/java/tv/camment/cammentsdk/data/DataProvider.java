@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 
 import static tv.camment.cammentsdk.data.DataContract.AUTHORITY;
 import static tv.camment.cammentsdk.data.DataContract.AUTHORITY_URI;
+import static tv.camment.cammentsdk.data.DataContract.Advertisement;
 import static tv.camment.cammentsdk.data.DataContract.Camment;
 import static tv.camment.cammentsdk.data.DataContract.Codes;
 import static tv.camment.cammentsdk.data.DataContract.Show;
@@ -50,6 +51,8 @@ public final class DataProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Tables.CAMMENT_ID, Codes.CAMMENT_ID);
         uriMatcher.addURI(AUTHORITY, Tables.USER_INFO, Codes.USER_INFO);
         uriMatcher.addURI(AUTHORITY, Tables.USER_INFO_ID, Codes.USER_INFO_ID);
+        uriMatcher.addURI(AUTHORITY, Tables.ADVERTISEMENT, Codes.ADVERTISEMENT);
+        uriMatcher.addURI(AUTHORITY, Tables.ADVERTISEMENT_ID, Codes.ADVERTISEMENT_ID);
     }
 
     @Override
@@ -71,6 +74,10 @@ public final class DataProvider extends ContentProvider {
                 return UserInfo.CONTENT_TYPE;
             case Codes.USER_INFO_ID:
                 return UserInfo.CONTENT_TYPE_ITEM;
+            case Codes.ADVERTISEMENT:
+                return Advertisement.CONTENT_TYPE;
+            case Codes.ADVERTISEMENT_ID:
+                return Advertisement.CONTENT_TYPE_ITEM;
             default:
                 throw new IllegalArgumentException("unknown uri " + uri);
         }
@@ -93,6 +100,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.USER_INFO:
                 queryBuilder.setTables(Tables.USER_INFO);
+                break;
+            case Codes.ADVERTISEMENT:
+                queryBuilder.setTables(Tables.ADVERTISEMENT);
                 break;
         }
 
@@ -117,6 +127,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.USER_INFO:
                 id = db.insertWithOnConflict(Tables.USER_INFO, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+                break;
+            case Codes.ADVERTISEMENT:
+                id = db.insertWithOnConflict(Tables.ADVERTISEMENT, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
                 break;
         }
 
@@ -144,6 +157,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.USER_INFO:
                 table = Tables.USER_INFO;
+                break;
+            case Codes.ADVERTISEMENT:
+                table = Tables.ADVERTISEMENT;
                 break;
         }
 
@@ -179,6 +195,9 @@ public final class DataProvider extends ContentProvider {
             case Codes.USER_INFO:
                 delCount = db.delete(Tables.USER_INFO, selection, selectionArgs);
                 break;
+            case Codes.ADVERTISEMENT:
+                delCount = db.delete(Tables.ADVERTISEMENT, selection, selectionArgs);
+                break;
         }
         if (delCount > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
@@ -204,6 +223,9 @@ public final class DataProvider extends ContentProvider {
                 break;
             case Codes.USER_INFO:
                 updateCount = db.update(Tables.USER_INFO, values, selection, selectionArgs);
+                break;
+            case Codes.ADVERTISEMENT:
+                updateCount = db.update(Tables.ADVERTISEMENT, values, selection, selectionArgs);
                 break;
         }
 

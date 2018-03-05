@@ -23,6 +23,7 @@ public final class DataManager {
         FileUtils.getInstance().deleteAllFiles();
 
         CammentProvider.deleteCamments();
+        AdvertisementProvider.deleteAds();
         UserInfoProvider.deleteUserInfos();
     }
 
@@ -32,6 +33,7 @@ public final class DataManager {
         CammentProvider.deleteCamments();
         UserGroupProvider.deleteUserGroups();
         UserInfoProvider.deleteUserInfos();
+        AdvertisementProvider.deleteAds();
     }
 
 }

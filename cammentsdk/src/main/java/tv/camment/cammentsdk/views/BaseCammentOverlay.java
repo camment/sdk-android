@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -64,10 +65,10 @@ import tv.camment.cammentsdk.aws.messages.AdMessage;
 import tv.camment.cammentsdk.camera.CameraGLView;
 import tv.camment.cammentsdk.camera.CammentDefaultRenderersFactory;
 import tv.camment.cammentsdk.camera.RecordingHandler;
+import tv.camment.cammentsdk.data.AdvertisementProvider;
 import tv.camment.cammentsdk.data.CammentProvider;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.ChatItem;
-import tv.camment.cammentsdk.events.AdMessageReceivedEvent;
 import tv.camment.cammentsdk.events.MediaCodecFailureEvent;
 import tv.camment.cammentsdk.events.OnboardingEvent;
 import tv.camment.cammentsdk.events.UserGroupChangeEvent;
@@ -91,6 +92,12 @@ abstract class BaseCammentOverlay extends RelativeLayout
         LoaderManager.LoaderCallbacks<Cursor>,
         OnPreviewStartedListener,
         CammentPlayerEventListener.OnResetLastCammentPlayedListener, PullableView.PullListener, CammentListOnScrollListener.OnCammentLoadingMoreListener {
+
+    private static final String EXTRA_SUPER_STATE = "extra_super_state";
+    private static final String EXTRA_AD_UUID = "extra_ad_uuid";
+
+    private static final int CAMMENT_LOADER = 1;
+    private static final int ADS_LOADER = 2;
 
     private static final int THRESHOLD_X = 100;
     private static final int THRESHOLD_Y = 150;
@@ -133,33 +140,42 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return CammentProvider.getCammentLoader();
+        if (id == CAMMENT_LOADER) {
+            return CammentProvider.getCammentLoader();
+        } else {
+            return AdvertisementProvider.getAdvertisementLoader();
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        List<ChatItem<CCamment>> camments = CammentProvider.listFromCursor(data);
-        adapter.setData(camments);
+        if (loader.getId() == CAMMENT_LOADER) {
+            List<ChatItem<CCamment>> camments = CammentProvider.listFromCursor(data);
+            adapter.setData(camments);
 
-        if (camments != null) {
-            if (camments.size() == 1
-                    && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.PLAY)) {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        onboardingOverlay.displayTooltip(Step.PLAY);
-                    }
-                }, 500);
-            } else if (camments.size() > 0
-                    && OnboardingPreferences.getInstance().isOnboardingStepLastRemaining(Step.DELETE)
-                    && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.DELETE)) {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        onboardingOverlay.displayTooltip(Step.DELETE);
-                    }
-                }, 500);
+            if (camments != null) {
+                if (camments.size() == 1
+                        && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.PLAY)) {
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onboardingOverlay.displayTooltip(Step.PLAY);
+                        }
+                    }, 500);
+                } else if (camments.size() > 0
+                        && OnboardingPreferences.getInstance().isOnboardingStepLastRemaining(Step.DELETE)
+                        && !OnboardingPreferences.getInstance().wasOnboardingStepShown(Step.DELETE)) {
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onboardingOverlay.displayTooltip(Step.DELETE);
+                        }
+                    }, 500);
+                }
             }
+        } else {
+            List<ChatItem<AdMessage>> ads = AdvertisementProvider.listFromCursor(data);
+            adapter.setAdsData(ads);
         }
     }
 
@@ -282,7 +298,36 @@ abstract class BaseCammentOverlay extends RelativeLayout
             analytics.getEventClient().submitEvents();
         }
 
-        return super.onSaveInstanceState();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_SUPER_STATE, super.onSaveInstanceState());
+
+        if (adDetailView != null
+                && adDetailView.getVisibility() == VISIBLE) {
+            ChatItem<AdMessage> adMessage = adDetailView.getData();
+            if (adMessage != null) {
+                bundle.putString(EXTRA_AD_UUID, adMessage.getUuid());
+            }
+        }
+
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable(EXTRA_SUPER_STATE);
+
+            String adUuid = bundle.getString(EXTRA_AD_UUID);
+            if (!TextUtils.isEmpty(adUuid)) {
+                ChatItem<AdMessage> adByUuid = AdvertisementProvider.getAdByUuid(adUuid);
+                if (adByUuid != null
+                        && adByUuid.getContent() != null) {
+                    onAdClick(adByUuid);
+                }
+            }
+        }
+        super.onRestoreInstanceState(state);
     }
 
     private void stopCammentPlayback() {
@@ -300,7 +345,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
         super.onAttachedToWindow();
 
         if (getContext() instanceof AppCompatActivity) {
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(CAMMENT_LOADER, null, this);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(ADS_LOADER, null, this);
         }
 
         if (analytics != null) {
@@ -409,18 +455,18 @@ abstract class BaseCammentOverlay extends RelativeLayout
     }
 
     @Override
-    public void onAdClick(AdMessage adMessage) {
+    public void onAdClick(ChatItem<AdMessage> adMessage) {
         if (adDetailView != null) {
             adDetailView.setData(adMessage);
-            adDetailView.setVisibility(VISIBLE);
         }
     }
 
     @Override
-    public void onCloseAdClick(ChatItem chatItem) {
-        if (adapter != null) {
-            adapter.removeAdFromList(chatItem);
+    public void onCloseAdClick(ChatItem<AdMessage> chatItem) {
+        if (chatItem != null) {
+            AdvertisementProvider.deleteAdByUuid(chatItem.getUuid());
         }
+
         if (adDetailView != null) {
             adDetailView.setVisibility(GONE);
         }
@@ -709,16 +755,10 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
 
         if (getContext() instanceof AppCompatActivity) {
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(1);
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(1, null, this);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(AdMessageReceivedEvent event) {
-        if (adapter != null) {
-            adapter.addAdToList(event.getAdMessage(), event.getTimestamp());
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(CAMMENT_LOADER);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(CAMMENT_LOADER, null, this);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(ADS_LOADER);
+            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(ADS_LOADER, null, this);
         }
     }
 

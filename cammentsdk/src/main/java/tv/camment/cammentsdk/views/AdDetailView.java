@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 
 import tv.camment.cammentsdk.aws.messages.AdMessage;
+import tv.camment.cammentsdk.data.model.ChatItem;
 
 public final class AdDetailView extends BaseAdDetailView {
 
@@ -28,7 +29,12 @@ public final class AdDetailView extends BaseAdDetailView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setData(AdMessage adMessage) {
+    public void setData(ChatItem<AdMessage> adMessage) {
         super.setData(adMessage);
     }
+
+    public ChatItem<AdMessage> getData() {
+        return super.getData();
+    }
+
 }

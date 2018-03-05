@@ -82,7 +82,9 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         if (adsList == null || adsList.size() == 0) {
             this.ads = new ArrayList<>();
             items = new ArrayList<>();
-            items.addAll(this.camments);
+            if (camments != null) {
+                items.addAll(this.camments);
+            }
             notifyDataSetChanged();
             return;
         }

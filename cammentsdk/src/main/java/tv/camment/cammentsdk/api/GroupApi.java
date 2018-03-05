@@ -194,9 +194,16 @@ public final class GroupApi extends CammentAsyncClient {
         return new CammentCallback<Usergroup>() {
             @Override
             public void onSuccess(Usergroup usergroup) {
-                if (usergroup != null
-                        && TextUtils.equals(usergroup.getUserCognitoIdentityId(), IdentityPreferences.getInstance().getIdentityId())) {
-                    UserGroupProvider.insertUserGroup(usergroup, true);
+                if (usergroup == null)
+                    return;
+
+                Usergroup activeUserGroup = UserGroupProvider.getActiveUserGroup();
+                boolean isCurrentGroup = activeUserGroup != null && TextUtils.equals(activeUserGroup.getUuid(), usergroup.getUuid());
+
+                if (TextUtils.equals(usergroup.getUserCognitoIdentityId(), IdentityPreferences.getInstance().getIdentityId())) {
+                    if (!isCurrentGroup) {
+                        UserGroupProvider.insertUserGroup(usergroup, true);
+                    }
 
                     if (message instanceof InvitationMessage) {
                         final String showUuid = ((InvitationMessage) message).body.showUuid;
@@ -226,14 +233,18 @@ public final class GroupApi extends CammentAsyncClient {
                         }, 1000);
                     }
 
-                    UserGroupProvider.setActive(usergroup.getUuid(), true);
+                    if (!isCurrentGroup) {
+                        UserGroupProvider.setActive(usergroup.getUuid(), true);
 
-                    EventBus.getDefault().post(new UserGroupChangeEvent());
+                        EventBus.getDefault().post(new UserGroupChangeEvent());
 
-                    ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                    }
 
-                    Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
-                            R.string.cmmsdk_joined_private_chat, Toast.LENGTH_LONG).show();
+                    if (message instanceof InvitationMessage) {
+                        Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                                R.string.cmmsdk_joined_private_chat, Toast.LENGTH_LONG).show();
+                    }
 
                     CammentSDK.getInstance().hideProgressBar();
                     return;

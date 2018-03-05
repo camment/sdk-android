@@ -1,9 +1,13 @@
 package tv.camment.cammentsdk.listeners;
 
+import android.widget.Toast;
+
 import com.camment.clientsdk.model.Usergroup;
 
 import org.greenrobot.eventbus.EventBus;
 
+import tv.camment.cammentsdk.CammentSDK;
+import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.api.ApiManager;
 import tv.camment.cammentsdk.aws.messages.BaseMessage;
 import tv.camment.cammentsdk.aws.messages.InvitationMessage;
@@ -33,6 +37,9 @@ public final class InvitationDialogActionListener implements CammentDialog.Actio
         ApiManager.getInstance().getCammentApi().getUserGroupCamments();
 
         ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
+
+        Toast.makeText(CammentSDK.getInstance().getApplicationContext(),
+                R.string.cmmsdk_joined_private_chat, Toast.LENGTH_LONG).show();
     }
 
     @Override

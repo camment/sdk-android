@@ -171,7 +171,7 @@ public final class GroupApi extends CammentAsyncClient {
                 LogUtils.debug("onSuccess", "getUserGroupByUuid");
                 UserGroupProvider.insertUserGroup(usergroup, true);
 
-                ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+                //ApiManager.getInstance().getCammentApi().getUserGroupCamments();
             }
 
             @Override
@@ -231,14 +231,6 @@ public final class GroupApi extends CammentAsyncClient {
                                 }
                             }
                         }, 1000);
-                    }
-
-                    if (!isCurrentGroup) {
-                        UserGroupProvider.setActive(usergroup.getUuid(), true);
-
-                        EventBus.getDefault().post(new UserGroupChangeEvent());
-
-                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
                     }
 
                     if (message instanceof InvitationMessage) {

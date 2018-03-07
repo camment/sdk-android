@@ -38,6 +38,7 @@ public final class UserGroupProvider {
 
         Usergroup activeUserGroup = getActiveUserGroup();
         if (activeUserGroup != null && changeGroup) {
+            CammentProvider.deleteCammentsByGroupUuid(activeUserGroup.getUuid());
             setActive(activeUserGroup.getUuid(), false);
         }
 
@@ -54,7 +55,7 @@ public final class UserGroupProvider {
 
             //CammentSDK.getInstance().connectToIoT();
 
-            ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+            //ApiManager.getInstance().getCammentApi().getUserGroupCamments();
         }
     }
 

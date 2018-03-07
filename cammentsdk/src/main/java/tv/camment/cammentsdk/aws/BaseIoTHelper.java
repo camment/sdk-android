@@ -418,7 +418,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
         camment.setThumbnail(message.body.thumbnail);
         camment.setUrl(message.body.url);
         camment.setUserCognitoIdentityId(message.body.userCognitoIdentityId);
-        camment.setTimestamp(System.currentTimeMillis());
+        camment.setTimestampLong(System.currentTimeMillis());
         camment.setRecorded(true);
         camment.setTransferId(-1);
 

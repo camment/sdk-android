@@ -17,6 +17,7 @@ import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.ChatItem;
 import tv.camment.cammentsdk.helpers.IdentityPreferences;
+import tv.camment.cammentsdk.utils.DateTimeUtils;
 import tv.camment.cammentsdk.utils.LogUtils;
 
 
@@ -54,11 +55,7 @@ public final class CammentProvider {
         cv.put(DataContract.Camment.userCognitoIdentityId, camment.getUserCognitoIdentityId());
         cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
 
-        long timestamp = camment.getTimestamp() == 0
-                ? System.currentTimeMillis()
-                : cammentByUuid == null ? camment.getTimestamp() : cammentByUuid.getTimestamp();
-
-        cv.put(DataContract.Camment.timestamp, timestamp);
+        cv.put(DataContract.Camment.timestamp, camment.getTimestampLong());
         cv.put(DataContract.Camment.transferId, camment.getTransferId());
         cv.put(DataContract.Camment.recorded, camment.isRecorded() ? 1 : 0);
 
@@ -110,8 +107,8 @@ public final class CammentProvider {
             cv.put(DataContract.Camment.userGroupUuid, camment.getUserGroupUuid());
 
             final CCamment cammentByUuid = getCammentByUuid(camment.getUuid());
-            long timestamp = cammentByUuid == null ? -System.currentTimeMillis() : cammentByUuid.getTimestamp();
-            cv.put(DataContract.Camment.timestamp, -System.currentTimeMillis());
+
+            cv.put(DataContract.Camment.timestamp, DateTimeUtils.getTimestampFromIsoDateString(camment.getTimestamp()));
 
             cv.put(DataContract.Camment.transferId, -1);
             cv.put(DataContract.Camment.recorded, 1);
@@ -158,6 +155,16 @@ public final class CammentProvider {
 
         int delete = cr.delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
         LogUtils.debug("deleteCammentByUuid", uuid + " - " + (delete > 0));
+    }
+
+    public static void deleteCammentsByGroupUuid(String groupUuid) {
+        ContentResolver cr = CammentSDK.getInstance().getApplicationContext().getContentResolver();
+
+        String where = DataContract.Camment.userGroupUuid + "=?";
+        String[] selectionArgs = {groupUuid};
+
+        int delete = cr.delete(DataContract.Camment.CONTENT_URI, where, selectionArgs);
+        LogUtils.debug("deleteCammentsByGroupUuid", groupUuid + " - " + (delete > 0));
     }
 
     public static void setCammentDeleted(String uuid) {
@@ -349,7 +356,7 @@ public final class CammentProvider {
         camment.setUserCognitoIdentityId(cursor.getString(cursor.getColumnIndex(DataContract.Camment.userCognitoIdentityId)));
         camment.setUserGroupUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.userGroupUuid)));
         camment.setShowUuid(cursor.getString(cursor.getColumnIndex(DataContract.Camment.showUuid)));
-        camment.setTimestamp(cursor.getLong(cursor.getColumnIndex(DataContract.Camment.timestamp)));
+        camment.setTimestampLong(cursor.getLong(cursor.getColumnIndex(DataContract.Camment.timestamp)));
         camment.setTransferId(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.transferId)));
         camment.setRecorded(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.recorded)) == 1);
         camment.setDeleted(cursor.getInt(cursor.getColumnIndex(DataContract.Camment.deleted)) == 1);
@@ -369,7 +376,7 @@ public final class CammentProvider {
                 CCamment camment;
                 do {
                     camment = fromCursor(cursor);
-                    camments.add(new ChatItem<>(ChatItem.ChatItemType.CAMMENT, camment.getUuid(), camment.getTimestamp(), camment));
+                    camments.add(new ChatItem<>(ChatItem.ChatItemType.CAMMENT, camment.getUuid(), camment.getTimestampLong(), camment));
                 } while (cursor.moveToNext());
             }
         }

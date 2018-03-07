@@ -35,7 +35,7 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
     CammentListOnScrollListener(LinearLayoutManager layoutManager, OnCammentLoadingMoreListener onCammentLoadingMoreListener) {
         this.layoutManager = layoutManager;
         this.onCammentLoadingMoreListener = onCammentLoadingMoreListener;
-        loadMoreItems(true);
+        loadMoreItems();
     }
 
     @Override
@@ -50,39 +50,48 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
             if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0
                     && totalItemCount >= SDKConfig.CAMMENT_PAGE_SIZE) {
-                loadMoreItems(false);
+                if (loadMoreItems()) {
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lastKey != null
+                                    && onCammentLoadingMoreListener != null) {
+                                onCammentLoadingMoreListener.onCammentLoadingMoreStarted();
+                            }
+                        }
+                    });
+                }
             }
         }
     }
 
-    void loadMoreItems(boolean dropTable) {
+    boolean loadMoreItems() {
         final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup == null
                 || TextUtils.isEmpty(usergroup.getUuid())) {
-            return;
+            return false;
         }
 
-        isLoading = true;
-
-        if (lastKey != null
-                && onCammentLoadingMoreListener != null) {
-            onCammentLoadingMoreListener.onCammentLoadingMoreStarted();
+        if (layoutManager != null
+                && layoutManager.getItemCount() > 0
+                && lastKey == null) {
+            return false;
         }
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments(lastKey, getUserGroupCammentsCallback(usergroup.getUuid(), dropTable));
+        LogUtils.debug("getUserGroupCamments", "GET for uuid " + usergroup.getUuid() + " lastKey " + lastKey);
+
+        isLoading = ApiManager.getInstance().getCammentApi().getUserGroupCamments(lastKey, getUserGroupCammentsCallback(usergroup.getUuid()));
+
+        return isLoading;
     }
 
-    private CammentCallback<CammentList> getUserGroupCammentsCallback(final String groupUuid, final boolean dropTable) {
+    private CammentCallback<CammentList> getUserGroupCammentsCallback(final String groupUuid) {
         return new CammentCallback<CammentList>() {
             @Override
             public void onSuccess(CammentList cammentList) {
                 LogUtils.debug("onSuccess1", "getUserGroupCamments " + cammentList.getLastKey());
-                ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode()); //TODO add hash for lastKey at least
-
-                if (dropTable) {
-                    CammentProvider.deleteCamments();
-                }
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode() + (lastKey == null ? 0 : lastKey.hashCode()));
 
                 if (onCammentLoadingMoreListener != null) {
                     onCammentLoadingMoreListener.onCammentLoadingMoreFinished();
@@ -108,7 +117,7 @@ final class CammentListOnScrollListener extends RecyclerView.OnScrollListener {
             @Override
             public void onException(Exception exception) {
                 Log.e("onException1", "getUserGroupCamments", exception);
-                ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode());
+                ApiCallManager.getInstance().removeCall(ApiCallType.GET_CAMMENTS, groupUuid.hashCode() + (lastKey == null ? 0 : lastKey.hashCode()));
 
                 if (onCammentLoadingMoreListener != null) {
                     onCammentLoadingMoreListener.onCammentLoadingMoreFinished();

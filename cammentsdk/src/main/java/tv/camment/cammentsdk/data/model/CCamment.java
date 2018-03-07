@@ -4,10 +4,12 @@ import android.text.TextUtils;
 
 import com.camment.clientsdk.model.Camment;
 
+import tv.camment.cammentsdk.utils.DateTimeUtils;
+
 
 public final class CCamment extends Camment {
 
-    private long timestamp;
+    private long timestampLong;
     private int transferId = -1;
     private boolean recorded;
     private boolean deleted;
@@ -27,7 +29,7 @@ public final class CCamment extends Camment {
         setThumbnail(camment.getThumbnail());
         setShowUuid(camment.getShowUuid());
         setUrl(camment.getUrl());
-        setTimestamp(System.currentTimeMillis());
+        setTimestampLong(DateTimeUtils.getTimestampFromIsoDateString(camment.getTimestamp()));
         setTransferId(-1);
         setRecorded(true);
         setDeleted(false);
@@ -59,12 +61,12 @@ public final class CCamment extends Camment {
         return c.getUuid().equals(getUuid());
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public long getTimestampLong() {
+        return timestampLong;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setTimestampLong(long timestampLong) {
+        this.timestampLong = timestampLong;
     }
 
     public int getTransferId() {

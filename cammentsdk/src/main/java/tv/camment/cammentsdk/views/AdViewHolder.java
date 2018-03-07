@@ -52,14 +52,14 @@ final class AdViewHolder extends RecyclerView.ViewHolder {
     private void handleOnItemClick() {
         if (actionListener != null
                 && adItem != null) {
-            actionListener.onAdClick(adItem);
+            //actionListener.onAdClick(adItem);
         }
     }
 
     private void handleOnCloseClick() {
         if (actionListener != null
                 && adItem != null) {
-            actionListener.onCloseAdClick(adItem);
+            //actionListener.onCloseAdClick(adItem);
         }
     }
 

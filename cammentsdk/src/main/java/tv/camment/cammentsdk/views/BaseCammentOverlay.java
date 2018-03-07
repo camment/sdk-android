@@ -140,11 +140,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == CAMMENT_LOADER) {
-            return CammentProvider.getCammentLoader();
-        } else {
-            return AdvertisementProvider.getAdvertisementLoader();
-        }
+        return CammentProvider.getCammentLoader();
     }
 
     @Override
@@ -173,9 +169,6 @@ abstract class BaseCammentOverlay extends RelativeLayout
                     }, 500);
                 }
             }
-        } else {
-            List<ChatItem<AdMessage>> ads = AdvertisementProvider.listFromCursor(data);
-            adapter.setAdsData(ads);
         }
     }
 
@@ -301,13 +294,13 @@ abstract class BaseCammentOverlay extends RelativeLayout
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_SUPER_STATE, super.onSaveInstanceState());
 
-        if (adDetailView != null
-                && adDetailView.getVisibility() == VISIBLE) {
-            ChatItem<AdMessage> adMessage = adDetailView.getData();
-            if (adMessage != null) {
-                bundle.putString(EXTRA_AD_UUID, adMessage.getUuid());
-            }
-        }
+//        if (adDetailView != null
+//                && adDetailView.getVisibility() == VISIBLE) {
+//            ChatItem<AdMessage> adMessage = adDetailView.getData();
+//            if (adMessage != null) {
+//                bundle.putString(EXTRA_AD_UUID, adMessage.getUuid());
+//            }
+//        }
 
         return bundle;
     }
@@ -318,14 +311,14 @@ abstract class BaseCammentOverlay extends RelativeLayout
             Bundle bundle = (Bundle) state;
             state = bundle.getParcelable(EXTRA_SUPER_STATE);
 
-            String adUuid = bundle.getString(EXTRA_AD_UUID);
-            if (!TextUtils.isEmpty(adUuid)) {
-                ChatItem<AdMessage> adByUuid = AdvertisementProvider.getAdByUuid(adUuid);
-                if (adByUuid != null
-                        && adByUuid.getContent() != null) {
-                    onAdClick(adByUuid);
-                }
-            }
+//            String adUuid = bundle.getString(EXTRA_AD_UUID);
+//            if (!TextUtils.isEmpty(adUuid)) {
+//                ChatItem<AdMessage> adByUuid = AdvertisementProvider.getAdByUuid(adUuid);
+//                if (adByUuid != null
+//                        && adByUuid.getContent() != null) {
+//                    onAdClick(adByUuid);
+//                }
+//            }
         }
         super.onRestoreInstanceState(state);
     }
@@ -346,7 +339,7 @@ abstract class BaseCammentOverlay extends RelativeLayout
 
         if (getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(CAMMENT_LOADER, null, this);
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(ADS_LOADER, null, this);
+            //((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(ADS_LOADER, null, this);
         }
 
         if (analytics != null) {
@@ -454,28 +447,28 @@ abstract class BaseCammentOverlay extends RelativeLayout
         }
     }
 
-    @Override
-    public void onAdClick(ChatItem<AdMessage> adMessage) {
-        if (adDetailView != null) {
-            adDetailView.setData(adMessage);
-        }
-    }
-
-    @Override
-    public void onCloseAdClick(ChatItem<AdMessage> chatItem) {
-        if (chatItem != null) {
-            AdvertisementProvider.deleteAdByUuid(chatItem.getUuid());
-        }
-
-        if (adDetailView != null) {
-            adDetailView.setVisibility(GONE);
-        }
-    }
+//    @Override
+//    public void onAdClick(ChatItem<AdMessage> adMessage) {
+//        if (adDetailView != null) {
+//            adDetailView.setData(adMessage);
+//        }
+//    }
+//
+//    @Override
+//    public void onCloseAdClick(ChatItem<AdMessage> chatItem) {
+//        if (chatItem != null) {
+//            AdvertisementProvider.deleteAdByUuid(chatItem.getUuid());
+//        }
+//
+//        if (adDetailView != null) {
+//            adDetailView.setVisibility(GONE);
+//        }
+//    }
 
     @Override
     public void onLoadMoreIfPossible() {
         if (cammentListOnScrollListener != null) {
-            cammentListOnScrollListener.loadMoreItems(false);
+            cammentListOnScrollListener.loadMoreItems();
         }
     }
 
@@ -757,8 +750,8 @@ abstract class BaseCammentOverlay extends RelativeLayout
         if (getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(CAMMENT_LOADER);
             ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(CAMMENT_LOADER, null, this);
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(ADS_LOADER);
-            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(ADS_LOADER, null, this);
+//            ((AppCompatActivity) getContext()).getSupportLoaderManager().destroyLoader(ADS_LOADER);
+//            ((AppCompatActivity) getContext()).getSupportLoaderManager().initLoader(ADS_LOADER, null, this);
         }
     }
 

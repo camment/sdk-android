@@ -118,7 +118,7 @@ abstract class BaseRecordingHandler extends CammentAsyncClient {
         camment.setShowUuid(showUuid);
         camment.setUrl(FileUtils.getInstance().getUploadCammentFile(camment.getUuid()).toString());
         camment.setRecorded(false);
-        camment.setTimestamp(System.currentTimeMillis());
+        camment.setTimestampLong(System.currentTimeMillis());
         camment.setUserCognitoIdentityId(IdentityPreferences.getInstance().getIdentityId());
         camment.setSeen(true);
 

@@ -173,7 +173,7 @@ public final class UserApi extends CammentAsyncClient {
         }
     }
 
-    private CammentCallback<UserinfoList>  checkUserAfterConnectionRestoredAndGetDataCallback(final String groupUuid) {
+    private CammentCallback<UserinfoList> checkUserAfterConnectionRestoredAndGetDataCallback(final String groupUuid) {
         return new CammentCallback<UserinfoList>() {
             @Override
             public void onSuccess(UserinfoList result) {
@@ -216,9 +216,10 @@ public final class UserApi extends CammentAsyncClient {
                                 }
                             }
                         });
-                    } else {
-                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
                     }
+//                    } else {
+//                        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+//                    }
                 }
             }
 

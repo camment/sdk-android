@@ -80,7 +80,7 @@ public final class GroupListFragment extends Fragment
 
         //CammentSDK.getInstance().connectToIoT();
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+        //ApiManager.getInstance().getCammentApi().getUserGroupCamments();
     }
 
     @Override

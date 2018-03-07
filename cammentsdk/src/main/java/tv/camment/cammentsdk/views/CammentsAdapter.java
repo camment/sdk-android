@@ -16,7 +16,6 @@ import java.util.Set;
 
 import tv.camment.cammentsdk.R;
 import tv.camment.cammentsdk.SDKConfig;
-import tv.camment.cammentsdk.aws.messages.AdMessage;
 import tv.camment.cammentsdk.data.model.CCamment;
 import tv.camment.cammentsdk.data.model.ChatItem;
 import tv.camment.cammentsdk.data.model.ChatItemComparator;
@@ -25,17 +24,13 @@ import tv.camment.cammentsdk.data.model.ChatItemComparator;
 final class CammentsAdapter extends RecyclerView.Adapter {
 
     private static final int CAMMENT = 0;
-    private static final int AD = 1;
-    private static final int LOADING = 2;
+    private static final int LOADING = 1;
 
     private static long hashCode;
 
     private final ActionListener actionListener;
 
-    private List<ChatItem> items;
-
     private List<ChatItem<CCamment>> camments;
-    private List<ChatItem<AdMessage>> ads;
     private boolean isLoading;
 
     CammentsAdapter(ActionListener actionListener) {
@@ -46,8 +41,6 @@ final class CammentsAdapter extends RecyclerView.Adapter {
     public void setData(List<ChatItem<CCamment>> camments) {
         if (camments == null) {
             this.camments = null;
-            this.ads = null;
-            this.items = null;
             notifyDataSetChanged();
             return;
         }
@@ -78,59 +71,22 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         this.camments.addAll(cammentSet);
         Collections.sort(this.camments, new ChatItemComparator());
 
-        //start allItems
-        items = new ArrayList<>();
-        items.addAll(this.camments);
-        if (ads != null) {
-            items.addAll(ads);
-        }
-        Collections.sort(this.items, new ChatItemComparator());
-        //end allItems
-
         notifyDataSetChanged();
     }
-
-    void setAdsData(List<ChatItem<AdMessage>> adsList) {
-        if (adsList == null || adsList.size() == 0) {
-            this.ads = new ArrayList<>();
-            items = new ArrayList<>();
-            if (camments != null) {
-                items.addAll(this.camments);
-            }
-            notifyDataSetChanged();
-            return;
-        }
-
-        Set<ChatItem<AdMessage>> adSet = new HashSet<>();
-        adSet.addAll(adsList);
-
-        this.ads = new ArrayList<>();
-
-        this.ads.addAll(adSet);
-        Collections.sort(this.ads, new ChatItemComparator());
-
-        //start allItems
-        items = new ArrayList<>();
-        items.addAll(this.ads);
-        if (camments != null) {
-            items.addAll(camments);
-        }
-        Collections.sort(this.items, new ChatItemComparator());
-        //end allItems
-
-        notifyDataSetChanged();
-    }
-
 
     void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
-        notifyDataSetChanged();
+        if (isLoading) {
+            notifyItemInserted(getItemCount());
+        } else {
+            notifyItemRemoved(getItemCount());
+        }
     }
 
     @Override
     public long getItemId(int position) {
-        if (items != null && position < items.size()) {
-            return items.get(position).getUuid().hashCode();
+        if (camments != null && position < camments.size()) {
+            return camments.get(position).getUuid().hashCode();
         } else {
             return 1111L;
         }
@@ -138,14 +94,8 @@ final class CammentsAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (items != null && position < items.size()) {
-            switch (items.get(position).getType()) {
-                case AD:
-                    return AD;
-                case CAMMENT:
-                default:
-                    return CAMMENT;
-            }
+        if (camments != null && position < camments.size()) {
+            return CAMMENT;
         } else {
             return LOADING;
         }
@@ -156,9 +106,6 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView;
         switch (viewType) {
-            case AD:
-                itemView = inflater.inflate(R.layout.cmmsdk_ad_item, parent, false);
-                return new AdViewHolder(itemView, actionListener);
             case LOADING:
                 itemView = inflater.inflate(R.layout.cmmsdk_loading_item, parent, false);
                 return new LoadingViewHolder(itemView);
@@ -173,17 +120,14 @@ final class CammentsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case CAMMENT:
-                ((CammentViewHolder) holder).bindData((CCamment) items.get(position).getContent());
-                break;
-            case AD:
-                ((AdViewHolder) holder).bindData(items.get(position));
+                ((CammentViewHolder) holder).bindData(camments.get(position).getContent());
                 break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return (items != null ? items.size() : 0) + (isLoading ? 1 : 0);
+        return (camments != null ? camments.size() : 0) + (isLoading ? 1 : 0);
     }
 
     interface ActionListener {
@@ -193,10 +137,6 @@ final class CammentsAdapter extends RecyclerView.Adapter {
         void onCammentBottomSheetDisplayed();
 
         void stopCammentIfPlaying(Camment camment);
-
-        void onAdClick(ChatItem<AdMessage> adMessage);
-
-        void onCloseAdClick(ChatItem<AdMessage> chatItem);
 
         void onLoadMoreIfPossible();
 

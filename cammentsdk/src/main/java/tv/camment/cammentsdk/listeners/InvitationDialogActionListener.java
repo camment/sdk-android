@@ -34,7 +34,7 @@ public final class InvitationDialogActionListener implements CammentDialog.Actio
 
         EventBus.getDefault().post(new UserGroupChangeEvent());
 
-        ApiManager.getInstance().getCammentApi().getUserGroupCamments();
+        //ApiManager.getInstance().getCammentApi().getUserGroupCamments();
 
         ApiManager.getInstance().getInvitationApi().sendInvitationForDeeplink(invitationMessage.body.groupUuid, invitationMessage.body.showUuid);
 

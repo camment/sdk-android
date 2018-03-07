@@ -105,15 +105,17 @@ public final class CammentApi extends CammentAsyncClient {
         };
     }
 
-    public void getUserGroupCamments(final String lastKey, CammentCallback<CammentList> userGroupCammentsCallback) {
+    public boolean getUserGroupCamments(final String lastKey, CammentCallback<CammentList> userGroupCammentsCallback) {
+        boolean canCall = false;
+
         final Usergroup usergroup = UserGroupProvider.getActiveUserGroup();
 
         if (usergroup == null
                 || TextUtils.isEmpty(usergroup.getUuid())) {
-            return;
+            return canCall;
         }
 
-        if (ApiCallManager.getInstance().canCall(ApiCallType.GET_CAMMENTS, usergroup.getUuid().hashCode())) {
+        if (canCall = ApiCallManager.getInstance().canCall(ApiCallType.GET_CAMMENTS, usergroup.getUuid().hashCode() + (lastKey == null ? 0 : lastKey.hashCode()))) {
             submitTask(new Callable<CammentList>() {
                 @Override
                 public CammentList call() throws Exception {
@@ -121,6 +123,8 @@ public final class CammentApi extends CammentAsyncClient {
                 }
             }, userGroupCammentsCallback);
         }
+
+        return canCall;
     }
 
     public void deleteUserGroupCamment(final Camment camment) {

@@ -21,12 +21,13 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:layout_marginTop="2dp"
+            android:rotation="90"
             android:textSize="8dp"
             android:text="@string/cmmsdk_ad"/>
 
     </LinearLayout>
 
-    <tv.camment.cammentsdk.views.SquareFrameLayout
+    <FrameLayout
         android:id="@+id/cmmsdk_sfl_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,18 +46,8 @@
             android:id="@+id/cmmsdk_v_border"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/cmmsdk_rounded_inside_corners" />
+            android:background="@drawable/cmmsdk_rounded_inside_corners_white" />
 
-    </tv.camment.cammentsdk.views.SquareFrameLayout>
-
-    <ImageButton
-        android:id="@+id/cmmsdk_ib_close"
-        android:layout_width="24dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="0dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:src="@drawable/cmmsdk_cancel" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -16,24 +16,6 @@
             android:layout_height="wrap_content"
             android:scaleType="fitStart" />
 
-        <TextView
-            android:id="@+id/cmmsdk_btn_learn_more"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@+id/cmmsdk_iv_ad"
-            android:layout_centerHorizontal="true"
-            android:background="@color/cmmsdk_camment_reddish"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"
-            android:text="@string/cmmsdk_ad_click_more"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="10dp"
-            android:textStyle="bold" />
-
     </RelativeLayout>
 
     <ImageButton

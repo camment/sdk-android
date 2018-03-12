@@ -1,88 +1,85 @@
 <resources>
-    <string name="cmmsdk_permission">Para usar Camment necesitas facilitar el acceso a grabar vídeo y grabar audio</string>
 
-    <string name="cmmsdk_anonymous_invited_to_chat">El usuario te invitó a un chat privado</string>
-    <string name="cmmsdk_join_conversation">¿Te gustaría unirte a la conversación?</string>
+    <string name="cmmsdk_permission">Para usar Camment necesitas permitir grabar vídeo y audio</string>
+
+    <string name="cmmsdk_anonymous_invited_to_chat">Tu amigo te invitó a un grupo privado</string>
+    <string name="cmmsdk_join_conversation">¿Te gustaría unirte al grupo?</string>
 
     <string name="cmmsdk_join">Unirse</string>
     <string name="cmmsdk_no">No</string>
-    <string name="cmmsdk_yes">Si</string>
+    <string name="cmmsdk_yes">Sí</string>
     <string name="cmmsdk_ok">OK</string>
     <string name="cmmsdk_cancel">Cancelar</string>
-    <string name="cmmsdk_done">Hecho</string>
-    <string name="cmmsdk_login">Ingresar</string>
+    <string name="cmmsdk_login">Iniciar Sesión</string>
 
-    <string name="cmmsdk_help_tap_and_hold_to_record">Toca y mantén la presión para grabar un Video (Camment)</string>
-    <string name="cmmsdk_help_swipe_left_to_hide_camments">Desliza los camments hacia ← la izquierda para ocultarlos</string>
-    <string name="cmmsdk_help_swipe_right_to_show_camments">Desliza los camments hacia → la derecha para que vuelvan a aparecer</string>
-    <string name="cmmsdk_help_tap_to_play">Bien hecho! Ahora presiona sobre el Camment para poder escucharlo</string>
-    <string name="cmmsdk_help_sidebar_to_invite">Desplaza la barra lateral hacia la → derecha para invitar a tus amigos a unirse a este grupo</string>
-    <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén presionado tu Camment para eliminarlo</string>
-    <string name="cmmsdk_help_start_making_video_camments">Empieza a grabar tus Camments\nhaciendo click aquí</string>
-    <string name="cmmsdk_help_skip_tutorial">Saltarse el tutorial</string>
-    <string name="cmmsdk_help_continue_tutorial">Continúa con tu tutorial más tarde desde la barra lateral</string>
+    <string name="cmmsdk_help_tap_and_hold_to_record">Toca y mantén pulsado para grabar un mini vídeo (Camment)</string>
+    <string name="cmmsdk_help_swipe_left_to_hide_camments">Desliza ← a la izquierda para ocultar los Camments</string>
+    <string name="cmmsdk_help_swipe_right_to_show_camments">Desliza → a la derecha para que aparezcan los Camments</string>
+    <string name="cmmsdk_help_tap_to_play">¡Bien Hecho! Ahora toca el Camment para poder verlo</string>
+    <string name="cmmsdk_help_sidebar_to_invite">Desplaza la barra lateral hacia la → derecha\npara invitar a tus amigos a unirse a este grupo</string>
+    <string name="cmmsdk_help_tap_and_hold_to_delete">Toca y mantén pulsado tu Camment para eliminarlo</string>
+    <string name="cmmsdk_help_start_making_video_camments">Comienza a realizar video camments\npulsando aquí después</string>
+    <string name="cmmsdk_help_skip_tutorial">Salta el tutorial</string>
+    <string name="cmmsdk_help_continue_tutorial">Continua el tutorial más tarde desde la barra lateral</string>
 
-    <string name="cmmsdk_continue_tutorial">Continúa con tu tutorial</string>
+    <string name="cmmsdk_continue_tutorial">Continúa con el tutorial</string>
 
-    <string name="cmmsdk_setup_use_camment_chat">¿Te gustaría chatear a través de videos con amigos mientras miras este programa?</string>
-    <string name="cmmsdk_setup_what_is_camment">Es como si enviaras un SMS pero enviando videos de 5 segundos (Camments) que aparecerán en una ventana en la parte superior de la pantalla, a la vez que ves este programa</string>
+    <string name="cmmsdk_setup_use_camment_chat">¿Te gustaría chatear a través de videos con tus amigos mientras ves este programa?</string>
+    <string name="cmmsdk_setup_what_is_camment">Es como si enviaras un SMS a tu grupo de amigos pero enviando vídeos de 5 segundos (Camments) que aparecerán en la parte superior de la pantalla, mientras ves este programa</string>
     <string name="cmmsdk_setup_sounds_fun">Suena divertido</string>
     <string name="cmmsdk_setup_maybe_later">Quizás más tarde</string>
 
     <string name="cmmsdk_camment_actions_title">Selecciona una opción</string>
-    <string name="cmmsdk_camment_actions_delete_camment">Eliminar tu Camment</string>
+    <string name="cmmsdk_camment_actions_delete_camment">Eliminar Camment</string>
 
-    <string name="cmmsdk_passcode_error">No se encontró ninguna emisión.\nPor favor: revisa tu código de acceso</string>
+    <string name="cmmsdk_passcode_error">No se encontró ninguna retransmisión.\nPor favor, comprueba tu clave de acceso.</string>
 
-    <string name="cmmsdk_joined_private_chat">¡Te has unido al chat privado!</string>
+    <string name="cmmsdk_joined_private_chat">¡Te has unido al Grupo Privado!</string>
 
-    <string name="cmmsdk_invitation_link_title">Enviar el enlace de invitación</string>
-    <string name="cmmsdk_invitation_link_desc">Invita a tus amigos compartiendo este enlace de invitación a través del canal que prefieras</string>
+    <string name="cmmsdk_invitation_link_title">Enviar invitación</string>
+    <string name="cmmsdk_invitation_link_desc">Invita a tus amigos compartiendo este enlace de invitación a través de la app que prefieras</string>
 
-    <string name="cmmsdk_invitation_sharing_options">Elige el canal que quieres utilizar compartir la invitación</string>
+    <string name="cmmsdk_invitation_sharing_options">Elige como quieres compartir</string>
 
-    <string name="cmmsdk_drawer_invite_friends">Para invitar a tus amigos</string>
-    <string name="cmmsdk_drawer_invite_friends_msg">Invita a tus amigos a chatear contigo vía video comentarios que aparecera´n en la parte superior de tu transmisión.</string>
-    <string name="cmmsdk_drawer_learn_more">Para aprender más</string>
+    <string name="cmmsdk_drawer_invite_friends">Invitar amigos</string>
+    <string name="cmmsdk_drawer_invite_friends_msg">Invita a tus amigos a chatear contigo vía video comentarios que aparecerán en la parte superior de tu transmisión.</string>
+    <string name="cmmsdk_drawer_learn_more">Aprende más</string>
     <string name="cmmsdk_drawer_logout_fb">Cerrar sesión</string>
-    <string name="cmmsdk_drawer_logout_fb_msg">Si sale de su cuenta de Facebook, eliminará de la discusión actual.</string>
-    <string name="cmmsdk_drawer_people_in_chat">Otras personas se unieron a su chat Camment</string>
-    <string name="cmmsdk_drawer_chat_groups">%d grupos a los que te has unido</string>
-    <string name="cmmsdk_drawer_no_chat_groups">No se han encontrado ningún grupo</string>
+    <string name="cmmsdk_drawer_logout_fb_msg">Si sale de su cuenta de Facebook se te eliminará de este grupo.</string>
+    <string name="cmmsdk_drawer_people_in_chat">Otras personas se unieron a tu Grupo de Camment</string>
 
-    <string name="cmmsdk_invitation_default_msg">¡Hola, únete a nuestra conversación privada!</string>
+    <string name="cmmsdk_invitation_default_msg">¡Hola, únete a nuestro chat privado!</string>
 
     <string name="cmmsdk_login_fb_title">No has iniciado sesión</string>
-    <string name="cmmsdk_login_fb_msg">Quieres iniciar la sesión con tu cuenta de Facebook?</string>
+    <string name="cmmsdk_login_fb_msg">¿Quieres iniciar la sesión con tu cuenta de Facebook?</string>
 
     <string name="cmmsdk_user_left_group">%s ha abandonado el grupo</string>
 
     <string name="cmmsdk_somebody">Alguien</string>
     <string name="cmmsdk_user">Usuario</string>
 
-    <string name="cmmsdk_leave_confirmation_title">Abandona el grupo</string>
-    <string name="cmmsdk_leave_confirmation_msg">¿De verdad quieres dejar el grupo actual?</string>
+    <string name="cmmsdk_leave_confirmation_title">Salir del grupo</string>
+    <string name="cmmsdk_leave_confirmation_msg">¿De verdad quieres abandonar este grupo?</string>
 
-    <string name="cmmsdk_block_confirmation_title">Bloquear al usuario</string>
-    <string name="cmmsdk_block_confirmation_msg">¿Realmente quieres bloquear %s del grupo?</string>
+    <string name="cmmsdk_block_confirmation_title">Bloquear usuario</string>
+    <string name="cmmsdk_block_confirmation_msg">¿Realmente quieres bloquear a %s del grupo?</string>
 
-    <string name="cmmsdk_unblock_confirmation_title">UDesbloquear usuario</string>
-    <string name="cmmsdk_unblock_confirmation_msg">¿Realmente quieres desbloquear %s del grupo?</string>
+    <string name="cmmsdk_unblock_confirmation_title">Desbloquear usuario </string>
+    <string name="cmmsdk_unblock_confirmation_msg">¿Realmente quieres desbloquear a %s del grupo?</string>
 
     <string name="cmmsdk_blocked_from_group_title">Has sido bloqueado</string>
-    <string name="cmmsdk_blocked_from_group_msg">El administrador del grupo te ha bloqueado de este grupo</string>
+    <string name="cmmsdk_blocked_from_group_msg">El administrador te ha bloqueado de este grupo</string>
 
     <string name="cmmsdk_user_blocked">%s ha sido bloqueado</string>
     <string name="cmmsdk_user_unblocked">%s ha sido desbloqueado</string>
 
     <string name="cmmsdk_user_has_joined_title">%s se ha unido</string>
-    <string name="cmmsdk_user_has_joined_msg">Tus amigos se están uniendo a la conversación. Siempre puedes deslizar hacia la → derecha para ver quién más está activo en el grupo y bloquear a las personas no deseadas.</string>
+    <string name="cmmsdk_user_has_joined_msg">Tus amigos se están uniendo al grupo. Siempre puedes deslizar hacia la → derecha para ver quién más está activo en el grupo y bloquear a las personas no deseadas.</string>
 
     <string name="cmmsdk_ad">AD</string>
-    <string name="cmmsdk_ad_click_more">Haz click para saber y/o aprender mas</string>
 
-    <string name="cmmsdk_leave_group">Abandona el grupo</string>
+    <string name="cmmsdk_leave_group">Dejar el grupo</string>
 
-    <string name="cmmsdk_video_codec_issue">No se puede grabar un Camment debido a las limitaciones de tú dispositivo.</string>
+    <string name="cmmsdk_video_codec_issue">No se puede grabar un Camment debido a las limitaciones de tu dispositivo.</string>
 
 </resources>

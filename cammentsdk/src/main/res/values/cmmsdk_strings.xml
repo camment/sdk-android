@@ -14,7 +14,6 @@
     <string name="cmmsdk_yes">Yes</string>
     <string name="cmmsdk_ok">OK</string>
     <string name="cmmsdk_cancel">Cancel</string>
-    <string name="cmmsdk_done">Done</string>
     <string name="cmmsdk_login">Login</string>
 
     <string name="cmmsdk_help_tap_and_hold_to_record">Tap &amp; hold to record a mini video (camment)</string>
@@ -52,8 +51,6 @@
     <string name="cmmsdk_drawer_logout_fb">Log out</string>
     <string name="cmmsdk_drawer_logout_fb_msg">Logout from Facebook will remove you from the current group.</string>
     <string name="cmmsdk_drawer_people_in_chat">People joined to your Camment group</string>
-    <string name="cmmsdk_drawer_chat_groups">%d groups joined</string>
-    <string name="cmmsdk_drawer_no_chat_groups">No groups found</string>
 
     <string name="cmmsdk_invitation_default_msg">Hey, join our private chat!</string>
 
@@ -81,10 +78,9 @@
     <string name="cmmsdk_user_unblocked">%s has been unblocked</string>
 
     <string name="cmmsdk_user_has_joined_title">%s has joined</string>
-    <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the group. You can always swipe → right to see who else is in the group and remove unwanted people</string>
+    <string name="cmmsdk_user_has_joined_msg">Now your friends are joining the group. You can always swipe → right to see who else is in the group and block unwanted people</string>
 
     <string name="cmmsdk_ad">AD</string>
-    <string name="cmmsdk_ad_click_more">Click to learn more</string>
 
     <string name="cmmsdk_leave_group">Leave group</string>
 

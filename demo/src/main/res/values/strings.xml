@@ -21,14 +21,14 @@
     <string name="log_in">Log In</string>
     <string name="log_out">Log Out</string>
 
-    <string name="settings">Settings</string>
-    <string name="camment_settings">Camment Settings</string>
+    <string name="settings" translatable="false">Settings</string>
+    <string name="camment_settings" translatable="false">Camment Settings</string>
 
-    <string name="adjust_camment_volume">Adjust camment volume</string>
+    <string name="adjust_camment_volume" translatable="false">Adjust camment volume</string>
     <string name="key_adjust_camment_volume" translatable="false">key_adjust_camment_volume</string>
-    <string name="full_adjustment">Full</string>
-    <string name="mild_adjustment">Mild</string>
-    <string name="no_adjustment">No</string>
+    <string name="full_adjustment" translatable="false">Full</string>
+    <string name="mild_adjustment" translatable="false">Mild</string>
+    <string name="no_adjustment" translatable="false">No</string>
 
     <string name="key_release_version" translatable="false">key_release_version</string>
     <string name="title_release_version" translatable="false">Release version</string>

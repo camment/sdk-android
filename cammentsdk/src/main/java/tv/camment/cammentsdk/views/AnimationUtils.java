@@ -18,7 +18,7 @@ final class AnimationUtils {
 
         animator = ValueAnimator.ofFloat(0.0f, 1.0f);
 
-        animator.setDuration(150);
+        animator.setDuration(250);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -45,7 +45,7 @@ final class AnimationUtils {
         flCamera.setPivotY(0);
 
         ValueAnimator animator = ValueAnimator.ofFloat(1.0f, 0.0f);
-        animator.setDuration(150);
+        animator.setDuration(250);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {

@@ -105,7 +105,7 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                 }
-                mqttManager.subscribeToTopic(AWSConfig.IOT_TOPIC, AWSIotMqttQos.QOS1, getAWSIotMqttNewMessageCallback());
+                //mqttManager.subscribeToTopic(AWSConfig.IOT_TOPIC, AWSIotMqttQos.QOS1, getAWSIotMqttNewMessageCallback());
 
                 mqttManager.subscribeToTopic(AWSConfig.IOT_USER_TOPIC + IdentityPreferences.getInstance().getIdentityId(), AWSIotMqttQos.QOS1, getAWSIotMqttNewMessageCallback());
 
@@ -418,9 +418,14 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
         camment.setThumbnail(message.body.thumbnail);
         camment.setUrl(message.body.url);
         camment.setUserCognitoIdentityId(message.body.userCognitoIdentityId);
-        camment.setTimestampLong(System.currentTimeMillis());
         camment.setRecorded(true);
         camment.setTransferId(-1);
+
+        if (cammentByUuid != null) {
+            camment.setTimestampLong(cammentByUuid.getTimestampLong());
+        } else {
+            camment.setTimestampLong(System.currentTimeMillis());
+        }
 
         AWSManager.getInstance().getS3UploadHelper().preCacheFile(camment, true);
 

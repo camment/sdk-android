@@ -83,7 +83,7 @@ abstract class BaseTooltipView extends RelativeLayout {
             position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.right;
             position_y = anchor_rect.top - contentViewHeight - CommonUtils.dpToPx(getContext(), 8);
         } else if (orientation == Orientation.TOP) {
-            position_x = anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);
+            position_x = (anchor_rect.right - anchor_rect.left) / 4;
             position_y = anchor_rect.bottom + CommonUtils.dpToPx(getContext(), 8);
         } else if (orientation == Orientation.RIGHT) {
             position_x = CommonUtils.getScreenWidth(getContext()) - anchor_rect.left + CommonUtils.dpToPx(getContext(), 8);

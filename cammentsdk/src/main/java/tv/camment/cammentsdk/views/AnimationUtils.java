@@ -18,7 +18,7 @@ final class AnimationUtils {
 
         animator = ValueAnimator.ofFloat(0.0f, 1.0f);
 
-        animator.setDuration(250);
+        animator.setDuration(150);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {

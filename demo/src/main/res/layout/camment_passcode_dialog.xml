@@ -34,37 +34,43 @@
         android:textColorHint="@color/cmmsdk_camment_button_grey"
         android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btn_negative"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_passcode"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/btn_positive"
-        android:background="@drawable/cmmsdk_button_ripple"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:padding="16dp"
-        android:text="@string/cmmsdk_cancel"
-        android:textAllCaps="false"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="16sp" />
+        android:gravity="end"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_positive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/et_passcode"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/cmmsdk_button_ripple"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:padding="16dp"
-        android:text="@string/cmmsdk_ok"
-        android:textAllCaps="false"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        <Button
+            android:id="@+id/btn_negative"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/cmmsdk_button_ripple"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:padding="16dp"
+            android:text="@string/cmmsdk_cancel"
+            android:textAllCaps="false"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_positive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/cmmsdk_button_ripple"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:padding="16dp"
+            android:text="@string/cmmsdk_ok"
+            android:textAllCaps="false"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -40,6 +40,7 @@ import tv.camment.cammentsdk.helpers.AuthHelper;
 import tv.camment.cammentsdk.helpers.GeneralPreferences;
 import tv.camment.cammentsdk.helpers.MixpanelHelper;
 import tv.camment.cammentsdk.helpers.PermissionHelper;
+import tv.camment.cammentsdk.utils.CommonUtils;
 import tv.camment.cammentsdk.utils.LogUtils;
 
 abstract class BaseCammentSDK extends CammentLifecycle
@@ -83,6 +84,8 @@ abstract class BaseCammentSDK extends CammentLifecycle
             if (TextUtils.isEmpty(getApiKey())) {
                 throw new IllegalArgumentException("Missing CammentSDK API key");
             }
+
+            CommonUtils.setViewSizes(getApplicationContext());
 
             AWSManager.getInstance().checkKeyStore();
 

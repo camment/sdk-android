@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import tv.camment.cammentsdk.CammentSDK;
 import tv.camment.cammentsdk.SDKConfig;
+import tv.camment.cammentsdk.utils.CommonUtils;
 
 public final class SquareFrameLayout extends FrameLayout {
 
@@ -16,7 +18,9 @@ public final class SquareFrameLayout extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int size = (int) (MeasureSpec.getSize(widthMeasureSpec) * customScale);
+        int size = (int) (CommonUtils.dpToPx(CammentSDK.getInstance().getApplicationContext(), SDKConfig.CAMMENT_BIG_DP) * customScale);
+        //int size = (int) (SDKConfig.CAMMENT_BIG_DP * customScale);
+
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

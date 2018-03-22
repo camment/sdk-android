@@ -352,12 +352,24 @@ abstract class BaseCammentOverlay extends RelativeLayout
     @Override
     protected void onFinishInflate() {
         flCamera = (SquareFrameLayout) findViewById(R.id.cmmsdk_fl_camera);
+
         vRecordIndicator = findViewById(R.id.cmmsdk_v_record_indicator);
+        vRecordIndicator.getLayoutParams().width = CommonUtils.dpToPx(getContext(), SDKConfig.RECORD_INDICATOR_DP);
+        vRecordIndicator.getLayoutParams().height = CommonUtils.dpToPx(getContext(), SDKConfig.RECORD_INDICATOR_DP);
 
         rvCamments = (CammentRecyclerView) findViewById(R.id.cmmsdk_rv_camments);
+
+        int recordMargin = CommonUtils.dpToPx(getContext(), (int)((SDKConfig.RECORD_NORMAL_DP * 1.5 - SDKConfig.RECORD_NORMAL_DP) / 2));
+
         ibRecord = (RecordingButton) findViewById(R.id.cmmsdk_ib_record);
+        ibRecord.getLayoutParams().width = CommonUtils.dpToPx(getContext(), SDKConfig.RECORD_NORMAL_DP);
+        ibRecord.getLayoutParams().height = CommonUtils.dpToPx(getContext(), SDKConfig.RECORD_NORMAL_DP);
+        ((MarginLayoutParams) ibRecord.getLayoutParams()).setMargins(0, 0, recordMargin, recordMargin);
 
         pullableView = (PullableView) findViewById(R.id.cmmsdk_pullable_view);
+        pullableView.getLayoutParams().width = CommonUtils.dpToPx(getContext(), SDKConfig.RECORD_NORMAL_DP);
+        pullableView.getLayoutParams().height = CommonUtils.dpToPx(getContext(), SDKConfig.RECORD_NORMAL_DP);
+        ((MarginLayoutParams) pullableView.getLayoutParams()).setMargins(0, 0, recordMargin, recordMargin);
         pullableView.addBoundView(new BoundView(ibRecord, Collections.<Transformation>singletonList(new TranslateTransformation())));
         pullableView.setListener(this);
 

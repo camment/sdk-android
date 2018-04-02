@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.util.Log;
 
 import tv.camment.cammentsdk.api.ApiManager;
+import tv.camment.cammentsdk.aws.AWSManager;
 import tv.camment.cammentsdk.utils.NetworkUtils;
 
 
@@ -17,9 +17,9 @@ public final class NetworkChangeReceiver extends BroadcastReceiver {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
             boolean isConnected = NetworkUtils.getInstance().isInternetConnectionAvailable(context);
 
-            Log.d("INTERNET", "SDK " + isConnected);
-
             if (isConnected) {
+                AWSManager.getInstance().getIoTHelper().connect();
+
                 ApiManager.getInstance().getUserApi().checkUserAfterConnectionRestoredAndGetData();
             }
         }

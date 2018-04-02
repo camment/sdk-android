@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.lang.reflect.Field;
 import java.security.KeyStore;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -61,13 +62,27 @@ abstract class BaseIoTHelper extends CammentAsyncClient {
     }
 
     void connect() {
+        if (mqttManager != null) {
+            try {
+                Field field = mqttManager.getClass().getDeclaredField("connectionState");
+                field.setAccessible(true);
+                Enum enumObj = (Enum) field.get(mqttManager);
+                int value = enumObj.ordinal();
+                if (value == 0 || value == 1) { //0 - connecting, 1 - connected
+                    return;
+                }
+            } catch (Exception e) {
+                LogUtils.debug("IOT", "connectionState", e);
+            }
+        }
+
         submitBgTask(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 if (mqttManager == null) {
                     mqttManager = AWSManager.getInstance().getAWSIotMqttManager();
                     mqttManager.setMaxAutoReconnectAttepts(20);
-                    mqttManager.setReconnectRetryLimits(4, 16);
+                    mqttManager.setReconnectRetryLimits(4, 8);
                 }
 
                 mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {

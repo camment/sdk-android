@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 2.1.4**
+**current version: 2.1.5**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
@@ -24,7 +24,7 @@ supportLibVersion "26.0.2"
 CammentSDK relies on following dependencies: 
 - Amazon AWS SDK (v2.6.13)
 - Facebook SDK (v4.25.0) (part of CammentAuth)
-- Google Exoplayer (v2.5.4)
+- Google Exoplayer (v2.7.3)
 - Glide library (v4.3.0)
 - EasyPermissions library (v0.4.2)
 - Greenrobot EventBus (v3.0.0)
@@ -61,7 +61,7 @@ allprojects {
     repositories {
         ... // your other repositories
         maven {
-            url 'https://raw.githubusercontent.com/camment/sdk-android/master/sdk/'
+            url 'https://raw.githubusercontent.com/camment/sdk-android/rtve/sdk/'
         }
     }
 }
@@ -78,63 +78,28 @@ dependencies {
     }
 }
 ```
+*Note*: ```<sdk_version>``` is currently **2.1.5**
 *Note*: ```transitive true``` means that gradle will download also the SDK dependencies
 
 Now **sync the project with your gradle files** and **clean the project**. 
 
 ## CammentAuth - Facebook SDK
-CammentSDK requires authentication via **Facebook SDK**. Currently it is the only option but it's planned to support more options in the future.
-> If you don't have Facebook SDK set up in your project, you can find instructions how to create and setup Facebook Application here:
-https://developers.facebook.com/docs/android/getting-started/
+CammentSDK requires authentication via **Facebook SDK**. CammentSDK provides the functionality for you with our Facebook App Id.
+Nevertheless you have to provide us **development and release key hashes**. How to retrieve them is described in official FB documentation in sections: “Running Sample Apps”, “Create a Development Key Hash”, “Setting a Release Key Hash” (https://developers.facebook.com/docs/android/getting-started#samples, https://developers.facebook.com/docs/android/getting-started#create_hash)
 
-Don't forget to add following into the ```AndroidManifest.xml``` (more into at https://developers.facebook.com/docs/facebook-login/android):
-```xml
-<application ...>
-    ...
-    <meta-data
-        android:name="com.facebook.sdk.ApplicationId"
-        android:value="@string/facebook_app_id" />
-    
-    <activity
-        android:name="com.facebook.FacebookActivity"
-        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-        android:label="@string/app_name" />
-        
-    <activity
-        android:name="com.facebook.CustomTabActivity"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="@string/fb_login_protocol_scheme" /> 
-        </intent-filter>
-    </activity>
-    ...
-</application>
-```
-## CammentAuthIdentityProvider
-Generally, CammentSDK handles own login/logout (if not logged in, login is called by trying to invite somebody; logout can be called from the side-panel). 
+## Pass onActivityResult to CammentSDK
+CammentSDK handles Facebook Login. In order to complete the flow correctly, pass results of ```onActivityResult``` to CammentSDK. 
 
-If you have already Facebook login/logout functionality on some of your existing activities, call ```void notifyLogoutSuccessful()``` explicitly to notify CammentSDK. This way CammentSDK can cleanup data and refresh its UI properly.
+```onActivityResult``` should be overridden in **ALL activities (use your BaseActivity or similar parent activity)** where CammentSDK is used as Facebook Login may be performed e.g. when invitation request is received and there has to be an activity ready to receive onActivityResult from Facebook SDK. To avoid mistakes, pass it to CammentSDK from all your activities.
 ```java
-CammentSDK.getInstance().getAppAuthIdentityProvider().notifyLogoutSuccessful(); // call when Facebook logout was successful
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    ...
+    CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
+}
 ```
 
-If you want to be notified about Facebook login/logout performed by CammentSDK, register listener ```CammentAuthListener```:
-```java
-CammentSDK.getInstance().getAppAuthIdentityProvider().addCammentAuthListener(new CammentAuthListener() {
-    @Override
-    public void onLoggedIn(CammentAuthInfo cammentAuthInfo) {
-        // perform your code after login
-    }
-
-    @Override
-    public void onLoggedOut() {
-        // perform your code after logout
-    }
-});
-```
 ## Initialize CammentSDK
 Open your application class extending ```Application``` and add following into the ```onCreate()``` method:
 ```java
@@ -153,6 +118,7 @@ public class YourApp extends Application {
         android:name=".YourApp"
         ...>
 ```
+
 ## Modify AndroidManifest.xml
 Open your application ```AndroidManifest.xml``` and add:
 1. specify your API key (security of the API key you have to handle by yourself):
@@ -189,7 +155,8 @@ android {
     }
 }
 ```
-## Camment audio recording volume
+
+## (OPTIONAL) Camment audio recording volume
 As Android decreases volume of recorded video in order to compensate sound of microphone membrane, you may notice that the camments recorded on Android device are significantly more quiet than the camments recorded on iOS device.
 You can decide whether you want to artificially increase camment sound recording or not. Test by yourself which setting is the best for you as by increasing the recording sound it may result in the increased volume of other sounds too, e.g. microphone membrane.
 To do so use method ```setCammentAudioVolumeAdjustment(CammentAudioVolume cammentAudioVolume)```.
@@ -206,7 +173,7 @@ public class YourApp extends Application {
     }
 }
 ```
-Camment audio volume adjustment levels are (default value is ```FULL_ADJUSTMENT```):
+Camment audio volume adjustment levels are (**default value is ```NO_ADJUSTMENT```**):
 ```java
 public enum CammentAudioVolume {
 
@@ -216,118 +183,9 @@ public enum CammentAudioVolume {
 
 }
 ```
-## Add CammentSDK overlay on top of your video player
-CammentSDK overlay should be included in the activity which shows video streaming.
-```xml
-<tv.camment.cammentsdk.views.CammentOverlay
-        android:id="@+id/camment_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-```
-CammentSDK overlay should be on top of every other view in the layout (usually defined as last in the layout). 
-Example of layout:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black"
-    tools:context="tv.camment.cammentdemo.CammentMainActivity">
+## Opening Activity with list of karaoke videos
+Call ```EurovisionShowsActivity.start(Context context)``` to open activity from your code. Opening of the player (```EurovisionPlayerActivity```) and karaoke functionality is handled by CammentSDK so you're not required to do any further actions.
 
-    <FrameLayout
-        android:id="@+id/fl_parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <VideoView
-            android:id="@+id/show_player"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/cl_progressbar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        android:layout_gravity="center" />
-
-    <tv.camment.cammentsdk.views.CammentOverlay
-        android:id="@+id/camment_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
-```
-As CammentSDK overlay intercepts all touch events, it has to know to which ```ViewGroup``` to pass the touch events in order not to disable underlying components. In the layout above ```VideoView``` is wrapped in ```FrameLayout``` to enable this.
-Then in the activity where CammentOverlay is used, call ```setParentViewGroup(ViewGroup parentViewGroup)``` method.
-
-
-CammentSDK also needs to know unique identifier of the currently watched show. Use ```setShowMetadata(ShowMetadata showMetadata)``` method. The first parameter of ```ShowMetadata``` object is show uuid and the second one is custom invitation text which will be passed together with invitation deeplink (can be null or empty String, in such case default invitation text is used). 
-```java
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.<your_layout>);
-    ...
-    CammentSDK.getInstance().setShowMetadata(new ShowMetadata("<Any unique String identifier of your show>", "<Any custom invitation text>"));
-        
-    FrameLayout parentViewGroup = (FrameLayout) findViewById(R.id.fl_parent);
-    CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.camment_overlay);
-    cammentOverlay.setParentViewGroup(parentViewGroup);
-}
-```
-## Pass onActivityResult and onRequestPermissionsResult to CammentSDK
-CammentSDK handles permissions which it needs as well as Facebook Login. In order to complete the flow correctly, pass results of ```onActivityResult``` and ```onRequestPermissionsResult``` to CammentSDK. 
-
-```onActivityResult``` should be overridden in **all activities (use your BaseActivity or similar parent activity)** where CammentSDK is used as Facebook Login may be performed e.g. when invitation request is received and there has to be an activity ready to receive onActivityResult from Facebook SDK. 
-```java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    ...
-    CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
-}
-```
-```onRequestPermissionsResult``` should be overridden in the **activity where CammentOverlay is used**.
-```java
-@Override
-public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    ...
-    CammentSDK.getInstance().onRequestPermissionsResult(requestCode, permissions, grantResults);
-}
-```
-## React to Camment interactions 
-For better user experience we recommend muting a video player when a user starts recording camment and decrease the volume at least by half when a user plays camment. In order to do it - implement ```CammentAudioListener``` interface and set it using method ```setCammentAudioListener(CammentAudioListener cammentAudioListener)```. Again this should be done in the activity where CammentSDK Overlay is used.
-
-```java
-public interface CammentAudioListener {
-
-    void onCammentPlaybackStarted(); // Decrease player volume
-
-    void onCammentPlaybackEnded(); // Restore normal volume
-
-    void onCammentRecordingStarted(); // Decrease player volume (almost mute)
-
-    void onCammentRecordingEnded(); // Restore normal volume
-
-}
-```
-> Video Player volume is handled by the host application. Make sure that correct audio volume is used to ensure good user experience, e.g. "onCammentPlaybackStarted" decreases volume to 60% and "onCammentRecordingStarted" decreases volume to 30% of original value.
-```java
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.<your_layout>);
-    ...
-    CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.camment_overlay);
-    cammentOverlay.setCammentAudioListener(this);
-}
-```
 ## DeepLinking
 CammentSDK takes care of the invitation deeplinking. It specifies in its manifest ```CammentDeeplinkActivity``` which takes care of the deeplinks starting with ```camment://``` scheme.
 Deeplinks are currently used to join group after an invitation. After the deeplink is opened, dialog is opened and user can decide if he wants to join the group or not. 
@@ -358,9 +216,14 @@ public class YourApp extends Application {
         CammentSDK.getInstance().setOnDeeplinkOpenShowListener(new OnDeeplinkOpenShowListener() {
             @Override
             public void onOpenShowWithUuid(String showUuid) {
-                // your code to open Activity (where CammentOverlay is added) with given showUuid
+                handleOpenShowWithUuid(showUuid);
             }
         });
+    }
+    
+    private void handleOpenShowWithUuid(String showUuid) {
+        // EurovisionShowsActivity will handle opening activity with karaoke player too
+        EurovisionShowsActivity.startFromDeeplink(this, showUuid); 
     }
 }
 ```

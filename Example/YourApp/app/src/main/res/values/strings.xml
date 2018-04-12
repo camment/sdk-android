@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">YourApp</string>
+    <string name="your_host_activity">This activity simulates your host activity</string>
+    <string name="open_karaoke_list">OPEN KARAOKE LIST</string>
+
+</resources>

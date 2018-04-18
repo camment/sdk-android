@@ -1,10 +1,10 @@
 # CammentSDK for Android
-**current version: 2.1.5**
+**current version: 2.1.6**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
 The instructions were written for the following configuration:
-- Android Studio 3.0.1
+- Android Studio 3.1.1
 - Java 1.8.0_144
 - Gradle 2.3.3 (distribution gradle-3.5-all.zip)
 
@@ -32,6 +32,7 @@ CammentSDK relies on following dependencies:
 - Android Support Design Library (v26.0.2)
 - Android Support RecyclerView (v26.0.2)
 - Android Support ConstraintLayout (v1.0.2)
+- DanielMartinus Konfetti (v1.1.0)
 
 *Note:* If you use some of these dependencies in your application too, you can remove them from your app gradle file. In case you want to override some dependencies, you can do it using gradle, e.g.:
 ```gradle
@@ -78,7 +79,7 @@ dependencies {
     }
 }
 ```
-*Note*: ```<sdk_version>``` is currently **2.1.5**
+*Note*: ```<sdk_version>``` is currently **2.1.6**
 *Note*: ```transitive true``` means that gradle will download also the SDK dependencies
 
 Now **sync the project with your gradle files** and **clean the project**. 

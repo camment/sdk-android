@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 2.1.7**
+**current version: 2.1.8**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
@@ -33,6 +33,7 @@ CammentSDK relies on following dependencies:
 - Android Support RecyclerView (v26.0.2)
 - Android Support ConstraintLayout (v1.0.2)
 - DanielMartinus Konfetti (v1.1.0)
+- Sannies Mp4Parser (v1.1.22)
 
 *Note:* If you use some of these dependencies in your application too, you can remove them from your app gradle file. In case you want to override some dependencies, you can do it using gradle, e.g.:
 ```gradle
@@ -79,7 +80,7 @@ dependencies {
     }
 }
 ```
-*Note*: ```<sdk_version>``` is currently **2.1.7**
+*Note*: ```<sdk_version>``` is currently **2.1.8**
 *Note*: ```transitive true``` means that gradle will download also the SDK dependencies
 
 Now **sync the project with your gradle files** and **clean the project**. 
@@ -133,11 +134,11 @@ Open your application ```AndroidManifest.xml``` and add:
        
 </application>            
 ```
-2. Specify ```ContentProvider``` used by CammentSDK as it has to have unique authority:
+2. Specify ```ContentProvider``` used by CammentSDK as it has to have unique authority (copy, don't change anything):
 ```xml
 <application
     ...>
-    
+    ...
     <provider
             android:name="tv.camment.cammentsdk.data.DataProvider"
             android:authorities="${applicationId}.cammentsdk"
@@ -155,6 +156,24 @@ android {
         ...
     }
 }
+```
+3. Specify ```FileProvider``` used by CammentSDK to enable sharing of internal video files (copy, don't change anything):
+```xml
+<application
+    ...>
+    ...
+    <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.cammentsdk.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/cmmsdk_file_provider_paths" />
+
+    </provider>
+</application>            
 ```
 
 ## (OPTIONAL) Camment audio recording volume

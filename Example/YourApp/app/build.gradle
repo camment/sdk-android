@@ -51,11 +51,11 @@ dependencies {
     compile otherDependencies.appCompat
     // compile 'com.android.support:multidex:1.0.2'
 
-    compile('tv.camment.cammentsdk:cammentsdk:2.1.7@aar') {
+    compile('tv.camment.cammentsdk:cammentsdk:2.1.8@aar') {
         transitive true
     }
 
-    compile('tv.camment.cammentauth:cammentauth:2.1.7@aar') {
+    compile('tv.camment.cammentauth:cammentauth:2.1.8@aar') {
         transitive true
     }
 }

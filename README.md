@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 2.1.8**
+**current version: 2.1.9**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
@@ -80,7 +80,7 @@ dependencies {
     }
 }
 ```
-*Note*: ```<sdk_version>``` is currently **2.1.8**
+*Note*: ```<sdk_version>``` is currently **2.1.9**
 *Note*: ```transitive true``` means that gradle will download also the SDK dependencies
 
 Now **sync the project with your gradle files** and **clean the project**. 

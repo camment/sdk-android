@@ -1,37 +1,37 @@
 # CammentSDK for Android
-**current version: 2.1.5**
+**current version: 3.0.0**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
 The instructions were written for the following configuration:
-- Android Studio 3.0.1
+- Android Studio 3.1.1
 - Java 1.8.0_144
-- Gradle 2.3.3 (distribution gradle-3.5-all.zip)
+- Gradle 3.1.1 (distribution gradle-4.6-all.zip)
 
 ## Technical specification
 **SDK version**
 SDK is built with the following configuration:
 ```gradle
 minSdkVersion 19
-targetSdkVersion 26
-compileSdkVersion 26
-buildToolsVersion "26.0.2"
-supportLibVersion "26.0.2"
+targetSdkVersion 27
+compileSdkVersion 27
+buildToolsVersion "27.0.3"
+supportLibVersion "27.1.0"
 ```
 *Note:* If your application supports also lower SDK versions, you have to handle enabling/disabling of the CammentSDK by yourself.
 
 **Dependencies**
 CammentSDK relies on following dependencies: 
-- Amazon AWS SDK (v2.6.13)
-- Facebook SDK (v4.25.0) (part of CammentAuth)
-- Google Exoplayer (v2.5.4)
-- Glide library (v4.3.0)
-- EasyPermissions library (v0.4.2)
+- Amazon AWS SDK (v2.6.18)
+- Facebook SDK (v4.32.0) (part of CammentAuth)
+- Google Exoplayer (v2.7.3)
+- Glide library (v4.7.1)
+- EasyPermissions library (v1.2.0)
 - Greenrobot EventBus (v3.0.0)
-- Android Support v4 (v26.0.2)
-- Android Support Design Library (v26.0.2)
-- Android Support RecyclerView (v26.0.2)
-- Android Support ConstraintLayout (v1.0.2)
+- Android Support v4 (v27.1.0)
+- Android Support Design Library (v27.1.0)
+- Android Support RecyclerView (v27.1.0)
+- Android Support ConstraintLayout (v1.1.0)
 
 *Note:* If you use some of these dependencies in your application too, you can remove them from your app gradle file. In case you want to override some dependencies, you can do it using gradle, e.g.:
 ```gradle
@@ -206,7 +206,7 @@ public class YourApp extends Application {
     }
 }
 ```
-Camment audio volume adjustment levels are (default value is ```FULL_ADJUSTMENT```):
+Camment audio volume adjustment levels are (default value is ```NO_ADJUSTMENT```):
 ```java
 public enum CammentAudioVolume {
 
@@ -280,6 +280,21 @@ protected void onCreate(Bundle savedInstanceState) {
     cammentOverlay.setParentViewGroup(parentViewGroup);
 }
 ```
+
+Bottom margin of the camment recording button can be increased if needed. Use ```setRecordButtonMarginBottom(int bottomMarginInDp)``` method of CammentOverlay class to add additional bottom margin (in dp unit). It'll be added to the predefined minimum bottom margin.
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.<your_layout>);
+    ...
+        
+    CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.camment_overlay);
+    cammentOverlay.setRecordButtonMarginBottom(16);
+    ...
+}
+```
+
 ## Pass onActivityResult and onRequestPermissionsResult to CammentSDK
 CammentSDK handles permissions which it needs as well as Facebook Login. In order to complete the flow correctly, pass results of ```onActivityResult``` and ```onRequestPermissionsResult``` to CammentSDK. 
 
@@ -328,6 +343,88 @@ protected void onCreate(Bundle savedInstanceState) {
     cammentOverlay.setCammentAudioListener(this);
 }
 ```
+## Enable video stream syncing in groups
+In order to support syncing of position in video stream with host user, implement ```CammentPlayerListener``` interface and set it using method ```setCammentPlayerListener(CammentPlayerListener cammentPlayerListener)``` of CammentSDK class.
+```java
+public interface CammentPlayerListener {
+
+    int getCurrentPosition(); //return current position of video stream player in milliseconds (i.e. 1s = 1000ms)
+
+    boolean isPlaying(); //return true if player is currently playing the stream (false if i.e. paused, stopped)
+
+    void onSyncPosition(int currentPosition, boolean isPlaying); //the method will be called by CammentSDK when position should be adjusted - use "currentPosition" value to seek to given position and "isPlaying" to play(true)/pause(false) video stream
+
+}
+``` 
+Example of implementation:
+```java
+CammentSDK.getInstance().setCammentPlayerListener(new CammentPlayerListener() {
+            @Override
+            public int getCurrentPosition() {
+                return videoView != null ? videoView.getCurrentPosition() : 0;
+            }
+
+            @Override
+            public boolean isPlaying() {
+                return videoView != null && videoView.isPlaying();
+            }
+
+            @Override
+            public void onSyncPosition(int currentPosition, boolean isPlaying) {
+                if (videoView != null) {
+                    videoView.seekTo(currentPosition);
+
+                    if (videoView.isPlaying() && !isPlaying) {
+                        videoView.pause();
+                    } else if (!videoView.isPlaying() && isPlaying) {
+                        videoView.start();
+                    }
+                }
+            }
+        });
+```
+
+Notify CammentSDK about your player actions using CammentSDK class methods ```onPlaybackStarted(int currentPositionMillis)```, ```onPlaybackPaused(int currentPositionMillis)``` and ```onPlaybackPositionChanged(int currentPositionMillis, boolean isPlaying)```. 
+Example of usage:
+```java
+public class MyVideoView extends VideoView {
+
+    public MyVideoView(Context context) {
+        super(context);
+    }
+
+    public MyVideoView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public MyVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    public void start() {
+        super.start();
+
+        CammentSDK.getInstance().onPlaybackStarted(getCurrentPosition());
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+
+        CammentSDK.getInstance().onPlaybackPaused(getCurrentPosition());
+    }
+
+    @Override
+    public void seekTo(int msec) {
+        super.seekTo(msec);
+
+        CammentSDK.getInstance().onPlaybackPositionChanged(getCurrentPosition(), isPlaying());
+    }
+}
+
+```
+
 ## DeepLinking
 CammentSDK takes care of the invitation deeplinking. It specifies in its manifest ```CammentDeeplinkActivity``` which takes care of the deeplinks starting with ```camment://``` scheme.
 Deeplinks are currently used to join group after an invitation. After the deeplink is opened, dialog is opened and user can decide if he wants to join the group or not. 

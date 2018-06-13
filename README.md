@@ -31,6 +31,7 @@ CammentSDK relies on following dependencies:
 - Android Support Design Library (v27.1.0)
 - Android Support RecyclerView (v27.1.0)
 - Android Support ConstraintLayout (v1.1.0)
+
 (Google Exoplayer (v2.7.3) as internal dependency)
 
 *Note:* If you use some of these dependencies in your application too, you can remove them from your app gradle file. In case you want to override some dependencies, you can do it using gradle, e.g.:

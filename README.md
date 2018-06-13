@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 3.0.0**
+**current version: 3.0.1**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
@@ -24,7 +24,6 @@ supportLibVersion "27.1.0"
 CammentSDK relies on following dependencies: 
 - Amazon AWS SDK (v2.6.18)
 - Facebook SDK (v4.32.0) (part of CammentAuth)
-- Google Exoplayer (v2.7.3)
 - Glide library (v4.7.1)
 - EasyPermissions library (v1.2.0)
 - Greenrobot EventBus (v3.0.0)
@@ -32,6 +31,7 @@ CammentSDK relies on following dependencies:
 - Android Support Design Library (v27.1.0)
 - Android Support RecyclerView (v27.1.0)
 - Android Support ConstraintLayout (v1.1.0)
+(Google Exoplayer (v2.7.3) as internal dependency)
 
 *Note:* If you use some of these dependencies in your application too, you can remove them from your app gradle file. In case you want to override some dependencies, you can do it using gradle, e.g.:
 ```gradle

@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 3.0.1**
+**current version: 3.0.2**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 

@@ -1,5 +1,5 @@
 # CammentSDK for Android
-**current version: 3.0.2**
+**current version: 3.0.3**
 
 To get started with the Camment Mobile SDK for Android you can set up the SDK and build a new project, or you can integrate the SDK into your existing project. 
 
@@ -22,7 +22,7 @@ supportLibVersion "27.1.0"
 
 **Dependencies**
 CammentSDK relies on following dependencies: 
-- Amazon AWS SDK (v2.6.18)
+- Amazon AWS SDK (v2.6.28)
 - Facebook SDK (v4.32.0) (part of CammentAuth)
 - Glide library (v4.7.1)
 - EasyPermissions library (v1.2.0)
@@ -71,10 +71,10 @@ Add following dependencies into your **application level** ```build.gradle``` fi
 ```gradle
 dependencies {
     ... //your other dependencies
-    compile ('tv.camment.cammentsdk:cammentsdk:<sdk_version>@aar') {
+    implementation ('tv.camment.cammentsdk:cammentsdk:<sdk_version>@aar') {
         transitive true
     }
-    compile ('tv.camment.cammentauth:cammentauth:<sdk_version>@aar') {
+    implementation ('tv.camment.cammentauth:cammentauth:<sdk_version>@aar') {
         transitive true
     }
 }
@@ -117,11 +117,6 @@ Don't forget to add following into the ```AndroidManifest.xml``` (more into at h
 ## CammentAuthIdentityProvider
 Generally, CammentSDK handles own login/logout (if not logged in, login is called by trying to invite somebody; logout can be called from the side-panel). 
 
-If you have already Facebook login/logout functionality on some of your existing activities, call ```void notifyLogoutSuccessful()``` explicitly to notify CammentSDK. This way CammentSDK can cleanup data and refresh its UI properly.
-```java
-CammentSDK.getInstance().getAppAuthIdentityProvider().notifyLogoutSuccessful(); // call when Facebook logout was successful
-```
-
 If you want to be notified about Facebook login/logout performed by CammentSDK, register listener ```CammentAuthListener```:
 ```java
 CammentSDK.getInstance().getAppAuthIdentityProvider().addCammentAuthListener(new CammentAuthListener() {
@@ -136,6 +131,9 @@ CammentSDK.getInstance().getAppAuthIdentityProvider().addCammentAuthListener(new
     }
 });
 ```
+
+Instead of the above mentioned listener, you can use ```AccessTokenTracker``` from FacebookSDK to track AccessToken changes. That's how you can detect Facebook login/logout events. For more information see: https://developers.facebook.com/docs/reference/android/current/class/AccessTokenTracker/
+
 ## Initialize CammentSDK
 Open your application class extending ```Application``` and add following into the ```onCreate()``` method:
 ```java
@@ -190,32 +188,20 @@ android {
     }
 }
 ```
-## Camment audio recording volume
-As Android decreases volume of recorded video in order to compensate sound of microphone membrane, you may notice that the camments recorded on Android device are significantly more quiet than the camments recorded on iOS device.
-You can decide whether you want to artificially increase camment sound recording or not. Test by yourself which setting is the best for you as by increasing the recording sound it may result in the increased volume of other sounds too, e.g. microphone membrane.
-To do so use method ```setCammentAudioVolumeAdjustment(CammentAudioVolume cammentAudioVolume)```.
-```java
-public class YourApp extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ...
-        CammentSDK.getInstance().init(this);
+3. Specify activity with scheme for deeplinking (see more info about deeplinking in the section at the end of the README)
+```xml
+<activity
+    android:name="tv.camment.cammentsdk.CammentDeeplinkActivity"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
         
-        CammentSDK.getInstance().setCammentAudioVolumeAdjustment(CammentAudioVolume.NO_ADJUSTMENT);
-    }
-}
-```
-Camment audio volume adjustment levels are (default value is ```NO_ADJUSTMENT```):
-```java
-public enum CammentAudioVolume {
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
-    NO_ADJUSTMENT, // original Android recording audio level is used
-    MILD_ADJUSTMENT, // original Android recording audio level is increased slightly
-    FULL_ADJUSTMENT // original Android recording audio level is increased significantly
-
-}
+        <data android:scheme="YOUR_SCHEME" /> //replace YOUR_SCHEME with scheme you received from Camment
+    </intent-filter>
+</activity>
 ```
 ## Add CammentSDK overlay on top of your video player
 CammentSDK overlay should be included in the activity which shows video streaming.
@@ -308,7 +294,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     CammentSDK.getInstance().onActivityResult(requestCode, resultCode, data);
 }
 ```
-```onRequestPermissionsResult``` should be overridden in the **activity where CammentOverlay is used**.
+```onRequestPermissionsResult``` should be overridden in the **activities where CammentSDK views are used**.
 ```java
 @Override
 public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -318,7 +304,7 @@ public void onRequestPermissionsResult(int requestCode, @NonNull String[] permis
 }
 ```
 ## React to Camment interactions 
-For better user experience we recommend muting a video player when a user starts recording camment and decrease the volume at least by half when a user plays camment. In order to do it - implement ```CammentAudioListener``` interface and set it using method ```setCammentAudioListener(CammentAudioListener cammentAudioListener)```. Again this should be done in the activity where CammentSDK Overlay is used.
+For better user experience we recommend muting a video player when a user starts recording camment and decrease the volume at least by half when a user plays camment. In order to do it - implement ```CammentAudioListener``` interface and set it using method ```setCammentAudioListener(CammentAudioListener cammentAudioListener)```. This should be done in the activity where CammentSDK Overlay is used.
 
 ```java
 public interface CammentAudioListener {
@@ -340,92 +326,42 @@ protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.<your_layout>);
     ...
-    CammentOverlay cammentOverlay = (CammentOverlay) findViewById(R.id.camment_overlay);
-    cammentOverlay.setCammentAudioListener(this);
+    CammentSDK.getInstance().setCammentAudioListener(this);
 }
 ```
-## Enable video stream syncing in groups
-In order to support syncing of position in video stream with host user, implement ```CammentPlayerListener``` interface and set it using method ```setCammentPlayerListener(CammentPlayerListener cammentPlayerListener)``` of CammentSDK class.
+## Video stream syncing in groups
+In previous version syncing of the video stream including group host functionality was introduced. Syncing functionality is DISABLED in this release and therefore you can remove/comment out all implementation which was needed for this (if you've implemented it before).
+This includes:
+- implementing ```CammentPlayerListener``` and setting it's instance using method ```setCammentPlayerListener(CammentPlayerListener cammentPlayerListener)```
+- calls to the methods ```onPlaybackStarted(int currentPositionMillis)```, ```onPlaybackPaused(int currentPositionMillis)``` and ```onPlaybackPositionChanged(int currentPositionMillis, boolean isPlaying)```
+
+## Camment audio recording volume
+As Android decreases volume of recorded video in order to compensate sound of microphone membrane, you may notice that the camments recorded on Android device are significantly more quiet than the camments recorded on iOS device.
+You can decide whether you want to artificially increase camment sound recording or not. Test by yourself which setting is the best for you as by increasing the recording sound it may result in the increased volume of other sounds too, e.g. microphone membrane.
+To do so use method ```setCammentAudioVolumeAdjustment(CammentAudioVolume cammentAudioVolume)```.
 ```java
-public interface CammentPlayerListener {
-
-    int getCurrentPosition(); //return current position of video stream player in milliseconds (i.e. 1s = 1000ms)
-
-    boolean isPlaying(); //return true if player is currently playing the stream (false if i.e. paused, stopped)
-
-    void onSyncPosition(int currentPosition, boolean isPlaying); //the method will be called by CammentSDK when position should be adjusted - use "currentPosition" value to seek to given position and "isPlaying" to play(true)/pause(false) video stream
-
-}
-``` 
-Example of implementation:
-```java
-CammentSDK.getInstance().setCammentPlayerListener(new CammentPlayerListener() {
-            @Override
-            public int getCurrentPosition() {
-                return videoView != null ? videoView.getCurrentPosition() : 0;
-            }
-
-            @Override
-            public boolean isPlaying() {
-                return videoView != null && videoView.isPlaying();
-            }
-
-            @Override
-            public void onSyncPosition(int currentPosition, boolean isPlaying) {
-                if (videoView != null) {
-                    videoView.seekTo(currentPosition);
-
-                    if (videoView.isPlaying() && !isPlaying) {
-                        videoView.pause();
-                    } else if (!videoView.isPlaying() && isPlaying) {
-                        videoView.start();
-                    }
-                }
-            }
-        });
-```
-
-Notify CammentSDK about your player actions using CammentSDK class methods ```onPlaybackStarted(int currentPositionMillis)```, ```onPlaybackPaused(int currentPositionMillis)``` and ```onPlaybackPositionChanged(int currentPositionMillis, boolean isPlaying)```. 
-Example of usage:
-```java
-public class MyVideoView extends VideoView {
-
-    public MyVideoView(Context context) {
-        super(context);
-    }
-
-    public MyVideoView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public MyVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+public class YourApp extends Application {
 
     @Override
-    public void start() {
-        super.start();
-
-        CammentSDK.getInstance().onPlaybackStarted(getCurrentPosition());
-    }
-
-    @Override
-    public void pause() {
-        super.pause();
-
-        CammentSDK.getInstance().onPlaybackPaused(getCurrentPosition());
-    }
-
-    @Override
-    public void seekTo(int msec) {
-        super.seekTo(msec);
-
-        CammentSDK.getInstance().onPlaybackPositionChanged(getCurrentPosition(), isPlaying());
+    public void onCreate() {
+        super.onCreate();
+        ...
+        CammentSDK.getInstance().init(this);
+        
+        CammentSDK.getInstance().setCammentAudioVolumeAdjustment(CammentAudioVolume.NO_ADJUSTMENT);
     }
 }
-
 ```
+Camment audio volume adjustment levels are (default value is ```NO_ADJUSTMENT```):
+```java
+public enum CammentAudioVolume {
 
+    NO_ADJUSTMENT, // original Android recording audio level is used
+    MILD_ADJUSTMENT, // original Android recording audio level is increased slightly
+    FULL_ADJUSTMENT // original Android recording audio level is increased significantly
+
+}
+```
 ## DeepLinking
 CammentSDK takes care of the invitation deeplinking. It specifies in its manifest ```CammentDeeplinkActivity``` which takes care of the deeplinks starting with ```camment://``` scheme.
 Deeplinks are currently used to join group after an invitation. After the deeplink is opened, dialog is opened and user can decide if he wants to join the group or not. 

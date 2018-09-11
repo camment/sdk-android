@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">YourApp</string>
+
+    <string name="facebook_app_id" translatable="false">272405646569362</string> <!-- TODO INSERT YOUR FB APP ID, DON'T USE THIS IN PRODUCTION -->
+    <string name="fb_login_protocol_scheme" translatable="false">fb272405646569362</string> <!-- TODO INSERT YOUR FB PROTOCOL SCHEME, DON'T USE THIS IN PRODUCTION -->
+
+</resources>

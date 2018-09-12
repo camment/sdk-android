@@ -66,11 +66,11 @@ dependencies {
 
     implementation otherDependencies.values()
 
-    implementation('tv.camment.cammentsdk:cammentsdk:3.0.3@aar') {
+    implementation('tv.camment.cammentsdk:cammentsdk:3.0.4@aar') {
         transitive true
     }
 
-    implementation('tv.camment.cammentauth:cammentauth:3.0.3@aar') {
+    implementation('tv.camment.cammentauth:cammentauth:3.0.4@aar') {
         transitive true
     }
 }

@@ -19,7 +19,7 @@ public final class YourFacebookLoginHelper {
 
     private static YourFacebookLoginHelper INSTANCE;
 
-    private static final String[] permissions = new String[]{"public_profile", "email", "user_friends"};
+    private static final String[] permissions = new String[]{"public_profile", "email"};
 
     private final LoginManager loginManager;
     private final CallbackManager callbackManager;

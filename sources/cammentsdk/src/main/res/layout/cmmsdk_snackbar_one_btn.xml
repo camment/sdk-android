@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/cmmsdk_snackbar_bubble"
+    android:orientation="horizontal"
+    android:paddingBottom="12dp"
+    android:paddingEnd="24dp"
+    android:paddingStart="24dp"
+    android:paddingTop="8dp">
+
+    <tv.camment.cammentsdk.views.LightTextView
+        android:id="@+id/cmmsdk_tv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textColor="@color/cmmsdk_button_grey_dark"
+        tools:text="Demo Message" />
+
+    <tv.camment.cammentsdk.views.RegularButton
+        android:id="@+id/cmmsdk_btn_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@android:color/holo_blue_dark"
+        tools:text="Retry" />
+
+</LinearLayout>

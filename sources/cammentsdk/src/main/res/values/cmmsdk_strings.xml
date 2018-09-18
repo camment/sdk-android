@@ -1,0 +1,105 @@
+<resources>
+    <string name="cmmsdk_app_name" translatable="false">Camment</string>
+
+    <string name="cmmsdk_facebook_app_id" translatable="false">272405646569362</string>
+    <string name="cmmsdk_fb_login_protocol_scheme" translatable="false">fb272405646569362</string>
+
+    <string name="cmmsdk_permission">In order to use Camment feature you need to grant the access to video and audio recording</string>
+
+    <string name="cmmsdk_anonymous_invited_to_chat">Your friend invited you to a private chat</string>
+    <string name="cmmsdk_join_conversation">Would you like to join the conversation?</string>
+
+    <string name="cmmsdk_join">Join</string>
+    <string name="cmmsdk_no">No</string>
+    <string name="cmmsdk_yes">Yes</string>
+    <string name="cmmsdk_ok">OK</string>
+    <string name="cmmsdk_cancel">Cancel</string>
+    <string name="cmmsdk_login">Login</string>
+
+    <string name="cmmsdk_help_tap_and_hold_to_record">Tap &amp; hold to record a mini video (camment)</string>
+    <string name="cmmsdk_help_swipe_left_to_hide_camments">Swipe ← left anywhere to hide camments</string>
+    <string name="cmmsdk_help_swipe_right_to_show_camments">Swipe → right to show camments</string>
+    <string name="cmmsdk_help_tap_to_play">Great success! Now tap the camment to play it</string>
+    <string name="cmmsdk_help_sidebar_to_invite">Pull the sidebar to the → right\nto invite friends to this group</string>
+    <string name="cmmsdk_help_tap_and_hold_to_delete">Tap &amp; hold your camment to delete it</string>
+    <string name="cmmsdk_help_start_making_video_camments">Start making video camments\nby tapping here later</string>
+    <string name="cmmsdk_help_skip_tutorial">Skip tutorial</string>
+    <string name="cmmsdk_help_continue_tutorial">Continue tutorial later from sidebar</string>
+
+    <string name="cmmsdk_continue_tutorial">Continue tutorial</string>
+
+    <string name="cmmsdk_setup_use_camment_chat">Would you like to video chat with friends while watching this show?</string>
+    <string name="cmmsdk_setup_what_is_camment">It\'s like SMS group messaging but with mini videos (camments) on top of the show you are now watching</string>
+    <string name="cmmsdk_setup_sounds_fun">Sounds fun</string>
+    <string name="cmmsdk_setup_maybe_later">Maybe later</string>
+
+    <string name="cmmsdk_camment_actions_title">Choose action</string>
+    <string name="cmmsdk_camment_actions_delete_camment">Delete camment</string>
+
+    <string name="cmmsdk_passcode_error">No streams were found.\nPlease check your passcode.</string>
+
+    <string name="cmmsdk_joined_private_chat">You have joined the private group!</string>
+
+    <string name="cmmsdk_invitation_link_title">Send the invitation link</string>
+    <string name="cmmsdk_invitation_link_desc">Invite users by sharing the invitation link via channel of your choice</string>
+
+    <string name="cmmsdk_invitation_sharing_options">Choose the sharing channel</string>
+
+    <string name="cmmsdk_drawer_invite_friends">Invite friends</string>
+    <string name="cmmsdk_drawer_invite_friends_msg">Invite friends to chat with short videos on top of your stream.</string>
+    <string name="cmmsdk_drawer_logout_fb">Log out</string>
+    <string name="cmmsdk_drawer_logout_fb_msg">Logout from Facebook will remove you from the current group.</string>
+    <string name="cmmsdk_drawer_people_in_chat">People joined to your Camment group</string>
+
+    <string name="cmmsdk_invitation_default_msg">Hey, join our private chat!</string>
+
+    <string name="cmmsdk_login_fb_title">You\'re not logged in</string>
+    <string name="cmmsdk_login_fb_msg">Login with your Facebook account?</string>
+
+    <string name="cmmsdk_user_left_group">%s has left the group</string>
+
+    <string name="cmmsdk_somebody">Somebody</string>
+    <string name="cmmsdk_user">User</string>
+
+    <string name="cmmsdk_leave_confirmation_title">Leave group</string>
+    <string name="cmmsdk_leave_confirmation_msg">Do you really want to leave current group?</string>
+
+    <string name="cmmsdk_block_confirmation_title">Block user</string>
+    <string name="cmmsdk_block_confirmation_msg">Do you really want to block %s?</string>
+
+    <string name="cmmsdk_unblock_confirmation_title">Unblock user</string>
+    <string name="cmmsdk_unblock_confirmation_msg">Do you really want to unblock %s?</string>
+
+    <string name="cmmsdk_blocked_from_group_title">You are blocked</string>
+    <string name="cmmsdk_blocked_from_group_msg">Group owner has blocked you from the current group</string>
+
+    <string name="cmmsdk_user_blocked">%s has been blocked</string>
+    <string name="cmmsdk_user_unblocked">%s has been unblocked</string>
+
+    <string name="cmmsdk_user_has_joined_title">%s has joined</string>
+
+    <string name="cmmsdk_ad">AD</string>
+
+    <string name="cmmsdk_leave_group">Leave group</string>
+
+    <string name="cmmsdk_video_codec_issue">Can\'t record a camment due to the device limitations.</string>
+
+    <string name="cmmsdk_user_came_online">%s came online</string>
+    <string name="cmmsdk_user_went_offline">%s went offline</string>
+
+    <string name="cmmsdk_we_are_syncing_you">We are syncing you with the host %s</string>
+    <string name="cmmsdk_paused_video">Host paused the video</string>
+    <string name="cmmsdk_someone_host_now">Host changed to %s</string>
+    <string name="cmmsdk_you_host_now">You are the group host now. You have controls!</string>
+
+    <string name="cmmsdk_create_new_group">Create new group</string>
+    <string name="cmmsdk_created">Created: %s</string>
+    <string name="cmmsdk_camment_chat">Camment Chat</string>
+    <string name="cmmsdk_special_host">Special Host</string>
+
+    <string name="cmmsdk_logout_confirmation_title">Do you want to logout?</string>
+
+    <string name="cmmsdk_continue_to_show">Continue to show</string>
+    <string name="cmmsdk_tap_camera_icon">Tap Camera icon to enable camera</string>
+
+</resources>

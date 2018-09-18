@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="cmmsdk_camment_red">#d0011a</color>
+    <color name="cmmsdk_camment_reddish">#fe3824</color>
+    <color name="cmmsdk_camment_red_transp">#88FB0D1B</color>
+    <color name="cmmsdk_camment_red_ripple">#830111</color>
+    <color name="cmmsdk_camment_grey">#3B3B3B</color>
+    <color name="cmmsdk_camment_button_grey">#808080</color>
+    <color name="cmmsdk_camment_silver">#bdc3c7</color>
+    <color name="cmmsdk_camment_lightest_grey">#E6E6E6</color>
+    <color name="cmmsdk_camment_darker_grey">#BEBEBE</color>
+    <color name="cmmsdk_camment_divider_grey">#979797</color>
+    <color name="cmmsdk_camment_text_grey">#303030</color>
+    <color name="cmmsdk_camment_ripple">#33E1F5FE</color>
+    <color name="cmmsdk_button_grey_dark">#7F7F7F</color>
+    <color name="cmmsdk_tooltip">#E6202428</color>
+    <color name="cmmsdk_drawer_bg">#E6202428</color>
+    <color name="cmmsdk_drawer_user_bg">#1Affffff</color>
+    <color name="cmmsdk_online">#7BB841</color>
+    <color name="cmmsdk_offline">#9b9b9b</color>
+    <color name="cmmsdk_button_dark_grey">#80000000</color>
+    <color name="cmmsdk_sofa_overlay">#80000000</color>
+    <color name="cmmsdk_sofa_progress">#CCFFFFFF</color>
+
+</resources>

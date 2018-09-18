@@ -1,0 +1,150 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    resourcePrefix 'cmmsdk_'
+
+    def RELEASE_VERSION = 3
+
+    def MAJOR_VERSION = 0
+
+    def MINOR_VERSION = 4
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionName RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
+        versionCode RELEASE_VERSION * 100000000 + 10000 * MAJOR_VERSION + 100 * MINOR_VERSION
+
+        defaultPublishConfig 'release'
+
+        buildConfigField("boolean", "SHOW_ADS", "false")
+        buildConfigField("boolean", "USE_MIXPANEL", "true")
+        buildConfigField("boolean", "PULL_UP_BUTTON", "false")
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            useProguard false
+            debuggable true
+        }
+
+        release {
+            minifyEnabled true
+            useProguard true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        devApi {
+            dimension "default"
+
+            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
+        }
+
+        prodApi {
+            dimension "default"
+
+            buildConfigField("String", "ENVIRONMENT", "\"prod\"")
+        }
+    }
+}
+
+ext {
+    supportLibVersion = rootProject.ext.supportLibVersion
+    awsVersion = '2.6.28'
+    constraintLayoutVersion = '1.1.3'
+    glideVersion = '4.7.1'
+    easyPermissionsVersion = '1.2.0'
+    eventBusVersion = '3.0.0'
+    mixpanelVersion = '5.4.0'
+
+    awsDependencies = [
+            core                   : "com.amazonaws:aws-android-sdk-core:${awsVersion}",
+            cognitoSync            : "com.amazonaws:aws-android-sdk-cognito:${awsVersion}",
+            cognitoIdentityProvider: "com.amazonaws:aws-android-sdk-cognitoidentityprovider:${awsVersion}",
+            apiGatewayCore         : "com.amazonaws:aws-android-sdk-apigateway-core:${awsVersion}",
+            iot                    : "com.amazonaws:aws-android-sdk-iot:${awsVersion}",
+            s3                     : "com.amazonaws:aws-android-sdk-s3:${awsVersion}",
+            analytics              : "com.amazonaws:aws-android-sdk-mobileanalytics:${awsVersion}",
+    ]
+
+    otherDependencies = [
+            supportv4       : "com.android.support:support-v4:${supportLibVersion}",
+            design          : "com.android.support:design:${supportLibVersion}",
+            recyclerView    : "com.android.support:recyclerview-v7:${supportLibVersion}",
+            constraintLayout: "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+            easyPermissions : "pub.devrel:easypermissions:${easyPermissionsVersion}",
+            eventBus        : "org.greenrobot:eventbus:${eventBusVersion}",
+    ]
+
+    glideDependencies = [
+            glide           : "com.github.bumptech.glide:glide:${glideVersion}",
+            glideCompiler   : "com.github.bumptech.glide:compiler:${glideVersion}",
+    ]
+
+    mixpanelDependencies = [
+            mixpanel: "com.mixpanel.android:mixpanel-android:${mixpanelVersion}",
+    ]
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+
+    api awsDependencies.values()
+    api otherDependencies.values()
+
+    api glideDependencies.glide
+    annotationProcessor glideDependencies.glideCompiler
+
+    api mixpanelDependencies.values()
+}
+
+publishing {
+
+    def RELEASE_VERSION = 3
+
+    def MAJOR_VERSION = 0
+
+    def MINOR_VERSION = 4
+
+    publications {
+        maven(MavenPublication) {
+            groupId 'tv.camment.cammentsdk'
+            artifactId 'cammentsdk'
+            version RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
+            artifact "$buildDir/outputs/aar/cammentsdk-prodApi-release.aar"
+            //aar artifact you want to publish
+
+            //generate pom nodes for dependencies
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.api.allDependencies.each { dependency ->
+                    if (dependency.name != "unspecified") {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dependency.group)
+                        dependencyNode.appendNode('artifactId', dependency.name)
+                        dependencyNode.appendNode('version', dependency.version)
+                    }
+                }
+            }
+        }
+    }
+
+    //publish to filesystem repo
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
+}

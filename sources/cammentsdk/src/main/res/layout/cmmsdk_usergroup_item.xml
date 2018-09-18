@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="2dp"
+    android:background="@color/cmmsdk_camment_lightest_grey">
+
+    <FrameLayout
+        android:id="@+id/cmmsdk_fl_avatar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/cmmsdk_white_circle_border">
+
+        <ImageView
+            android:id="@+id/cmmsdk_iv_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/cmmsdk_user" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/cmmsdk_ll_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/cmmsdk_fl_avatar"
+        android:layout_toStartOf="@+id/cmmsdk_iv_arrow"
+        android:orientation="vertical">
+
+        <tv.camment.cammentsdk.views.SemiBoldTextView
+            android:id="@+id/cmmsdk_tv_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/cmmsdk_camment_text_grey"
+            android:textSize="13sp"
+            tools:text="Group name" />
+
+        <tv.camment.cammentsdk.views.LightTextView
+            android:id="@+id/cmmsdk_tv_timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/cmmsdk_button_grey_dark"
+            android:textSize="10sp"
+            tools:text="Timestamp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/cmmsdk_iv_arrow"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:adjustViewBounds="true"
+        android:rotation="180"
+        android:src="@drawable/cmmsdk_back" />
+
+</RelativeLayout>

@@ -1,0 +1,103 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    resourcePrefix 'cmmauth_'
+
+    def RELEASE_VERSION = 3
+
+    def MAJOR_VERSION = 0
+
+    def MINOR_VERSION = 4
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionName RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
+        versionCode RELEASE_VERSION * 100000000 + 10000 * MAJOR_VERSION + 100 * MINOR_VERSION
+
+        defaultPublishConfig 'release'
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            useProguard false
+            debuggable true
+        }
+
+        release {
+            minifyEnabled false
+            useProguard false
+        }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        devApi {
+            dimension "default"
+        }
+
+        prodApi {
+            dimension "default"
+        }
+    }
+}
+
+ext {
+    facebookVersion = '4.32.0'
+
+    facebookDependencies = [
+            facebookLogin: "com.facebook.android:facebook-login:${facebookVersion}",
+    ]
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api facebookDependencies.values()
+
+    implementation project(path: ':cammentsdk')
+}
+
+publishing {
+
+    def RELEASE_VERSION = 3
+
+    def MAJOR_VERSION = 0
+
+    def MINOR_VERSION = 4
+
+    publications {
+        maven(MavenPublication) {
+            groupId 'tv.camment.cammentauth'
+            artifactId 'cammentauth'
+            version RELEASE_VERSION + "." + MAJOR_VERSION + "." + MINOR_VERSION
+            artifact "$buildDir/outputs/aar/cammentauth-prodApi-release.aar"
+            //aar artifact you want to publish
+
+            //generate pom nodes for dependencies
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.api.allDependencies.each { dependency ->
+                    if (dependency.name != "unspecified") {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dependency.group)
+                        dependencyNode.appendNode('artifactId', dependency.name)
+                        dependencyNode.appendNode('version', dependency.version)
+                    }
+                }
+            }
+        }
+    }
+
+    //publish to filesystem repo
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
+}

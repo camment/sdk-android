@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cmmsdk_camment_silver">
+
+    <tv.camment.cammentsdk.sofa.SofaBgImageView
+        android:id="@+id/cmmsdk_sofa_bg_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <tv.camment.cammentsdk.sofa.SofaImageView
+        android:id="@+id/cmmsdk_iv_sofa"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/cmmsdk_g_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/cmmsdk_g_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/cmmsdk_g_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/cmmsdk_iv_camera_text_shadow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:gravity="center_horizontal"
+        android:src="@drawable/cmmsdk_text_shadow"
+        app:layout_constraintBottom_toBottomOf="@+id/cmmsdk_tv_camera"
+        app:layout_constraintLeft_toLeftOf="@+id/cmmsdk_tv_camera"
+        app:layout_constraintRight_toRightOf="@+id/cmmsdk_tv_camera"
+        app:layout_constraintTop_toTopOf="@+id/cmmsdk_tv_camera" />
+
+    <tv.camment.cammentsdk.sofa.SofaCameraView
+        android:id="@+id/cmmsdk_sofa_cammera_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <tv.camment.cammentsdk.sofa.SofaInviteView
+        android:id="@+id/cmmsdk_sofa_invite_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <tv.camment.cammentsdk.views.LightTextView
+        android:id="@+id/cmmsdk_tv_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:text="@string/cmmsdk_tap_camera_icon"
+        android:textColor="@android:color/white"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <tv.camment.cammentsdk.views.RegularTextView
+        android:id="@+id/cmmsdk_tv_info"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/cmmsdk_g_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Enjoy the show with Brian and Samsung. Invite a friend to your virtual couch and WIN prices!" />
+
+    <tv.camment.cammentsdk.sofa.ForceWrapImageView
+        android:id="@+id/cmmsdk_iv_logo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/cmmsdk_g_center"
+        app:layout_constraintTop_toBottomOf="@+id/cmmsdk_g_bottom"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_default="wrap" />
+
+    <tv.camment.cammentsdk.views.RegularButton
+        android:id="@+id/cmmsdk_btn_continue_show"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/cmmsdk_rounded_dark_grey_ripple"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:minHeight="0dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:text="@string/cmmsdk_continue_to_show"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/cmmsdk_g_center"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cmmsdk_g_bottom"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_default="wrap" />
+
+    <View
+        android:id="@+id/cmmsdk_sofa_overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cmmsdk_sofa_overlay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <tv.camment.cammentsdk.sofa.SofaCammentView
+        android:id="@+id/cmmsdk_sofa_camment_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

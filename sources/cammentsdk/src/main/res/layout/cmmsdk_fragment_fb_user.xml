@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cmmsdk_camment_lightest_grey"
+    tools:context="tv.camment.cammentsdk.views.FbUserFragment">
+
+    <ImageButton
+        android:id="@+id/cmmsdk_ib_settings"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:cropToPadding="false"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cmmsdk_logout" />
+
+    <ImageView
+        android:id="@+id/cmmsdk_iv_avatar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="-8dp"
+        android:scaleType="centerCrop"
+        android:layout_below="@+id/cmmsdk_ib_settings"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/cmmsdk_user" />
+
+    <tv.camment.cammentsdk.views.BoldTextView
+        android:id="@+id/cmmsdk_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cmmsdk_iv_avatar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/cmmsdk_camment_text_grey"
+        tools:text="Name Surname" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/cmmsdk_tv_name"
+        android:alpha="0.7"
+        android:background="@color/cmmsdk_camment_divider_grey" />
+
+</RelativeLayout>
+

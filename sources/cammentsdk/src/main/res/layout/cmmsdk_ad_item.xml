@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cmmsdk_sfl_container"
+        android:layout_alignEnd="@+id/cmmsdk_sfl_container"
+        android:layout_alignStart="@+id/cmmsdk_sfl_container"
+        android:layout_alignTop="@+id/cmmsdk_sfl_container">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="2dp"
+            android:rotation="90"
+            android:textSize="8dp"
+            android:text="@string/cmmsdk_ad"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/cmmsdk_sfl_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp">
+
+        <tv.camment.cammentsdk.views.SquareImageView
+            android:id="@+id/cmmsdk_iv_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@android:color/black"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:id="@+id/cmmsdk_v_border"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cmmsdk_rounded_inside_corners_white" />
+
+    </FrameLayout>
+
+</RelativeLayout>
